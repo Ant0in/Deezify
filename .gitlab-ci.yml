@@ -1,14 +1,14 @@
+image: maven:3.9.5-eclipse-temurin-17
+
 stages:
   - test
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
-before_script:
-  - apt-get update -qy
-  - apt-get install -y maven
-
 test:
   stage: test
   script:
+    - echo $CI_PROJECT_DIR
     - mvn test
+
