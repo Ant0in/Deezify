@@ -9,6 +9,5 @@ variables:
 test:
   stage: test
   script:
-    - echo $CI_PROJECT_DIR
     - mvn test
 
