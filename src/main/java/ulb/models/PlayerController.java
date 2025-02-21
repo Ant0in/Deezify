@@ -9,10 +9,13 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerController {
 
     private String filePath;
+    private ArrayList <String> library;
     private MediaPlayer mediaPlayer;
     private DoubleProperty progress = new SimpleDoubleProperty(0.0);
 
@@ -23,10 +26,18 @@ public class PlayerController {
     }
 
     private void initialize() {
+        initializeLibrary();
         initializeFilePath();
         initializeMediaPlayer();
     }
 
+    private void initializeLibrary() {
+        library = new ArrayList<>();
+        library.add("src/main/resources/songs/song1.mp3");
+        library.add("src/main/resources/songs/song2.mp3");
+        library.add("src/main/resources/songs/song3.mp3");
+    }
+    
     private void initializeFilePath() {
         File file = new File("src/main/resources/songs/song1.mp3");
         if (!file.exists()) {
@@ -53,16 +64,30 @@ public class PlayerController {
                 progress.set(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
             });
 
-            this.mediaPlayer.setVolume(1.0);
         } catch (Exception e) {
             System.err.println("Failed to load media: " + e.getMessage());
         }
     }
 
-    public void play (){
-        System.out.println("playing...");
-        this.mediaPlayer.play();
+    private void updateMediaPlayer(){
+        initializeMediaPlayer();
+    }
 
+    private void setFilePath(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.err.println("Error: File does not exist at " + file.getAbsolutePath());
+            return;
+        }
+        this.filePath = file.toURI().toString();
+        updateMediaPlayer();
+    }
+
+    public void play (String songPath) {
+        this.mediaPlayer.stop();
+        setFilePath(songPath);        
+        this.mediaPlayer.play();
+        System.out.println("playing...");
     }
     public void stop() {
         System.out.println("stopped.");
@@ -102,7 +127,9 @@ public class PlayerController {
         return Duration.ZERO;
     }
 
-
+    public ArrayList<String> getLibrary() {
+        return library;
+    }
     /*private void initTimer() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> updateProgress()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Runs indefinitely

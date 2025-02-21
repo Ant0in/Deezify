@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import ulb.models.PlayerController;
@@ -13,6 +14,7 @@ import javafx.beans.binding.Bindings;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
@@ -34,11 +36,13 @@ public class MainWindowController implements Initializable {
 
     @FXML private Label songProgressTimeLabel;
 
+    @FXML private ListView <String> playListView;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initPlayerController();
         initProgressBindings();
         initVolumeControls();
+        updatePlayListView();
     }
 
     private void initPlayerController() {
@@ -87,9 +91,20 @@ public class MainWindowController implements Initializable {
         });
     }
 
+    private void updatePlayListView() {
+        this.playListView.getItems().clear();
+        for (String songPathString : playerController.getLibrary()) {
+            this.playListView.getItems().add(songPathString);
+        }
+
+    }
+
+
     @FXML
     public void handlePlaySong(){
-        playerController.play();
+        
+        playerController.play(this.playListView.getSelectionModel().getSelectedItem());
+        playerController.setVolume(volumeValue * 0.01);
     }
 
     @FXML
