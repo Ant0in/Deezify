@@ -15,38 +15,40 @@
    <children>
       <TextField fx:id="songInput" layoutX="137.0" layoutY="14.0" prefHeight="25.0" prefWidth="325.0" />
       <BorderPane layoutX="14.0" layoutY="39.0" prefHeight="350.0" prefWidth="86.0" />
-      <ListView fx:id="playListView" layoutX="137.0" layoutY="39.0" prefHeight="250.0" prefWidth="325.0" />
+      <ListView fx:id="playListView" layoutX="137.0" layoutY="39.0" prefHeight="213.0" prefWidth="325.0" />
       <HBox layoutX="137.0" layoutY="289.0" prefHeight="19.0" prefWidth="325.0">
          <children>
             <ProgressBar fx:id="songProgressBar" prefHeight="18.0" prefWidth="264.0" progress="0.0" />
             <Label fx:id="songProgressTimeLabel" prefHeight="18.0" prefWidth="68.0" text="00:00/00:00" textAlignment="CENTER" />
          </children>
       </HBox>
-      <AnchorPane layoutX="137.0" layoutY="308.0" prefHeight="62.0" prefWidth="261.0">
+      <AnchorPane layoutX="160.0" layoutY="308.0" prefHeight="77.0" prefWidth="261.0">
          <children>
-            <HBox layoutX="14.0" layoutY="18.0" prefHeight="25.0" prefWidth="181.0">
+            <AnchorPane layoutX="131.0" layoutY="14.0" prefHeight="54.0" prefWidth="111.0">
                <children>
-                <Button fx:id="previousSongButton" minWidth="35.0" onAction="#handlePreviousSong" prefHeight="25.0" prefWidth="47.0" text="PREV" />
-                <Button fx:id="pauseSongButton" minWidth="17.0" onAction="#handlePauseSong" prefHeight="23.0" prefWidth="46.0" text="PAUSE" />
-                <Button fx:id="playSongButton" onAction="#handlePlaySong" prefHeight="15.0" text="PLAY" />
-                <Button fx:id="nextSongButton" mnemonicParsing="false" onAction="#handleNextSong" text="NEXT" />
+                  <Slider fx:id="volumeSlider" layoutX="21.0" layoutY="24.0" prefHeight="14.0" prefWidth="107.0" />
+                  <Label fx:id="volumeLabel" layoutX="63.0" layoutY="5.0" minWidth="16.0" prefHeight="17.0" prefWidth="23.0" text="50" />
                </children>
-            </HBox>
-            <AnchorPane layoutX="219.0" layoutY="-2.0" prefHeight="62.0" prefWidth="47.0">
+            </AnchorPane>
+            <AnchorPane layoutY="3.0" prefHeight="78.0" prefWidth="139.0">
                <children>
-                  <Slider fx:id="volumeSlider" layoutX="6.0" orientation="VERTICAL" prefHeight="62.0" prefWidth="16.0" value="50.0" />
-                  <Label fx:id="volumeLabel" layoutX="27.0" layoutY="18.0" minWidth="16.0" prefHeight="17.0" prefWidth="23.0" text="50" />
+                <Button fx:id="previousSongButton" layoutY="7.0" minWidth="32.0" onAction="#handlePreviousSong" prefHeight="25.0" prefWidth="43.0" text="⏮" />
+                <Button fx:id="pauseSongButton" layoutX="48.0" layoutY="7.0" minWidth="17.0" onAction="#handlePauseSong" prefHeight="25.0" prefWidth="43.0" text="⏸" />
+                <Button fx:id="nextSongButton" layoutX="96.0" layoutY="7.0" mnemonicParsing="false" onAction="#handleNextSong" prefHeight="25.0" prefWidth="43.0" text="⏭" />
+                <Button fx:id="playSongButton" layoutX="48.0" layoutY="39.0" onAction="#handlePlaySong" prefHeight="25.0" prefWidth="43.0" text="PLAY" />
                </children>
             </AnchorPane>
          </children>
       </AnchorPane>
       <ListView fx:id="queueListView" layoutX="470.0" layoutY="14.0" prefHeight="277.0" prefWidth="122.0" />
-      <HBox layoutX="452.0" layoutY="326.0" prefHeight="25.0" prefWidth="139.0">
+      <HBox layoutX="452.0" layoutY="308.0" prefHeight="25.0" prefWidth="139.0">
          <children>
             <Button fx:id="addSongButton" mnemonicParsing="false" onAction="#handleAddSong" prefHeight="25.0" prefWidth="43.0" text="ADD" />
             <Button fx:id="deleteSongButton" mnemonicParsing="false" onAction="#handleDeleteSong" prefHeight="25.0" prefWidth="43.0" text="DEL" />
             <Button fx:id="clearQueueButton" mnemonicParsing="false" onAction="#handleClearQueue" prefHeight="25.0" prefWidth="51.0" text="CLEAR" />
          </children>
       </HBox>
+      <Label layoutX="137.0" layoutY="244.0" prefHeight="45.0" prefWidth="86.0" text="Current Song : " />
+      <Label fx:id="currentSongLabel" layoutX="223.0" layoutY="254.0" maxHeight="50.0" maxWidth="239.0" minHeight="25.0" minWidth="50.0" prefHeight="25.0" prefWidth="239.0" text="None" textAlignment="CENTER" />
    </children>
 </AnchorPane>

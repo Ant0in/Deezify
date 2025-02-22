@@ -17,7 +17,6 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        // Parent root = FXMLLoader.load(getClass().getResource("/fxml/main_window.fxml"));
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/main_layout.fxml")));
         //Group root = new Group();
         Scene scene = new Scene(root);

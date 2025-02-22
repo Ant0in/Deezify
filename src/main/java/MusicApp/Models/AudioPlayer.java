@@ -2,6 +2,8 @@ package MusicApp.Models;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -9,6 +11,7 @@ import javafx.scene.media.MediaPlayer;
 public class AudioPlayer {
     private MediaPlayer mediaPlayer;
     private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
+    private final StringProperty currentSong = new SimpleStringProperty("None");;
 
     public void loadSong(Song song) {
         if (mediaPlayer != null) {
@@ -16,6 +19,9 @@ public class AudioPlayer {
         }
         Media media = new Media(new java.io.File(song.getCoverPath()).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
+
+
+        currentSong.set(song.getSongName());
 
         // Mettre à jour la propriété de progression pendant la lecture
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
@@ -59,4 +65,10 @@ public class AudioPlayer {
     public Boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING;
     }
+
+    public StringProperty currentSongProperty() {
+        return currentSong;
+    }
+
+
 }

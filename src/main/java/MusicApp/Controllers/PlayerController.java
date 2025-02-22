@@ -2,6 +2,7 @@ package MusicApp.Controllers;
 
 import MusicApp.Models.AudioPlayer;
 import MusicApp.Models.Song;
+import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,10 @@ public class PlayerController {
 
     public void skip() {
         if (queue.isEmpty()) {
-            currentIndex++;
-            playCurrent();
+            if (currentIndex < library.size() - 1) {
+                currentIndex++;
+                playCurrent();
+            }
         } else {
             playFromQueue(0);
             queue.removeFirst();
@@ -155,6 +158,10 @@ public class PlayerController {
 
     public Boolean isPlaying() {
         return getAudioPlayer().isPlaying();
+    }
+
+    public StringProperty currentSongProperty() {
+        return getAudioPlayer().currentSongProperty();
     }
     
 

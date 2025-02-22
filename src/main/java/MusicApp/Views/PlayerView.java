@@ -20,6 +20,7 @@ public class PlayerView implements Initializable {
     @FXML private ProgressBar songProgressBar;
     @FXML private ListView<String> playListView, queueListView;
     @FXML private Button addSongButton, deleteSongButton, clearQueueButton;
+    @FXML private Label currentSongLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -28,6 +29,7 @@ public class PlayerView implements Initializable {
 
         initBindings();
         initVolumeControls();
+        initCurrentSongControls();
         updatePlayListView();
         updateQueueListView();
 
@@ -50,6 +52,10 @@ public class PlayerView implements Initializable {
         int minutes = (int) duration.toMinutes();
         int seconds = (int) (duration.toSeconds() % 60);
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    private void initCurrentSongControls(){
+        currentSongLabel.textProperty().bind(playerController.currentSongProperty());
     }
 
     private void initVolumeControls() {
@@ -98,6 +104,7 @@ public class PlayerView implements Initializable {
             } else {
                 playerController.playFromLibrary(selectedIndex);
             }
+            updatePlayPauseButton(true);
         } else {
             System.out.println("No song selected.");
         }
@@ -112,12 +119,18 @@ public class PlayerView implements Initializable {
         return -1;
     }
 
+    private void updatePlayPauseButton(boolean isPlaying) {
+        pauseSongButton.setText(isPlaying ? "⏸" : "▶");
+    }
+
     @FXML
     private void handlePauseSong() {
         if (playerController.isPlaying()) {
             playerController.pause();
+            updatePlayPauseButton(false);
         } else {
             playerController.unpause();
+            updatePlayPauseButton(true);
         }
     }
 
