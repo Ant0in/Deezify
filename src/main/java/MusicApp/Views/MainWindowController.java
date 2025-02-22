@@ -1,4 +1,4 @@
-package ulb.views;
+package MusicApp.Views;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,12 +7,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
-import ulb.models.PlayerController;
 import javafx.beans.binding.Bindings;
 import javafx.util.Duration;
-
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import MusicApp.Models.PlayerController;
+import MusicApp.Models.Song;
+import MusicApp.Models.SongCell;
 
 public class MainWindowController implements Initializable {
 
@@ -32,7 +34,8 @@ public class MainWindowController implements Initializable {
 
     @FXML private Label songProgressTimeLabel;
 
-    @FXML private ListView <String> playListView;
+    //@FXML private ListView <String> playListView;
+    @FXML private ListView <Song> playListView;
 
     @FXML private ListView <String> queueListView;
 
@@ -105,10 +108,24 @@ public class MainWindowController implements Initializable {
     }
 
     private void updatePlayListView() {
-        this.playListView.getItems().clear();
+
+        playListView.getItems().clear();
+
+        for (String songPathString : playerController.getLibrary()) {
+            // Assuming all songs have a default image (replace with actual image logic)
+            String imagePath = "images/song.png";
+
+            playListView.getItems().add(new Song(songPathString, imagePath));
+        }
+
+        // Apply the custom cell factory
+        playListView.setCellFactory(listView -> new SongCell());
+
+
+        /*this.playListView.getItems().clear();
         for (String songPathString : playerController.getLibrary()) {
             this.playListView.getItems().add(songPathString);
-        }
+        }*/
 
     }
 

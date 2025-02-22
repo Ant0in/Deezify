@@ -1,6 +1,6 @@
-package ulb;
+package MusicApp;
 
-import ulb.views.MainWindow;
+import MusicApp.Views.MainWindow;
 
 /**
  * Hello world!
