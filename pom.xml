@@ -61,7 +61,7 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>3.1.1</version>
             <configuration>
-                <mainClass>ulb.Main</mainClass>
+                <mainClass>MusicApp.Main</mainClass>
             </configuration>
         </plugin>
         <plugin>
@@ -71,7 +71,7 @@
                 <archive>
                     <manifest>
                         <addClasspath>true</addClasspath>
-                        <mainClass>ulb.Main</mainClass>
+                        <mainClass>MusicApp.Main</mainClass>
                     </manifest>
                 </archive>
             </configuration>
