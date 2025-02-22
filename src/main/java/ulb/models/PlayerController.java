@@ -4,22 +4,34 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerController {
 
-    private String filePath;
+    public interface SongChangeListener {
+        void onSongChanged();
+    }
+
+    private SongChangeListener songChangeListener;
+
+    public void setSongChangeListener(SongChangeListener listener) {
+        this.songChangeListener = listener;
+    }
+
     private ArrayList <String> library;
     private MediaPlayer mediaPlayer;
-    private DoubleProperty progress = new SimpleDoubleProperty(0.0);
+    private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
 
-    private Timeline timeline;
+    private int currentSongIndexLibrary;
+    private int currentSongIndexQueue;
+
+    private ArrayList<String> queue;
+
+    boolean isPlayingFromLibrary = false;
+    boolean isPlayingFromQueue = false;
 
     public PlayerController(){
         initialize();
@@ -27,8 +39,8 @@ public class PlayerController {
 
     private void initialize() {
         initializeLibrary();
-        initializeFilePath();
-        initializeMediaPlayer();
+        initializeQueue();
+        updateMediaPlayer(getCurrentSongPathLibrary());
     }
 
     private void initializeLibrary() {
@@ -36,70 +48,88 @@ public class PlayerController {
         library.add("src/main/resources/songs/song1.mp3");
         library.add("src/main/resources/songs/song2.mp3");
         library.add("src/main/resources/songs/song3.mp3");
-    }
-    
-    private void initializeFilePath() {
-        File file = new File("src/main/resources/songs/song1.mp3");
-        if (!file.exists()) {
-            System.err.println("Error: File does not exist at " + file.getAbsolutePath());
-            return;
-        }
-        this.filePath = file.toURI().toString();
+        library.add("src/main/resources/songs/song4.mp3");
+        library.add("src/main/resources/songs/song5.mp3");
+        library.add("src/main/resources/songs/song6.mp3");
+        currentSongIndexLibrary=0;
     }
 
-    private void initializeMediaPlayer() {
-        if (filePath == null) {
-            System.err.println("Error: File path is not initialized.");
+    private void initializeQueue() {
+        queue = new ArrayList<>();
+        queue.add("src/main/resources/songs/song1.mp3");
+        currentSongIndexQueue=0;
+    }
+
+    private void notifyListner(){
+        if (songChangeListener != null) {
+            songChangeListener.onSongChanged();
+        }
+    }
+
+    private String getCurrentSongPathLibrary(){
+        return library.get(currentSongIndexLibrary);
+    }
+
+    private String getCurrentSongPathQueue(){
+        return queue.get(currentSongIndexQueue);
+    }
+
+    private boolean checkFileExists(String filePath) {
+        File file = new File(filePath);
+        return file.exists();
+    }
+
+    private void updateMediaPlayer(String filePath) {
+        // String filePath = getCurrentSongPathLibrary();
+        if (!validateFilePath(filePath)) {
             return;
         }
+
+        String fileUri = new File(filePath).toURI().toString();
 
         try {
-            Media media = new Media(filePath);
+            Media media = new Media(fileUri);
+            if (mediaPlayer != null) {
+                mediaPlayer.dispose();
+            }
             this.mediaPlayer = new MediaPlayer(media);
-
-            this.mediaPlayer.setOnReady(() -> System.out.println("Media loaded: " + filePath));
-            this.mediaPlayer.setOnError(() -> System.err.println("Error playing media: " + media.getSource()));
-
-            mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
-                progress.set(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
-            });
-
+            attachMediaListeners(media);
         } catch (Exception e) {
             System.err.println("Failed to load media: " + e.getMessage());
         }
     }
 
-    private void updateMediaPlayer(){
-        initializeMediaPlayer();
-    }
-
-    private void setFilePath(String filePath) {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            System.err.println("Error: File does not exist at " + file.getAbsolutePath());
-            return;
+    private boolean validateFilePath(String filePath) {
+        if (filePath == null) {
+            System.err.println("Error: File path is not initialized.");
+            return false;
         }
-        this.filePath = file.toURI().toString();
-        updateMediaPlayer();
+        if (!checkFileExists(filePath)) {
+            System.err.println("Error: File does not exist at " + filePath);
+            return false;
+        }
+        return true;
     }
 
-    public void play (String songPath) {
-        this.mediaPlayer.stop();
-        setFilePath(songPath);        
-        this.mediaPlayer.play();
-        System.out.println("playing...");
-    }
-    public void stop() {
-        System.out.println("stopped.");
-        this.mediaPlayer.pause();
-    }
-    public void next(){
-        System.out.println("playing next song...");
+    private void attachMediaListeners(Media media) {
+
+        // Optionally set an onReady handler if needed.
+        mediaPlayer.setOnError(() -> System.err.println("Error playing media: " + media.getSource()));
+
+        mediaPlayer.setOnEndOfMedia(() -> {
+            System.out.println("End of media");
+            next();
+        });
+
+        mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+            Duration total = mediaPlayer.getTotalDuration();
+            if (total != null && total.toSeconds() > 0) {
+                progress.set(newTime.toSeconds() / total.toSeconds());
+            }
+        });
     }
 
-    public void previous(){
-        System.out.println("playing previous song...");
-    }
+
 
     public void setVolume(double volume) {
         this.mediaPlayer.setVolume(volume);
@@ -130,15 +160,109 @@ public class PlayerController {
     public ArrayList<String> getLibrary() {
         return library;
     }
-    /*private void initTimer() {
-        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> updateProgress()));
-        timeline.setCycleCount(Timeline.INDEFINITE); // Runs indefinitely
-        timeline.play(); // Starts the timer
+
+    public ArrayList<String> getQueue() {
+        return queue;
     }
 
-    private void updateProgress() {
-        // Update UI components, e.g., progress bar
-        songProgressBar.setProgress(playerController.getCurrentProgress());
-    }*/
+    public void turnOffFlags(){
+        isPlayingFromLibrary = false;
+        isPlayingFromQueue = false;
+    }
 
+    public void stop() {
+        System.out.println("stopped.");
+        turnOffFlags();
+        this.mediaPlayer.stop();
+    }
+
+    public void playFromQueue (int index){
+        if(index<0 || index>=queue.size()){
+            System.err.println("Error: Invalid index");
+            return;
+        }
+        this.mediaPlayer.pause();
+        currentSongIndexQueue=index;
+        updateMediaPlayer(getCurrentSongPathQueue());
+        this.mediaPlayer.play();
+        turnOnPlayFromQueue();
+        System.out.println("playing from queue...");
+        notifyListner();
+    }
+
+    public void playFromLibrary (int index){
+        if(index<0 || index>=library.size()){
+            System.err.println("Error: Invalid index");
+            return;
+        }
+        this.mediaPlayer.pause();
+        currentSongIndexLibrary=index;
+        updateMediaPlayer(getCurrentSongPathLibrary());
+        this.mediaPlayer.play();
+        turnOnPlayFromLibrary();
+        System.out.println("playing from library...");
+        notifyListner();
+    }
+
+    public void playNextFromQueue(){
+        if(currentSongIndexQueue+1<queue.size()){
+            playFromQueue(currentSongIndexQueue+1);
+        }
+    }
+
+    public void playNextFromLibrary(){
+        if(currentSongIndexLibrary+1<library.size()){
+            playFromLibrary(currentSongIndexLibrary+1);
+        }
+    }
+
+    private void turnOnPlayFromLibrary() {
+        isPlayingFromLibrary = true;
+        isPlayingFromQueue = false;
+    }
+
+    private void turnOnPlayFromQueue() {
+        isPlayingFromQueue = true;
+        isPlayingFromLibrary = false;
+    }
+
+    public void next(){
+        if(isPlayingFromLibrary){
+            if (!queue.isEmpty()) {
+                playFromQueue(0);
+            } else {
+                playNextFromLibrary();
+            }
+        } else if(isPlayingFromQueue){
+            playNextFromQueue();
+        }
+    }
+
+    public void previous(){
+        if(isPlayingFromQueue){
+            if(currentSongIndexQueue-1>=0){
+                playFromQueue(currentSongIndexQueue-1);
+            }
+        }
+    }
+
+    public void addToQueue(int index){
+        if(index<0 || index>=library.size()){
+            System.err.println("Error: Invalid index");
+            return;
+        }
+        queue.add(library.get(index));
+    }
+
+    public void removeFromQueue(int index){
+        if(index<0 || index>=queue.size()){
+            System.err.println("Error: Invalid index");
+            return;
+        }
+        queue.remove(index);
+    }
+
+    public void clearQueue(){
+        queue.clear();
+    }
 }

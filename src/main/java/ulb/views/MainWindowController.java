@@ -1,7 +1,5 @@
 package ulb.views;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,7 +12,6 @@ import javafx.beans.binding.Bindings;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
@@ -32,42 +29,58 @@ public class MainWindowController implements Initializable {
     private int volumeValue;
 
     @FXML private ProgressBar songProgressBar;
-    @FXML private Label songProgressValueLabel;
 
     @FXML private Label songProgressTimeLabel;
 
     @FXML private ListView <String> playListView;
+
+    @FXML private ListView <String> queueListView;
+
+    @FXML private Button addSongButton;
+    @FXML private Button deleteSongButton;
+    @FXML private Button clearQueueButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initPlayerController();
         initProgressBindings();
         initVolumeControls();
         updatePlayListView();
+        updateQueueListView();
+
+
+        // When an item is selected in the library, clear selection in the queue.
+        playListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                queueListView.getSelectionModel().clearSelection();
+            }
+        });
+
+        // When an item is selected in the queue, clear selection in the library.
+        queueListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                playListView.getSelectionModel().clearSelection();
+            }
+        });
+    }
+
+    private void changeSong() {
+        resetVolumeSlider();
     }
 
     private void initPlayerController() {
         // Initialize your player controller.
         playerController = new PlayerController();
+        playerController.setSongChangeListener(this::changeSong);
     }
 
     private void initProgressBindings() {
         songProgressBar.progressProperty().bind(playerController.progressProperty());
-        songProgressValueLabel.textProperty().bind(Bindings.createStringBinding(
-                () -> String.format("%.0f%%", playerController.progressProperty().get() * 100),
-                playerController.progressProperty()
-        ));
-
         songProgressTimeLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             Duration current = playerController.getCurrentTime();
             Duration total = playerController.getTotalDuration();
             return String.format("%s/%s", formatDuration(current), formatDuration(total));
         }, playerController.progressProperty()));
-
-        /*songProgressValueLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            Duration current = playerController.getCurrentTime();
-            Duration total = playerController.getTotalDuration();
-            return String.format("%s / %s", formatDuration(current), formatDuration(total));
-        }, playerController.progressProperty()));*/
     }
 
 
@@ -99,12 +112,36 @@ public class MainWindowController implements Initializable {
 
     }
 
+    private void updateQueueListView() {
+        this.queueListView.getItems().clear();
+        for (String songPathString : playerController.getQueue()) {
+            this.queueListView.getItems().add(songPathString);
+        }
+    }
+
+    private void resetVolumeSlider() {
+        volumeSlider.setValue(50);
+    }
+
 
     @FXML
     public void handlePlaySong(){
-        
-        playerController.play(this.playListView.getSelectionModel().getSelectedItem());
-        playerController.setVolume(volumeValue * 0.01);
+        int selectedSongIndex = -1;
+        if (!queueListView.getSelectionModel().isEmpty()) {
+            System.out.println("Playing from queue");
+            selectedSongIndex = queueListView.getSelectionModel().getSelectedIndex();
+            playerController.playFromQueue(selectedSongIndex);
+        } else if (!playListView.getSelectionModel().isEmpty()) {
+            System.out.println("Playing from library");
+            selectedSongIndex = playListView.getSelectionModel().getSelectedIndex();
+            playerController.playFromLibrary(selectedSongIndex);
+        }
+        if (selectedSongIndex == -1) {
+            // Optionally display a warning to the user
+            System.out.println("No song selected.");
+            return;
+        }
+        // resetVolumeSlider();
     }
 
     @FXML
@@ -115,10 +152,39 @@ public class MainWindowController implements Initializable {
     @FXML
     public void handlePreviousSong(){
         playerController.previous();
+        // resetVolumeSlider();
     }
 
     @FXML
     public void handleNextSong(){
         playerController.next();
+        // resetVolumeSlider();
     }
+
+    @FXML
+    public void handleAddSong(){
+        // Add the selected song from the library to the queue.
+        if (!playListView.getSelectionModel().isEmpty()) {
+            int selectedSongIndex = playListView.getSelectionModel().getSelectedIndex();
+            playerController.addToQueue(selectedSongIndex);
+            updateQueueListView();
+        }
+    }
+
+    @FXML
+    public void handleDeleteSong(){
+        // Remove the selected song from the queue.
+        if (!queueListView.getSelectionModel().isEmpty()) {
+            int selectedSongIndex = queueListView.getSelectionModel().getSelectedIndex();
+            playerController.removeFromQueue(selectedSongIndex);
+            updateQueueListView();
+        }
+    }
+
+    @FXML
+    public void handleClearQueue(){
+        playerController.clearQueue();
+        updateQueueListView();
+    }
+
 }

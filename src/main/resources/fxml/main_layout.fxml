@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
@@ -9,25 +8,45 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ulb.views.MainWindowController">
 
    <children>
-      <ButtonBar layoutX="104.0" layoutY="310.0" minWidth="-Infinity" prefHeight="44.0" prefWidth="475.0">
-        <buttons>
-          <Button fx:id="previousSongButton" minWidth="50.0" onAction="#handlePreviousSong" prefHeight="25.0" text="PRE" />
-          <Button fx:id="stopSongButton" minWidth="17.0" onAction="#handleStopSong" prefHeight="25.0" text="STOP" />
-          <Button fx:id="playSongButton" onAction="#handlePlaySong" prefHeight="15.0" text="PLAY" />
-          <Button fx:id="nextSongButton" mnemonicParsing="false" onAction="#handleNextSong" text="NEXT" />
-            <Slider fx:id="volumeSlider" value="50.0" />
-            <Label fx:id="volumeLabel" minWidth="29.0" prefHeight="17.0" text="50" />
-        </buttons>
-      </ButtonBar>
-      <TextField fx:id="songInput" layoutX="103.0" layoutY="14.0" prefHeight="25.0" prefWidth="475.0" />
+      <TextField fx:id="songInput" layoutX="137.0" layoutY="14.0" prefHeight="25.0" prefWidth="325.0" />
       <BorderPane layoutX="14.0" layoutY="39.0" prefHeight="350.0" prefWidth="86.0" />
-      <ListView fx:id="playListView" layoutX="104.0" layoutY="42.0" prefHeight="250.0" prefWidth="475.0" />
-      <ProgressBar fx:id="songProgressBar" layoutX="104.0" layoutY="292.0" prefHeight="18.0" prefWidth="397.0" progress="0.0" />
-      <Label fx:id="songProgressValueLabel" layoutX="510.0" layoutY="274.0" prefHeight="18.0" prefWidth="68.0" text="00:00/00:00" textAlignment="CENTER" />
-      <Label fx:id="songProgressTimeLabel" layoutX="510.0" layoutY="292.0" prefHeight="18.0" prefWidth="68.0" text="00:00/00:00" textAlignment="CENTER" />
+      <ListView fx:id="playListView" layoutX="137.0" layoutY="39.0" prefHeight="250.0" prefWidth="325.0" />
+      <HBox layoutX="137.0" layoutY="289.0" prefHeight="19.0" prefWidth="325.0">
+         <children>
+            <ProgressBar fx:id="songProgressBar" prefHeight="18.0" prefWidth="264.0" progress="0.0" />
+            <Label fx:id="songProgressTimeLabel" prefHeight="18.0" prefWidth="68.0" text="00:00/00:00" textAlignment="CENTER" />
+         </children>
+      </HBox>
+      <AnchorPane layoutX="137.0" layoutY="308.0" prefHeight="62.0" prefWidth="261.0">
+         <children>
+            <HBox layoutX="14.0" layoutY="18.0" prefHeight="25.0" prefWidth="181.0">
+               <children>
+                <Button fx:id="previousSongButton" minWidth="35.0" onAction="#handlePreviousSong" prefHeight="25.0" prefWidth="47.0" text="PREV" />
+                <Button fx:id="stopSongButton" minWidth="17.0" onAction="#handleStopSong" prefHeight="23.0" prefWidth="46.0" text="STOP" />
+                <Button fx:id="playSongButton" onAction="#handlePlaySong" prefHeight="15.0" text="PLAY" />
+                <Button fx:id="nextSongButton" mnemonicParsing="false" onAction="#handleNextSong" text="NEXT" />
+               </children>
+            </HBox>
+            <AnchorPane layoutX="219.0" layoutY="-2.0" prefHeight="62.0" prefWidth="47.0">
+               <children>
+                  <Slider fx:id="volumeSlider" layoutX="6.0" orientation="VERTICAL" prefHeight="62.0" prefWidth="16.0" value="50.0" />
+                  <Label fx:id="volumeLabel" layoutX="27.0" layoutY="18.0" minWidth="16.0" prefHeight="17.0" prefWidth="23.0" text="50" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <ListView fx:id="queueListView" layoutX="470.0" layoutY="14.0" prefHeight="277.0" prefWidth="122.0" />
+      <HBox layoutX="452.0" layoutY="326.0" prefHeight="25.0" prefWidth="139.0">
+         <children>
+            <Button fx:id="addSongButton" mnemonicParsing="false" onAction="#handleAddSong" prefHeight="25.0" prefWidth="43.0" text="ADD" />
+            <Button fx:id="deleteSongButton" mnemonicParsing="false" onAction="#handleDeleteSong" prefHeight="25.0" prefWidth="43.0" text="DEL" />
+            <Button fx:id="clearQueueButton" mnemonicParsing="false" onAction="#handleClearQueue" prefHeight="25.0" prefWidth="51.0" text="CLEAR" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>
