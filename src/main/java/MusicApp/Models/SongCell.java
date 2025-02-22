@@ -25,7 +25,7 @@ public class SongCell extends ListCell<Song> {
             setGraphic(null);
         } else {
             imageView.setImage(new Image(song.getImagePath())); // Load image
-            titleLabel.setText(song.getTitle()); // Set song title
+            titleLabel.setText(song.getSongName()); // Set song title
             setGraphic(hbox); // Set the HBox as the cell content
         }
     }

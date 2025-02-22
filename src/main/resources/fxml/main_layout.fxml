@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MusicApp.Views.MainWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MusicApp.Views.PlayerView">
 
    <children>
       <TextField fx:id="songInput" layoutX="137.0" layoutY="14.0" prefHeight="25.0" prefWidth="325.0" />
@@ -27,7 +27,7 @@
             <HBox layoutX="14.0" layoutY="18.0" prefHeight="25.0" prefWidth="181.0">
                <children>
                 <Button fx:id="previousSongButton" minWidth="35.0" onAction="#handlePreviousSong" prefHeight="25.0" prefWidth="47.0" text="PREV" />
-                <Button fx:id="stopSongButton" minWidth="17.0" onAction="#handleStopSong" prefHeight="23.0" prefWidth="46.0" text="STOP" />
+                <Button fx:id="pauseSongButton" minWidth="17.0" onAction="#handlePauseSong" prefHeight="23.0" prefWidth="46.0" text="PAUSE" />
                 <Button fx:id="playSongButton" onAction="#handlePlaySong" prefHeight="15.0" text="PLAY" />
                 <Button fx:id="nextSongButton" mnemonicParsing="false" onAction="#handleNextSong" text="NEXT" />
                </children>
