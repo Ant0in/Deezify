@@ -22,7 +22,7 @@ public class TestPlayerController {
             // Cette méthode initialise JavaFX dans le thread de l'application.
         });
     }
-    
+
     @Test
     public void testPlayFromLibrary() {
         PlayerController playerController = new PlayerController();

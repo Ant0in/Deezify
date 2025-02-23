@@ -15,7 +15,7 @@ import javafx.scene.media.MediaPlayer;
 public class AudioPlayer {
     private MediaPlayer mediaPlayer;
     private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
-    private final StringProperty currentSong = new SimpleStringProperty("None");;
+    private final StringProperty currentSong = new SimpleStringProperty("None");
 
     /**
      * Load a song into the player.
@@ -83,6 +83,14 @@ public class AudioPlayer {
     }
 
     /**
+     * Get the progress of the song.
+     * @return The progress of the song.
+     */
+    public double getProgress() {
+        return progress.get();
+    }
+
+    /**
      * Set the volume of the song.
      * @param volume The volume to set.
      */
@@ -109,10 +117,28 @@ public class AudioPlayer {
     }
 
     /**
+     * Get the current song.
+     * @return The current song.
+     */
+    public String getCurrentSong() {
+        return currentSong.get();
+    }
+
+    /**
      * Get the media player.
      * @return The media player.
      */
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
+    }
+
+    /**
+     * Stop the song.
+     */
+    public void stop() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+        mediaPlayer = null;
     }
 }

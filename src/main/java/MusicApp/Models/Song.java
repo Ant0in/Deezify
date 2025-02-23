@@ -8,7 +8,6 @@ public class Song {
     private String style;
     private String coverPath;
     private Duration duration;
-    private String imagePath;
 
     /**
      * Constructor
@@ -57,9 +56,58 @@ public class Song {
     public Duration getDuration() { return duration; }
 
     /**
-     * Get the path to the image.
-     * @return The path to the image.
+     * Set the name of the song.
+     * @param songName The name of the song.
      */
-    public String getImagePath() { return imagePath; }
+    public void setSongName(String songName) { this.songName = songName; }
+
+    /**
+     * Set the name of the artist.
+     * @param artistName The name of the artist.
+     */
+    public void setArtistName(String artistName) { this.artistName = artistName; }
+
+    /**
+     * Set the style of the song.
+     * @param style The style of the song.
+     */
+    public void setStyle(String style) { this.style = style; }
+
+    /**
+     * Set the path to the cover image.
+     * @param coverPath The path to the cover image.
+     */
+    public void setCoverPath(String coverPath) { this.coverPath = coverPath; }
+
+    /**
+     * Set the duration of the song.
+     * @param duration The duration of the song.
+     */
+    public void setDuration(Duration duration) { this.duration = duration; }
+
+    /**
+     * Get the string representation of the song.
+     * @return The string representation of the song.
+     */
+    @Override
+    public String toString() {
+        return songName + " - " + artistName;
+    }
+
+    /**
+     * Check if two songs are equal.
+     * @param obj The object to compare.
+     * @return True if the songs are equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Song) {
+            Song song = (Song) obj;
+            return songName.equals(song.getSongName()) && artistName.equals(song.getArtistName());
+        }
+        return false;
+    }
+
+
 }
 
