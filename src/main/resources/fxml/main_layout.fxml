@@ -27,7 +27,7 @@
             <AnchorPane layoutX="131.0" layoutY="14.0" prefHeight="54.0" prefWidth="111.0">
                <children>
                   <Slider fx:id="volumeSlider" layoutX="21.0" layoutY="24.0" prefHeight="14.0" prefWidth="107.0" />
-                  <Label fx:id="volumeLabel" layoutX="63.0" layoutY="5.0" minWidth="16.0" prefHeight="17.0" prefWidth="23.0" text="50" />
+                  <Label fx:id="volumeLabel" layoutX="66.0" layoutY="5.0" text="50" textAlignment="CENTER" />
                </children>
             </AnchorPane>
             <AnchorPane layoutY="3.0" prefHeight="78.0" prefWidth="139.0">

@@ -81,6 +81,9 @@ public class PlayerView implements Initializable {
             double progress = e.getX() / songProgressBar.getWidth();
             playerController.seek(progress);
         });
+        pauseSongButton.textProperty().bind(Bindings.when(playerController.isPlaying())
+                .then("⏸")
+                .otherwise("▶"));
     }
 
     /**
@@ -182,7 +185,6 @@ public class PlayerView implements Initializable {
             } else {
                 playerController.playFromLibrary(selectedIndex);
             }
-            updatePlayPauseButton(true);
         } else {
             System.out.println("No song selected.");
         }
@@ -203,24 +205,14 @@ public class PlayerView implements Initializable {
     }
 
     /**
-     * Update the play/pause button.
-     * @param isPlaying Whether the song is playing.
-     */
-    private void updatePlayPauseButton(boolean isPlaying) {
-        pauseSongButton.setText(isPlaying ? "⏸" : "▶");
-    }
-
-    /**
      * Handle the pause song button.
      */
     @FXML
     private void handlePauseSong() {
-        if (playerController.isPlaying()) {
+        if (playerController.isPlaying().get()) {
             playerController.pause();
-            updatePlayPauseButton(false);
         } else {
             playerController.unpause();
-            updatePlayPauseButton(true);
         }
     }
 

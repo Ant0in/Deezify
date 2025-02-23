@@ -1,9 +1,6 @@
 package MusicApp.Models;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -16,6 +13,7 @@ public class AudioPlayer {
     private MediaPlayer mediaPlayer;
     private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
     private final StringProperty currentSong = new SimpleStringProperty("None");
+    private final BooleanProperty isPlaying = new SimpleBooleanProperty(false);
 
     /**
      * Load a song into the player.
@@ -29,7 +27,7 @@ public class AudioPlayer {
         mediaPlayer = new MediaPlayer(media);
 
 
-        currentSong.set(song.getSongName());
+        currentSong.set(song.toString());
 
         // Mettre à jour la propriété de progression pendant la lecture
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
@@ -45,6 +43,7 @@ public class AudioPlayer {
     public void unpause() {
         if (mediaPlayer != null) {
             mediaPlayer.play();
+            isPlaying.set(true);
         }
     }
 
@@ -54,6 +53,7 @@ public class AudioPlayer {
     public void pause() {
         if (mediaPlayer != null) {
             mediaPlayer.pause();
+            isPlaying.set(false);
         }
     }
 
@@ -104,8 +104,8 @@ public class AudioPlayer {
      * Check if the song is playing.
      * @return True if the song is playing, false otherwise.
      */
-    public Boolean isPlaying() {
-        return mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING;
+    public BooleanProperty isPlaying() {
+        return isPlaying;
     }
 
     /**
@@ -140,6 +140,7 @@ public class AudioPlayer {
             mediaPlayer.stop();
         }
         mediaPlayer = null;
+        isPlaying.set(false);
     }
 
     /**

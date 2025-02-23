@@ -1,126 +1,121 @@
 package MusicApp.ControllersTest;
 
 import MusicApp.Controllers.PlayerController;
-import javafx.application.Platform;
 import javafx.util.Duration;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
-import org.junit.Assume;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+import org.testfx.framework.junit.ApplicationTest;
 
 import java.util.List;
 
-public class TestPlayerController {
+public class TestPlayerController extends ApplicationTest {
 
-    // Cette méthode sera exécutée une seule fois avant tous les tests
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        boolean javafxAvailable = System.getProperty("javafx.platform") != null;
-        Assume.assumeTrue("JavaFX non disponible, test ignoré.", javafxAvailable);
-        Platform.startup(() -> {
-            // Cette méthode initialise JavaFX dans le thread de l'application.
-        });
+    private PlayerController playerController;
+    private List<String> library;
+
+    @Before
+    public void setUp() {
+        playerController = new PlayerController();
+        library = playerController.getLibrary();
+    }
+
+    private boolean hasEnoughSongs(int count) {
+        return library.size() >= count;
     }
 
     @Test
     public void testPlayFromLibrary() {
-        PlayerController playerController = new PlayerController();
-        playerController.playFromLibrary(0);
-        playerController.getAudioPlayer().getMediaPlayer().onReadyProperty().addListener((observable, oldValue, newValue) -> {
-            assertTrue(playerController.isPlaying());
-            assertEquals("Song1", playerController.getAudioPlayer().currentSongProperty().get());
-        });
+        if (!hasEnoughSongs(1)) return;
+
+        int songIndex = 0;
+        playerController.playFromLibrary(songIndex);
+        assertTrue(playerController.isPlaying().get());
+        assertEquals(library.get(songIndex), playerController.getAudioPlayer().currentSongProperty().get());
     }
 
     @Test
     public void testSkip() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(2)) return;
+
         playerController.playFromLibrary(0);
-        playerController.getAudioPlayer().getMediaPlayer().onReadyProperty().addListener((observable, oldValue, newValue) -> {
-            playerController.skip();
-            assertTrue(playerController.isPlaying());
-            assertEquals("Song2", playerController.getAudioPlayer().currentSongProperty().get());
-        });
+        playerController.skip();
+        assertTrue(playerController.isPlaying().get());
+        assertEquals(library.get(1), playerController.getAudioPlayer().currentSongProperty().get());
     }
 
     @Test
     public void testPrec() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(2)) return;
+
         playerController.playFromLibrary(1);
-        playerController.getAudioPlayer().getMediaPlayer().onReadyProperty().addListener((observable, oldValue, newValue) -> {
-            playerController.prec();
-            assertTrue(playerController.isPlaying());
-            assertEquals("Song1", playerController.getAudioPlayer().currentSongProperty().get());
-        });
+        playerController.prec();
+        assertTrue(playerController.isPlaying().get());
+        assertEquals(library.get(0), playerController.getAudioPlayer().currentSongProperty().get());
     }
 
     @Test
     public void testPauseAndUnpause() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(1)) return;
+
         playerController.playFromLibrary(0);
-        playerController.getAudioPlayer().getMediaPlayer().onReadyProperty().addListener((observable, oldValue, newValue) -> {
-            playerController.pause();
-            assertFalse(playerController.isPlaying());
-            playerController.unpause();
-            assertTrue(playerController.isPlaying());
-        });
+        playerController.pause();
+        assertFalse(playerController.isPlaying().get());
+        playerController.unpause();
+        assertTrue(playerController.isPlaying().get());
     }
 
     @Test
     public void testAddToQueue() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(2)) return;
+
         playerController.addToQueue(1);
-        List<String> queue = playerController.getQueue();
-        assertEquals(1, queue.size());
-        assertEquals("Song2", queue.get(0));
+        assertEquals(1, playerController.getQueue().size());
+        assertEquals(library.get(1), playerController.getQueue().get(0));
     }
 
     @Test
     public void testRemoveFromQueue() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(2)) return;
+
         playerController.addToQueue(1);
         playerController.removeFromQueue(0);
-        List<String> queue = playerController.getQueue();
-        assertTrue(queue.isEmpty());
+        assertTrue(playerController.getQueue().isEmpty());
     }
 
     @Test
     public void testClearQueue() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(2)) return;
+
         playerController.addToQueue(1);
         playerController.clearQueue();
-        List<String> queue = playerController.getQueue();
-        assertTrue(queue.isEmpty());
+        assertTrue(playerController.getQueue().isEmpty());
     }
 
     @Test
     public void testPlayFromQueue() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(2)) return;
+
         playerController.addToQueue(1);
         playerController.playFromQueue(0);
-        playerController.getAudioPlayer().getMediaPlayer().onReadyProperty().addListener((observable, oldValue, newValue) -> {
-            assertTrue(playerController.isPlaying());
-            assertEquals("Song2", playerController.getAudioPlayer().currentSongProperty().get());
-        });
+        assertTrue(playerController.isPlaying().get());
+        assertEquals(library.get(1), playerController.getAudioPlayer().currentSongProperty().get());
     }
 
     @Test
     public void testGetCurrentTime() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(1)) return;
+
         playerController.playFromLibrary(0);
-        Duration currentTime = playerController.getCurrentTime();
-        assertNotNull(currentTime);
+        assertNotNull(playerController.getCurrentTime());
     }
 
     @Test
     public void testGetTotalDuration() {
-        PlayerController playerController = new PlayerController();
+        if (!hasEnoughSongs(1)) return;
+
         playerController.playFromLibrary(0);
-        Duration totalDuration = playerController.getTotalDuration();
-        assertNotNull(totalDuration);
+        assertNotNull(playerController.getTotalDuration());
     }
 }

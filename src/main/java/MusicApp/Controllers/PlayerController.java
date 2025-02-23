@@ -2,6 +2,7 @@ package MusicApp.Controllers;
 
 import MusicApp.Models.AudioPlayer;
 import MusicApp.Models.Song;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 import java.util.ArrayList;
@@ -159,7 +160,7 @@ public class PlayerController {
     public List<String> getLibrary() {
         List<String> songNames = new ArrayList<>();
         for (Song song : library) {
-            songNames.add(song.getSongName() + " · " + song.getArtistName());
+            songNames.add(song.toString());
         }
         return songNames;
     }
@@ -171,7 +172,7 @@ public class PlayerController {
     public List<String> getQueue() {
         List<String> songNames = new ArrayList<>();
         for (Song song : queue) {
-            songNames.add(song.getSongName());
+            songNames.add(song.toString());
         }
         return songNames;
     }
@@ -255,7 +256,7 @@ public class PlayerController {
      * Return whether the song is playing.
      * @return Whether the song is playing.
      */
-    public Boolean isPlaying() {
+    public BooleanProperty isPlaying() {
         return getAudioPlayer().isPlaying();
     }
 
