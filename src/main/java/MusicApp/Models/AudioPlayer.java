@@ -141,4 +141,21 @@ public class AudioPlayer {
         }
         mediaPlayer = null;
     }
+
+    /**
+     * Seek to a specific progress in the song.
+     * @param progress The progress to seek to.
+     */
+    public void seek(double progress) {
+        if (mediaPlayer != null) {
+            mediaPlayer.seek(mediaPlayer.getTotalDuration().multiply(progress));
+        }
+    }
+
+    public void setOnEndOfMedia(Runnable action) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setOnEndOfMedia(action);
+        }
+    }
+
 }

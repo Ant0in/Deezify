@@ -58,9 +58,12 @@ public class PlayerController {
      * In a real application, the library would be loaded from a database or a file.
      */
     private void loadLibrary() {
-        library.add(new Song("Song1", "Artist1", "Pop", "src/main/resources/songs/song1.mp3", Duration.minutes(3)));
-        library.add(new Song("Song2", "Artist2", "Rock", "src/main/resources/songs/song2.mp3", Duration.minutes(4)));
-        library.add(new Song("Song3", "Artist3", "Jazz", "src/main/resources/songs/song3.mp3", Duration.minutes(5)));
+        library.add(new Song("HIGHEST IN THE ROOM", "Travis Scott", "Pop", "src/main/resources/songs/song1.mp3", Duration.minutes(3)));
+        library.add(new Song("World, Hold On", "Bob Sinclar", "Rock", "src/main/resources/songs/song2.mp3", Duration.minutes(4)));
+        library.add(new Song("ARSENAL", "Maes", "Jazz", "src/main/resources/songs/song3.mp3", Duration.minutes(5)));
+        library.add(new Song("Dance Monkey", "Tones and I", "Pop", "src/main/resources/songs/song4.mp3", Duration.minutes(3)));
+        library.add(new Song("Blinding Lights", "The Weeknd", "Pop", "src/main/resources/songs/song5.mp3", Duration.minutes(4)));
+        library.add(new Song("Roses", "SAINt JHN", "Pop", "src/main/resources/songs/song6.mp3", Duration.minutes(3)));
     }
 
     /**
@@ -122,6 +125,7 @@ public class PlayerController {
         if (currentIndex >= 0 && currentIndex < library.size()) {
             Song song = library.get(currentIndex);
             audioPlayer.loadSong(song);
+            audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
             System.out.println("Playing: " + song.getSongName());
     
@@ -155,7 +159,7 @@ public class PlayerController {
     public List<String> getLibrary() {
         List<String> songNames = new ArrayList<>();
         for (Song song : library) {
-            songNames.add(song.getSongName());
+            songNames.add(song.getSongName() + " · " + song.getArtistName());
         }
         return songNames;
     }
@@ -192,18 +196,28 @@ public class PlayerController {
         }
     }
 
+    /**
+     * Clear the queue.
+     */
     public void clearQueue() {
         queue.clear();
     }
     
-    
+    /**
+     * Play a song from the library.
+     * @param index The index of the song in the library.
+     */
     public void playFromLibrary(int index) {
         if (index >= 0 && index < library.size()) {
             currentIndex = index;
             playCurrent();
         }
     }
-    
+
+    /**
+     * Play a song from the queue.
+     * @param index The index of the song in the queue.
+     */
     public void playFromQueue(int index) {
         if (index >= 0 && index < queue.size()) {
             Song song = queue.get(index);
@@ -212,25 +226,74 @@ public class PlayerController {
             System.out.println("Playing from queue: " + song.getSongName());
         }
     }
-    
+
+    /**
+     * Get the current time of the song.
+     * @return The current time of the song.
+     */
     public Duration getCurrentTime() {
         return getAudioPlayer().getCurrentTime();
     }
-    
+
+    /**
+     * Get the total duration of the song.
+     * @return The total duration of the song.
+     */
     public Duration getTotalDuration() {
         return getAudioPlayer().getTotalDuration();
     }
-    
+
+    /**
+     * Get the progress of the song.
+     * @return The progress of the song.
+     */
     public javafx.beans.property.DoubleProperty progressProperty() {
         return getAudioPlayer().progressProperty();
     }
 
+    /**
+     * Return whether the song is playing.
+     * @return Whether the song is playing.
+     */
     public Boolean isPlaying() {
         return getAudioPlayer().isPlaying();
     }
 
+    /**
+     * Get the current song property.
+     * @return The current song property.
+     */
     public StringProperty currentSongProperty() {
         return getAudioPlayer().currentSongProperty();
+    }
+
+    /**
+     * Seek to a specific duration in the song.
+     * @param duration The duration to seek to.
+     */
+    public void seek(double duration) {
+        getAudioPlayer().seek(duration);
+    }
+
+    /**
+     * Search the library for songs that match the query.
+     * @param query The query to search for.
+     * @return A list of song names that match the query.
+     */
+    public List<String> searchLibrary(String query) {
+        List<Song> results = new ArrayList<>();
+        for (Song song : library) {
+            if (song.getSongName().toLowerCase().contains(query.toLowerCase()) ||
+                song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
+                song.getStyle().toLowerCase().contains(query.toLowerCase())) {
+                results.add(song);
+            }
+        }
+        List<String> songNames = new ArrayList<>();
+        for (Song song : results) {
+            songNames.add(song.getSongName() + " · " + song.getArtistName());
+        }
+        return songNames;
     }
     
 

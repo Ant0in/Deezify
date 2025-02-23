@@ -18,13 +18,22 @@ public class PlayerView implements Initializable {
 
     private PlayerController playerController;
 
-    @FXML private Button playSongButton, pauseSongButton, nextSongButton, previousSongButton;
-    @FXML private Label volumeLabel, songProgressTimeLabel;
-    @FXML private Slider volumeSlider;
-    @FXML private ProgressBar songProgressBar;
-    @FXML private ListView<String> playListView, queueListView;
-    @FXML private Button addSongButton, deleteSongButton, clearQueueButton;
-    @FXML private Label currentSongLabel;
+    @FXML
+    private Button playSongButton, pauseSongButton, nextSongButton, previousSongButton;
+    @FXML
+    private Label volumeLabel, songProgressTimeLabel;
+    @FXML
+    private Slider volumeSlider;
+    @FXML
+    private ProgressBar songProgressBar;
+    @FXML
+    private ListView<String> playListView, queueListView;
+    @FXML
+    private Button addSongButton, deleteSongButton, clearQueueButton;
+    @FXML
+    private Label currentSongLabel;
+    @FXML
+    private TextField songInput;
 
     /**
      * Initialize the view.
@@ -39,10 +48,17 @@ public class PlayerView implements Initializable {
         initBindings();
         initVolumeControls();
         initCurrentSongControls();
+        initSongInput();
         updatePlayListView();
         updateQueueListView();
 
         setupListSelectionListeners();
+
+        playListView.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                handlePlaySong();
+            }
+        });
     }
 
     /**
@@ -61,6 +77,23 @@ public class PlayerView implements Initializable {
             formatDuration(playerController.getCurrentTime()) + "/" + formatDuration(playerController.getTotalDuration()),
             playerController.progressProperty()
         ));
+        songProgressBar.setOnMouseClicked(e -> {
+            double progress = e.getX() / songProgressBar.getWidth();
+            playerController.seek(progress);
+        });
+    }
+
+    /**
+     * Initialize the song input for the search
+     */
+    private void initSongInput() {
+        songInput.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && !newVal.isEmpty()) {
+                playListView.getItems().setAll(playerController.searchLibrary(newVal));
+            } else {
+                updatePlayListView();
+            }
+        });
     }
 
     /**
