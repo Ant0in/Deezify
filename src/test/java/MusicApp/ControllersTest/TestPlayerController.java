@@ -7,6 +7,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,7 +19,8 @@ public class TestPlayerController {
     // Cette méthode sera exécutée une seule fois avant tous les tests
     @BeforeClass
     public static void setUpBeforeClass() {
-        // Cette ligne initialise la plateforme JavaFX avant d'exécuter les tests.
+        boolean javafxAvailable = System.getProperty("javafx.platform") != null;
+        Assume.assumeTrue("JavaFX non disponible, test ignoré.", javafxAvailable);
         Platform.startup(() -> {
             // Cette méthode initialise JavaFX dans le thread de l'application.
         });
