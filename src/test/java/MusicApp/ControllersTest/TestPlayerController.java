@@ -14,6 +14,15 @@ import java.util.List;
 
 public class TestPlayerController {
 
+    // Cette méthode sera exécutée une seule fois avant tous les tests
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        // Cette ligne initialise la plateforme JavaFX avant d'exécuter les tests.
+        Platform.startup(() -> {
+            // Cette méthode initialise JavaFX dans le thread de l'application.
+        });
+    }
+    
     @Test
     public void testPlayFromLibrary() {
         PlayerController playerController = new PlayerController();
