@@ -10,6 +10,10 @@ import MusicApp.Controllers.PlayerController;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * PlayerView
+ * Class that represents the view of the music player.
+ */
 public class PlayerView implements Initializable {
 
     private PlayerController playerController;
@@ -22,6 +26,11 @@ public class PlayerView implements Initializable {
     @FXML private Button addSongButton, deleteSongButton, clearQueueButton;
     @FXML private Label currentSongLabel;
 
+    /**
+     * Initialize the view.
+     * @param location The location of the FXML file.
+     * @param resources The resources of the FXML file.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         playerController = new PlayerController();
@@ -36,10 +45,16 @@ public class PlayerView implements Initializable {
         setupListSelectionListeners();
     }
 
+    /**
+     * Called when the current song changes.
+     */
     private void onSongChange() {
         resetVolumeSlider();
     }
 
+    /**
+     * Initialize the bindings between the view and the controller.
+     */
     private void initBindings() {
         songProgressBar.progressProperty().bind(playerController.progressProperty());
         songProgressTimeLabel.textProperty().bind(Bindings.createStringBinding(() ->
@@ -48,16 +63,27 @@ public class PlayerView implements Initializable {
         ));
     }
 
+    /**
+     * Format a duration to a string.
+     * @param duration The duration to format.
+     * @return The formatted duration.
+     */
     private String formatDuration(Duration duration) {
         int minutes = (int) duration.toMinutes();
         int seconds = (int) (duration.toSeconds() % 60);
         return String.format("%02d:%02d", minutes, seconds);
     }
 
+    /**
+     * Initialize the current song controls.
+     */
     private void initCurrentSongControls(){
         currentSongLabel.textProperty().bind(playerController.currentSongProperty());
     }
 
+    /**
+     * Initialize the volume controls.
+     */
     private void initVolumeControls() {
         volumeSlider.setValue(50);
         updateVolumeLabel(50);
@@ -69,10 +95,17 @@ public class PlayerView implements Initializable {
         });
     }
 
+    /**
+     * Update the volume label.
+     * @param volume The volume to set.
+     */
     private void updateVolumeLabel(int volume) {
         volumeLabel.setText(String.valueOf(volume));
     }
 
+    /**
+     * Setup the list selection listeners.
+     */
     private void setupListSelectionListeners() {
         playListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) queueListView.getSelectionModel().clearSelection();
@@ -83,18 +116,30 @@ public class PlayerView implements Initializable {
         });
     }
 
+    /**
+     * Update the play list view.
+     */
     private void updatePlayListView() {
         playListView.getItems().setAll(playerController.getLibrary());
     }
 
+    /**
+     * Update the queue list view.
+     */
     private void updateQueueListView() {
         queueListView.getItems().setAll(playerController.getQueue());
     }
 
+    /**
+     * Reset the volume slider.
+     */
     private void resetVolumeSlider() {
         volumeSlider.setValue(50);
     }
 
+    /**
+     * Handle the play song button.
+     */
     @FXML
     private void handlePlaySong() {
         int selectedIndex = getSelectedIndex();
@@ -110,6 +155,11 @@ public class PlayerView implements Initializable {
         }
     }
 
+    /**
+     * Get the selected index in the list views.
+     * Its priority is queueListView > playListView.
+     * @return The selected index, or -1 if none is selected.
+     */
     private int getSelectedIndex() {
         if (!queueListView.getSelectionModel().isEmpty()) {
             return queueListView.getSelectionModel().getSelectedIndex();
@@ -119,10 +169,17 @@ public class PlayerView implements Initializable {
         return -1;
     }
 
+    /**
+     * Update the play/pause button.
+     * @param isPlaying Whether the song is playing.
+     */
     private void updatePlayPauseButton(boolean isPlaying) {
         pauseSongButton.setText(isPlaying ? "⏸" : "▶");
     }
 
+    /**
+     * Handle the pause song button.
+     */
     @FXML
     private void handlePauseSong() {
         if (playerController.isPlaying()) {
@@ -134,17 +191,26 @@ public class PlayerView implements Initializable {
         }
     }
 
+    /**
+     * Handle the previous song button.
+     */
     @FXML
     private void handlePreviousSong() {
         playerController.prec();
     }
 
+    /**
+     * Handle the next song button.
+     */
     @FXML
     private void handleNextSong() {
         playerController.skip();
         updateQueueListView();
     }
 
+    /**
+     * Handle the add song button.
+     */
     @FXML
     private void handleAddSong() {
         int index = playListView.getSelectionModel().getSelectedIndex();
@@ -154,6 +220,9 @@ public class PlayerView implements Initializable {
         }
     }
 
+    /**
+     * Handle the delete song button.
+     */
     @FXML
     private void handleDeleteSong() {
         int index = queueListView.getSelectionModel().getSelectedIndex();
@@ -163,6 +232,9 @@ public class PlayerView implements Initializable {
         }
     }
 
+    /**
+     * Handle the clear queue button.
+     */
     @FXML
     private void handleClearQueue() {
         playerController.clearQueue();
