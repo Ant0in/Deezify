@@ -1,9 +1,6 @@
 package MusicApp;
-<<<<<<< HEAD
 
 import MusicApp.Views.MainWindow;
-=======
->>>>>>> main
 
 /**
  * Hello world!
