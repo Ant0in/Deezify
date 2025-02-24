@@ -109,6 +109,7 @@
         </plugin>
         <!-- Exec Maven Plugin with VM options -->
         <plugin>
+<<<<<<< HEAD
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>3.1.1</version>
@@ -125,12 +126,21 @@
               <argument>--add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED</argument>
             </arguments>
           </configuration>
+=======
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.1</version>
+            <configuration>
+                <mainClass>MusicApp.Main</mainClass>
+            </configuration>
+>>>>>>> main
         </plugin>
         <!-- Maven Jar Plugin -->
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.1.0</version>
           <configuration>
+<<<<<<< HEAD
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
@@ -138,6 +148,15 @@
               </manifest>
             </archive>
           </configuration>
+=======
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <mainClass>MusicApp.Main</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+>>>>>>> main
         </plugin>
         <!-- Maven Install Plugin -->
         <plugin>
