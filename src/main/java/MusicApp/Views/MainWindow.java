@@ -35,7 +35,7 @@ public class MainWindow extends Application {
         Scene scene = new Scene(root);
 
         // Apply the CSS file
-        // scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+        // scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style1.css")).toExternalForm());
 
         primaryStage.setTitle("Music Player");
 

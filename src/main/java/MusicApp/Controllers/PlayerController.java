@@ -80,7 +80,6 @@ public class PlayerController {
             }
         } else {
             playFromQueue(0);
-            queue.removeFirst();
         }
     }
 
@@ -224,6 +223,7 @@ public class PlayerController {
             Song song = queue.get(index);
             audioPlayer.loadSong(song);
             audioPlayer.unpause();
+            removeFromQueue(index);
             System.out.println("Playing from queue: " + song.getSongName());
         }
     }

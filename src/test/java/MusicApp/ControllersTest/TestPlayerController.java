@@ -1,7 +1,6 @@
 package MusicApp.ControllersTest;
 
 import MusicApp.Controllers.PlayerController;
-import javafx.util.Duration;
 import static org.junit.Assert.*;
 
 import org.junit.Before;

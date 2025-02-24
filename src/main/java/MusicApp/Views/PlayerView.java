@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.beans.binding.Bindings;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import MusicApp.Controllers.PlayerController;
 
@@ -34,6 +35,10 @@ public class PlayerView implements Initializable {
     private Label currentSongLabel;
     @FXML
     private TextField songInput;
+    @FXML
+    private AnchorPane selectedSongAnchorPane;
+    @FXML
+    private AnchorPane playingSongAnchorPane;
 
     /**
      * Initialize the view.
@@ -84,6 +89,12 @@ public class PlayerView implements Initializable {
         pauseSongButton.textProperty().bind(Bindings.when(playerController.isPlaying())
                 .then("⏸")
                 .otherwise("▶"));
+
+        playingSongAnchorPane.visibleProperty().bind(playerController.currentSongProperty().isNotEqualTo("None"));
+        selectedSongAnchorPane.visibleProperty().bind(
+                playListView.getSelectionModel().selectedItemProperty().isNotNull()
+                        .or(queueListView.getSelectionModel().selectedItemProperty().isNotNull())
+        );
     }
 
     /**
@@ -174,34 +185,31 @@ public class PlayerView implements Initializable {
     }
 
     /**
+     * Clears the selection in both the queue and playlist ListViews.
+     */
+
+    private void clearSelections(){
+        queueListView.getSelectionModel().clearSelection();
+        playListView.getSelectionModel().clearSelection();
+    }
+
+    /**
      * Handle the play song button.
      */
     @FXML
     private void handlePlaySong() {
-        int selectedIndex = getSelectedIndex();
-        if (selectedIndex != -1) {
-            if (!queueListView.getSelectionModel().isEmpty()) {
-                playerController.playFromQueue(selectedIndex);
-            } else {
-                playerController.playFromLibrary(selectedIndex);
-            }
-        } else {
+        int songIndexFromQueue = queueListView.getSelectionModel().getSelectedIndex();
+        int songIndexFromLibrary = playListView.getSelectionModel().getSelectedIndex();
+        if (songIndexFromQueue!=-1){
+            System.out.println("The selected song index : " + songIndexFromQueue);
+            playerController.playFromQueue(songIndexFromQueue);
+        }else if (songIndexFromLibrary != -1){
+            playerController.playFromLibrary(songIndexFromLibrary);
+        }else{
             System.out.println("No song selected.");
         }
-    }
-
-    /**
-     * Get the selected index in the list views.
-     * Its priority is queueListView > playListView.
-     * @return The selected index, or -1 if none is selected.
-     */
-    private int getSelectedIndex() {
-        if (!queueListView.getSelectionModel().isEmpty()) {
-            return queueListView.getSelectionModel().getSelectedIndex();
-        } else if (!playListView.getSelectionModel().isEmpty()) {
-            return playListView.getSelectionModel().getSelectedIndex();
-        }
-        return -1;
+        updateQueueListView();
+        clearSelections();
     }
 
     /**
