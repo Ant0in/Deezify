@@ -5,6 +5,8 @@ import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
+
 /**
  * AudioPlayer
  * Class that manages the audio playing.

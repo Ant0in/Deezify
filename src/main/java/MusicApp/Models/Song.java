@@ -2,11 +2,14 @@ package MusicApp.Models;
 
 import javafx.util.Duration;
 
+import java.nio.file.Path;
+
 public class Song {
     private String songName;
     private String artistName;
     private String style;
     private String coverPath;
+    private Path filePath;
     private Duration duration;
 
     /**
@@ -15,16 +18,23 @@ public class Song {
      * @param artistName The name of the artist.
      * @param style The style of the song.
      * @param coverPath The path to the cover image.
+     * @param filePath The path to the music file.
      * @param duration The duration of the song.
      */
-    public Song(String songName, String artistName, String style, String coverPath, Duration duration) {
+    public Song(String songName, String artistName, String style, String coverPath, Path filePath, Duration duration) {
         this.songName = songName;
         this.artistName = artistName;
         this.style = style;
         this.coverPath = coverPath;
+        this.filePath = filePath;
         this.duration = duration;
     }
 
+    /**
+     * Get song file path
+     * @return The Path to the song file.
+     */
+    public Path getFilePath() { return filePath; }
     /**
      * Get the name of the song.
      * @return The name of the song.
