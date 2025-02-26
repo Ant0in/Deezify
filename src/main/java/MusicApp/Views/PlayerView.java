@@ -3,6 +3,9 @@ package MusicApp.Views;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
@@ -56,6 +59,8 @@ public class PlayerView implements Initializable {
         initSongInput();
         updatePlayListView();
         updateQueueListView();
+
+        enableQueueDragAndDrop();
 
         setupListSelectionListeners();
 
@@ -273,4 +278,55 @@ public class PlayerView implements Initializable {
         playerController.clearQueue();
         updateQueueListView();
     }
+
+    private void enableQueueDragAndDrop() {
+        queueListView.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : item);
+                }
+            };
+
+            // Start of dragging
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(cell.getItem());
+                    db.setContent(content);
+                    event.consume();
+                }
+            });
+
+            // Allows receiving the dragged element
+            cell.setOnDragOver(event -> {
+                if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+                event.consume();
+            });
+
+            // When the element is released
+            cell.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasString()) {
+                    int draggedIndex = queueListView.getItems().indexOf(db.getString());
+                    int dropIndex = cell.getIndex();
+
+                    if (draggedIndex != dropIndex) {
+                        playerController.reorderQueue(draggedIndex, dropIndex);
+                        updateQueueListView();
+                    }
+
+                    event.setDropCompleted(true);
+                }
+                event.consume();
+            });
+
+            return cell;
+        });
+    }
+
 }

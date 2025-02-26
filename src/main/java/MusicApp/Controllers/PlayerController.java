@@ -297,6 +297,18 @@ public class PlayerController {
         return songNames;
     }
     
+    /**
+     * Reorganize the queue by moving a song from one index to another.
+     * @param fromIndex The initial index of the song.
+     * @param toIndex The index where the song should be placed.
+     */
 
+    public void reorderQueue(int fromIndex, int toIndex) {
+        if (fromIndex >= 0 && fromIndex < queue.size() && toIndex >= 0 && toIndex <= queue.size()) {
+            Song song = queue.remove(fromIndex);
+            queue.add(toIndex, song);
+        }
+    }
+   
 }
 
