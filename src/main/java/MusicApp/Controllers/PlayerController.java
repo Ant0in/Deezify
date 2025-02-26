@@ -4,10 +4,14 @@ import MusicApp.Models.AudioPlayer;
 import MusicApp.Models.Library;
 import MusicApp.Models.Queue;
 import MusicApp.Models.Song;
+import MusicApp.Views.PlayerView;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,41 +24,27 @@ import java.util.List;
  * It also allows to add songs to a queue and play them in the order they were added.
  */
 public class PlayerController {
-
-    /**
-     * Interface for the song change listener.
-     */
-    public interface SongChangeListener {
-        /**
-         * Called when the current song changes.
-         */
-        void onSongChanged();
-    }
-    
-    private SongChangeListener songChangeListener;
-
-    /**
-     * Set the song change listener.
-     * @param listener The listener to set.
-     */
-    public void setSongChangeListener(SongChangeListener listener) {
-        this.songChangeListener = listener;
-    }
-
-    
     private final AudioPlayer audioPlayer;
     private final Library library;
     private final Queue queue;
     private int currentIndex;
 
+    private final PlayerView playerView;
+
+
     /**
      * Constructor
      */
-    public PlayerController() {
+    public PlayerController() throws IOException {
         this.audioPlayer = new AudioPlayer();
         this.library = new Library();
         this.queue = new Queue();
         loadLibrary();
+        this.playerView = new PlayerView(this);
+    }
+
+    public void show(Stage stage) {
+        this.playerView.show(stage);
     }
 
     /**
@@ -132,10 +122,6 @@ public class PlayerController {
             audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
             System.out.println("Playing: " + song.getSongName());
-    
-            if (songChangeListener != null) {
-                songChangeListener.onSongChanged();
-            }
         }
     }
     
@@ -325,6 +311,10 @@ public class PlayerController {
 
     public Song getFromQueue(int index) {
         return queue.get(index);
+    }
+
+    public DoubleProperty volumeProperty() {
+        return getAudioPlayer().volumeProperty();
     }
 }
 

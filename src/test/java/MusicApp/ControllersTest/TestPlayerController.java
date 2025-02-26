@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TestPlayerController extends ApplicationTest {
@@ -17,7 +18,7 @@ public class TestPlayerController extends ApplicationTest {
     private Library library;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         playerController = new PlayerController();
         library = playerController.getLibrary();
     }

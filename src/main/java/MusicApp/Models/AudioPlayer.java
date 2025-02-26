@@ -14,6 +14,7 @@ public class AudioPlayer {
     private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
     private final StringProperty currentSong = new SimpleStringProperty("None");
     private final BooleanProperty isPlaying = new SimpleBooleanProperty(false);
+    private final DoubleProperty volume = new SimpleDoubleProperty(1.0);
 
     /**
      * Load a song into the player.
@@ -28,6 +29,7 @@ public class AudioPlayer {
 
 
         currentSong.set(song.toString());
+        mediaPlayer.volumeProperty().bind(volume);
 
         // Mettre à jour la propriété de progression pendant la lecture
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
@@ -157,6 +159,10 @@ public class AudioPlayer {
         if (mediaPlayer != null) {
             mediaPlayer.setOnEndOfMedia(action);
         }
+    }
+
+    public DoubleProperty volumeProperty() {
+        return volume;
     }
 
 }

@@ -2,14 +2,18 @@ package MusicApp.Views;
 
 import MusicApp.Models.Song;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import MusicApp.Controllers.PlayerController;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -17,9 +21,10 @@ import java.util.ResourceBundle;
  * PlayerView
  * Class that represents the view of the music player.
  */
-public class PlayerView implements Initializable {
+public class PlayerView {
 
-    private PlayerController playerController;
+    private final PlayerController playerController;
+    private Scene scene;
 
     @FXML
     private Button playSongButton, pauseSongButton, nextSongButton, previousSongButton;
@@ -42,63 +47,105 @@ public class PlayerView implements Initializable {
     @FXML
     private AnchorPane playingSongAnchorPane;
 
-    /**
-     * Initialize the view.
-     * @param location The location of the FXML file.
-     * @param resources The resources of the FXML file.
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        playerController = new PlayerController();
-        playerController.setSongChangeListener(this::onSongChange);
+    private static final String PLAY_ICON = "▶";
+    private static final String PAUSE_ICON = "⏸";
 
+
+    public PlayerView(PlayerController playerController) throws IOException {
+        this.playerController = playerController;
+        initializeScene("/fxml/main_layout.fxml");
+        initialize();
+    }
+
+    public void initializeScene(String fxmlPath) throws IOException {
+        URL url = PlayerView.class.getResource(fxmlPath);
+        FXMLLoader loader = new FXMLLoader(url);
+        loader.setController((Object) this);
+        Pane root = loader.load();
+        this.scene = new Scene(root);
+    }
+
+    public void initialize(){
         initBindings();
-        initVolumeControls();
-        initCurrentSongControls();
         initSongInput();
         updatePlayListView();
         updateQueueListView();
-
         enableQueueDragAndDrop();
-
         setupListSelectionListeners();
-
-        playListView.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                handlePlaySong();
-            }
-        });
-    }
-
-    /**
-     * Called when the current song changes.
-     */
-    private void onSongChange() {
-        resetVolumeSlider();
+        enableDoubleClickToPlay();
+        setupListSelectionListeners();
     }
 
     /**
      * Initialize the bindings between the view and the controller.
      */
     private void initBindings() {
+        bindButtons();
+        bindSongProgress();
+        bindPlayingSongAnchor();
+        bindSelectedSongAnchor();
+        bindVolumeControls();
+        bindCurrentSongControls();
+    }
+
+    private void bindButtons(){
+        pauseSongButton.textProperty().bind(Bindings.when(playerController.isPlaying())
+                .then(PAUSE_ICON)
+                .otherwise(PLAY_ICON));
+    }
+
+    private void bindSongProgress(){
         songProgressBar.progressProperty().bind(playerController.progressProperty());
-        songProgressTimeLabel.textProperty().bind(Bindings.createStringBinding(() ->
-            formatDuration(playerController.getCurrentTime()) + "/" + formatDuration(playerController.getTotalDuration()),
-            playerController.progressProperty()
-        ));
+        songProgressTimeLabel.textProperty().bind(
+                Bindings.createStringBinding(
+                        this::getFormattedSongProgress,  // Extracted method
+                        playerController.progressProperty()
+                )
+        );
         songProgressBar.setOnMouseClicked(e -> {
             double progress = e.getX() / songProgressBar.getWidth();
             playerController.seek(progress);
         });
-        pauseSongButton.textProperty().bind(Bindings.when(playerController.isPlaying())
-                .then("⏸")
-                .otherwise("▶"));
+    }
 
+    private String getFormattedSongProgress() {
+        Duration currentTime = playerController.getCurrentTime();
+        Duration totalDuration = playerController.getTotalDuration();
+
+        if (totalDuration == null || totalDuration.isUnknown()) {
+            return formatDuration(currentTime) + " / --:--";
+        }
+
+        return formatDuration(currentTime) + " / " + formatDuration(totalDuration);
+    }
+
+
+    private void bindPlayingSongAnchor(){
         playingSongAnchorPane.visibleProperty().bind(playerController.currentSongProperty().isNotEqualTo("None"));
+    }
+
+    private void bindSelectedSongAnchor(){
         selectedSongAnchorPane.visibleProperty().bind(
                 playListView.getSelectionModel().selectedItemProperty().isNotNull()
                         .or(queueListView.getSelectionModel().selectedItemProperty().isNotNull())
         );
+    }
+
+    /**
+     * Initialize the volume controls.
+     */
+    private void bindVolumeControls() {
+        volumeSlider.setValue(50);
+        volumeLabel.textProperty().bind(
+                volumeSlider.valueProperty().asString("%.0f")
+        );
+        playerController.volumeProperty().bind(
+                volumeSlider.valueProperty().divide(100)
+        );
+    }
+
+    private void bindCurrentSongControls(){
+        currentSongLabel.textProperty().bind(playerController.currentSongProperty());
     }
 
     /**
@@ -114,6 +161,24 @@ public class PlayerView implements Initializable {
         });
     }
 
+    public void enableDoubleClickToPlay(){
+        playListView.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                handlePlaySong();
+            }
+        });
+    }
+
+    public String getTitle(){
+        return "Music Player";
+    }
+
+    public void show(Stage stage) {
+        stage.setScene(this.scene);
+        stage.setTitle(getTitle());
+        stage.show();
+    }
+
     /**
      * Format a duration to a string.
      * @param duration The duration to format.
@@ -123,35 +188,6 @@ public class PlayerView implements Initializable {
         int minutes = (int) duration.toMinutes();
         int seconds = (int) (duration.toSeconds() % 60);
         return String.format("%02d:%02d", minutes, seconds);
-    }
-
-    /**
-     * Initialize the current song controls.
-     */
-    private void initCurrentSongControls(){
-        currentSongLabel.textProperty().bind(playerController.currentSongProperty());
-    }
-
-    /**
-     * Initialize the volume controls.
-     */
-    private void initVolumeControls() {
-        volumeSlider.setValue(50);
-        updateVolumeLabel(50);
-
-        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            int volume = newVal.intValue();
-            updateVolumeLabel(volume);
-            playerController.setVolume(volume * 0.01);
-        });
-    }
-
-    /**
-     * Update the volume label.
-     * @param volume The volume to set.
-     */
-    private void updateVolumeLabel(int volume) {
-        volumeLabel.setText(String.valueOf(volume));
     }
 
     /**
@@ -179,13 +215,6 @@ public class PlayerView implements Initializable {
      */
     private void updateQueueListView() {
         queueListView.getItems().setAll(playerController.getQueueNames());
-    }
-
-    /**
-     * Reset the volume slider.
-     */
-    private void resetVolumeSlider() {
-        volumeSlider.setValue(50);
     }
 
     /**
