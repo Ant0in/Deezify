@@ -1,4 +1,4 @@
-package ulb;
+package MusicApp;
 
 /**
  * Hello world!
