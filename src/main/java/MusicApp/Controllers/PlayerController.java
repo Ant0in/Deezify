@@ -66,7 +66,7 @@ public class PlayerController {
     private void loadLibrary() {
         Path folderPath = Paths.get("src/main/resources/songs/");
 
-        List<Path> songs = new ArrayList<>();
+        List<Path> songs;
         try {
             songs = MusicLoader.getAllSongPaths(folderPath);
         } catch (IOException e) {

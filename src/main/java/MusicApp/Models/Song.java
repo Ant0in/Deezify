@@ -9,7 +9,7 @@ public class Song {
     private String artistName;
     private String style;
     private String coverPath;
-    private Path filePath;
+    private final Path filePath;
     private Duration duration;
 
     /**
