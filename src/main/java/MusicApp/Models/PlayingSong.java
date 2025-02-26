@@ -4,6 +4,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
+import java.nio.file.Path;
+
 /**
  * PlayingSong
  * Class that represents a song that is currently playing.
@@ -19,8 +21,8 @@ public class PlayingSong extends Song {
      * @param coverPath The path to the cover image.
      * @param duration The duration of the song.
      */
-    public PlayingSong(String songName, String artistName, String style, String coverPath, Duration duration) {
-        super(songName, artistName, style, coverPath, duration);
+    public PlayingSong(String songName, String artistName, String style, Path coverPath, Duration duration, Path path) {
+        super(songName, artistName, style, coverPath, duration, path);
         this.progress.set(0.0);
     }
 

@@ -1,10 +1,14 @@
 package MusicApp.Controllers;
 
 import MusicApp.Models.AudioPlayer;
+import MusicApp.Models.Library;
+import MusicApp.Models.Queue;
 import MusicApp.Models.Song;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
+
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +43,8 @@ public class PlayerController {
 
     
     private final AudioPlayer audioPlayer;
-    private final List<Song> library;
-    private final List<Song> queue;
+    private final Library library;
+    private final Queue queue;
     private int currentIndex;
 
     /**
@@ -48,8 +52,8 @@ public class PlayerController {
      */
     public PlayerController() {
         this.audioPlayer = new AudioPlayer();
-        this.library = new ArrayList<>();
-        this.queue = new ArrayList<>();
+        this.library = new Library();
+        this.queue = new Queue();
         loadLibrary();
     }
 
@@ -59,12 +63,12 @@ public class PlayerController {
      * In a real application, the library would be loaded from a database or a file.
      */
     private void loadLibrary() {
-        library.add(new Song("HIGHEST IN THE ROOM", "Travis Scott", "Pop", "src/main/resources/songs/song1.mp3", Duration.minutes(3)));
-        library.add(new Song("World, Hold On", "Bob Sinclar", "Rock", "src/main/resources/songs/song2.mp3", Duration.minutes(4)));
-        library.add(new Song("ARSENAL", "Maes", "Jazz", "src/main/resources/songs/song3.mp3", Duration.minutes(5)));
-        library.add(new Song("Dance Monkey", "Tones and I", "Pop", "src/main/resources/songs/song4.mp3", Duration.minutes(3)));
-        library.add(new Song("Blinding Lights", "The Weeknd", "Pop", "src/main/resources/songs/song5.mp3", Duration.minutes(4)));
-        library.add(new Song("Roses", "SAINt JHN", "Pop", "src/main/resources/songs/song6.mp3", Duration.minutes(3)));
+        library.add(new Song("HIGHEST IN THE ROOM", "Travis Scott", "Pop", Paths.get("src/main/resources/songs/song1.mp3"), Duration.minutes(3)));
+        library.add(new Song("World, Hold On", "Bob Sinclar", "Rock", Paths.get("src/main/resources/songs/song2.mp3"), Duration.minutes(4)));
+        library.add(new Song("ARSENAL", "Maes", "Jazz", Paths.get("src/main/resources/songs/song3.mp3"), Duration.minutes(5)));
+        library.add(new Song("Dance Monkey", "Tones and I", "Pop", Paths.get("src/main/resources/songs/song4.mp3"), Duration.minutes(3)));
+        library.add(new Song("Blinding Lights", "The Weeknd", "Pop", Paths.get("src/main/resources/songs/song5.mp3"), Duration.minutes(4)));
+        library.add(new Song("Roses", "SAINt JHN", "Pop", Paths.get("src/main/resources/songs/song6.mp3"), Duration.minutes(3)));
     }
 
     /**
@@ -156,44 +160,48 @@ public class PlayerController {
      * Get the list of songs in the library.
      * @return The list of songs in the library.
      */
-    public List<String> getLibrary() {
+    public List<String> getLibraryNames() {
         List<String> songNames = new ArrayList<>();
-        for (Song song : library) {
+        for (Song song : library.toList()) {
             songNames.add(song.toString());
         }
         return songNames;
+    }
+
+    public Library getLibrary() {
+        return library;
     }
 
     /**
      * Get the list of songs in the queue.
      * @return The list of songs in the queue.
      */
-    public List<String> getQueue() {
+    public List<String> getQueueNames() {
         List<String> songNames = new ArrayList<>();
-        for (Song song : queue) {
+        for (Song song : queue.toList()) {
             songNames.add(song.toString());
         }
         return songNames;
+    }
+
+    public Queue getQueue() {
+        return queue;
     }
 
     /**
      * Add a song to the queue.
      * @param index The index of the song in the library.
      */
-    public void addToQueue(int index) {
-        if (index >= 0 && index < library.size()) {
-            queue.add(library.get(index));
-        }
+    public void addToQueue(Song song) {
+        queue.add(song);
     }
 
     /**
      * Remove a song from the queue.
      * @param index The index of the song in the queue.
      */
-    public void removeFromQueue(int index) {
-        if (index >= 0 && index < queue.size()) {
-            queue.remove(index);
-        }
+    public void removeFromQueue(Song song) {
+        queue.remove(song);
     }
 
     /**
@@ -223,7 +231,7 @@ public class PlayerController {
             Song song = queue.get(index);
             audioPlayer.loadSong(song);
             audioPlayer.unpause();
-            removeFromQueue(index);
+            removeFromQueue(song);
             System.out.println("Playing from queue: " + song.getSongName());
         }
     }
@@ -283,7 +291,7 @@ public class PlayerController {
      */
     public List<String> searchLibrary(String query) {
         List<Song> results = new ArrayList<>();
-        for (Song song : library) {
+        for (Song song : library.toList()) {
             if (song.getSongName().toLowerCase().contains(query.toLowerCase()) ||
                 song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
                 song.getStyle().toLowerCase().contains(query.toLowerCase())) {
@@ -305,10 +313,18 @@ public class PlayerController {
 
     public void reorderQueue(int fromIndex, int toIndex) {
         if (fromIndex >= 0 && fromIndex < queue.size() && toIndex >= 0 && toIndex <= queue.size()) {
-            Song song = queue.remove(fromIndex);
+            Song song = queue.get(fromIndex);
+            queue.remove(song);
             queue.add(toIndex, song);
         }
     }
-   
+
+    public Song getFromLibrary(int index) {
+        return library.get(index);
+    }
+
+    public Song getFromQueue(int index) {
+        return queue.get(index);
+    }
 }
 

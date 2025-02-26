@@ -2,12 +2,25 @@ package MusicApp.Models;
 
 import javafx.util.Duration;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class Song {
     private String songName;
     private String artistName;
     private String style;
-    private String coverPath;
+    private Path coverPath;
     private Duration duration;
+    private Path path;
+
+    public Song(String songName, String artistName, String style, Path path, Duration duration, Path coverPath) {
+        this.songName = songName;
+        this.artistName = artistName;
+        this.style = style;
+        this.coverPath = coverPath;
+        this.duration = duration;
+        this.path = path;
+    }
 
     /**
      * Constructor
@@ -17,13 +30,10 @@ public class Song {
      * @param coverPath The path to the cover image.
      * @param duration The duration of the song.
      */
-    public Song(String songName, String artistName, String style, String coverPath, Duration duration) {
-        this.songName = songName;
-        this.artistName = artistName;
-        this.style = style;
-        this.coverPath = coverPath;
-        this.duration = duration;
+    public Song(String songName, String artistName, String style, Path path, Duration duration) {
+        this(songName, artistName, style, path, duration, Paths.get("src/main/resources/images/song.png"));
     }
+
 
     /**
      * Get the name of the song.
@@ -47,7 +57,7 @@ public class Song {
      * Get the path to the cover image.
      * @return The path to the cover image.
      */
-    public String getCoverPath() { return coverPath; }
+    public Path getCoverPath() { return coverPath; }
 
     /**
      * Get the duration of the song.
@@ -77,7 +87,7 @@ public class Song {
      * Set the path to the cover image.
      * @param coverPath The path to the cover image.
      */
-    public void setCoverPath(String coverPath) { this.coverPath = coverPath; }
+    public void setCoverPath(Path coverPath) { this.coverPath = coverPath; }
 
     /**
      * Set the duration of the song.
@@ -106,6 +116,14 @@ public class Song {
             return songName.equals(song.getSongName()) && artistName.equals(song.getArtistName());
         }
         return false;
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
     }
 
 
