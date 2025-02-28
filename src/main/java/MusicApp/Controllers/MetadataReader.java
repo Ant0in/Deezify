@@ -19,7 +19,7 @@ public class MetadataReader {
     /**
      * 
      * This method reads the metadata of a file and returns it in a hashmap
-     * Fields included in the hashmap are : Album, Artist, Comment, Genre, Title, Track, Year
+     * Fields included in the hashmap are : title, artist, genre, cover, duration
      * @param fd : mp3 File Object
      * @return HashMap<String, String> containing relevant tags mentioned above
      * @throws ID3TagException
@@ -29,40 +29,41 @@ public class MetadataReader {
     public static final HashMap<String, String> getMetadata(File fd) throws ID3TagException {
         
         HashMap<String, String> metadata = new HashMap<>();
-        Tag tag = readTag(fd);
+        AudioFile file = readFile(fd);
+        Tag tag = readTag(file);
 
         if (tag == null) {
             throw new ID3TagException("No ID3v2 tags found", new Throwable());
         }
 
-        // get some attributes such as Album, Artist, comment, Genre, Title, Track, Year, ...
+        // get some attributes such as title, artist, genre, cover, duration, ...
         // and put them in a new hashmap
 
         // TODO : add more if needed
 
-        metadata.put("Album", tag.getFirst(FieldKey.ALBUM));
-        metadata.put("Artist", tag.getFirst(FieldKey.ARTIST));
-        metadata.put("Comment", tag.getFirst(FieldKey.COMMENT));
-        metadata.put("Genre", tag.getFirst(FieldKey.GENRE));
-        metadata.put("Title", tag.getFirst(FieldKey.TITLE));
-        metadata.put("Track", tag.getFirst(FieldKey.TRACK));
-        metadata.put("Year", tag.getFirst(FieldKey.YEAR));
+        metadata.put("title", tag.getFirst(FieldKey.TITLE));
+        metadata.put("artist", tag.getFirst(FieldKey.ARTIST));
+        metadata.put("genre", tag.getFirst(FieldKey.GENRE));
+        metadata.put("cover", tag.getFirst(FieldKey.COVER_ART));
+        metadata.put("duration", String.valueOf(file.getAudioHeader().getTrackLength()));
 
+        // metadata.put("album", tag.getFirst(FieldKey.ALBUM));
+        // metadata.put("comment", tag.getFirst(FieldKey.COMMENT));
+        // metadata.put("track", tag.getFirst(FieldKey.TRACK));
+        // metadata.put("year", tag.getFirst(FieldKey.YEAR));
+    
         return metadata;
 
     }
 
     /**
-     * This method reads the tag of a file and returns it
-     * @param fd : mp3 File Object
+     * This method reads the tag of an AudioFile and returns it
+     * @param fd : AudioFile Object
      * @return Tag object
     */
 
-    private static Tag readTag(File fd) {
-
-        AudioFile file = MetadataReader.readFile(fd);
-        return file.getTag();
-
+    private static Tag readTag(AudioFile fd) {
+        return fd.getTag();
     }
 
     /**

@@ -1,10 +1,12 @@
 package MusicApp.Models;
 
+import java.nio.file.Path;
+import java.util.HashMap;
+
 import javafx.util.Duration;
 
-import java.nio.file.Path;
-
 public class Song {
+
     private String songName;
     private String artistName;
     private String style;
@@ -28,6 +30,22 @@ public class Song {
         this.coverPath = coverPath;
         this.filePath = filePath;
         this.duration = duration;
+    }
+
+    /**
+     * Constructor using the metadata map from MetadataReader.
+     * @param metadata The metadata of the song.
+     * @param filePath The path to the music file.
+     */
+    public Song(HashMap<String, String> metadata, Path filePath) {
+        
+        this.songName = metadata.get("title") != null ? metadata.get("title") : "Unknown Title";
+        this.artistName = metadata.get("artist") != null ? metadata.get("artist") : "Unknown Artist";
+        this.style = metadata.get("genre") != null ? metadata.get("genre") : "Unknown Genre";
+        this.coverPath = metadata.get("cover") != null ? metadata.get("cover") : "Unknown Cover";
+        this.filePath = filePath;
+        this.duration = metadata.get("duration") != null ? Duration.seconds(Double.parseDouble(metadata.get("duration"))) : Duration.seconds(0);
+
     }
 
     /**

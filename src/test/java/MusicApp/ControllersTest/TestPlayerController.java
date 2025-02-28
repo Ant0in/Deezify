@@ -1,13 +1,16 @@
 package MusicApp.ControllersTest;
 
-import MusicApp.Controllers.PlayerController;
-import static org.junit.Assert.*;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
-import java.util.List;
+import MusicApp.Controllers.PlayerController;
 
 public class TestPlayerController extends ApplicationTest {
 

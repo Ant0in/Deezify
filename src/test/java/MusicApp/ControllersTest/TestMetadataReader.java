@@ -61,14 +61,11 @@ public class TestMetadataReader {
         }
 
         // few eq checks
-
-        assertEquals("china idk", metadata.get("Album"));
-        assertEquals("ant0in", metadata.get("Artist"));
-        assertEquals("comment 101 idfk", metadata.get("Comment"));
-        assertEquals("Electro", metadata.get("Genre"));
-        assertEquals("Chinese DOIT sound effect", metadata.get("Title"));
-        assertEquals("101", metadata.get("Track"));
-        assertEquals("20210912", metadata.get("Year"));
+        assertEquals("Chinese DOIT sound effect", metadata.get("title"));
+        assertEquals("ant0in", metadata.get("artist"));
+        assertEquals("Electro", metadata.get("genre"));
+        // cover is not tested smh
+        assertEquals("2", metadata.get("duration"));
 
     }
 
