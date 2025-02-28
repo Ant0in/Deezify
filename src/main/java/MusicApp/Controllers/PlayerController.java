@@ -5,6 +5,10 @@ import MusicApp.Models.Song;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,17 +58,32 @@ public class PlayerController {
     }
 
     /**
-     * Load the library with some sample songs.
-     * This method is for testing purposes only.
-     * In a real application, the library would be loaded from a database or a file.
+     * Loads the library with some sample songs from a default folder.
+     *
+     *  !!!  Metadata is currently hardcoded for testing, and should be dynamically loaded. !!!
+     *
      */
     private void loadLibrary() {
-        library.add(new Song("HIGHEST IN THE ROOM", "Travis Scott", "Pop", "src/main/resources/songs/song1.mp3", Duration.minutes(3)));
-        library.add(new Song("World, Hold On", "Bob Sinclar", "Rock", "src/main/resources/songs/song2.mp3", Duration.minutes(4)));
-        library.add(new Song("ARSENAL", "Maes", "Jazz", "src/main/resources/songs/song3.mp3", Duration.minutes(5)));
-        library.add(new Song("Dance Monkey", "Tones and I", "Pop", "src/main/resources/songs/song4.mp3", Duration.minutes(3)));
-        library.add(new Song("Blinding Lights", "The Weeknd", "Pop", "src/main/resources/songs/song5.mp3", Duration.minutes(4)));
-        library.add(new Song("Roses", "SAINt JHN", "Pop", "src/main/resources/songs/song6.mp3", Duration.minutes(3)));
+        Path folderPath = Paths.get("src/main/resources/songs/");
+
+        List<Path> songs;
+        try {
+            songs = MusicLoader.getAllSongPaths(folderPath);
+        } catch (IOException e) {
+            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
+            return;
+        }
+
+        for (Path songPath : songs) {
+            library.add(new Song(
+                    songPath.getFileName().toString(), // song name
+                    "Unknown Artist",                 // placeholder artist name
+                    "Unknown Style",                  // placeholder style
+                    songPath.toString(),              // placeholder cover path
+                    songPath,                         // file path
+                    Duration.UNKNOWN                  // placeholder duration
+            ));
+        }
     }
 
     /**
