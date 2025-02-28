@@ -1,5 +1,5 @@
 
-package MusicApp.Models;
+package MusicApp.Controllers;
 import java.io.File;
 import java.util.HashMap;
 
@@ -8,12 +8,24 @@ import org.jaudiotagger.audio.mp3.MP3FileReader;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
+import MusicApp.Exceptions.ID3TagException;
+
 
 
 
 
 public class MetadataReader {
     
+    /**
+     * 
+     * This method reads the metadata of a file and returns it in a hashmap
+     * Fields included in the hashmap are : Album, Artist, Comment, Genre, Title, Track, Year
+     * @param fd : mp3 File Object
+     * @return HashMap<String, String> containing relevant tags mentioned above
+     * @throws ID3TagException
+     * 
+    */
+
     public static final HashMap<String, String> getMetadata(File fd) throws ID3TagException {
         
         HashMap<String, String> metadata = new HashMap<>();
@@ -40,12 +52,25 @@ public class MetadataReader {
 
     }
 
+    /**
+     * This method reads the tag of a file and returns it
+     * @param fd : mp3 File Object
+     * @return Tag object
+    */
+
     private static Tag readTag(File fd) {
 
         AudioFile file = MetadataReader.readFile(fd);
         return file.getTag();
 
     }
+
+    /**
+     * This method reads the file and returns it as an AudioFile object
+     * @param fd : mp3 File Object
+     * @return AudioFile object
+     * @throws RuntimeException (can be IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException)
+    */
 
     private static AudioFile readFile(File fd) throws RuntimeException {
 

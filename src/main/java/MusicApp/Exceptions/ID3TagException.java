@@ -1,6 +1,6 @@
 
 
-package MusicApp.Models;
+package MusicApp.Exceptions;
 
 
 public class ID3TagException extends Exception {

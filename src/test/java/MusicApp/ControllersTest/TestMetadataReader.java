@@ -1,5 +1,5 @@
 
-package MusicApp.ModelsTest;
+package MusicApp.ControllersTest;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -9,8 +9,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
 
-import MusicApp.Models.ID3TagException;
-import MusicApp.Models.MetadataReader;
+import MusicApp.Controllers.MetadataReader;
+import MusicApp.Exceptions.ID3TagException;
 
 
 public class TestMetadataReader {
