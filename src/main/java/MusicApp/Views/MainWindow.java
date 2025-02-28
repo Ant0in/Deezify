@@ -1,5 +1,6 @@
 package MusicApp.Views;
 
+import MusicApp.utils.LanguageManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,7 +38,7 @@ public class MainWindow extends Application {
         // Apply the CSS file
         // scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style1.css")).toExternalForm());
 
-        primaryStage.setTitle("Music Player");
+        primaryStage.setTitle(LanguageManager.get("app.title"));
 
         primaryStage.setScene(scene);
         primaryStage.show();

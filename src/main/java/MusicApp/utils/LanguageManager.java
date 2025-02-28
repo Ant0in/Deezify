@@ -1,4 +1,4 @@
-package app.localization;
+package MusicApp.utils;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -13,7 +13,11 @@ public class LanguageManager {
     private static final String DEFAULT_LANGUAGE = "en"; // default language if pc language is not supported
     private static final String[] SUPPORTED_LANGUAGES = {"fr", "en", "nl"}; // supported languages
     private static Locale currentLocale;
+
     private static ResourceBundle messages;
+    private static ResourceBundle general;
+    private static ResourceBundle errors;
+    private static ResourceBundle buttons;
 
     static {
         // gets the language saved in the preferences, or the default language
@@ -32,11 +36,19 @@ public class LanguageManager {
         }
         currentLocale = Locale.forLanguageTag(languageCode);
         messages = ResourceBundle.getBundle("lang.messages", currentLocale);
+        general = ResourceBundle.getBundle("lang.general", currentLocale);
+        errors = ResourceBundle.getBundle("lang.errors", currentLocale);
+        buttons = ResourceBundle.getBundle("lang.buttons", currentLocale);
+
         prefs.put("language", languageCode); // save the language in the preferences
     }
 
     public static String get(String key) {
-        return messages.getString(key);
+        if (messages.containsKey(key)) return messages.getString(key);
+        if (general.containsKey(key)) return general.getString(key);
+        if (buttons.containsKey(key)) return buttons.getString(key);
+        if (errors.containsKey(key)) return errors.getString(key);
+        return "???" + key + "???";
     }
 
     private static boolean isLanguageSupported(String languageCode) {

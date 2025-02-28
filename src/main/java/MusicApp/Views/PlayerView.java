@@ -1,5 +1,6 @@
 package MusicApp.Views;
 
+import MusicApp.utils.LanguageManager;
 import MusicApp.Models.Song;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,7 @@ import MusicApp.Controllers.PlayerController;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+
 
 /**
  * PlayerView
@@ -74,6 +75,11 @@ public class PlayerView {
         setupListSelectionListeners();
         enableDoubleClickToPlay();
         setupListSelectionListeners();
+        initializeTranslation();
+    }
+
+    public void initializeTranslation() {
+        playSongButton.setText(LanguageManager.get("button.play"));
     }
 
     /**
@@ -169,8 +175,8 @@ public class PlayerView {
         });
     }
 
-    public String getTitle(){
-        return "Music Player";
+    public String getTitle() {
+        return LanguageManager.get("app.title");
     }
 
     public void show(Stage stage) {

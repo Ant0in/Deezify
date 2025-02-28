@@ -1,5 +1,6 @@
 package MusicApp;
 
+import MusicApp.utils.LanguageManager;
 import MusicApp.Controllers.MetaController;
 import MusicApp.Views.MainWindow;
 import javafx.application.Application;
