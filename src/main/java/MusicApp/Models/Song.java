@@ -78,6 +78,12 @@ public class Song {
     public String getCoverPath() { return coverPath; }
 
     /**
+     * Get the path to the file.
+     * @return The path to the file.
+     */
+    public String getPath() { return filePath.toString(); }
+
+    /**
      * Get the duration of the song.
      * @return The duration of the song.
      */
