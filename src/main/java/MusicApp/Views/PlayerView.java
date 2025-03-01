@@ -51,8 +51,6 @@ public class PlayerView {
     @FXML
     private TextField songInput;
     @FXML
-    private AnchorPane selectedSongAnchorPane;
-    @FXML
     private AnchorPane playingSongAnchorPane;
     @FXML
     private ImageView imageCover;
@@ -111,7 +109,6 @@ public class PlayerView {
         bindSongProgress();
         bindPlayingSongAnchor();
         bindCurrentSongCover();
-        bindSelectedSongAnchor();
         bindVolumeControls();
         bindCurrentSongControls();
     }
@@ -120,6 +117,9 @@ public class PlayerView {
         pauseSongButton.textProperty().bind(Bindings.when(playerController.isPlaying())
                 .then(PAUSE_ICON)
                 .otherwise(PLAY_ICON));
+        deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
+        addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
+        playSongButton.disableProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNull().and(queueListView.getSelectionModel().selectedItemProperty().isNull()));
     }
 
     private void bindSongProgress(){
@@ -152,12 +152,6 @@ public class PlayerView {
         playingSongAnchorPane.visibleProperty().bind(playerController.currentSongProperty().isNotEqualTo("None"));
     }
 
-    private void bindSelectedSongAnchor(){
-        selectedSongAnchorPane.visibleProperty().bind(
-                playListView.getSelectionModel().selectedItemProperty().isNotNull()
-                        .or(queueListView.getSelectionModel().selectedItemProperty().isNotNull())
-        );
-    }
 
     /**
      * Initialize the volume controls.
