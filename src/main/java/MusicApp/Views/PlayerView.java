@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import MusicApp.Controllers.PlayerController;
+import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,6 +30,8 @@ public class PlayerView {
 
     @FXML
     private Button playSongButton, pauseSongButton, nextSongButton, previousSongButton;
+    @FXML
+    private Button btnEnglish, btnFrench, btnDutch;
     @FXML
     private Label volumeLabel, songProgressTimeLabel;
     @FXML
@@ -75,11 +78,21 @@ public class PlayerView {
         setupListSelectionListeners();
         enableDoubleClickToPlay();
         setupListSelectionListeners();
-        initializeTranslation();
+        initLanguageButtons();
+        initTranslation();
     }
 
-    public void initializeTranslation() {
+    private void initTranslation() {
         playSongButton.setText(LanguageManager.get("button.play"));
+        addSongButton.setText(LanguageManager.get("button.add"));
+        deleteSongButton.setText(LanguageManager.get("button.delete"));
+        clearQueueButton.setText(LanguageManager.get("button.clear"));        
+    }
+
+    private void initLanguageButtons() {
+        btnEnglish.setOnAction(this::handleSwitchToEnglish);
+        btnFrench.setOnAction(this::handleSwitchToFrench);
+        btnDutch.setOnAction(this::handleSwitchToDutch);
     }
 
     /**
@@ -369,5 +382,36 @@ public class PlayerView {
         }
         event.consume();
     }
+    /**
+     * Handle the switch to the 3 different languages
+     */
+
+    @FXML
+    private void handleSwitchToEnglish(ActionEvent event) {
+        switchLanguage("en");
+    }
+
+    @FXML
+    private void handleSwitchToFrench(ActionEvent event) {
+        switchLanguage("fr");
+    }
+
+    @FXML
+    private void handleSwitchToDutch(ActionEvent event) {
+        switchLanguage("nl");
+    }
+
+    private void switchLanguage(String languageCode) {
+        LanguageManager.setLanguage(languageCode);
+        refreshUI();
+    }
+
+    private void refreshUI() {
+        initTranslation();
+        Stage stage = (Stage) scene.getWindow();
+        stage.setTitle(LanguageManager.get("app.title"));
+}
+
+
 
 }

@@ -42,5 +42,13 @@
             <Button fx:id="clearQueueButton" layoutX="160.0" mnemonicParsing="false" onAction="#handleClearQueue" prefHeight="25.0" prefWidth="51.0" text="CLEAR" />
          </children>
       </AnchorPane>
+      <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="120.0" prefWidth="60.0">
+         <children>
+            <Button fx:id="btnEnglish" layoutX="0.0" layoutY="0.0" onAction="#handleSwitchToEnglish" prefWidth="50.0" text="EN" />
+            <Button fx:id="btnFrench" layoutX="0.0" layoutY="30.0" onAction="#handleSwitchToFrench" prefWidth="50.0" text="FR" />
+            <Button fx:id="btnDutch" layoutX="0.0" layoutY="60.0" onAction="#handleSwitchToDutch" prefWidth="50.0" text="NL" />
+         </children>
+   </AnchorPane>
+
    </children>
 </AnchorPane>
