@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.AnchorPane;
@@ -15,8 +17,10 @@ import javafx.util.Duration;
 import MusicApp.Controllers.PlayerController;
 import javafx.event.ActionEvent;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 
 /**
@@ -50,6 +54,10 @@ public class PlayerView {
     private AnchorPane selectedSongAnchorPane;
     @FXML
     private AnchorPane playingSongAnchorPane;
+    @FXML
+    private ImageView imageCover;
+    @FXML
+    private Pane labelContainer;
 
     private static final String PLAY_ICON = "▶";
     private static final String PAUSE_ICON = "⏸";
@@ -102,6 +110,7 @@ public class PlayerView {
         bindButtons();
         bindSongProgress();
         bindPlayingSongAnchor();
+        bindCurrentSongCover();
         bindSelectedSongAnchor();
         bindVolumeControls();
         bindCurrentSongControls();
@@ -165,6 +174,30 @@ public class PlayerView {
 
     private void bindCurrentSongControls(){
         currentSongLabel.textProperty().bind(playerController.currentSongProperty());
+    }
+
+    private void bindCurrentSongCover() {
+        imageCover.imageProperty().bind(
+                Bindings.createObjectBinding(
+                        () -> {
+                            Song currentSong = playerController.getCurrentSong();
+                            try {
+                                if (currentSong == null || currentSong.getCoverPath() == null) {
+                                    return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/song.png")));
+                                }
+                                File file = currentSong.getCoverPath().toFile();
+                                if (!file.exists()) {
+                                    return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/song.png")));
+                                }
+                                return new Image(file.toURI().toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/song.png")));
+                            }
+                        },
+                        playerController.currentSongProperty()
+                )
+        );
     }
 
     /**
@@ -235,6 +268,7 @@ public class PlayerView {
     private void updateQueueListView() {
         queueListView.getItems().setAll(playerController.getQueueNames());
     }
+
 
     /**
      * Clears the selection in both the queue and playlist ListViews.

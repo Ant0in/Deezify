@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class PlayerController {
      * In a real application, the library would be loaded from a database or a file.
      */
     private void loadLibrary() {
-        library.add(new Song("HIGHEST IN THE ROOM", "Travis Scott", "Pop", Paths.get("src/main/resources/songs/song1.mp3"), Duration.minutes(3)));
+        library.add(new Song("HIGHEST IN THE ROOM", "Travis Scott", "Pop", Paths.get("src/main/resources/songs/song1.mp3"), Duration.minutes(3), Paths.get("src/main/resources/images/HITR.png")));
         library.add(new Song("World, Hold On", "Bob Sinclar", "Rock", Paths.get("src/main/resources/songs/song2.mp3"), Duration.minutes(4)));
         library.add(new Song("ARSENAL", "Maes", "Jazz", Paths.get("src/main/resources/songs/song3.mp3"), Duration.minutes(5)));
         library.add(new Song("Dance Monkey", "Tones and I", "Pop", Paths.get("src/main/resources/songs/song4.mp3"), Duration.minutes(3)));
@@ -316,5 +317,22 @@ public class PlayerController {
     public DoubleProperty volumeProperty() {
         return getAudioPlayer().volumeProperty();
     }
+
+    /**
+     * Get the cover image of the song.
+     * @return The path to the cover image.
+     */
+    public Path getCover(Song song) {
+        return song.getCoverPath();
+    }
+
+    public Song getCurrentSong() {
+        if (audioPlayer.isPlaying() != null) {
+            return library.get(currentIndex);
+        } else {
+            return null;
+        }
+    }
+
 }
 
