@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 
 import MusicApp.Models.Library;
 import MusicApp.Models.Song;
+import javafx.stage.Stage;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
@@ -20,8 +21,7 @@ public class TestPlayerController extends ApplicationTest {
 
     @Before
     public void setUp() throws IOException {
-        metaController = new MetaController();
-        playerController = new PlayerController(metaController);
+        playerController = new PlayerController(null);
         library = playerController.getLibrary();
     }
 
