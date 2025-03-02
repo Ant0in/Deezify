@@ -18,6 +18,7 @@ public class LanguageManager {
     private static ResourceBundle general;
     private static ResourceBundle errors;
     private static ResourceBundle buttons;
+    private static ResourceBundle settings;
 
     static {
         // gets the language saved in the preferences, or the default language
@@ -39,6 +40,7 @@ public class LanguageManager {
         general = ResourceBundle.getBundle("lang.general", currentLocale);
         errors = ResourceBundle.getBundle("lang.errors", currentLocale);
         buttons = ResourceBundle.getBundle("lang.buttons", currentLocale);
+        settings = ResourceBundle.getBundle("lang.settings", currentLocale);
 
         prefs.put("language", languageCode); // save the language in the preferences
     }
@@ -48,7 +50,12 @@ public class LanguageManager {
         if (general.containsKey(key)) return general.getString(key);
         if (buttons.containsKey(key)) return buttons.getString(key);
         if (errors.containsKey(key)) return errors.getString(key);
+        if (settings.containsKey(key)) return settings.getString(key);
         return "???" + key + "???";
+    }
+
+    public static Locale getCurrentLocale() {
+        return currentLocale;
     }
 
     private static boolean isLanguageSupported(String languageCode) {

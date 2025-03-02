@@ -31,12 +31,14 @@ public class PlayerController {
     private int currentIndex;
 
     private final PlayerView playerView;
+    private final MetaController metaController;
 
 
     /**
      * Constructor
      */
-    public PlayerController() throws IOException {
+    public PlayerController(MetaController metaController) throws IOException {
+        this.metaController = metaController;
         this.audioPlayer = new AudioPlayer();
         this.library = new Library();
         this.queue = new Queue();
@@ -217,6 +219,7 @@ public class PlayerController {
         if (index >= 0 && index < queue.size()) {
             Song song = queue.get(index);
             audioPlayer.loadSong(song);
+            audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
             removeFromQueue(song);
             System.out.println("Playing from queue: " + song.getSongName());
@@ -260,7 +263,7 @@ public class PlayerController {
      * @return The current song property.
      */
     public StringProperty currentSongProperty() {
-        return getAudioPlayer().currentSongProperty();
+        return getAudioPlayer().currentSongStringProperty();
     }
 
     /**
@@ -276,7 +279,7 @@ public class PlayerController {
      * @param query The query to search for.
      * @return A list of song names that match the query.
      */
-    public List<String> searchLibrary(String query) {
+    public List<Song> searchLibrary(String query) {
         List<Song> results = new ArrayList<>();
         for (Song song : library.toList()) {
             if (song.getSongName().toLowerCase().contains(query.toLowerCase()) ||
@@ -285,11 +288,7 @@ public class PlayerController {
                 results.add(song);
             }
         }
-        List<String> songNames = new ArrayList<>();
-        for (Song song : results) {
-            songNames.add(song.getSongName() + " · " + song.getArtistName());
-        }
-        return songNames;
+        return results;
     }
     
     /**
@@ -328,10 +327,30 @@ public class PlayerController {
 
     public Song getCurrentSong() {
         if (audioPlayer.isPlaying() != null) {
-            return library.get(currentIndex);
+            return audioPlayer.getCurrentSong();
         } else {
             return null;
         }
+    }
+
+    public void close() {
+        audioPlayer.close();
+    }
+
+    public void openSettings() {
+        metaController.showSettings();
+    }
+
+    public void refreshUI() {
+        playerView.refreshUI();
+    }
+
+    public void setBalance(double balance) {
+        audioPlayer.setBalance(balance);
+    }
+
+    public double getBalance() {
+        return audioPlayer.getBalance();
     }
 
 }

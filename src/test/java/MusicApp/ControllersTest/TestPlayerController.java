@@ -1,5 +1,6 @@
 package MusicApp.ControllersTest;
 
+import MusicApp.Controllers.MetaController;
 import MusicApp.Controllers.PlayerController;
 import static org.junit.Assert.*;
 
@@ -10,16 +11,17 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
 import java.io.IOException;
-import java.util.List;
 
 public class TestPlayerController extends ApplicationTest {
 
+    private MetaController metaController;
     private PlayerController playerController;
     private Library library;
 
     @Before
     public void setUp() throws IOException {
-        playerController = new PlayerController();
+        metaController = new MetaController();
+        playerController = new PlayerController(metaController);
         library = playerController.getLibrary();
     }
 
@@ -34,7 +36,7 @@ public class TestPlayerController extends ApplicationTest {
         int songIndex = 0;
         playerController.playFromLibrary(songIndex);
         assertTrue(playerController.isPlaying().get());
-        assertEquals(library.get(songIndex).toString(), playerController.getAudioPlayer().currentSongProperty().get());
+        assertEquals(library.get(songIndex).toString(), playerController.getAudioPlayer().currentSongStringProperty().get());
     }
 
     @Test
@@ -44,7 +46,7 @@ public class TestPlayerController extends ApplicationTest {
         playerController.playFromLibrary(0);
         playerController.skip();
         assertTrue(playerController.isPlaying().get());
-        assertEquals(library.get(1).toString(), playerController.getAudioPlayer().currentSongProperty().get());
+        assertEquals(library.get(1).toString(), playerController.getAudioPlayer().currentSongStringProperty().get());
     }
 
     @Test
@@ -54,7 +56,7 @@ public class TestPlayerController extends ApplicationTest {
         playerController.playFromLibrary(1);
         playerController.prec();
         assertTrue(playerController.isPlaying().get());
-        assertEquals(library.get(0).toString(), playerController.getAudioPlayer().currentSongProperty().get());
+        assertEquals(library.get(0).toString(), playerController.getAudioPlayer().currentSongStringProperty().get());
     }
 
     @Test
@@ -105,7 +107,7 @@ public class TestPlayerController extends ApplicationTest {
         playerController.addToQueue(song);
         playerController.playFromQueue(0);
         assertTrue(playerController.isPlaying().get());
-        assertEquals(library.get(1).toString(), playerController.getAudioPlayer().currentSongProperty().get());
+        assertEquals(library.get(1).toString(), playerController.getAudioPlayer().currentSongStringProperty().get());
     }
 
     @Test
