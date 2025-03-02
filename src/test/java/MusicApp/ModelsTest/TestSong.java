@@ -1,11 +1,12 @@
 package MusicApp.ModelsTest;
 
-import MusicApp.Models.Song;
-import javafx.util.Duration;
+import java.nio.file.Paths;
+import java.util.HashMap;
+
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import MusicApp.Models.Song;
+import javafx.util.Duration;
 
 public class TestSong {
     @Test
@@ -85,5 +86,26 @@ public class TestSong {
         Song song2 = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
         assert (song1.equals(song2));
     }
+
+    @Test
+    public void testSongFromMetadata() {
+
+        HashMap<String, String> metadata = new HashMap<>();
+        metadata.put("title", "Song1");
+        metadata.put("artist", "Artist1");
+        metadata.put("genre", "Style1");
+        metadata.put("cover", "Cover1");
+        metadata.put("duration", "1000");
+
+        Song song = new Song(metadata, Paths.get("file1.mp3"));
+
+        assert (song.getSongName().equals("Song1"));
+        assert (song.getArtistName().equals("Artist1"));
+        assert (song.getStyle().equals("Style1"));
+        assert (song.getCoverPath().equals("Cover1"));
+        assert (song.getDuration().equals(Duration.seconds(1000)));
+        
+    }
+
 }
 

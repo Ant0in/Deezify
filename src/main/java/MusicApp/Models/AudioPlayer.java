@@ -25,7 +25,7 @@ public class AudioPlayer {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
-        Media media = new Media(new java.io.File(song.getCoverPath()).toURI().toString());
+        Media media = new Media(new java.io.File(song.getPath()).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
 

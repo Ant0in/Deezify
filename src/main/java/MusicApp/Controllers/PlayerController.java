@@ -1,16 +1,18 @@
 package MusicApp.Controllers;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import MusicApp.Exceptions.ID3TagException;
 import MusicApp.Models.AudioPlayer;
 import MusicApp.Models.Song;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Controller class for the music player.
@@ -60,7 +62,7 @@ public class PlayerController {
     /**
      * Loads the library with some sample songs from a default folder.
      *
-     *  !!!  Metadata is currently hardcoded for testing, and should be dynamically loaded. !!!
+     *  // !!!  Metadata is currently hardcoded for testing, and should be dynamically loaded. !!!
      *
      */
     private void loadLibrary() {
@@ -75,14 +77,20 @@ public class PlayerController {
         }
 
         for (Path songPath : songs) {
+
+            HashMap<String, String> metadata = new HashMap<>();
+
+            try {
+                metadata = MetadataReader.getMetadata(songPath.toFile());
+            } catch (ID3TagException e) {
+                System.out.println("Error while reading metadata: " + e.getMessage());
+            }
+            
             library.add(new Song(
-                    songPath.getFileName().toString(), // song name
-                    "Unknown Artist",                 // placeholder artist name
-                    "Unknown Style",                  // placeholder style
-                    songPath.toString(),              // placeholder cover path
-                    songPath,                         // file path
-                    Duration.UNKNOWN                  // placeholder duration
+                    metadata,      // metadata
+                    songPath       // file path
             ));
+
         }
     }
 
