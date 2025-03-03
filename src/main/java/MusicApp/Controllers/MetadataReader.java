@@ -11,10 +11,6 @@ import org.jaudiotagger.tag.Tag;
 
 import MusicApp.Exceptions.ID3TagException;
 
-
-
-
-
 public class MetadataReader {
     
     /**
@@ -23,11 +19,11 @@ public class MetadataReader {
      * Fields included in the hashmap are : title, artist, genre, cover, duration
      * @param fd : mp3 File Object
      * @return HashMap<String, String> containing relevant tags mentioned above
-     * @throws ID3TagException
+     * @throws ID3TagException (if no ID3v2 tags are found)
      * 
     */
 
-    public static final HashMap<String, String> getMetadata(File fd) throws ID3TagException {
+    public static HashMap<String, String> getMetadata(File fd) throws ID3TagException {
         
         HashMap<String, String> metadata = new HashMap<>();
         AudioFile file = readFile(fd);
@@ -85,7 +81,7 @@ public class MetadataReader {
     private static AudioFile readFile(File fd) throws RuntimeException {
 
         MP3FileReader reader = new MP3FileReader();
-        AudioFile file = null;
+        AudioFile file;
 
         // These are the exceptions thrown by the read method if something goes wrong
         // IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException
