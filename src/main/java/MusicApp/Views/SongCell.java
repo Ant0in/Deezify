@@ -23,7 +23,7 @@ public class SongCell extends ListCell<Song> {
     private final Label artistLabel = new Label();
     private final Label durationLabel = new Label();
     private final HBox hbox = new HBox(10); // Spacing between image and text
-    private final Button playButton = new Button("▶");
+    private final Button playButton = new Button("");
 
     /**
      * Constructor
@@ -33,7 +33,7 @@ public class SongCell extends ListCell<Song> {
         imageView.setFitHeight(25);
         imageView.setPreserveRatio(true);
 
-        artistLabel.setStyle("-fx-opacity: 50%; -fx-start-margin: 10px;");
+        artistLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%; -fx-start-margin: 10px;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -46,6 +46,12 @@ public class SongCell extends ListCell<Song> {
                 playerController.playFromLibrary(index);
             }
         });
+
+        ImageView playIcon = new ImageView(getClass().getResource("/images/play2.png").toExternalForm());
+        playIcon.setFitWidth(20);
+        playIcon.setFitHeight(20);
+        playButton.setGraphic(playIcon);
+        playButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
     }
 
     /**
@@ -56,7 +62,6 @@ public class SongCell extends ListCell<Song> {
     @Override
     protected void updateItem(Song song, boolean empty) {
         super.updateItem(song, empty);
-
         if (empty || song == null) {
             setGraphic(null);
         } else {
@@ -66,8 +71,10 @@ public class SongCell extends ListCell<Song> {
             } else {
             }
             titleLabel.setText(song.getSongName());
+            titleLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
             artistLabel.setText(song.getArtistName());
             durationLabel.setText(String.format("%d:%02d", (int) song.getDuration().toMinutes(), (int) song.getDuration().toSeconds() % 60));
+            durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
             setGraphic(hbox);
         }
     }

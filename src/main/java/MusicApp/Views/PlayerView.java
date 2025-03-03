@@ -14,12 +14,16 @@ import javafx.scene.input.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import MusicApp.Controllers.PlayerController;
 import javafx.event.ActionEvent;
+import javafx.stage.StageStyle;
+import javafx.scene.paint.Color;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +43,7 @@ public class PlayerView {
     @FXML
     private Button pauseSongButton, nextSongButton, previousSongButton;
     @FXML
-    private Button btnEnglish, btnFrench, btnDutch;
+    private Button exitButton, btnSettings;
     @FXML
     private Label volumeLabel, songProgressTimeLabel;
     @FXML
@@ -61,9 +65,12 @@ public class PlayerView {
     @FXML
     private Pane labelContainer;
 
-    private static final String PLAY_ICON = "▶";
-    private static final String PAUSE_ICON = "⏸";
+    //private static final String PLAY_ICON = "▶";
+    //private static final String PAUSE_ICON = "⏸";
 
+    /* To enable drag */
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     public PlayerView(PlayerController playerController) throws IOException {
         this.playerController = playerController;
@@ -89,7 +96,6 @@ public class PlayerView {
         setupListSelectionListeners();
         enableDoubleClickToPlay();
         setupListSelectionListeners();
-        initLanguageButtons();
         initTranslation();
     }
 
@@ -97,12 +103,6 @@ public class PlayerView {
         addSongButton.setText(LanguageManager.get("button.add"));
         deleteSongButton.setText(LanguageManager.get("button.delete"));
         clearQueueButton.setText(LanguageManager.get("button.clear"));        
-    }
-
-    private void initLanguageButtons() {
-        btnEnglish.setOnAction(this::handleSwitchToEnglish);
-        btnFrench.setOnAction(this::handleSwitchToFrench);
-        btnDutch.setOnAction(this::handleSwitchToDutch);
     }
 
     /**
@@ -115,12 +115,31 @@ public class PlayerView {
         bindCurrentSongCover();
         bindVolumeControls();
         bindCurrentSongControls();
+        bindButtonsImages();
     }
 
     private void bindButtons(){
-        pauseSongButton.textProperty().bind(Bindings.when(playerController.isPlaying())
-                .then(PAUSE_ICON)
-                .otherwise(PLAY_ICON));
+        deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
+        addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
+
+        ImageView playIcon = new ImageView(new Image(getClass().getResource("/images/play_white.png").toExternalForm()));
+        playIcon.setFitWidth(20);
+        playIcon.setFitHeight(20);
+
+        ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/images/pause_white.png").toExternalForm()));
+        pauseIcon.setFitWidth(20);
+        pauseIcon.setFitHeight(20);
+
+        playerController.isPlaying().addListener((obs, wasPlaying, isPlaying) -> {
+            if (isPlaying) {
+                pauseSongButton.setGraphic(pauseIcon);
+                currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");
+            } else {
+                pauseSongButton.setGraphic(playIcon);
+                currentSongLabel.setStyle("-fx-text-fill: white;");
+            }
+        });
+
         deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
         addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
     }
@@ -167,6 +186,19 @@ public class PlayerView {
         playerController.volumeProperty().bind(
                 volumeSlider.valueProperty().divide(100)
         );
+
+        // For gradual filling
+        volumeSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+            double percentage = 100.0 * newValue.doubleValue() / volumeSlider.getMax();
+            String style = String.format(
+                    "-track-color: linear-gradient(to right, " +
+                            "white 0%%, " +
+                            "white %1$.1f%%, " +
+                            "-default-track-color %1$.1f%%, " +
+                            "-default-track-color 100%%);",
+                    percentage);
+            volumeSlider.setStyle(style);
+        });
     }
 
     private void bindCurrentSongControls(){
@@ -216,6 +248,33 @@ public class PlayerView {
 
     }
 
+    private void bindButtonsImages() {
+        ImageView exitIcon = new ImageView(getClass().getResource("/images/cross.png").toExternalForm());
+        exitIcon.setFitWidth(20);
+        exitIcon.setFitHeight(20);
+        exitButton.setGraphic(exitIcon);
+
+        ImageView playIcon = new ImageView(getClass().getResource("/images/play_white.png").toExternalForm());
+        playIcon.setFitWidth(20);
+        playIcon.setFitHeight(20);
+        pauseSongButton.setGraphic(playIcon);
+
+        ImageView nextIcon = new ImageView(getClass().getResource("/images/next_white.png").toExternalForm());
+        nextIcon.setFitWidth(20);
+        nextIcon.setFitHeight(20);
+        nextSongButton.setGraphic(nextIcon);
+
+        ImageView previousIcon = new ImageView(getClass().getResource("/images/previous_white.png").toExternalForm());
+        previousIcon.setFitWidth(20);
+        previousIcon.setFitHeight(20);
+        previousSongButton.setGraphic(previousIcon);
+
+        ImageView settingsIcon = new ImageView(getClass().getResource("/images/settings.png").toExternalForm());
+        settingsIcon.setFitWidth(20);
+        settingsIcon.setFitHeight(20);
+        btnSettings.setGraphic(settingsIcon);
+    }
+
     /**
      * Initialize the song input for the search
      */
@@ -242,13 +301,38 @@ public class PlayerView {
         });
     }
 
+    public void enableDoubleClickToGrow(Stage stage){
+        labelContainer.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                stage.setFullScreen(true);
+            }
+        });
+    }
+
+    private void enableDrag(Stage stage) {
+        labelContainer.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        labelContainer.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
+    }
+
     public String getTitle() {
         return LanguageManager.get("app.title");
     }
 
     public void show(Stage stage) {
+        stage.initStyle(StageStyle.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);
+
         stage.setScene(this.scene);
         stage.setTitle(getTitle());
+        enableDrag(stage);
+        enableDoubleClickToGrow(stage);
         stage.show();
     }
 
@@ -380,6 +464,14 @@ public class PlayerView {
     private void handleClearQueue() {
         playerController.clearQueue();
         updateQueueListView();
+    }
+
+    /**
+     * Handle the exit button
+     */
+    @FXML
+    private void handleExitApp() {
+        Platform.exit();
     }
 
     private void enableQueueDragAndDrop() {

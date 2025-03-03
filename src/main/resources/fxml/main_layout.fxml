@@ -11,30 +11,33 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.Region?>
 
 <?import javafx.scene.layout.BorderPane?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            prefWidth="920" prefHeight="500">
+            prefWidth="920" prefHeight="500"
+            stylesheets="@/css/style2.css"
+            styleClass="body"
+            fx:id="labelContainer">
    <top>
       <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 5;">
-         <Button fx:id="btnEnglish" text="EN" onAction="#handleSwitchToEnglish"/>
-         <Button fx:id="btnFrench"  text="FR" onAction="#handleSwitchToFrench"/>
-         <Button fx:id="btnDutch"   text="NL" onAction="#handleSwitchToDutch"/>
-         <Button fx:id="btnSettings" text="⚙" onAction="#handleSettings"/>
+         <Button fx:id="btnSettings" onAction="#handleSettings" styleClass="settingsbtn"/>
+         <Region fx:id="spacer" HBox.hgrow="ALWAYS"/>
+         <Button fx:id="exitButton" onAction="#handleExitApp" styleClass="exitbtn"/>
       </HBox>
    </top>
    <center>
       <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
          <VBox spacing="5" alignment="TOP_LEFT" HBox.hgrow="ALWAYS">
-            <TextField fx:id="songInput" promptText="Search..."/>
-            <ListView fx:id="playListView" VBox.vgrow="ALWAYS"/>
+            <TextField fx:id="songInput" promptText="Search..." styleClass="input"/>
+            <ListView fx:id="playListView" VBox.vgrow="ALWAYS" styleClass="songs"/>
          </VBox>
          <VBox spacing="5">
-            <ListView fx:id="queueListView" prefWidth="160" VBox.vgrow="ALWAYS"/>
-            <Button fx:id="addSongButton" text="ADD" onAction="#handleAddSong" maxWidth="Infinity"/>
-            <Button fx:id="deleteSongButton" text="DEL" onAction="#handleDeleteSong" maxWidth="Infinity"/>
-            <Button fx:id="clearQueueButton" text="CLEAR" onAction="#handleClearQueue" maxWidth="Infinity"/>
+            <ListView fx:id="queueListView" prefWidth="160" VBox.vgrow="ALWAYS" styleClass="queue"/>
+            <Button fx:id="addSongButton" text="ADD" onAction="#handleAddSong" maxWidth="Infinity" styleClass="queueButton"/>
+            <Button fx:id="deleteSongButton" text="DEL" onAction="#handleDeleteSong" maxWidth="Infinity" styleClass="queueButton"/>
+            <Button fx:id="clearQueueButton" text="CLEAR" onAction="#handleClearQueue" maxWidth="Infinity" styleClass="queueButton"/>
          </VBox>
       </HBox>
    </center>
@@ -43,9 +46,9 @@
       <VBox fx:id="controls" spacing="10" style="-fx-padding: 10;">
          <HBox spacing="10" alignment="CENTER_LEFT">
             <ProgressBar fx:id="songProgressBar" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-            <Label fx:id="songProgressTimeLabel" text="00:00/00:00"/>
+            <Label fx:id="songProgressTimeLabel" text="00:00/00:00" styleClass="timeText"/>
          </HBox>
-         <HBox spacing="10" alignment="CENTER">
+         <HBox spacing="10" alignment="CENTER" styleClass="runningSong">
             <!-- Left side: Cover and Title -->
             <HBox spacing="10" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                <ImageView fx:id="imageCover" fitHeight="57.0" fitWidth="60.0" preserveRatio="true">
@@ -55,19 +58,19 @@
                   </clip>
                </ImageView>
                <VBox alignment="CENTER_LEFT">
-                  <Label fx:id="currentSongLabel" text="None"/>
-                  <Label fx:id="currentArtistLabel" text="" style="-fx-text-fill: grey; -fx-font-style: italic;"/>
+                  <Label fx:id="currentSongLabel" text="None" styleClass="currentSong"/>
+                  <Label fx:id="currentArtistLabel" text="" styleClass="currentArtist"/>
                </VBox>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
-               <Button fx:id="previousSongButton" text="⏮" onAction="#handlePreviousSong"/>
-               <Button fx:id="pauseSongButton" text="⏸" onAction="#handlePauseSong"/>
-               <Button fx:id="nextSongButton" text="⏭" onAction="#handleNextSong"/>
+               <Button fx:id="previousSongButton" onAction="#handlePreviousSong" styleClass="previousbtn"/>
+               <Button fx:id="pauseSongButton" onAction="#handlePauseSong" styleClass="pausebtn"/>
+               <Button fx:id="nextSongButton" onAction="#handleNextSong" styleClass="nextbtn"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-               <Label text="Vol"/>
-               <Slider fx:id="volumeSlider" prefWidth="80"/>
-               <Label fx:id="volumeLabel" text="50"/>
+               <Label text="Vol" styleClass="volumeText"/>
+               <Slider fx:id="volumeSlider" prefWidth="80" styleClass="volume"/>
+               <Label fx:id="volumeLabel" text="50" styleClass="volumeText"/>
             </HBox>
          </HBox>
       </VBox>
