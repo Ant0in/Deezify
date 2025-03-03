@@ -82,8 +82,14 @@
       <version>4.0.15-alpha</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
 
+    <dependency>
+      <groupId>net.jthink</groupId>
+      <artifactId>jaudiotagger</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+
+  </dependencies>
   <build>
     <pluginManagement>
       <plugins>

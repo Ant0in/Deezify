@@ -1,17 +1,21 @@
 package MusicApp.ControllersTest;
 
-import MusicApp.Controllers.MetaController;
-import MusicApp.Controllers.PlayerController;
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import MusicApp.Controllers.MetaController;
 import MusicApp.Models.Library;
 import MusicApp.Models.Song;
-import javafx.stage.Stage;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
-import java.io.IOException;
+import MusicApp.Controllers.PlayerController;
 
 public class TestPlayerController extends ApplicationTest {
 

@@ -65,11 +65,7 @@ public class SongCell extends ListCell<Song> {
         if (empty || song == null) {
             setGraphic(null);
         } else {
-            if (song.getCoverPath() != null) {
-                Image image = new Image(song.getCoverPath().toUri().toString());
-                imageView.setImage(image);
-            } else {
-            }
+            imageView.setImage(song.getCoverImage());
             titleLabel.setText(song.getSongName());
             titleLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
             artistLabel.setText(song.getArtistName());

@@ -250,14 +250,10 @@ public class PlayerView {
                         () -> {
                             Song currentSong = playerController.getCurrentSong();
                             try {
-                                if (currentSong == null || currentSong.getCoverPath() == null) {
+                                if (currentSong == null || currentSong.getCover() == null) {
                                     return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/song.png")));
                                 }
-                                File file = currentSong.getCoverPath().toFile();
-                                if (!file.exists()) {
-                                    return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/song.png")));
-                                }
-                                return new Image(file.toURI().toString(), true);
+                                return currentSong.getCoverImage();
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/song.png")));
@@ -545,18 +541,26 @@ public class PlayerView {
     private void onDragDropped(DragEvent event, ListCell<Song> cell) {
         Dragboard db = event.getDragboard();
         if (db.hasString()) {
-            int draggedIndex = queueListView.getItems().indexOf(db.getString());
-            int dropIndex = cell.getIndex();
+            Song draggedSong = queueListView.getItems().stream()
+                    .filter(song -> song.getSongName().equals(db.getString()))
+                    .findFirst()
+                    .orElse(null);
 
-            if (draggedIndex != dropIndex) {
-                playerController.reorderQueue(draggedIndex, dropIndex);
-                updateQueueListView();
+            if (draggedSong != null) {
+                int draggedIndex = queueListView.getItems().indexOf(draggedSong);
+                int dropIndex = cell.getIndex();
+
+                if (draggedIndex != dropIndex) {
+                    playerController.reorderQueue(draggedIndex, dropIndex);
+                    updateQueueListView();
+                }
+
+                event.setDropCompleted(true);
             }
-
-            event.setDropCompleted(true);
         }
         event.consume();
     }
+
     /**
      * Handle the switch to the 3 different languages
      */
