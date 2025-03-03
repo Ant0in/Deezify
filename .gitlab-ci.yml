@@ -1,4 +1,4 @@
-image: maven:3.9.5-eclipse-temurin-23
+image: eclipse-temurin:23
 
 stages:
   - test
