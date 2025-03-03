@@ -275,6 +275,7 @@ public class AudioPlayer {
         this.balance = balance;
         if (mediaPlayer != null) {
             mediaPlayer.setBalance(balance);
+            this.saveBalance();
         }
     }
 
