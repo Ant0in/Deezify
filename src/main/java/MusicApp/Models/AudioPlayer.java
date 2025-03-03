@@ -5,7 +5,9 @@ import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * AudioPlayer
@@ -14,9 +16,91 @@ import java.io.File;
 public class AudioPlayer {
     private MediaPlayer mediaPlayer;
     private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
-    private final StringProperty currentSong = new SimpleStringProperty("None");
+    private final StringProperty currentSongString = new SimpleStringProperty("None");
+    private Song currentSong = null;
     private final BooleanProperty isPlaying = new SimpleBooleanProperty(false);
+    private final DoubleProperty volume = new SimpleDoubleProperty(1.0);
+    private double balance = 0.0;
 
+    public AudioPlayer() {
+        loadBalance();
+        setBalance(balance);
+    }
+
+
+    /**
+     * TEMPORARY: Could be replaced after discussion on the configuration system
+     * Config file in ~/.config/musicapp or %APPDATA%/musicapp
+     * One line is like this:
+     * balance=0.0
+     *
+     * Load the balance from the config file.
+     * if the file does not exist, the file is created
+     * if the file does not contain the balance, the balance is set to 0.0 and the file is updated
+     */
+    private void loadBalance() {
+        String configPath = System.getenv("APPDATA");
+        if (configPath == null) {
+            configPath = System.getProperty("user.home") + "/.config/musicapp";
+        } else {
+            configPath += "/musicapp";
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(configPath));
+            String line = reader.readLine();
+            if (line != null) {
+                String[] parts = line.split("=");
+                if (parts.length == 2 && parts[0].equals("balance")) {
+                    balance = Double.parseDouble(parts[1]);
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            balance = 0.0;
+            try {
+                java.io.FileWriter writer = new java.io.FileWriter(configPath);
+                writer.write("balance=0.0\n");
+                writer.close();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * TEMPORARY: Could be replaced after discussion on the configuration system
+     * Save the balance to the config file.
+     * if the file does not exist, the file is created
+     * if the file does not contain the balance, the balance is set to 0.0 and the file is updated
+     * if the file contains the balance, the balance is updated
+     */
+    public void saveBalance() {
+        String configPath = System.getenv("APPDATA");
+        if (configPath == null) {
+            configPath = System.getProperty("user.home") + "/.config/musicapp";
+        } else {
+            configPath += "/musicapp";
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(configPath));
+            String line = reader.readLine();
+            reader.close();
+            java.io.FileWriter writer = new java.io.FileWriter(configPath);
+            if (line != null) {
+                String[] parts = line.split("=");
+                if (parts.length == 2 && parts[0].equals("balance")) {
+                    writer.write("balance=" + balance + "\n");
+                } else {
+                    writer.write("balance=" + balance + "\n");
+                }
+            } else {
+                writer.write("balance=" + balance + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Load a song into the player.
      * @param song The song to load.
@@ -25,11 +109,13 @@ public class AudioPlayer {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
-        Media media = new Media(new java.io.File(song.getPath()).toURI().toString());
+        this.currentSong = song;
+        Media media = new Media(new java.io.File(song.getPath().toString()).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
-
-        currentSong.set(song.toString());
+        currentSongString.set(song.toString());
+        mediaPlayer.volumeProperty().bind(volume);
+        mediaPlayer.setBalance(balance);
 
         // Mettre à jour la propriété de progression pendant la lecture
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
@@ -59,6 +145,14 @@ public class AudioPlayer {
         }
     }
 
+    /**
+     * Change speed of the loaded song.
+     */
+    public void changeSpeed(double speed) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setRate(speed);
+        }
+    }
     /**
      * Get the current time of the song.
      * @return The current time of the song.
@@ -114,16 +208,20 @@ public class AudioPlayer {
      * Get the current song property.
      * @return The current song property.
      */
-    public StringProperty currentSongProperty() {
-        return currentSong;
+    public StringProperty currentSongStringProperty() {
+        return currentSongString;
     }
 
     /**
      * Get the current song.
      * @return The current song.
      */
-    public String getCurrentSong() {
-        return currentSong.get();
+    public String getCurrentSongString() {
+        return currentSongString.get();
+    }
+
+    public Song getCurrentSong() {
+        return currentSong;
     }
 
     /**
@@ -161,4 +259,27 @@ public class AudioPlayer {
         }
     }
 
+    public void close() {
+        if (mediaPlayer != null) {
+            mediaPlayer.dispose();
+            mediaPlayer = null;
+        }
+    }
+
+    public DoubleProperty volumeProperty() {
+        return volume;
+    }
+
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+        if (mediaPlayer != null) {
+            mediaPlayer.setBalance(balance);
+            this.saveBalance();
+        }
+    }
+
+    public double getBalance() {
+        return balance;
+    }
 }

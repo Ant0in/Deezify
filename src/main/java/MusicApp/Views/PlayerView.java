@@ -1,26 +1,49 @@
 package MusicApp.Views;
 
+import MusicApp.utils.LanguageManager;
+import MusicApp.Models.Song;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import MusicApp.Controllers.PlayerController;
+import javafx.event.ActionEvent;
+import javafx.stage.StageStyle;
+import javafx.scene.paint.Color;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.Objects;
+
 
 /**
  * PlayerView
  * Class that represents the view of the music player.
  */
-public class PlayerView implements Initializable {
+public class PlayerView {
 
-    private PlayerController playerController;
+    private final PlayerController playerController;
+    private Scene scene;
 
     @FXML
-    private Button playSongButton, pauseSongButton, nextSongButton, previousSongButton;
+    private Button pauseSongButton, nextSongButton, previousSongButton;
+    @FXML
+    private Button exitButton, btnSettings;
     @FXML
     private Label volumeLabel, songProgressTimeLabel;
     @FXML
@@ -28,73 +51,245 @@ public class PlayerView implements Initializable {
     @FXML
     private ProgressBar songProgressBar;
     @FXML
-    private ListView<String> playListView, queueListView;
+    private ListView<Song> playListView, queueListView;
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
     @FXML
-    private Label currentSongLabel;
+    private Label currentSongLabel, currentArtistLabel;
     @FXML
     private TextField songInput;
     @FXML
-    private AnchorPane selectedSongAnchorPane;
+    private VBox controls;
     @FXML
-    private AnchorPane playingSongAnchorPane;
+    private ImageView imageCover;
+    @FXML
+    private Pane labelContainer;
+    @FXML
+    private ToggleButton shuffleToggle;
+    @FXML
+    private ComboBox<String> speedBox;
 
-    /**
-     * Initialize the view.
-     * @param location The location of the FXML file.
-     * @param resources The resources of the FXML file.
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        playerController = new PlayerController();
-        playerController.setSongChangeListener(this::onSongChange);
+    //private static final String PLAY_ICON = "▶";
+    //private static final String PAUSE_ICON = "⏸";
 
-        initBindings();
-        initVolumeControls();
-        initCurrentSongControls();
-        initSongInput();
-        updatePlayListView();
-        updateQueueListView();
+    /* To enable drag */
+    private double xOffset = 0;
+    private double yOffset = 0;
 
-        setupListSelectionListeners();
-
-        playListView.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                handlePlaySong();
-            }
-        });
+    public PlayerView(PlayerController playerController) throws IOException {
+        this.playerController = playerController;
+        initializeScene("/fxml/main_layout.fxml");
+        initialize();
     }
 
-    /**
-     * Called when the current song changes.
-     */
-    private void onSongChange() {
-        resetVolumeSlider();
+    public void initializeScene(String fxmlPath) throws IOException {
+        URL url = PlayerView.class.getResource(fxmlPath);
+        FXMLLoader loader = new FXMLLoader(url);
+        loader.setController((Object) this);
+        Pane root = loader.load();
+        this.scene = new Scene(root);
+    }
+
+    public void initialize(){
+        initBindings();
+        initSongInput();
+        initSpeed();
+        initPlayListView();
+        updatePlayListView();
+        updateQueueListView();
+        enableQueueDragAndDrop();
+        setupListSelectionListeners();
+        enableDoubleClickToPlay();
+        enableShuffleToggle();
+        setupListSelectionListeners();
+        initTranslation();
+    }
+
+    private void initTranslation() {
+        addSongButton.setText(LanguageManager.get("button.add"));
+        deleteSongButton.setText(LanguageManager.get("button.delete"));
+        clearQueueButton.setText(LanguageManager.get("button.clear"));
+        songInput.setPromptText(LanguageManager.get("search"));
     }
 
     /**
      * Initialize the bindings between the view and the controller.
      */
     private void initBindings() {
+        bindButtons();
+        bindSongProgress();
+        bindPlayingSongAnchor();
+        bindCurrentSongCover();
+        bindVolumeControls();
+        bindCurrentSongControls();
+        bindButtonsImages();
+    }
+
+    private void bindButtons(){
+        deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
+        addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
+
+        ImageView playIcon = new ImageView(new Image(getClass().getResource("/images/play_white.png").toExternalForm()));
+        playIcon.setFitWidth(20);
+        playIcon.setFitHeight(20);
+
+        ImageView pauseIcon = new ImageView(new Image(getClass().getResource("/images/pause_white.png").toExternalForm()));
+        pauseIcon.setFitWidth(20);
+        pauseIcon.setFitHeight(20);
+
+        playerController.isPlaying().addListener((obs, wasPlaying, isPlaying) -> {
+            if (isPlaying) {
+                pauseSongButton.setGraphic(pauseIcon);
+                currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");
+            } else {
+                pauseSongButton.setGraphic(playIcon);
+                currentSongLabel.setStyle("-fx-text-fill: white;");
+            }
+        });
+
+        deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
+        addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
+    }
+
+    /**
+     * Initialize speed box.
+     */
+    private void initSpeed() {
+        speedBox.getItems().clear();
+        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x","1.25x", "1.5x", "1.75x", "2x");
+        speedBox.setValue("1x");
+        speedBox.setOnAction(e -> {
+            String speed = speedBox.getValue();
+            double rate = playerController.getSpeedValue(speed);
+            playerController.changeSpeed(rate);
+        });
+    }
+
+    private void bindSongProgress(){
         songProgressBar.progressProperty().bind(playerController.progressProperty());
-        songProgressTimeLabel.textProperty().bind(Bindings.createStringBinding(() ->
-            formatDuration(playerController.getCurrentTime()) + "/" + formatDuration(playerController.getTotalDuration()),
-            playerController.progressProperty()
-        ));
+        songProgressTimeLabel.textProperty().bind(
+                Bindings.createStringBinding(
+                        this::getFormattedSongProgress,  // Extracted method
+                        playerController.progressProperty()
+                )
+        );
         songProgressBar.setOnMouseClicked(e -> {
             double progress = e.getX() / songProgressBar.getWidth();
             playerController.seek(progress);
         });
-        pauseSongButton.textProperty().bind(Bindings.when(playerController.isPlaying())
-                .then("⏸")
-                .otherwise("▶"));
+    }
 
-        playingSongAnchorPane.visibleProperty().bind(playerController.currentSongProperty().isNotEqualTo("None"));
-        selectedSongAnchorPane.visibleProperty().bind(
-                playListView.getSelectionModel().selectedItemProperty().isNotNull()
-                        .or(queueListView.getSelectionModel().selectedItemProperty().isNotNull())
+    private String getFormattedSongProgress() {
+        Duration currentTime = playerController.getCurrentTime();
+        Duration totalDuration = playerController.getTotalDuration();
+
+        if (totalDuration == null || totalDuration.isUnknown()) {
+            return formatDuration(currentTime) + " / --:--";
+        }
+
+        return formatDuration(currentTime) + " / " + formatDuration(totalDuration);
+    }
+
+
+    private void bindPlayingSongAnchor(){
+        controls.visibleProperty().bind(playerController.currentSongProperty().isNotEqualTo("None"));
+    }
+
+
+    /**
+     * Initialize the volume controls.
+     */
+    private void bindVolumeControls() {
+        volumeSlider.setValue(50);
+        volumeLabel.textProperty().bind(
+                volumeSlider.valueProperty().asString("%.0f")
         );
+        playerController.volumeProperty().bind(
+                volumeSlider.valueProperty().divide(100)
+        );
+
+        // For gradual filling
+        volumeSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+            double percentage = 100.0 * newValue.doubleValue() / volumeSlider.getMax();
+            String style = String.format(
+                    "-track-color: linear-gradient(to right, " +
+                            "white 0%%, " +
+                            "white %1$.1f%%, " +
+                            "-default-track-color %1$.1f%%, " +
+                            "-default-track-color 100%%);",
+                    percentage);
+            volumeSlider.setStyle(style);
+        });
+    }
+
+    private void bindCurrentSongControls(){
+        currentSongLabel.textProperty().bind(
+                Bindings.createStringBinding(
+                        () -> {
+                            Song currentSong = playerController.getCurrentSong();
+                            return currentSong == null ? "" : currentSong.getSongName();
+                        },
+                        playerController.currentSongProperty()
+                )
+        );
+
+        currentArtistLabel.textProperty().bind(
+                Bindings.createStringBinding(
+                        () -> {
+                            Song currentSong = playerController.getCurrentSong();
+                            return currentSong == null ? "" : currentSong.getArtistName();
+                        },
+                        playerController.currentSongProperty()
+                )
+        );
+    }
+
+    private void bindCurrentSongCover() {
+        imageCover.imageProperty().bind(
+                Bindings.createObjectBinding(
+                        () -> {
+                            Song currentSong = playerController.getCurrentSong();
+                            try {
+                                if (currentSong == null || currentSong.getCover() == null) {
+                                    return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/song.png")));
+                                }
+                                return currentSong.getCoverImage();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/song.png")));
+                            }
+                        },
+                        playerController.currentSongProperty()
+                )
+        );
+
+    }
+
+    private void bindButtonsImages() {
+        ImageView exitIcon = new ImageView(getClass().getResource("/images/cross.png").toExternalForm());
+        exitIcon.setFitWidth(20);
+        exitIcon.setFitHeight(20);
+        exitButton.setGraphic(exitIcon);
+
+        ImageView playIcon = new ImageView(getClass().getResource("/images/play_white.png").toExternalForm());
+        playIcon.setFitWidth(20);
+        playIcon.setFitHeight(20);
+        pauseSongButton.setGraphic(playIcon);
+
+        ImageView nextIcon = new ImageView(getClass().getResource("/images/next_white.png").toExternalForm());
+        nextIcon.setFitWidth(20);
+        nextIcon.setFitHeight(20);
+        nextSongButton.setGraphic(nextIcon);
+
+        ImageView previousIcon = new ImageView(getClass().getResource("/images/previous_white.png").toExternalForm());
+        previousIcon.setFitWidth(20);
+        previousIcon.setFitHeight(20);
+        previousSongButton.setGraphic(previousIcon);
+
+        ImageView settingsIcon = new ImageView(getClass().getResource("/images/settings.png").toExternalForm());
+        settingsIcon.setFitWidth(20);
+        settingsIcon.setFitHeight(20);
+        btnSettings.setGraphic(settingsIcon);
     }
 
     /**
@@ -110,6 +305,61 @@ public class PlayerView implements Initializable {
         });
     }
 
+    private void initPlayListView() {
+        playListView.setCellFactory(lv -> new SongCell(playerController));
+        updatePlayListView();
+    }
+
+    public void enableShuffleToggle(){
+        shuffleToggle.setOnAction(event -> {
+        playerController.toggleShuffle(shuffleToggle.isSelected());
+        updatePlayListView(); // Update the play list view to show the new order
+        });
+    }
+
+    public void enableDoubleClickToPlay(){
+        playListView.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                handlePlaySong();
+            }
+        });
+    }
+
+    public void enableDoubleClickToGrow(Stage stage){
+        labelContainer.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                stage.setFullScreen(true);
+            }
+        });
+    }
+
+    private void enableDrag(Stage stage) {
+        labelContainer.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        labelContainer.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
+    }
+
+    public String getTitle() {
+        return LanguageManager.get("app.title");
+    }
+
+    public void show(Stage stage) {
+        stage.initStyle(StageStyle.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);
+
+        stage.setScene(this.scene);
+        stage.setTitle(getTitle());
+        enableDrag(stage);
+        enableDoubleClickToGrow(stage);
+        stage.show();
+    }
+
     /**
      * Format a duration to a string.
      * @param duration The duration to format.
@@ -119,35 +369,6 @@ public class PlayerView implements Initializable {
         int minutes = (int) duration.toMinutes();
         int seconds = (int) (duration.toSeconds() % 60);
         return String.format("%02d:%02d", minutes, seconds);
-    }
-
-    /**
-     * Initialize the current song controls.
-     */
-    private void initCurrentSongControls(){
-        currentSongLabel.textProperty().bind(playerController.currentSongProperty());
-    }
-
-    /**
-     * Initialize the volume controls.
-     */
-    private void initVolumeControls() {
-        volumeSlider.setValue(50);
-        updateVolumeLabel(50);
-
-        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            int volume = newVal.intValue();
-            updateVolumeLabel(volume);
-            playerController.setVolume(volume * 0.01);
-        });
-    }
-
-    /**
-     * Update the volume label.
-     * @param volume The volume to set.
-     */
-    private void updateVolumeLabel(int volume) {
-        volumeLabel.setText(String.valueOf(volume));
     }
 
     /**
@@ -167,22 +388,16 @@ public class PlayerView implements Initializable {
      * Update the play list view.
      */
     private void updatePlayListView() {
-        playListView.getItems().setAll(playerController.getLibrary());
+        playListView.getItems().setAll(playerController.getLibrary().toList());
     }
 
     /**
      * Update the queue list view.
      */
     private void updateQueueListView() {
-        queueListView.getItems().setAll(playerController.getQueue());
+        queueListView.getItems().setAll(playerController.getQueue().toList());
     }
 
-    /**
-     * Reset the volume slider.
-     */
-    private void resetVolumeSlider() {
-        volumeSlider.setValue(50);
-    }
 
     /**
      * Clears the selection in both the queue and playlist ListViews.
@@ -247,8 +462,9 @@ public class PlayerView implements Initializable {
     @FXML
     private void handleAddSong() {
         int index = playListView.getSelectionModel().getSelectedIndex();
+        Song selectedSong = playerController.getFromLibrary(index);
         if (index != -1) {
-            playerController.addToQueue(index);
+            playerController.addToQueue(selectedSong);
             updateQueueListView();
         }
     }
@@ -260,7 +476,7 @@ public class PlayerView implements Initializable {
     private void handleDeleteSong() {
         int index = queueListView.getSelectionModel().getSelectedIndex();
         if (index != -1) {
-            playerController.removeFromQueue(index);
+            playerController.removeFromQueue(playerController.getQueue().get(index));
             updateQueueListView();
         }
     }
@@ -273,4 +489,113 @@ public class PlayerView implements Initializable {
         playerController.clearQueue();
         updateQueueListView();
     }
+
+    /**
+     * Handle the exit button
+     */
+    @FXML
+    private void handleExitApp() {
+        Platform.exit();
+    }
+
+    private void enableQueueDragAndDrop() {
+        queueListView.setCellFactory(lv -> {
+            ListCell<Song> cell = new ListCell<Song>() {
+                @Override
+                protected void updateItem(Song item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : item.getSongName());
+                }
+            };
+
+            // Start of dragging
+            cell.setOnDragDetected(event -> onDragDetected(event, cell));
+
+            // Allows receiving the dragged element
+            cell.setOnDragOver(event -> onDragOver(event, cell));
+
+            // When the element is released
+            cell.setOnDragDropped(event -> onDragDropped(event, cell));
+
+            return cell;
+        });
+    }
+
+    private void onDragDetected(MouseEvent event, ListCell<Song> cell) {
+        if (!cell.isEmpty()) {
+            Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(cell.getItem().getSongName());
+            db.setContent(content);
+            event.consume();
+        }
+    }
+
+    private void onDragOver(DragEvent event, ListCell<Song> cell) {
+        if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
+        event.consume();
+    }
+
+    private void onDragDropped(DragEvent event, ListCell<Song> cell) {
+        Dragboard db = event.getDragboard();
+        if (db.hasString()) {
+            Song draggedSong = queueListView.getItems().stream()
+                    .filter(song -> song.getSongName().equals(db.getString()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (draggedSong != null) {
+                int draggedIndex = queueListView.getItems().indexOf(draggedSong);
+                int dropIndex = cell.getIndex();
+
+                if (draggedIndex != dropIndex) {
+                    playerController.reorderQueue(draggedIndex, dropIndex);
+                    updateQueueListView();
+                }
+
+                event.setDropCompleted(true);
+            }
+        }
+        event.consume();
+    }
+
+    /**
+     * Handle the switch to the 3 different languages
+     */
+
+    @FXML
+    private void handleSwitchToEnglish(ActionEvent event) {
+        switchLanguage("en");
+    }
+
+    @FXML
+    private void handleSwitchToFrench(ActionEvent event) {
+        switchLanguage("fr");
+    }
+
+    @FXML
+    private void handleSwitchToDutch(ActionEvent event) {
+        switchLanguage("nl");
+    }
+
+    @FXML
+    private void handleSettings(ActionEvent event) {
+        playerController.openSettings();
+    }
+
+    private void switchLanguage(String languageCode) {
+        LanguageManager.setLanguage(languageCode);
+        refreshUI();
+    }
+
+    public void refreshUI() {
+        initTranslation();
+        Stage stage = (Stage) scene.getWindow();
+        stage.setTitle(LanguageManager.get("app.title"));
+}
+
+
+
 }

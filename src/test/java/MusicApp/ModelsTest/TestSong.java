@@ -30,7 +30,7 @@ public class TestSong {
     @Test
     public void testGetCoverPath() {
         Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        assert (song.getCoverPath().equals("Cover1"));
+        assert (song.getCover().equals("Cover1"));
     }
 
     @Test
@@ -63,8 +63,8 @@ public class TestSong {
     @Test
     public void testSetCoverPath() {
         Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        song.setCoverPath("Cover2");
-        assert (song.getCoverPath().equals("Cover2"));
+        song.setCover("Cover2");
+        assert (song.getCover().equals("Cover2"));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class TestSong {
         assert (song.getSongName().equals("Song1"));
         assert (song.getArtistName().equals("Artist1"));
         assert (song.getStyle().equals("Style1"));
-        assert (song.getCoverPath().equals("Cover1"));
+        assert (song.getCover().equals("Cover1"));
         assert (song.getDuration().equals(Duration.seconds(1000)));
         
     }

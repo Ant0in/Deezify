@@ -1,6 +1,7 @@
 
 package MusicApp.Controllers;
 import java.io.File;
+import java.util.Base64;
 import java.util.HashMap;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -44,8 +45,16 @@ public class MetadataReader {
         metadata.put("title", tag.getFirst(FieldKey.TITLE));
         metadata.put("artist", tag.getFirst(FieldKey.ARTIST));
         metadata.put("genre", tag.getFirst(FieldKey.GENRE));
-        metadata.put("cover", tag.getFirst(FieldKey.COVER_ART));
         metadata.put("duration", String.valueOf(file.getAudioHeader().getTrackLength()));
+
+        try {
+            if (tag.getFirstArtwork() != null) {
+                byte[] imageData = tag.getFirstArtwork().getBinaryData();
+                metadata.put("cover", Base64.getEncoder().encodeToString(imageData));
+            }
+        } catch (Exception e) {
+            metadata.put("cover", null);
+        }
 
         // metadata.put("album", tag.getFirst(FieldKey.ALBUM));
         // metadata.put("comment", tag.getFirst(FieldKey.COMMENT));
