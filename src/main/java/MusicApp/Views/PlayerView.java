@@ -154,7 +154,8 @@ public class PlayerView {
      * Initialize speed box.
      */
     private void initSpeed() {
-        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x","1,25x", "1.5x", "1.75x", "2x");
+        speedBox.getItems().clear();
+        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x","1.25x", "1.5x", "1.75x", "2x");
         speedBox.setValue("1x");
         speedBox.setOnAction(e -> {
             String speed = speedBox.getValue();
