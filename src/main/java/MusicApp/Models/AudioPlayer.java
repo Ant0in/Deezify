@@ -22,85 +22,6 @@ public class AudioPlayer {
     private final DoubleProperty volume = new SimpleDoubleProperty(1.0);
     private double balance = 0.0;
 
-    public AudioPlayer() {
-        loadBalance();
-        setBalance(balance);
-    }
-
-
-    /**
-     * TEMPORARY: Could be replaced after discussion on the configuration system
-     * Config file in ~/.config/musicapp or %APPDATA%/musicapp
-     * One line is like this:
-     * balance=0.0
-     *
-     * Load the balance from the config file.
-     * if the file does not exist, the file is created
-     * if the file does not contain the balance, the balance is set to 0.0 and the file is updated
-     */
-    private void loadBalance() {
-        String configPath = System.getenv("APPDATA");
-        if (configPath == null) {
-            configPath = System.getProperty("user.home") + "/.config/musicapp";
-        } else {
-            configPath += "/musicapp";
-        }
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(configPath));
-            String line = reader.readLine();
-            if (line != null) {
-                String[] parts = line.split("=");
-                if (parts.length == 2 && parts[0].equals("balance")) {
-                    balance = Double.parseDouble(parts[1]);
-                }
-            }
-            reader.close();
-        } catch (IOException e) {
-            balance = 0.0;
-            try {
-                java.io.FileWriter writer = new java.io.FileWriter(configPath);
-                writer.write("balance=0.0\n");
-                writer.close();
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * TEMPORARY: Could be replaced after discussion on the configuration system
-     * Save the balance to the config file.
-     * if the file does not exist, the file is created
-     * if the file does not contain the balance, the balance is set to 0.0 and the file is updated
-     * if the file contains the balance, the balance is updated
-     */
-    public void saveBalance() {
-        String configPath = System.getenv("APPDATA");
-        if (configPath == null) {
-            configPath = System.getProperty("user.home") + "/.config/musicapp";
-        } else {
-            configPath += "/musicapp";
-        }
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(configPath));
-            String line = reader.readLine();
-            reader.close();
-            java.io.FileWriter writer = new java.io.FileWriter(configPath);
-            if (line != null) {
-                String[] parts = line.split("=");
-                if (parts.length == 2 && parts[0].equals("balance")) {
-                    writer.write("balance=" + balance + "\n");
-                } else {
-                    writer.write("balance=" + balance + "\n");
-                }
-            } else {
-                writer.write("balance=" + balance + "\n");
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     /**
      * Load a song into the player.
      * @param song The song to load.
@@ -275,7 +196,6 @@ public class AudioPlayer {
         this.balance = balance;
         if (mediaPlayer != null) {
             mediaPlayer.setBalance(balance);
-            this.saveBalance();
         }
     }
 

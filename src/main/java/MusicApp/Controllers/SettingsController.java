@@ -1,6 +1,8 @@
 package MusicApp.Controllers;
 
+import MusicApp.Models.Settings;
 import MusicApp.Views.SettingsView;
+import MusicApp.utils.DataProvider;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
@@ -23,6 +25,7 @@ public class SettingsController {
         this.settingsStage.setResizable(false);
         this.settingsStage.setTitle("Settings");
         this.settingsStage.setScene(settingsView.getScene());
+        this.musicDirectoryPath.set(metaController.getSettings().getMusicDirectory().toString());
     }
 
     public void show() {
@@ -41,18 +44,20 @@ public class SettingsController {
         metaController.refreshUI();
     }
 
-    public void setBalance(double balance) {
-        metaController.getPlayerController().setBalance(balance);
-    }
-
-    public double getBalance() {
-        return metaController.getPlayerController().getBalance();
-    }
-
     public StringProperty getMusicDirectoryPath(){return musicDirectoryPath;}
 
     public void setMusicDirectoryPath(String path){
         musicDirectoryPath.set(path);
         metaController.setMusicDirectoryPath(Paths.get(path));
+    }
+
+    public void setBalance(double balance) {
+        metaController.updateBalance(balance);
+    }
+
+    public void onSettingsChanged(Settings newSettings) {}
+
+    public double getBalance() {
+        return metaController.getSettings().getBalance();
     }
 }

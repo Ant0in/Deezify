@@ -2,29 +2,18 @@ package MusicApp.Controllers;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import MusicApp.Exceptions.ID3TagException;
-import MusicApp.Models.AudioPlayer;
-import MusicApp.Models.Library;
-import MusicApp.Models.PlaylistManager;
-import MusicApp.Models.Queue;
-import MusicApp.Models.Song;
+import MusicApp.Models.*;
 import MusicApp.Views.PlayerView;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Controller class for the music player.
@@ -54,7 +43,9 @@ public class PlayerController {
         this.library = new Library();
         this.queue = new Queue();
         this.playlistManager = new PlaylistManager(library);
-        loadLibrary(Paths.get("src/main/resources/songs/"));
+        Settings settings = metaController.getSettings();
+        this.audioPlayer.setBalance(settings.getBalance());
+        this.loadLibrary(settings.getMusicDirectory());
         this.playerView = new PlayerView(this);
     }
 
@@ -424,14 +415,6 @@ public class PlayerController {
         playerView.refreshUI();
     }
 
-    public void setBalance(double balance) {
-        audioPlayer.setBalance(balance);
-    }
-
-    public double getBalance() {
-        return audioPlayer.getBalance();
-    }
-
     /**
      * Toggle the shuffle mode.
      * @param isEnabled The shuffle button state.
@@ -448,5 +431,9 @@ public class PlayerController {
         }
     }
 
+    public void onSettingsChanged(Settings newSettings) {
+        audioPlayer.setBalance(newSettings.getBalance());
+        loadLibrary(newSettings.getMusicDirectory());
+    }
 }
 
