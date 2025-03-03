@@ -108,7 +108,8 @@ public class PlayerView {
     private void initTranslation() {
         addSongButton.setText(LanguageManager.get("button.add"));
         deleteSongButton.setText(LanguageManager.get("button.delete"));
-        clearQueueButton.setText(LanguageManager.get("button.clear"));        
+        clearQueueButton.setText(LanguageManager.get("button.clear"));
+        songInput.setPromptText(LanguageManager.get("search"));
     }
 
     /**

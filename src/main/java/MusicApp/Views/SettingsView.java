@@ -31,6 +31,7 @@ public class SettingsView {
 
     private String title;
     private final SettingsController settingsController;
+    private String originalLanguage;
 
     public SettingsView(SettingsController settingsController) throws IOException {
         this.settingsController = settingsController;
@@ -49,21 +50,41 @@ public class SettingsView {
     }
 
     private void init() {
+        originalLanguage = LanguageManager.getCurrentLocale().getLanguage();
         initComboBox();
         initSlider();
         initTranslations();
+        initButtons();
+    }
+
+    private void updateLanguageComboBox(){
+        String currentLanguage = LanguageManager.getCurrentLocale().getLanguage();
+        if (currentLanguage.equals("en")) {
+            languageComboBox.getSelectionModel().select(0);
+        } else if (currentLanguage.equals("fr")) {
+            languageComboBox.getSelectionModel().select(1);
+        } else if (currentLanguage.equals("nl")) {
+            languageComboBox.getSelectionModel().select(2);
+        }
     }
 
     private void initComboBox() {
-        languageComboBox.getItems().addAll("English", "Francais", "Nederlands");
-        Locale currentLanguage = LanguageManager.getCurrentLocale();
-        if (currentLanguage.getLanguage().equals("en")) {
-            languageComboBox.getSelectionModel().select(0);
-        } else if (currentLanguage.getLanguage().equals("fr")) {
-            languageComboBox.getSelectionModel().select(1);
-        } else if (currentLanguage.getLanguage().equals("nl")) {
-            languageComboBox.getSelectionModel().select(2);
+        languageComboBox.getItems().clear();
+        languageComboBox.getItems().addAll("English", "Français", "Nederlands");
+        updateLanguageComboBox();
+        languageComboBox.setOnAction(e -> handleLanguageChange());
+    }
+
+    private void handleLanguageChange() {
+        String selected = languageComboBox.getSelectionModel().getSelectedItem();
+        if (selected.equals("English")) {
+            LanguageManager.setLanguage("en");
+        } else if (selected.equals("Français")) {
+            LanguageManager.setLanguage("fr");
+        } else if (selected.equals("Nederlands")) {
+            LanguageManager.setLanguage("nl");
         }
+        refreshLanguage();
     }
 
     private void initSlider() {
@@ -87,6 +108,7 @@ public class SettingsView {
 
     public void refreshLanguage() {
         initTranslations();
+        updateLanguageComboBox();
     }
 
     private void initButtons() {
@@ -96,14 +118,6 @@ public class SettingsView {
 
     @FXML
     public void handleSave() {
-        String language = languageComboBox.getSelectionModel().getSelectedItem();
-        if (language.equals("English")) {
-            LanguageManager.setLanguage("en");
-        } else if (language.equals("Francais")) {
-            LanguageManager.setLanguage("fr");
-        } else if (language.equals("Nederlands")) {
-            LanguageManager.setLanguage("nl");
-        }
         settingsController.refreshLanguage();
         settingsController.setBalance(balanceSlider.getValue());
         settingsController.close();
@@ -111,6 +125,8 @@ public class SettingsView {
 
     @FXML
     public void handleCancel() {
+        LanguageManager.setLanguage(originalLanguage);
+        settingsController.refreshLanguage();
         settingsController.close();
     }
 
