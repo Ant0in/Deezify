@@ -1,15 +1,19 @@
 package MusicApp.Controllers;
 
 import MusicApp.Views.SettingsView;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 public class SettingsController {
     private Stage settingsStage;
     private SettingsView settingsView;
     private MetaController metaController;
+    private StringProperty musicDirectoryPath = new SimpleStringProperty("None");
 
     public SettingsController(MetaController metaController) throws IOException {
         this.metaController = metaController;
@@ -19,7 +23,6 @@ public class SettingsController {
         this.settingsStage.setResizable(false);
         this.settingsStage.setTitle("Settings");
         this.settingsStage.setScene(settingsView.getScene());
-
     }
 
     public void show() {
@@ -44,5 +47,12 @@ public class SettingsController {
 
     public double getBalance() {
         return metaController.getPlayerController().getBalance();
+    }
+
+    public StringProperty getMusicDirectoryPath(){return musicDirectoryPath;}
+
+    public void setMusicDirectoryPath(String path){
+        musicDirectoryPath.set(path);
+        metaController.setMusicDirectoryPath(Paths.get(path));
     }
 }

@@ -3,6 +3,7 @@ package MusicApp.Controllers;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class MetaController {
 
@@ -40,5 +41,9 @@ public class MetaController {
 
     public PlayerController getPlayerController() {
         return playerController;
+    }
+
+    public void setMusicDirectoryPath(Path musicDirectoryPath){
+        playerController.loadLibrary(musicDirectoryPath);
     }
 }

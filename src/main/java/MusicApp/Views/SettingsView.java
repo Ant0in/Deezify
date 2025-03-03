@@ -11,9 +11,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
@@ -28,6 +30,10 @@ public class SettingsView {
     private Label balanceLabel, balanceTitle, languageTitle, languageSelect, left, right;
     @FXML
     private Button saveButton, cancelButton;
+    @FXML
+    private Button browseButton; // Add this
+    @FXML
+    private Label directoryLabel;
 
     private String title;
     private final SettingsController settingsController;
@@ -55,6 +61,7 @@ public class SettingsView {
         initSlider();
         initTranslations();
         initButtons();
+        initBinding();
     }
 
     private void updateLanguageComboBox(){
@@ -104,6 +111,7 @@ public class SettingsView {
         title = LanguageManager.get("settings.title");
         saveButton.setText(LanguageManager.get("settings.save"));
         cancelButton.setText(LanguageManager.get("settings.cancel"));
+        browseButton.setText(LanguageManager.get("settings.select_music_folder"));
     }
 
     public void refreshLanguage() {
@@ -114,6 +122,11 @@ public class SettingsView {
     private void initButtons() {
         saveButton.setOnMouseClicked(event -> handleSave());
         cancelButton.setOnMouseClicked(event -> handleCancel());
+        browseButton.setOnMouseClicked(event->handleBrowseDirectory());
+    }
+
+    private void initBinding(){
+        directoryLabel.textProperty().bind(settingsController.getMusicDirectoryPath());
     }
 
     @FXML
@@ -128,6 +141,18 @@ public class SettingsView {
         LanguageManager.setLanguage(originalLanguage);
         settingsController.refreshLanguage();
         settingsController.close();
+    }
+
+    @FXML
+    private void handleBrowseDirectory() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select Music Folder");
+        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        File selectedDirectory = directoryChooser.showDialog(null);
+        if (selectedDirectory != null) {
+            settingsController.setMusicDirectoryPath(selectedDirectory.getAbsolutePath());
+        }
     }
 
     public String getTitle() {

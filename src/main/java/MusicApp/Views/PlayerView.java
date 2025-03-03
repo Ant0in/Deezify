@@ -323,6 +323,11 @@ public class PlayerView {
                 handlePlaySong();
             }
         });
+        queueListView.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                handlePlaySong();
+            }
+        });
     }
 
     public void enableDoubleClickToGrow(Stage stage){
@@ -387,14 +392,14 @@ public class PlayerView {
     /**
      * Update the play list view.
      */
-    private void updatePlayListView() {
+    public void updatePlayListView() {
         playListView.getItems().setAll(playerController.getLibrary().toList());
     }
 
     /**
      * Update the queue list view.
      */
-    private void updateQueueListView() {
+    public void updateQueueListView() {
         queueListView.getItems().setAll(playerController.getQueue().toList());
     }
 

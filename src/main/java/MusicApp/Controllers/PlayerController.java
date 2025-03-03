@@ -54,7 +54,7 @@ public class PlayerController {
         this.library = new Library();
         this.queue = new Queue();
         this.playlistManager = new PlaylistManager(library);
-        loadLibrary();
+        loadLibrary(Paths.get("src/main/resources/songs/"));
         this.playerView = new PlayerView(this);
     }
 
@@ -68,9 +68,7 @@ public class PlayerController {
      *  // !!!  Metadata is currently hardcoded for testing, and should be dynamically loaded. !!!
      *
      */
-    private void loadLibrary() {
-        Path folderPath = Paths.get("src/main/resources/songs/");
-
+    public void loadLibrary(Path folderPath) {
         List<Path> songs;
         try {
             songs = MusicLoader.getAllSongPaths(folderPath);
@@ -79,6 +77,7 @@ public class PlayerController {
             return;
         }
 
+        library.clear();
         for (Path songPath : songs) {
 
             HashMap<String, String> metadata = new HashMap<>();
@@ -93,8 +92,11 @@ public class PlayerController {
                     metadata,      // metadata
                     songPath       // file path
             ));
-
         }
+        if (this.playerView != null){
+            this.playerView.updatePlayListView();
+        }
+
     }
 
     /**
@@ -298,6 +300,7 @@ public class PlayerController {
             audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
             removeFromQueue(song);
+            playerView.updateQueueListView();
             System.out.println("Playing from queue: " + song.getSongName());
         }
     }
