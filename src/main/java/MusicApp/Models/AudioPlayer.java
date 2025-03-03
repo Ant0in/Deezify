@@ -146,6 +146,14 @@ public class AudioPlayer {
     }
 
     /**
+     * Change speed of the loaded song.
+     */
+    public void changeSpeed(double speed) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setRate(speed);
+        }
+    }
+    /**
      * Get the current time of the song.
      * @return The current time of the song.
      */

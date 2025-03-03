@@ -2,6 +2,7 @@ package MusicApp.Controllers;
 
 import MusicApp.Models.AudioPlayer;
 import MusicApp.Models.Library;
+import MusicApp.Models.PlaylistManager;
 import MusicApp.Models.Queue;
 import MusicApp.Models.Song;
 import MusicApp.Views.PlayerView;
@@ -28,7 +29,9 @@ public class PlayerController {
     private final AudioPlayer audioPlayer;
     private final Library library;
     private final Queue queue;
+    private final PlaylistManager playlistManager;
     private int currentIndex;
+    private double currentSpeed = 1.0;
 
     private final PlayerView playerView;
     private final MetaController metaController;
@@ -42,6 +45,7 @@ public class PlayerController {
         this.audioPlayer = new AudioPlayer();
         this.library = new Library();
         this.queue = new Queue();
+        this.playlistManager = new PlaylistManager(library);
         loadLibrary();
         this.playerView = new PlayerView(this);
     }
@@ -122,6 +126,7 @@ public class PlayerController {
         if (currentIndex >= 0 && currentIndex < library.size()) {
             Song song = library.get(currentIndex);
             audioPlayer.loadSong(song);
+            applyCurrentSpeed();
             audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
             System.out.println("Playing: " + song.getSongName());
@@ -142,6 +147,47 @@ public class PlayerController {
      */
     public void setVolume(double volume) {
         getAudioPlayer().setVolume(volume);
+    }
+
+    /**
+     * Get the current speed value.
+     * @param speedLabel The speed label.
+     * @return The speed value.
+     */
+    public double getSpeedValue(String speedLabel) {
+        switch (speedLabel) {
+            case "0.25x":
+                return 0.25;
+            case "0.5x":
+                return 0.5;
+            case "0.75x":
+                return 0.75;
+            case "1x":
+                return 1.0;
+            case "1.25x":
+                return 1.25;
+            case "1.5x":
+                return 1.5;
+            case "1.75x":
+                return 1.75;
+            case "2x":
+                return 2.0;
+            default:
+                return 1.0; 
+        }
+    }
+
+    /**
+     * Change speed of the currently playing song.
+     * @param speed The speed to set.
+     */
+    public void changeSpeed(double speed) {
+        this.currentSpeed = speed;
+        audioPlayer.changeSpeed(speed);
+    }
+
+    public void applyCurrentSpeed() {
+        audioPlayer.changeSpeed(currentSpeed);
     }
 
 
@@ -219,6 +265,7 @@ public class PlayerController {
         if (index >= 0 && index < queue.size()) {
             Song song = queue.get(index);
             audioPlayer.loadSong(song);
+            applyCurrentSpeed();
             audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
             removeFromQueue(song);
@@ -351,6 +398,22 @@ public class PlayerController {
 
     public double getBalance() {
         return audioPlayer.getBalance();
+    }
+
+    /**
+     * Toggle the shuffle mode.
+     * @param isEnabled The shuffle button state.
+     */
+    public void toggleShuffle(boolean isEnabled) {
+        Song currentSong = (currentIndex >= 0 && currentIndex < library.size()) ? library.get(currentIndex) : null;
+        playlistManager.toggleShuffle(isEnabled, currentSong);
+        if (currentSong != null) {
+            int newIndex = isEnabled ? 0 : playlistManager.getOriginalIndex(currentSong);
+            if (newIndex != -1) {
+                currentIndex = newIndex;
+                goTo(currentIndex);
+            }
+        }
     }
 
 }

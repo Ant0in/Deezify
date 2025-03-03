@@ -64,6 +64,10 @@ public class PlayerView {
     private ImageView imageCover;
     @FXML
     private Pane labelContainer;
+    @FXML
+    private ToggleButton shuffleToggle;
+    @FXML
+    private ComboBox<String> speedBox;
 
     //private static final String PLAY_ICON = "▶";
     //private static final String PAUSE_ICON = "⏸";
@@ -89,12 +93,14 @@ public class PlayerView {
     public void initialize(){
         initBindings();
         initSongInput();
+        initSpeed();
         initPlayListView();
         updatePlayListView();
         updateQueueListView();
         enableQueueDragAndDrop();
         setupListSelectionListeners();
         enableDoubleClickToPlay();
+        enableShuffleToggle();
         setupListSelectionListeners();
         initTranslation();
     }
@@ -142,6 +148,19 @@ public class PlayerView {
 
         deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
         addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
+    }
+
+    /**
+     * Initialize speed box.
+     */
+    private void initSpeed() {
+        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x","1,25x", "1.5x", "1.75x", "2x");
+        speedBox.setValue("1x");
+        speedBox.setOnAction(e -> {
+            String speed = speedBox.getValue();
+            double rate = playerController.getSpeedValue(speed);
+            playerController.changeSpeed(rate);
+        });
     }
 
     private void bindSongProgress(){
@@ -291,6 +310,13 @@ public class PlayerView {
     private void initPlayListView() {
         playListView.setCellFactory(lv -> new SongCell(playerController));
         updatePlayListView();
+    }
+
+    public void enableShuffleToggle(){
+        shuffleToggle.setOnAction(event -> {
+        playerController.toggleShuffle(shuffleToggle.isSelected());
+        updatePlayListView(); // Update the play list view to show the new order
+        });
     }
 
     public void enableDoubleClickToPlay(){
@@ -476,7 +502,7 @@ public class PlayerView {
 
     private void enableQueueDragAndDrop() {
         queueListView.setCellFactory(lv -> {
-            ListCell<Song> cell = new ListCell<>() {
+            ListCell<Song> cell = new ListCell<Song>() {
                 @Override
                 protected void updateItem(Song item, boolean empty) {
                     super.updateItem(item, empty);
