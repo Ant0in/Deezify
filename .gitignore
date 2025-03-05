@@ -129,6 +129,7 @@ fabric.properties
 
 # Package Files #
 *.jar
+!MusicApp_groupe2-*.jar
 *.war
 *.nar
 *.ear
