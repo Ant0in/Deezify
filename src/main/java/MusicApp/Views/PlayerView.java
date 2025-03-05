@@ -2,6 +2,8 @@ package MusicApp.Views;
 
 import MusicApp.utils.LanguageManager;
 import MusicApp.Models.Song;
+import java.util.List;
+import java.util.Arrays;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -123,12 +125,11 @@ public class PlayerView {
         bindVolumeControls();
         bindCurrentSongControls();
         bindButtonsImages();
+        bindAllControlActivation();
+        bindQueueButtonsActivation();
     }
 
     private void bindButtons(){
-        deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
-        addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
-
         ImageView playIcon = new ImageView(new Image(getClass().getResource("/images/play_white.png").toExternalForm()));
         playIcon.setFitWidth(20);
         playIcon.setFitHeight(20);
@@ -146,9 +147,6 @@ public class PlayerView {
                 currentSongLabel.setStyle("-fx-text-fill: white;");
             }
         });
-
-        deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
-        addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
     }
 
     /**
@@ -192,9 +190,8 @@ public class PlayerView {
 
 
     private void bindPlayingSongAnchor(){
-        controls.visibleProperty().bind(playerController.currentSongProperty().isNotEqualTo("None"));
+        controls.setVisible(true);
     }
-
 
     /**
      * Initialize the volume controls.
@@ -291,6 +288,49 @@ public class PlayerView {
         settingsIcon.setFitHeight(20);
         btnSettings.setGraphic(settingsIcon);
     }
+
+
+    private void bindAllControlActivation() {
+        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider);
+        updateControlsState(controls, true);
+        playerController.currentSongProperty().addListener((obs, oldVal, newVal) -> {
+            boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
+            updateControlsState(controls, !songIsPlaying);
+        });
+    }
+
+    private void updateControlsState(List<Control> controls, boolean disable) {
+        for (Control c : controls) {
+            c.setDisable(disable);
+            c.getStyleClass().remove("disabled-btn");
+            if (disable) {
+                c.getStyleClass().add("disabled-btn");
+            }
+        }
+    }
+
+    private void bindQueueButtonsActivation() {
+        addSongButton.disableProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNull());
+        deleteSongButton.disableProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNull());
+        clearQueueButton.disableProperty().bind(Bindings.isEmpty(queueListView.getItems()));
+    
+        applyDisableStyleListener(addSongButton);
+        applyDisableStyleListener(deleteSongButton);
+        applyDisableStyleListener(clearQueueButton);
+    }
+
+    private void applyDisableStyleListener(Control control) {
+        control.disableProperty().addListener((obs, wasDisabled, isDisabled) -> {
+            if (isDisabled) {
+                if (!control.getStyleClass().contains("disabled-btn")) {
+                    control.getStyleClass().add("disabled-btn");
+                }
+            } else {
+                control.getStyleClass().remove("disabled-btn");
+            }
+        });
+    }
+
 
     /**
      * Initialize the song input for the search

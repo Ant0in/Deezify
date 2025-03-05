@@ -9,6 +9,23 @@
     -fx-padding: 5px 15px;
 }
 
+.button:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-background-color: #2f508e;/*#00ACC1;*/
+}
+
+.disabled-btn {
+    -fx-opacity: 0.5;
+    -fx-background-color: #555;
+    -fx-text-fill: #888;
+    -fx-border-color: transparent;
+}
+
+.disabled-btn:hover {
+    -fx-background-color: #555;
+}
+
 .exitbtn {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -18,12 +35,6 @@
 
 .root {
     -fx-background-color: linear-gradient(to bottom, #062726, #102b3f);
-}
-
-.button:hover {
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-    -fx-background-color: #2f508e;/*#00ACC1;*/
 }
 
 .progress-bar {
@@ -73,6 +84,16 @@
     -fx-border-width: 2px;
     -fx-text-fill: white;
 }
+.queueButton:disabled {
+    -fx-opacity: 0.5;
+    -fx-background-color: #555;
+    -fx-text-fill: #888;
+    -fx-border-color: transparent;
+}
+
+.queueButton:disabled:hover {
+    -fx-background-color: #555;
+}
 
 .songs {
     -fx-background-color: #201e1e;
@@ -107,7 +128,7 @@
     -fx-background-color: #2f508e;
 }
 
-.pausebtn, .previousbtn, .nextbtn, .settingsbtn {
+.pausebtn, .previousbtn, .nextbtn, .settingsbtn ,.shuffle-btn{
     -fx-background-color: transparent;
 }
 
