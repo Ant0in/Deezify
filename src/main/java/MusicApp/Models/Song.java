@@ -1,13 +1,25 @@
 package MusicApp.Models;
 
+import java.io.ByteArrayInputStream;
+import java.nio.file.Path;
+import java.util.Base64;
+import java.util.HashMap;
+
+import javafx.scene.image.Image;
 import javafx.util.Duration;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class Song {
+
     private String songName;
     private String artistName;
     private String style;
-    private String coverPath;
+    private String cover;
+    private final Path filePath;
     private Duration duration;
+    private Path path;
 
     /**
      * Constructor
@@ -15,16 +27,43 @@ public class Song {
      * @param artistName The name of the artist.
      * @param style The style of the song.
      * @param coverPath The path to the cover image.
+     * @param filePath The path to the music file.
      * @param duration The duration of the song.
      */
-    public Song(String songName, String artistName, String style, String coverPath, Duration duration) {
+    public Song(String songName, String artistName, String style, String cover, Path filePath, Duration duration) {
         this.songName = songName;
         this.artistName = artistName;
         this.style = style;
-        this.coverPath = coverPath;
+        this.cover = cover;
+        this.filePath = filePath;
         this.duration = duration;
     }
 
+    /**
+     * Constructor using the metadata map from MetadataReader.
+     * @param metadata The metadata of the song.
+     * @param filePath The path to the music file.
+     */
+    public Song(HashMap<String, String> metadata, Path filePath) {
+        
+        this.songName = metadata.get("title") != null ? metadata.get("title") : "Unknown Title";
+        this.artistName = metadata.get("artist") != null ? metadata.get("artist") : "Unknown Artist";
+        this.style = metadata.get("genre") != null ? metadata.get("genre") : "Unknown Genre";
+        if (metadata.get("cover") != null) {
+            this.cover = metadata.get("cover");
+        } else {
+            this.cover = null;
+        }
+        this.filePath = filePath;
+        this.duration = metadata.get("duration") != null ? Duration.seconds(Double.parseDouble(metadata.get("duration"))) : Duration.seconds(0);
+
+    }
+
+    /**
+     * Get song file path
+     * @return The Path to the song file.
+     */
+    public Path getFilePath() { return filePath; }
     /**
      * Get the name of the song.
      * @return The name of the song.
@@ -47,7 +86,26 @@ public class Song {
      * Get the path to the cover image.
      * @return The path to the cover image.
      */
-    public String getCoverPath() { return coverPath; }
+    public String getCover() { return cover; }
+
+    public Image getCoverImage() {
+        if (this.cover == null) {
+            return new Image(getClass().getResource("/images/song.png").toExternalForm());
+        }
+
+        try {
+            byte [] imageData = Base64.getDecoder().decode(cover);
+            return new Image(new ByteArrayInputStream(imageData));
+        } catch (Exception e) {
+            return new Image(getClass().getResource("/images/song.png").toExternalForm());
+        }
+    }
+
+    /**
+     * Get the path to the file.
+     * @return The path to the file.
+     */
+    public String getPath() { return filePath.toString(); }
 
     /**
      * Get the duration of the song.
@@ -77,7 +135,7 @@ public class Song {
      * Set the path to the cover image.
      * @param coverPath The path to the cover image.
      */
-    public void setCoverPath(String coverPath) { this.coverPath = coverPath; }
+    public void setCover(String cover) { this.cover = cover; }
 
     /**
      * Set the duration of the song.

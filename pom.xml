@@ -6,14 +6,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ulb</groupId>
-  <artifactId>infof307</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>infof307</name>
+  <artifactId>MusicApp_groupe2</artifactId>
+  <version>0.1</version>
+  <name>MusicApp_groupe2</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.source>23</maven.compiler.source>
+    <maven.compiler.target>23</maven.compiler.target>
   </properties>
 
   <repositories>
@@ -82,9 +82,65 @@
       <version>4.0.15-alpha</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
 
+    <dependency>
+      <groupId>net.jthink</groupId>
+      <artifactId>jaudiotagger</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+
+  </dependencies>
   <build>
+    <plugins>
+      <!-- Maven Compiler Plugin -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+<!--        <configuration>-->
+<!--          <source>23</source>-->
+<!--          <target>23</target>-->
+<!--        </configuration>-->
+      </plugin>
+      <!-- Maven Surefire Plugin -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+      <!-- Maven Shade Plugin for creating an uber JAR with all dependencies -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>MusicApp.MainLauncher</mainClass>
+                </transformer>
+                <!-- Merge service files if any -->
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
     <pluginManagement>
       <plugins>
         <!-- Maven Clean Plugin -->
@@ -97,23 +153,13 @@
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.0.2</version>
         </plugin>
-        <!-- Maven Compiler Plugin -->
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-        </plugin>
-        <!-- Maven Surefire Plugin -->
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
-        </plugin>
         <!-- Exec Maven Plugin with VM options -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>3.1.1</version>
           <configuration>
-            <mainClass>MusicApp.Main</mainClass>
+            <mainClass>MusicApp.MainLauncher</mainClass>
             <arguments>
               <argument>--module-path</argument>
               <!-- Replace [module-path-value] with your actual module path -->
@@ -134,7 +180,7 @@
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
-                <mainClass>MusicApp.Main</mainClass>
+                <mainClass>MusicApp.MainLauncher</mainClass>
               </manifest>
             </archive>
           </configuration>
