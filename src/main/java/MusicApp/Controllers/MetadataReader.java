@@ -4,15 +4,43 @@ import java.io.File;
 import java.util.Base64;
 import java.util.HashMap;
 
+import MusicApp.Exceptions.BadFileTypeException;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.mp3.MP3FileReader;
+import org.jaudiotagger.audio.wav.WavFileReader;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
 import MusicApp.Exceptions.ID3TagException;
 
+enum FileType {
+    MP3,
+    WAV,
+//    FLAC,
+//    OGG
+    NONE
+}
+
 public class MetadataReader {
-    
+
+    /**
+     * This method returns an enum based on the extension of a file
+     * @param fd : File Object
+     * @return FileType enum
+    */
+    private static FileType getFileExtension(File fd) {
+        String fileName = fd.getName();
+        String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+        if (ext.equals("mp3")) {
+            return FileType.MP3;
+        } else if (ext.equals("wav")) {
+            return FileType.WAV;
+        } else {
+            return FileType.NONE;
+        }
+    }
+
     /**
      * 
      * This method reads the metadata of a file and returns it in a hashmap
@@ -23,12 +51,11 @@ public class MetadataReader {
      * 
     */
 
-    public static HashMap<String, String> getMetadata(File fd) throws ID3TagException {
-        
+    public static HashMap<String, String> getMetadata(File fd) throws ID3TagException, BadFileTypeException {
+
         HashMap<String, String> metadata = new HashMap<>();
         AudioFile file = readFile(fd);
         Tag tag = readTag(file);
-
         if (tag == null) {
             throw new ID3TagException("No ID3v2 tags found", new Throwable());
         }
@@ -52,13 +79,7 @@ public class MetadataReader {
             metadata.put("cover", null);
         }
 
-        // metadata.put("album", tag.getFirst(FieldKey.ALBUM));
-        // metadata.put("comment", tag.getFirst(FieldKey.COMMENT));
-        // metadata.put("track", tag.getFirst(FieldKey.TRACK));
-        // metadata.put("year", tag.getFirst(FieldKey.YEAR));
-    
         return metadata;
-
     }
 
     /**
@@ -73,12 +94,31 @@ public class MetadataReader {
 
     /**
      * This method reads the file and returns it as an AudioFile object
+     * @param fd : WAV File Object
+     * @return AudioFile object
+     * @throws RuntimeException (can be IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException)
+     */
+
+    private static AudioFile readWAVFile(File fd) {
+        WavFileReader reader = new WavFileReader();
+        AudioFile file;
+
+        try {
+            file = reader.read(fd);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return file;
+    }
+
+    /**
+     * This method reads the file and returns it as an AudioFile object
      * @param fd : mp3 File Object
      * @return AudioFile object
      * @throws RuntimeException (can be IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException)
     */
 
-    private static AudioFile readFile(File fd) throws RuntimeException {
+    private static AudioFile readMP3File(File fd) throws RuntimeException {
 
         MP3FileReader reader = new MP3FileReader();
         AudioFile file;
@@ -93,7 +133,22 @@ public class MetadataReader {
         }
 
         return file;
+    }
 
+    /**
+     * This method reads the file and returns it as an AudioFile object
+     * currently supports MP3 and WAV files only
+     * @param fd : File Object
+     * @return AudioFile object
+    */
+    private static AudioFile readFile(File fd) throws BadFileTypeException {
+        FileType ext = getFileExtension(fd);
+
+        return switch (ext) {
+            case MP3 -> readMP3File(fd);
+            case WAV -> readWAVFile(fd);
+            default -> throw new BadFileTypeException("Unsupported file type", new Throwable());
+        };
     }
 
 }

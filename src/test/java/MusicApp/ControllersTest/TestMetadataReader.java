@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+
+import MusicApp.Exceptions.BadFileTypeException;
 import org.junit.Test;
 
 import MusicApp.Controllers.MetadataReader;
@@ -20,7 +22,7 @@ public class TestMetadataReader {
     public void testReadValidFile() {
 
         // check if the metadata reader can handle a mp3 file with valid metadata
-        File file = Paths.get("src", "test", "resources", "goodTestFile.mp3").toFile();
+        File file = Paths.get("src", "test", "resources", "goodTestMP3.mp3").toFile();
         boolean hasExceptionOccured = false;
 
         try {
@@ -34,10 +36,10 @@ public class TestMetadataReader {
     }
 
     @Test
-    public void testNoID3v2Tags() {
+    public void testNoTagsMP3() {
 
         // check if the metadata reader can handle a mp3 file with no ID3v2 tags
-        File file = Paths.get("src", "test", "resources", "noID3TagFile.mp3").toFile();
+        File file = Paths.get("src", "test", "resources", "noID3TagMP3.mp3").toFile();
 
         assertThrows(ID3TagException.class, () -> {
             MetadataReader.getMetadata(file);
@@ -46,15 +48,15 @@ public class TestMetadataReader {
     }
 
     @Test
-    public void testCheckMetadata() {
+    public void testCheckMetadataMP3() {
 
         // check if the metadata reader can handle a mp3 file with valid metadata
-        File file = Paths.get("src", "test", "resources", "goodTestFile.mp3").toFile();
+        File file = Paths.get("src", "test", "resources", "goodTestMP3.mp3").toFile();
         HashMap<String, String> metadata;
 
         try {
             metadata = MetadataReader.getMetadata(file);
-        } catch (ID3TagException e) {
+        } catch (ID3TagException | BadFileTypeException e) {
             e.printStackTrace();
             assert false;
             return;
@@ -67,6 +69,64 @@ public class TestMetadataReader {
         // cover is not tested smh
         assertEquals("2", metadata.get("duration"));
 
+    }
+
+    @Test
+    public void testCheckMetadataWAV() {
+
+        // check if the metadata reader can handle a mp3 file with valid metadata
+        File file = Paths.get("src", "test", "resources", "goodTestWAV.wav").toFile();
+        HashMap<String, String> metadata;
+
+        try {
+            metadata = MetadataReader.getMetadata(file);
+        } catch (ID3TagException e) {
+            e.printStackTrace();
+            assert false;
+            return;
+        } catch (BadFileTypeException e) {
+            e.printStackTrace();
+            assert false;
+            return;
+        }
+
+        // few eq checks
+        assertEquals("3seconds", metadata.get("title"));
+        assertEquals("Sample", metadata.get("artist"));
+        assertEquals("Celtic", metadata.get("genre"));
+        // cover is not tested smh
+        assertEquals("3", metadata.get("duration"));
+    }
+
+    @Test
+    public void testNoTagsWAV() {
+
+        // check if the metadata reader can handle a mp3 file with no ID3v2 tags
+        File file = Paths.get("src", "test", "resources", "noTagWAV.wav").toFile();
+
+        try {
+            System.out.println(MetadataReader.getMetadata(file));
+            assertEquals("", MetadataReader.getMetadata(file).get("title"));
+            assertEquals("", MetadataReader.getMetadata(file).get("artist"));
+            assertEquals("", MetadataReader.getMetadata(file).get("genre"));
+        } catch (ID3TagException e) {
+            e.printStackTrace();
+            assert false;
+        } catch (BadFileTypeException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testBadFileType() {
+
+        // check if the metadata reader can handle a file with an invalid extension
+        File file = Paths.get("src", "test", "resources", "badFileType.opus").toFile();
+
+        assertThrows(BadFileTypeException.class, () -> {
+            MetadataReader.getMetadata(file);
+        });
     }
 
 }
