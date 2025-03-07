@@ -26,7 +26,7 @@ public class Song {
      * @param songName The name of the song.
      * @param artistName The name of the artist.
      * @param style The style of the song.
-     * @param coverPath The path to the cover image.
+     * @param cover The path to the cover image.
      * @param filePath The path to the music file.
      * @param duration The duration of the song.
      */
@@ -46,10 +46,10 @@ public class Song {
      */
     public Song(HashMap<String, String> metadata, Path filePath) {
         
-        this.songName = metadata.get("title") != null ? metadata.get("title") : "Unknown Title";
-        this.artistName = metadata.get("artist") != null ? metadata.get("artist") : "Unknown Artist";
-        this.style = metadata.get("genre") != null ? metadata.get("genre") : "Unknown Genre";
-        if (metadata.get("cover") != null) {
+        this.songName = metadata.get("title") != null && !metadata.get("title").isEmpty() ? metadata.get("title") : "Unknown Title";
+        this.artistName = metadata.get("artist") != null && !metadata.get("artist").isEmpty() ? metadata.get("artist") : "Unknown Artist";
+        this.style = metadata.get("genre") != null && !metadata.get("genre").isEmpty() ? metadata.get("genre") : "Unknown Genre";
+        if (metadata.get("cover") != null && !metadata.get("cover").isEmpty()) {
             this.cover = metadata.get("cover");
         } else {
             this.cover = null;
@@ -133,7 +133,7 @@ public class Song {
 
     /**
      * Set the path to the cover image.
-     * @param coverPath The path to the cover image.
+     * @param cover The path to the cover image.
      */
     public void setCover(String cover) { this.cover = cover; }
 
