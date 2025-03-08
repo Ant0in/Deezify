@@ -1,5 +1,7 @@
 package MusicApp.Models;
 
+import MusicApp.utils.DataProvider;
+
 import java.nio.file.Path;
 
 /**
@@ -24,27 +26,39 @@ public class Settings {
      * The settings string must be in the following format:
      * balance=0.0
      * musicFolder=/path/to/music/folder
-     *
+     * if the settings string is null or empty, an IllegalArgumentException is thrown.
+     * if the settings string does not contain one of the required fields, it will take the default value.
      * @param settings The settings string.
      * @return The Settings object.
      */
-    public static Settings fromString(String settings) {
+    public static Settings fromString(String settings) throws IllegalArgumentException {
+        double balance = 0.0;
+        Path musicFolder = DataProvider.getDefaultMusicDir();
         if (settings == null || settings.trim().isEmpty()) {
             throw new IllegalArgumentException("Settings string cannot be null or empty");
         }
 
         String[] lines = settings.split("\n");
-        if (lines.length < 2) {
-            throw new IllegalArgumentException("Settings string must contain both balance and musicFolder");
-        }
 
         try {
-            double balance = Double.parseDouble(lines[0].split("=")[1]);
-            Path musicFolder = Path.of(lines[1].split("=")[1]);
-            return new Settings(balance, musicFolder);
+            for (String line : lines) {
+                String[] parts = line.split("=");
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException("Invalid settings format");
+                }
+                switch (parts[0]) {
+                    case "balance":
+                        balance = Double.parseDouble(parts[1]);
+                        break;
+                    case "musicFolder":
+                        musicFolder = Path.of(parts[1]);
+                        break;
+                }
+            }
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid settings format", e);
         }
+        return new Settings(balance, musicFolder);
     }
 
     /**

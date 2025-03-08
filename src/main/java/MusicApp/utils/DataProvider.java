@@ -44,7 +44,7 @@ public class DataProvider {
      *
      * @return The default music directory.
      */
-    private Path getDefaultMusicDir() {
+    public static Path getDefaultMusicDir() {
         String os = System.getProperty("os.name").toLowerCase();
         Path defaultMusicDir;
         Path fallbackMusicDir;
