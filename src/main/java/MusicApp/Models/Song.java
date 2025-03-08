@@ -43,10 +43,10 @@ public class Song {
      */
     public Song(HashMap<String, String> metadata, Path filePath) {
         
-        this.songName = metadata.get("title") != null ? metadata.get("title") : "Unknown Title";
-        this.artistName = metadata.get("artist") != null ? metadata.get("artist") : "Unknown Artist";
-        this.style = metadata.get("genre") != null ? metadata.get("genre") : "Unknown Genre";
-        if (metadata.get("cover") != null) {
+        this.songName = metadata.get("title") != null && !metadata.get("title").isEmpty() ? metadata.get("title") : "Unknown Title";
+        this.artistName = metadata.get("artist") != null && !metadata.get("artist").isEmpty() ? metadata.get("artist") : "Unknown Artist";
+        this.style = metadata.get("genre") != null && !metadata.get("genre").isEmpty() ? metadata.get("genre") : "Unknown Genre";
+        if (metadata.get("cover") != null && !metadata.get("cover").isEmpty()) {
             this.cover = metadata.get("cover");
         } else {
             this.cover = null;

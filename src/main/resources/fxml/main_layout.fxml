@@ -63,8 +63,8 @@
                <Button fx:id="nextSongButton" onAction="#handleNextSong" styleClass="nextbtn" />
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="10" HBox.hgrow="ALWAYS">
-               <ToggleButton fx:id="shuffleToggle" mnemonicParsing="false" text="🔀" />
-               <ComboBox fx:id="speedBox" prefHeight="25.0" prefWidth="75.0" />
+               <ToggleButton fx:id="shuffleToggle" styleClass="shuffle-btn" mnemonicParsing="false" />
+               <ComboBox fx:id="speedBox" styleClass="speed-box" prefHeight="15.0" prefWidth="95.0" />
                <Label styleClass="volumeText" text="Vol" />
                <Slider fx:id="volumeSlider" prefWidth="80" styleClass="volume" />
                <Label fx:id="volumeLabel" styleClass="volumeText" text="50" />

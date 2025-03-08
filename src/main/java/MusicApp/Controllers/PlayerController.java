@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import MusicApp.Exceptions.BadFileTypeException;
 import MusicApp.Exceptions.ID3TagException;
 import MusicApp.Models.*;
 import MusicApp.Views.PlayerView;
@@ -78,6 +79,8 @@ public class PlayerController {
                 metadata = MetadataReader.getMetadata(songPath.toFile());
             } catch (ID3TagException e) {
                 System.out.println("Error while reading metadata: " + e.getMessage());
+            } catch (BadFileTypeException e) {
+                System.out.println("Bad file type: " + e.getMessage());
             }
             
             library.add(new Song(
