@@ -167,3 +167,51 @@
     -fx-text-fill: grey;
     -fx-font-weight: bold;
 }
+
+.shuffle-btn {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+}
+
+.shuffle-btn:hover {
+    -fx-background-color: #333939;
+    -fx-background-radius: 10px;
+}
+
+.shuffle-btn:selected {
+    -fx-background-color: #007BFF;
+    -fx-background-radius: 10px;
+}
+
+.speed-box {
+    -fx-background-color: #201e1e;
+    -fx-border-color: #007BFF;
+    -fx-border-radius: 8px;
+    -fx-text-fill: white;
+    -fx-padding: 5px;
+}
+
+.speed-box .arrow-button {
+    -fx-background-color: transparent;
+
+}
+
+.speed-box .arrow {
+    -fx-background-color: white;
+
+}
+
+.speed-box .list-view {
+    -fx-background-color: #201e1e;
+    -fx-border-color: #007BFF;
+    -fx-border-radius: 8px;
+}
+
+.speed-box .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+}
+
+.speed-box .list-cell:hover {
+    -fx-background-color: #333939;
+}

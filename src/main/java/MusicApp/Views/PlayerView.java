@@ -287,6 +287,11 @@ public class PlayerView {
         settingsIcon.setFitWidth(20);
         settingsIcon.setFitHeight(20);
         btnSettings.setGraphic(settingsIcon);
+
+        ImageView shuffleIcon = new ImageView(getClass().getResource("/images/shuffle.png").toExternalForm());
+        shuffleIcon.setFitWidth(20);
+        shuffleIcon.setFitHeight(20);
+        shuffleToggle.setGraphic(shuffleIcon);
     }
 
 
