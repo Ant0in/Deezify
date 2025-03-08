@@ -6,10 +6,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Set;
 
 public class MetaController {
 
+    /**
+     * Enum for the different scenes in the application.
+     * NOTE: settings is not a scene but a pop-up window.
+     */
     public enum Scenes {
         MAINWINDOW
     }
@@ -25,28 +28,49 @@ public class MetaController {
         this.settingsController = new SettingsController(this);
     }
 
+    /**
+     * Switches the scene to the specified scene.
+     * @param scene The scene to switch to.
+     */
     public final void switchScene(Scenes scene) {
         switch (scene) {
             case Scenes.MAINWINDOW ->this.playerController.show(this.stage);
         }
     }
 
+    /**
+     * Shows the settings window.
+     */
     public final void showSettings() {
         this.settingsController.show();
     }
 
+    /**
+     * Closes the settings window.
+     */
     public final void closeSettings() {
         this.settingsController.close();
     }
 
+    /**
+     * Refreshes the UI.
+     */
     public final void refreshUI() {
         this.playerController.refreshUI();
     }
 
+    /**
+     * Get the player controller.
+     * @return The player controller.
+     */
     public PlayerController getPlayerController() {
         return playerController;
     }
 
+    /**
+     * Get the current settings of the application.
+     * @return The current settings.
+     */
     public Settings getSettings() {
         try {
             return dataProvider.readSettings();
@@ -56,6 +80,10 @@ public class MetaController {
         }
     }
 
+    /**
+     * Notify the controllers that the settings have changed.
+     * @param newSettings The new settings.
+     */
     private void notifySettingsChanged(Settings newSettings) {
         try {
             dataProvider.writeSettings(newSettings);
@@ -66,6 +94,10 @@ public class MetaController {
         }
     }
 
+    /**
+     * Update the balance of the application.
+     * @param balance The new balance.
+     */
     public void updateBalance(double balance) {
         try {
             Settings settings = dataProvider.readSettings();
@@ -76,6 +108,10 @@ public class MetaController {
         }
     }
 
+    /**
+     * Set the music directory path and notify the change to the controllers.
+     * @param path The path to the music directory.
+     */
     public void setMusicDirectoryPath(Path path) {
         try {
             Settings settings = dataProvider.readSettings();

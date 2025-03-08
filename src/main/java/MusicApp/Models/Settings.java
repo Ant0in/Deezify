@@ -2,15 +2,32 @@ package MusicApp.Models;
 
 import java.nio.file.Path;
 
+/**
+ * Settings class to store the balance and music folder.
+ */
 public class Settings {
     private double balance;
     private Path musicDirectory;
 
+    /**
+     * Constructor
+     * @param balance The balance of the application.
+     * @param musicFolder The path to the music folder.
+     */
     public Settings(double balance, Path musicFolder) {
         this.balance = balance;
         this.musicDirectory = musicFolder;
     }
 
+    /**
+     * Parses a settings string to a Settings object.
+     * The settings string must be in the following format:
+     * balance=0.0
+     * musicFolder=/path/to/music/folder
+     *
+     * @param settings The settings string.
+     * @return The Settings object.
+     */
     public static Settings fromString(String settings) {
         if (settings == null || settings.trim().isEmpty()) {
             throw new IllegalArgumentException("Settings string cannot be null or empty");
@@ -30,21 +47,39 @@ public class Settings {
         }
     }
 
+    /**
+     * Get the balance of the settings.
+     * @return The balance.
+     */
     public double getBalance() {
         return balance;
     }
 
+    /**
+     * Get the music folder of the settings.
+     * @return The music folder.
+     */
     public Path getMusicDirectory() {
         return this.musicDirectory;
     }
 
+    /**
+     * Set the balance of the settings.
+     * @param balance The balance.
+     */
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
+    /**
+     * Set the music folder of the settings.
+     * @param musicDirectory The music folder.
+     */
     public void setMusicFolder(Path musicDirectory) {
         this.musicDirectory = musicDirectory;
     }
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {

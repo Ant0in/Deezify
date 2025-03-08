@@ -5,10 +5,6 @@ import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
 /**
  * AudioPlayer
  * Class that manages the audio playing.
@@ -74,6 +70,7 @@ public class AudioPlayer {
             mediaPlayer.setRate(speed);
         }
     }
+
     /**
      * Get the current time of the song.
      * @return The current time of the song.
@@ -119,7 +116,7 @@ public class AudioPlayer {
 
     /**
      * Check if the song is playing.
-     * @return True if the song is playing, false otherwise.
+     * @return True if the song is playing, False otherwise.
      */
     public BooleanProperty isPlaying() {
         return isPlaying;
@@ -174,12 +171,19 @@ public class AudioPlayer {
         }
     }
 
+    /**
+     * Set the action to perform when the song ends.
+     * @param action The action to perform.
+     */
     public void setOnEndOfMedia(Runnable action) {
         if (mediaPlayer != null) {
             mediaPlayer.setOnEndOfMedia(action);
         }
     }
 
+    /**
+     * Close the player.
+     */
     public void close() {
         if (mediaPlayer != null) {
             mediaPlayer.dispose();
@@ -187,11 +191,19 @@ public class AudioPlayer {
         }
     }
 
+    /**
+     * Get the volume property.
+     * @return The volume property.
+     */
     public DoubleProperty volumeProperty() {
         return volume;
     }
 
 
+    /**
+     * Get the volume of the song.
+     * @return The volume of the song.
+     */
     public void setBalance(double balance) {
         this.balance = balance;
         if (mediaPlayer != null) {
@@ -199,6 +211,10 @@ public class AudioPlayer {
         }
     }
 
+    /**
+     * Get the balance of the song.
+     * @return The balance of the song.
+     */
     public double getBalance() {
         return balance;
     }

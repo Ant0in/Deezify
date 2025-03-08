@@ -8,9 +8,6 @@ import java.util.HashMap;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public class Song {
 
     private String songName;
@@ -26,7 +23,7 @@ public class Song {
      * @param songName The name of the song.
      * @param artistName The name of the artist.
      * @param style The style of the song.
-     * @param coverPath The path to the cover image.
+     * @param cover Base64 representation of the image.
      * @param filePath The path to the music file.
      * @param duration The duration of the song.
      */
@@ -88,6 +85,10 @@ public class Song {
      */
     public String getCover() { return cover; }
 
+    /**
+     * Get the cover as a JavaFX Image.
+     * @return The cover image.
+     */
     public Image getCoverImage() {
         if (this.cover == null) {
             return new Image(getClass().getResource("/images/song.png").toExternalForm());
@@ -133,7 +134,7 @@ public class Song {
 
     /**
      * Set the path to the cover image.
-     * @param coverPath The path to the cover image.
+     * @param cover the cover in base64.
      */
     public void setCover(String cover) { this.cover = cover; }
 
