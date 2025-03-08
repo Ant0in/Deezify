@@ -1,0 +1,117 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom, #062726, #102b3f);
+}
+
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+#languageTitle, #balanceTitle {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.combo-box {
+    -fx-background-color: #201e1e;
+    -fx-border-color: #007BFF;
+    -fx-border-radius: 8px;
+    -fx-text-fill: white;
+    -fx-padding: 5px;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+    -fx-background-color: white;
+}
+
+.combo-box .list-view {
+    -fx-background-color: #2a2a2a;
+    -fx-border-color: #007BFF;
+    -fx-border-radius: 8px;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: #2a2a2a;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #333939;
+}
+
+.combo-box .list-cell:selected {
+    -fx-background-color: #2f508e;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+}
+
+.slider .track {
+    -fx-background-color: grey;
+    -fx-border-radius: 10px;
+}
+
+.slider .thumb {
+    -fx-background-color: #007BFF;
+    -fx-border-color: white;
+    -fx-background-radius: 8px;
+    -fx-pref-width: 15px;
+    -fx-pref-height: 15px;
+    -fx-border-radius: 8px;
+}
+
+.slider .thumb:hover {
+    -fx-background-color: #52adbd;
+}
+
+.slider .fill {
+    -fx-background-color: linear-gradient(to right, #52adbd, #156cb3);
+}
+
+.button {
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-padding: 5px 15px;
+    -fx-background-color: #007BFF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-background-color: #2f508e;
+}
+
+#browseButton {
+    -fx-background-color: #00ACC1;
+    -fx-border-radius: 10px;
+}
+
+#browseButton:hover {
+    -fx-background-color: #2f508e;
+}
+
+#directoryLabel {
+    -fx-text-fill: #cdbdbd;
+    -fx-font-style: italic;
+}
+
+#saveButton {
+    -fx-background-color: #007BFF;
+    -fx-text-fill: white;
+}
+
+#cancelButton {
+    -fx-background-color: #555;
+    -fx-text-fill: white;
+}
+
+#cancelButton:hover {
+    -fx-background-color: #2f508e;
+}
