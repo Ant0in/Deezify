@@ -2,18 +2,13 @@ package MusicApp.Controllers;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import MusicApp.Exceptions.BadFileTypeException;
 import MusicApp.Exceptions.ID3TagException;
-import MusicApp.Models.AudioPlayer;
-import MusicApp.Models.Library;
-import MusicApp.Models.PlaylistManager;
-import MusicApp.Models.Queue;
-import MusicApp.Models.Song;
+import MusicApp.Models.*;
 import MusicApp.Views.PlayerView;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -21,15 +16,9 @@ import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Controller class for the music player.
- *
+ * <p>
  * This class is responsible for managing the audio player and the song library.
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
@@ -55,19 +44,22 @@ public class PlayerController {
         this.library = new Library();
         this.queue = new Queue();
         this.playlistManager = new PlaylistManager(library);
-        loadLibrary(Paths.get("src/main/resources/songs/"));
+        Settings settings = metaController.getSettings();
+        this.audioPlayer.setBalance(settings.getBalance());
+        this.loadLibrary(settings.getMusicDirectory());
         this.playerView = new PlayerView(this);
     }
 
+    /**
+     * Show the player view.
+     * @param stage The stage to show the view on.
+     */
     public void show(Stage stage) {
         this.playerView.show(stage);
     }
 
     /**
-     * Loads the library with some sample songs from a default folder.
-     *
-     *  // !!!  Metadata is currently hardcoded for testing, and should be dynamically loaded. !!!
-     *
+     * Loads the library with some sample songs from a the settings folder
      */
     public void loadLibrary(Path folderPath) {
         List<Path> songs;
@@ -189,26 +181,16 @@ public class PlayerController {
      * @return The speed value.
      */
     public double getSpeedValue(String speedLabel) {
-        switch (speedLabel) {
-            case "0.25x":
-                return 0.25;
-            case "0.5x":
-                return 0.5;
-            case "0.75x":
-                return 0.75;
-            case "1x":
-                return 1.0;
-            case "1.25x":
-                return 1.25;
-            case "1.5x":
-                return 1.5;
-            case "1.75x":
-                return 1.75;
-            case "2x":
-                return 2.0;
-            default:
-                return 1.0; 
-        }
+        return switch (speedLabel) {
+            case "0.25x" -> 0.25;
+            case "0.5x" -> 0.5;
+            case "0.75x" -> 0.75;
+            case "1.25x" -> 1.25;
+            case "1.5x" -> 1.5;
+            case "1.75x" -> 1.75;
+            case "2x" -> 2.0;
+            default -> 1.0;
+        };
     }
 
     /**
@@ -220,6 +202,9 @@ public class PlayerController {
         audioPlayer.changeSpeed(speed);
     }
 
+    /**
+     * Apply the current speed to the audio player.
+     */
     public void applyCurrentSpeed() {
         audioPlayer.changeSpeed(currentSpeed);
     }
@@ -237,6 +222,10 @@ public class PlayerController {
         return songNames;
     }
 
+    /**
+     * Get the library.
+     * @return The library.
+     */
     public Library getLibrary() {
         return library;
     }
@@ -259,7 +248,7 @@ public class PlayerController {
 
     /**
      * Add a song to the queue.
-     * @param index The index of the song in the library.
+     * @param song The song to add.
      */
     public void addToQueue(Song song) {
         queue.add(song);
@@ -267,7 +256,7 @@ public class PlayerController {
 
     /**
      * Remove a song from the queue.
-     * @param index The index of the song in the queue.
+     * @param song The song to remove.
      */
     public void removeFromQueue(Song song) {
         queue.remove(song);
@@ -387,14 +376,29 @@ public class PlayerController {
         }
     }
 
+    /**
+     * Get a song from the library.
+     * @param index The index of the song in the library.
+     * @return The song at the specified index.
+     */
     public Song getFromLibrary(int index) {
         return library.get(index);
     }
 
+
+    /**
+     * Get a song from the queue.
+     * @param index The index of the song in the queue.
+     * @return The song at the specified index.
+     */
     public Song getFromQueue(int index) {
         return queue.get(index);
     }
 
+    /**
+     * Get the volume property.
+     * @return The volume property.
+     */
     public DoubleProperty volumeProperty() {
         return getAudioPlayer().volumeProperty();
     }
@@ -407,6 +411,10 @@ public class PlayerController {
         return song.getCover();
     }
 
+    /**
+     * Get the current song.
+     * @return The current song.
+     */
     public Song getCurrentSong() {
         if (audioPlayer.isPlaying() != null) {
             return audioPlayer.getCurrentSong();
@@ -415,24 +423,25 @@ public class PlayerController {
         }
     }
 
+    /**
+     * Close the audio player.
+     */
     public void close() {
         audioPlayer.close();
     }
 
+    /**
+     * Open the settings window.
+     */
     public void openSettings() {
         metaController.showSettings();
     }
 
+    /**
+     * Refresh the UI.
+     */
     public void refreshUI() {
         playerView.refreshUI();
-    }
-
-    public void setBalance(double balance) {
-        audioPlayer.setBalance(balance);
-    }
-
-    public double getBalance() {
-        return audioPlayer.getBalance();
     }
 
     /**
@@ -451,5 +460,13 @@ public class PlayerController {
         }
     }
 
+    /**
+     * Actions to do when the settings are changed
+     * @param newSettings The new settings.
+     */
+    public void onSettingsChanged(Settings newSettings) {
+        audioPlayer.setBalance(newSettings.getBalance());
+        loadLibrary(newSettings.getMusicDirectory());
+    }
 }
 

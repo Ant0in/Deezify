@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Locale;
 
 public class SettingsView {
@@ -31,7 +32,7 @@ public class SettingsView {
     @FXML
     private Button saveButton, cancelButton;
     @FXML
-    private Button browseButton; // Add this
+    private Button browseButton;
     @FXML
     private Label directoryLabel;
 
@@ -49,12 +50,19 @@ public class SettingsView {
         init();
     }
 
+    /**
+     * Show the settings view.
+     * @param stage The stage to show the view on.
+     */
     public void show(Stage stage) {
         stage.setScene(this.scene);
         stage.setTitle(getTitle());
         stage.show();
     }
 
+    /**
+     * Initialize the settings view.
+     */
     private void init() {
         originalLanguage = LanguageManager.getCurrentLocale().getLanguage();
         initComboBox();
@@ -64,6 +72,9 @@ public class SettingsView {
         initBinding();
     }
 
+    /**
+     * Update the language combobox to display the current language.
+     */
     private void updateLanguageComboBox(){
         String currentLanguage = LanguageManager.getCurrentLocale().getLanguage();
         if (currentLanguage.equals("en")) {
@@ -75,6 +86,9 @@ public class SettingsView {
         }
     }
 
+    /**
+     * Initialize the language combobox to display the possible languages
+     */
     private void initComboBox() {
         languageComboBox.getItems().clear();
         languageComboBox.getItems().addAll("English", "Français", "Nederlands");
@@ -82,6 +96,9 @@ public class SettingsView {
         languageComboBox.setOnAction(e -> handleLanguageChange());
     }
 
+    /**
+     * Handle the language change event.
+     */
     private void handleLanguageChange() {
         String selected = languageComboBox.getSelectionModel().getSelectedItem();
         if (selected.equals("English")) {
@@ -94,6 +111,9 @@ public class SettingsView {
         refreshLanguage();
     }
 
+    /**
+     * Initialize the balance slider.
+     */
     private void initSlider() {
         balanceSlider.setValue(settingsController.getBalance());
         balanceLabel.setText(String.format("%.2f", settingsController.getBalance()));
@@ -102,6 +122,9 @@ public class SettingsView {
         });
     }
 
+    /**
+     * Initialize the translations of the view.
+     */
     private void initTranslations() {
         languageTitle.setText(LanguageManager.get("settings.lang_title"));
         languageSelect.setText(LanguageManager.get("settings.lang_select"));
@@ -114,21 +137,33 @@ public class SettingsView {
         browseButton.setText(LanguageManager.get("settings.select_music_folder"));
     }
 
+    /**
+     * Refresh the language of the view.
+     */
     public void refreshLanguage() {
         initTranslations();
         updateLanguageComboBox();
     }
 
+    /**
+     * Initialize the buttons of the view.
+     */
     private void initButtons() {
         saveButton.setOnMouseClicked(event -> handleSave());
         cancelButton.setOnMouseClicked(event -> handleCancel());
         browseButton.setOnMouseClicked(event->handleBrowseDirectory());
     }
 
+    /**
+     * Initialize the binding of the view.
+     */
     private void initBinding(){
         directoryLabel.textProperty().bind(settingsController.getMusicDirectoryPath());
     }
 
+    /**
+     * Handle when the save button is pressed
+     */
     @FXML
     public void handleSave() {
         settingsController.refreshLanguage();
@@ -136,6 +171,9 @@ public class SettingsView {
         settingsController.close();
     }
 
+    /**
+     * Handle when the cancel button is pressed
+     */
     @FXML
     public void handleCancel() {
         LanguageManager.setLanguage(originalLanguage);
@@ -143,6 +181,9 @@ public class SettingsView {
         settingsController.close();
     }
 
+    /**
+     * Handle when the browse button is pressed
+     */
     @FXML
     private void handleBrowseDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -155,10 +196,18 @@ public class SettingsView {
         }
     }
 
+    /**
+     * Get the title of the view.
+     * @return The title of the view.
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Get the scene of the view.
+     * @return The scene of the view.
+     */
     public Scene getScene() {
         return scene;
     }
