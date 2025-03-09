@@ -3,13 +3,14 @@ package MusicApp.Controllers;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import MusicApp.Exceptions.BadFileTypeException;
 import MusicApp.Exceptions.ID3TagException;
 import MusicApp.Models.*;
 import MusicApp.Views.PlayerView;
+import MusicApp.utils.MetadataReader;
+import MusicApp.utils.MusicLoader;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
@@ -59,7 +60,7 @@ public class PlayerController {
     }
 
     /**
-     * Loads the library with some sample songs from a the settings folder
+     * Loads the library with some sample songs from a settings folder
      */
     public void loadLibrary(Path folderPath) {
         List<Path> songs;
@@ -73,20 +74,21 @@ public class PlayerController {
         library.clear();
         for (Path songPath : songs) {
 
-            HashMap<String, String> metadata = new HashMap<>();
-
             try {
-                metadata = MetadataReader.getMetadata(songPath.toFile());
+
+                Metadata metadata = MetadataReader.getMetadata(songPath.toFile());
+
+                library.add(new Song(
+                        metadata,      // metadata
+                        songPath       // file path
+                ));
             } catch (ID3TagException e) {
                 System.out.println("Error while reading metadata: " + e.getMessage());
             } catch (BadFileTypeException e) {
                 System.out.println("Bad file type: " + e.getMessage());
             }
             
-            library.add(new Song(
-                    metadata,      // metadata
-                    songPath       // file path
-            ));
+
         }
         if (this.playerView != null){
             this.playerView.updatePlayListView();

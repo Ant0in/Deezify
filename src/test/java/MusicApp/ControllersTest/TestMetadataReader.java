@@ -3,15 +3,17 @@ package MusicApp.ControllersTest;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.HashMap;
+
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
 import MusicApp.Exceptions.BadFileTypeException;
+import MusicApp.Models.Metadata;
+import javafx.util.Duration;
 import org.junit.Test;
 
-import MusicApp.Controllers.MetadataReader;
+import MusicApp.utils.MetadataReader;
 import MusicApp.Exceptions.ID3TagException;
 
 
@@ -52,7 +54,7 @@ public class TestMetadataReader {
 
         // check if the metadata reader can handle a mp3 file with valid metadata
         File file = Paths.get("src", "test", "resources", "goodTestMP3.mp3").toFile();
-        HashMap<String, String> metadata;
+        Metadata metadata;
 
         try {
             metadata = MetadataReader.getMetadata(file);
@@ -63,11 +65,11 @@ public class TestMetadataReader {
         }
 
         // few eq checks
-        assertEquals("Chinese DOIT sound effect", metadata.get("title"));
-        assertEquals("ant0in", metadata.get("artist"));
-        assertEquals("Electro", metadata.get("genre"));
+        assertEquals("Chinese DOIT sound effect", metadata.getTitle());
+        assertEquals("ant0in", metadata.getArtist());
+        assertEquals("Electro", metadata.getGenre());
         // cover is not tested smh
-        assertEquals("2", metadata.get("duration"));
+        assertEquals(Duration.seconds(Double.parseDouble("2")), metadata.getDuration());
 
     }
 
@@ -76,7 +78,7 @@ public class TestMetadataReader {
 
         // check if the metadata reader can handle a mp3 file with valid metadata
         File file = Paths.get("src", "test", "resources", "goodTestWAV.wav").toFile();
-        HashMap<String, String> metadata;
+        Metadata metadata;
 
         try {
             metadata = MetadataReader.getMetadata(file);
@@ -91,11 +93,11 @@ public class TestMetadataReader {
         }
 
         // few eq checks
-        assertEquals("3seconds", metadata.get("title"));
-        assertEquals("Sample", metadata.get("artist"));
-        assertEquals("Celtic", metadata.get("genre"));
+        assertEquals("3seconds", metadata.getTitle());
+        assertEquals("Sample", metadata.getArtist());
+        assertEquals("Celtic", metadata.getGenre());
         // cover is not tested smh
-        assertEquals("3", metadata.get("duration"));
+        assertEquals(Duration.seconds(Double.parseDouble("3")), metadata.getDuration());
     }
 
     @Test
@@ -106,9 +108,9 @@ public class TestMetadataReader {
 
         try {
             System.out.println(MetadataReader.getMetadata(file));
-            assertEquals("", MetadataReader.getMetadata(file).get("title"));
-            assertEquals("", MetadataReader.getMetadata(file).get("artist"));
-            assertEquals("", MetadataReader.getMetadata(file).get("genre"));
+            assertEquals("", MetadataReader.getMetadata(file).getTitle());
+            assertEquals("", MetadataReader.getMetadata(file).getArtist());
+            assertEquals("", MetadataReader.getMetadata(file).getGenre());
         } catch (ID3TagException e) {
             e.printStackTrace();
             assert false;

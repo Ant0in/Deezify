@@ -3,7 +3,6 @@ package MusicApp.Models;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.util.Base64;
-import java.util.HashMap;
 
 import javafx.scene.image.Image;
 import javafx.util.Duration;
@@ -40,18 +39,14 @@ public class Song {
      * @param metadata The metadata of the song.
      * @param filePath The path to the music file.
      */
-    public Song(HashMap<String, String> metadata, Path filePath) {
+    public Song(Metadata metadata, Path filePath) {
         
-        this.songName = metadata.get("title") != null && !metadata.get("title").isEmpty() ? metadata.get("title") : "Unknown Title";
-        this.artistName = metadata.get("artist") != null && !metadata.get("artist").isEmpty() ? metadata.get("artist") : "Unknown Artist";
-        this.style = metadata.get("genre") != null && !metadata.get("genre").isEmpty() ? metadata.get("genre") : "Unknown Genre";
-        if (metadata.get("cover") != null && !metadata.get("cover").isEmpty()) {
-            this.cover = metadata.get("cover");
-        } else {
-            this.cover = null;
-        }
+        this.songName = metadata.getTitle();
+        this.artistName = metadata.getArtist();
+        this.style = metadata.getGenre();
+        this.cover = metadata.getCoverBytesBase64().orElse(null);
         this.filePath = filePath;
-        this.duration = metadata.get("duration") != null ? Duration.seconds(Double.parseDouble(metadata.get("duration"))) : Duration.seconds(0);
+        this.duration = metadata.getDuration();
 
     }
 
