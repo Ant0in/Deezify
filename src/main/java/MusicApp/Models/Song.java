@@ -16,7 +16,6 @@ public class Song {
     private String cover;
     private final Path filePath;
     private Duration duration;
-    private Path path;
 
     /**
      * Constructor
@@ -103,12 +102,6 @@ public class Song {
     }
 
     /**
-     * Get the path to the file.
-     * @return The path to the file.
-     */
-    public String getPath() { return filePath.toString(); }
-
-    /**
      * Get the duration of the song.
      * @return The duration of the song.
      */
@@ -154,15 +147,14 @@ public class Song {
     }
 
     /**
-     * Check if two songs are equal.
+     * Check if two songs are equal by comparing their file paths.
      * @param obj The object to compare.
      * @return True if the songs are equal, false otherwise.
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Song) {
-            Song song = (Song) obj;
-            return songName.equals(song.getSongName()) && artistName.equals(song.getArtistName());
+        if (obj instanceof Song song) {
+            return filePath.equals(song.filePath);
         }
         return false;
     }
