@@ -18,13 +18,9 @@ build:
   rules:
     - if: $CI_COMMIT_TAG
   script:
-    - which tar || (echo "tar not found, installing it" && apt-get update -qq && apt-get install -y -qq tar)
-    - which zip || (echo "zip not found, installing it" && apt-get update -qq && apt-get install -y -qq zip)
     - mvn package -DskipTests
     - mkdir -p artifacts
     - cp target/*.jar artifacts/
-    - zip -r artifacts/source-code.zip . -x "target/*" ".git/*" ".m2/*" "artifacts/*"
-    - tar -czf artifacts/source-code.tar.gz --exclude=target --exclude=.git --exclude=.m2 --exclude=artifacts .
   artifacts:
     paths:
       - artifacts/
@@ -48,7 +44,3 @@ release:
       links:
         - name: 'JAR File'
           url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/file/artifacts/${CI_PROJECT_NAME}*.jar'
-        - name: 'Source Code (ZIP)'
-          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/file/artifacts/source-code.zip'
-        - name: 'Source Code (TAR.GZ)'
-          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/file/artifacts/source-code.tar.gz'
