@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"MusicApp"},{"l":"MusicApp.Controllers"},{"l":"MusicApp.ControllersTest"},{"l":"MusicApp.Models"},{"l":"MusicApp.Views"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"MusicApp","l":"MusicApp"},{"m":"MusicApp","l":"MusicApp.Controllers"},{"m":"MusicApp","l":"MusicApp.Exceptions"},{"m":"MusicApp","l":"MusicApp.Models"},{"m":"MusicApp","l":"MusicApp.utils"},{"m":"MusicApp","l":"MusicApp.Views"}];updateSearchResults();

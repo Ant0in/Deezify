@@ -1,5 +1,7 @@
+module:MusicApp
 MusicApp
 MusicApp.Controllers
-MusicApp.ControllersTest
+MusicApp.Exceptions
 MusicApp.Models
+MusicApp.utils
 MusicApp.Views
