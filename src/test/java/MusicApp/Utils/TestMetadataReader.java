@@ -108,9 +108,9 @@ public class TestMetadataReader {
 
         try {
             System.out.println(MetadataReader.getMetadata(file));
-            assertEquals("", MetadataReader.getMetadata(file).getTitle());
-            assertEquals("", MetadataReader.getMetadata(file).getArtist());
-            assertEquals("", MetadataReader.getMetadata(file).getGenre());
+            assertEquals("Unknown Title", MetadataReader.getMetadata(file).getTitle());
+            assertEquals("Unknown Artist", MetadataReader.getMetadata(file).getArtist());
+            assertEquals("Unknown Genre", MetadataReader.getMetadata(file).getGenre());
         } catch (ID3TagException e) {
             e.printStackTrace();
             assert false;
