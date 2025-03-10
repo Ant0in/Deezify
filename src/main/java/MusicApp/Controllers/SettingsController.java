@@ -1,6 +1,8 @@
 package MusicApp.Controllers;
 
+import MusicApp.Models.Settings;
 import MusicApp.Views.SettingsView;
+import MusicApp.utils.DataProvider;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
@@ -23,36 +25,67 @@ public class SettingsController {
         this.settingsStage.setResizable(false);
         this.settingsStage.setTitle("Settings");
         this.settingsStage.setScene(settingsView.getScene());
+        this.musicDirectoryPath.set(metaController.getSettings().getMusicDirectory().toString());
     }
 
+    /**
+     * Show the settings window.
+     */
     public void show() {
         if (settingsStage != null) {
             settingsStage.show();
         }
     }
 
+    /**
+     * Close the settings window.
+     */
     public void close() {
         if (settingsStage != null) {
             settingsStage.close();
         }
     }
 
+    /**
+     * Refresh the language of the settings window.
+     */
     public void refreshLanguage() {
         metaController.refreshUI();
     }
 
-    public void setBalance(double balance) {
-        metaController.getPlayerController().setBalance(balance);
-    }
-
-    public double getBalance() {
-        return metaController.getPlayerController().getBalance();
-    }
-
+    /**
+     * Get the settings view.
+     * @return The settings view.
+     */
     public StringProperty getMusicDirectoryPath(){return musicDirectoryPath;}
 
+    /**
+     * Set the music directory path.
+     * @param path The path to set.
+     */
     public void setMusicDirectoryPath(String path){
         musicDirectoryPath.set(path);
         metaController.setMusicDirectoryPath(Paths.get(path));
+    }
+
+    /**
+     * Set the balance of the application.
+     * @param balance The balance to set.
+     */
+    public void setBalance(double balance) {
+        metaController.updateBalance(balance);
+    }
+
+    /**
+     * Handle when settings are changed
+     */
+    public void onSettingsChanged(Settings newSettings) {}
+
+    /**
+     * Get the balance of the application.
+     * @return The balance of the application.
+     */
+    public double getBalance() {
+        return metaController.getSettings().getBalance();
     }
 }

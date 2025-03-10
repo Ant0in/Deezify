@@ -3,6 +3,7 @@ package MusicApp.ModelsTest;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
+import MusicApp.Models.Metadata;
 import org.junit.Test;
 
 import MusicApp.Models.Song;
@@ -97,7 +98,7 @@ public class TestSong {
         metadata.put("cover", "Cover1");
         metadata.put("duration", "1000");
 
-        Song song = new Song(metadata, Paths.get("file1.mp3"));
+        Song song = new Song(new Metadata(metadata), Paths.get("file1.mp3"));
 
         assert (song.getSongName().equals("Song1"));
         assert (song.getArtistName().equals("Artist1"));

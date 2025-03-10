@@ -3,13 +3,9 @@ package MusicApp.Models;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.util.Base64;
-import java.util.HashMap;
 
 import javafx.scene.image.Image;
 import javafx.util.Duration;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Song {
 
@@ -19,14 +15,13 @@ public class Song {
     private String cover;
     private final Path filePath;
     private Duration duration;
-    private Path path;
 
     /**
      * Constructor
      * @param songName The name of the song.
      * @param artistName The name of the artist.
      * @param style The style of the song.
-     * @param coverPath The path to the cover image.
+     * @param cover Base64 representation of the image.
      * @param filePath The path to the music file.
      * @param duration The duration of the song.
      */
@@ -44,18 +39,14 @@ public class Song {
      * @param metadata The metadata of the song.
      * @param filePath The path to the music file.
      */
-    public Song(HashMap<String, String> metadata, Path filePath) {
+    public Song(Metadata metadata, Path filePath) {
         
-        this.songName = metadata.get("title") != null ? metadata.get("title") : "Unknown Title";
-        this.artistName = metadata.get("artist") != null ? metadata.get("artist") : "Unknown Artist";
-        this.style = metadata.get("genre") != null ? metadata.get("genre") : "Unknown Genre";
-        if (metadata.get("cover") != null) {
-            this.cover = metadata.get("cover");
-        } else {
-            this.cover = null;
-        }
+        this.songName = metadata.getTitle();
+        this.artistName = metadata.getArtist();
+        this.style = metadata.getGenre();
+        this.cover = metadata.getCoverBytesBase64().orElse(null);
         this.filePath = filePath;
-        this.duration = metadata.get("duration") != null ? Duration.seconds(Double.parseDouble(metadata.get("duration"))) : Duration.seconds(0);
+        this.duration = metadata.getDuration();
 
     }
 
@@ -88,6 +79,10 @@ public class Song {
      */
     public String getCover() { return cover; }
 
+    /**
+     * Get the cover as a JavaFX Image.
+     * @return The cover image.
+     */
     public Image getCoverImage() {
         if (this.cover == null) {
             return new Image(getClass().getResource("/images/song.png").toExternalForm());
@@ -100,12 +95,6 @@ public class Song {
             return new Image(getClass().getResource("/images/song.png").toExternalForm());
         }
     }
-
-    /**
-     * Get the path to the file.
-     * @return The path to the file.
-     */
-    public String getPath() { return filePath.toString(); }
 
     /**
      * Get the duration of the song.
@@ -133,7 +122,7 @@ public class Song {
 
     /**
      * Set the path to the cover image.
-     * @param coverPath The path to the cover image.
+     * @param cover the cover in base64.
      */
     public void setCover(String cover) { this.cover = cover; }
 
@@ -153,15 +142,14 @@ public class Song {
     }
 
     /**
-     * Check if two songs are equal.
+     * Check if two songs are equal by comparing their file paths.
      * @param obj The object to compare.
      * @return True if the songs are equal, false otherwise.
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Song) {
-            Song song = (Song) obj;
-            return songName.equals(song.getSongName()) && artistName.equals(song.getArtistName());
+        if (obj instanceof Song song) {
+            return filePath.equals(song.filePath);
         }
         return false;
     }
