@@ -11,6 +11,7 @@ public class Queue extends Library {
 
     /**
      * Add a song to the queue.
+     *
      * @param song The song to add.
      */
     public void add(Song song) {
@@ -22,6 +23,7 @@ public class Queue extends Library {
 
     /**
      * Remove a song from the queue.
+     *
      * @param song The song to remove.
      */
     public void remove(Song song) {
@@ -33,6 +35,7 @@ public class Queue extends Library {
 
     /**
      * Remove the first song from the queue.
+     *
      * @return The first song in the queue just removed.
      */
     public Song pop() {

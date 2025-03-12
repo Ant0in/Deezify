@@ -10,16 +10,17 @@ import javafx.scene.media.MediaPlayer;
  * Class that manages the audio playing.
  */
 public class AudioPlayer {
-    private MediaPlayer mediaPlayer;
     private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
     private final StringProperty currentSongString = new SimpleStringProperty("None");
-    private Song currentSong = null;
     private final BooleanProperty isPlaying = new SimpleBooleanProperty(false);
     private final DoubleProperty volume = new SimpleDoubleProperty(1.0);
+    private MediaPlayer mediaPlayer;
+    private Song currentSong = null;
     private double balance = 0.0;
 
     /**
      * Load a song into the player.
+     *
      * @param song The song to load.
      */
     public void loadSong(Song song) {
@@ -73,6 +74,7 @@ public class AudioPlayer {
 
     /**
      * Get the current time of the song.
+     *
      * @return The current time of the song.
      */
     public Duration getCurrentTime() {
@@ -81,6 +83,7 @@ public class AudioPlayer {
 
     /**
      * Get the total duration of the song.
+     *
      * @return The total duration of the song.
      */
     public Duration getTotalDuration() {
@@ -90,6 +93,7 @@ public class AudioPlayer {
 
     /**
      * Get the progress of the song.
+     *
      * @return The progress of the song.
      */
     public DoubleProperty progressProperty() {
@@ -98,6 +102,7 @@ public class AudioPlayer {
 
     /**
      * Get the progress of the song.
+     *
      * @return The progress of the song.
      */
     public double getProgress() {
@@ -106,6 +111,7 @@ public class AudioPlayer {
 
     /**
      * Set the volume of the song.
+     *
      * @param volume The volume to set.
      */
     public void setVolume(double volume) {
@@ -116,6 +122,7 @@ public class AudioPlayer {
 
     /**
      * Check if the song is playing.
+     *
      * @return True if the song is playing, False otherwise.
      */
     public BooleanProperty isPlaying() {
@@ -124,6 +131,7 @@ public class AudioPlayer {
 
     /**
      * Get the current song property.
+     *
      * @return The current song property.
      */
     public StringProperty currentSongStringProperty() {
@@ -132,6 +140,7 @@ public class AudioPlayer {
 
     /**
      * Get the current song.
+     *
      * @return The current song.
      */
     public String getCurrentSongString() {
@@ -144,6 +153,7 @@ public class AudioPlayer {
 
     /**
      * Get the media player.
+     *
      * @return The media player.
      */
     public MediaPlayer getMediaPlayer() {
@@ -163,6 +173,7 @@ public class AudioPlayer {
 
     /**
      * Seek to a specific progress in the song.
+     *
      * @param progress The progress to seek to.
      */
     public void seek(double progress) {
@@ -173,6 +184,7 @@ public class AudioPlayer {
 
     /**
      * Set the action to perform when the song ends.
+     *
      * @param action The action to perform.
      */
     public void setOnEndOfMedia(Runnable action) {
@@ -193,15 +205,25 @@ public class AudioPlayer {
 
     /**
      * Get the volume property.
+     *
      * @return The volume property.
      */
     public DoubleProperty volumeProperty() {
         return volume;
     }
 
+    /**
+     * Get the balance of the song.
+     *
+     * @return The balance of the song.
+     */
+    public double getBalance() {
+        return balance;
+    }
 
     /**
      * Get the volume of the song.
+     *
      * @return The volume of the song.
      */
     public void setBalance(double balance) {
@@ -209,13 +231,5 @@ public class AudioPlayer {
         if (mediaPlayer != null) {
             mediaPlayer.setBalance(balance);
         }
-    }
-
-    /**
-     * Get the balance of the song.
-     * @return The balance of the song.
-     */
-    public double getBalance() {
-        return balance;
     }
 }

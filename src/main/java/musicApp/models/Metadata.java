@@ -13,13 +13,13 @@ import java.util.Optional;
 public class Metadata {
     private final HashMap<String, String> _metadata;
 
+    public Metadata(HashMap<String, String> metadata) {
+        _metadata = metadata;
+    }
+
     private String getMetadataOrDefault(String key, String defaultValue) {
         String value = _metadata.getOrDefault(key, defaultValue);
         return (value == null || value.isEmpty()) ? defaultValue : value;
-    }
-
-    public Metadata( HashMap<String, String> metadata) {
-        _metadata = metadata;
     }
 
     /**
@@ -31,6 +31,7 @@ public class Metadata {
     public String getTitle() {
         return getMetadataOrDefault("title", "Unknown Title");
     }
+
     /**
      * Retrieves the artist of the song.
      * If the artist is not present in the metadata, returns "Unknown Artist".
@@ -50,6 +51,7 @@ public class Metadata {
     public String getGenre() {
         return getMetadataOrDefault("genre", "Unknown Genre");
     }
+
     /**
      * Retrieves the duration of the song.
      * If the duration is not available, returns a duration of 0 seconds.

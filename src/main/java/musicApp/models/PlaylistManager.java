@@ -13,8 +13,10 @@ public class PlaylistManager {
     private Library library;
     private List<Song> originalLibrary;
     private boolean isShuffleMode;
+
     /**
      * Constructor
+     *
      * @param library The list of songs in the library.
      */
     public PlaylistManager(Library library) {
@@ -22,9 +24,10 @@ public class PlaylistManager {
         this.originalLibrary = new ArrayList<>(library.toList()); // Save original state
         this.isShuffleMode = false;
     }
-    
+
     /**
      * Return whenever the shuffle mode is enabled.
+     *
      * @return True if the shuffle mode is enabled, false otherwise.
      */
     public boolean isShuffleMode() {
@@ -33,7 +36,8 @@ public class PlaylistManager {
 
     /**
      * Toggle the shuffle mode.
-     * @param isEnabled The shuffle button state.
+     *
+     * @param isEnabled   The shuffle button state.
      * @param currentSong The current song.
      */
     public void toggleShuffle(boolean isEnabled, Song currentSong) {
@@ -48,6 +52,7 @@ public class PlaylistManager {
 
     /**
      * Shuffle the library.
+     *
      * @param currentSong The current song.
      */
     private void shuffleLibrary(Song currentSong) {
@@ -66,12 +71,13 @@ public class PlaylistManager {
 
     /**
      * Restore the library to its original state.
+     *
      * @param currentSong The current song.
      */
     private void restoreLibrary(Song currentSong) {
         if (originalLibrary != null) {
             library.clear();
-            library.addSongs(originalLibrary);            
+            library.addSongs(originalLibrary);
             if (currentSong != null) {
                 // Find original index of the current song
                 int originalIndex = originalLibrary.indexOf(currentSong);
@@ -86,6 +92,7 @@ public class PlaylistManager {
 
     /**
      * Get the original index of the song in the library.
+     *
      * @param song The song to get the original index.
      * @return The original index of the song in the library.
      */

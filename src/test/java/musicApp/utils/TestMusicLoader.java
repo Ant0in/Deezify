@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class TestMusicLoader {
     @Test
-    public void testNonExistentFolder(){
+    public void testNonExistentFolder() {
         Path nonExistentFolder = Paths.get("fdsf");
         assertThrows(IOException.class, () -> {
             MusicLoader.getAllSongPaths(nonExistentFolder);

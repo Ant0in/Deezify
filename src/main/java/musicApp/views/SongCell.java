@@ -56,7 +56,8 @@ public class SongCell extends ListCell<Song> {
 
     /**
      * Update the cell with the song information.
-     * @param song The song to display.
+     *
+     * @param song  The song to display.
      * @param empty Whether the cell is empty.
      */
     @Override

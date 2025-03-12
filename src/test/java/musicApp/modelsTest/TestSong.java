@@ -105,7 +105,7 @@ public class TestSong {
         assert (song.getStyle().equals("Style1"));
         assert (song.getCover().equals("Cover1"));
         assert (song.getDuration().equals(Duration.seconds(1000)));
-        
+
     }
 
 }

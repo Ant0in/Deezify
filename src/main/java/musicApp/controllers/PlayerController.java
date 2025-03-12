@@ -29,11 +29,10 @@ public class PlayerController {
     private final Library library;
     private final Queue queue;
     private final PlaylistManager playlistManager;
-    private int currentIndex;
-    private double currentSpeed = 1.0;
-
     private final PlayerView playerView;
     private final MetaController metaController;
+    private int currentIndex;
+    private double currentSpeed = 1.0;
 
 
     /**
@@ -53,6 +52,7 @@ public class PlayerController {
 
     /**
      * Show the player view.
+     *
      * @param stage The stage to show the view on.
      */
     public void show(Stage stage) {
@@ -87,10 +87,10 @@ public class PlayerController {
             } catch (BadFileTypeException e) {
                 System.out.println("Bad file type: " + e.getMessage());
             }
-            
+
 
         }
-        if (this.playerView != null){
+        if (this.playerView != null) {
             this.playerView.updatePlayListView();
         }
 
@@ -138,6 +138,7 @@ public class PlayerController {
 
     /**
      * Go to a specific song in the library.
+     *
      * @param index The index of the song in the library.
      */
     public void goTo(int index) {
@@ -160,17 +161,21 @@ public class PlayerController {
             System.out.println("Playing: " + song.getSongName());
         }
     }
-    
+
 
     /**
      * Get the audio player.
+     *
      * @return The audio player.
      */
-    public AudioPlayer getAudioPlayer() { return audioPlayer; }
+    public AudioPlayer getAudioPlayer() {
+        return audioPlayer;
+    }
 
 
     /**
      * Set the volume of the audio player.
+     *
      * @param volume The volume level (0.0 to 1.0).
      */
     public void setVolume(double volume) {
@@ -179,6 +184,7 @@ public class PlayerController {
 
     /**
      * Get the current speed value.
+     *
      * @param speedLabel The speed label.
      * @return The speed value.
      */
@@ -197,6 +203,7 @@ public class PlayerController {
 
     /**
      * Change speed of the currently playing song.
+     *
      * @param speed The speed to set.
      */
     public void changeSpeed(double speed) {
@@ -214,6 +221,7 @@ public class PlayerController {
 
     /**
      * Get the list of songs in the library.
+     *
      * @return The list of songs in the library.
      */
     public List<String> getLibraryNames() {
@@ -226,6 +234,7 @@ public class PlayerController {
 
     /**
      * Get the library.
+     *
      * @return The library.
      */
     public Library getLibrary() {
@@ -234,6 +243,7 @@ public class PlayerController {
 
     /**
      * Get the list of songs in the queue.
+     *
      * @return The list of songs in the queue.
      */
     public List<String> getQueueNames() {
@@ -250,6 +260,7 @@ public class PlayerController {
 
     /**
      * Add a song to the queue.
+     *
      * @param song The song to add.
      */
     public void addToQueue(Song song) {
@@ -258,6 +269,7 @@ public class PlayerController {
 
     /**
      * Remove a song from the queue.
+     *
      * @param song The song to remove.
      */
     public void removeFromQueue(Song song) {
@@ -270,9 +282,10 @@ public class PlayerController {
     public void clearQueue() {
         queue.clear();
     }
-    
+
     /**
      * Play a song from the library.
+     *
      * @param index The index of the song in the library.
      */
     public void playFromLibrary(int index) {
@@ -284,6 +297,7 @@ public class PlayerController {
 
     /**
      * Play a song from the queue.
+     *
      * @param index The index of the song in the queue.
      */
     public void playFromQueue(int index) {
@@ -301,6 +315,7 @@ public class PlayerController {
 
     /**
      * Get the current time of the song.
+     *
      * @return The current time of the song.
      */
     public Duration getCurrentTime() {
@@ -309,6 +324,7 @@ public class PlayerController {
 
     /**
      * Get the total duration of the song.
+     *
      * @return The total duration of the song.
      */
     public Duration getTotalDuration() {
@@ -317,6 +333,7 @@ public class PlayerController {
 
     /**
      * Get the progress of the song.
+     *
      * @return The progress of the song.
      */
     public javafx.beans.property.DoubleProperty progressProperty() {
@@ -325,6 +342,7 @@ public class PlayerController {
 
     /**
      * Return whether the song is playing.
+     *
      * @return Whether the song is playing.
      */
     public BooleanProperty isPlaying() {
@@ -333,6 +351,7 @@ public class PlayerController {
 
     /**
      * Get the current song property.
+     *
      * @return The current song property.
      */
     public StringProperty currentSongProperty() {
@@ -341,6 +360,7 @@ public class PlayerController {
 
     /**
      * Seek to a specific duration in the song.
+     *
      * @param duration The duration to seek to.
      */
     public void seek(double duration) {
@@ -349,6 +369,7 @@ public class PlayerController {
 
     /**
      * Search the library for songs that match the query.
+     *
      * @param query The query to search for.
      * @return A list of song names that match the query.
      */
@@ -356,18 +377,19 @@ public class PlayerController {
         List<Song> results = new ArrayList<>();
         for (Song song : library.toList()) {
             if (song.getSongName().toLowerCase().contains(query.toLowerCase()) ||
-                song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
-                song.getStyle().toLowerCase().contains(query.toLowerCase())) {
+                    song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
+                    song.getStyle().toLowerCase().contains(query.toLowerCase())) {
                 results.add(song);
             }
         }
         return results;
     }
-    
+
     /**
      * Reorganize the queue by moving a song from one index to another.
+     *
      * @param fromIndex The initial index of the song.
-     * @param toIndex The index where the song should be placed.
+     * @param toIndex   The index where the song should be placed.
      */
 
     public void reorderQueue(int fromIndex, int toIndex) {
@@ -380,6 +402,7 @@ public class PlayerController {
 
     /**
      * Get a song from the library.
+     *
      * @param index The index of the song in the library.
      * @return The song at the specified index.
      */
@@ -390,6 +413,7 @@ public class PlayerController {
 
     /**
      * Get a song from the queue.
+     *
      * @param index The index of the song in the queue.
      * @return The song at the specified index.
      */
@@ -399,6 +423,7 @@ public class PlayerController {
 
     /**
      * Get the volume property.
+     *
      * @return The volume property.
      */
     public DoubleProperty volumeProperty() {
@@ -407,6 +432,7 @@ public class PlayerController {
 
     /**
      * Get the cover image of the song.
+     *
      * @return The path to the cover image.
      */
     public String getCover(Song song) {
@@ -415,6 +441,7 @@ public class PlayerController {
 
     /**
      * Get the current song.
+     *
      * @return The current song.
      */
     public Song getCurrentSong() {
@@ -448,6 +475,7 @@ public class PlayerController {
 
     /**
      * Toggle the shuffle mode.
+     *
      * @param isEnabled The shuffle button state.
      */
     public void toggleShuffle(boolean isEnabled) {
@@ -464,6 +492,7 @@ public class PlayerController {
 
     /**
      * Actions to do when the settings are changed
+     *
      * @param newSettings The new settings.
      */
     public void onSettingsChanged(Settings newSettings) {

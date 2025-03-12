@@ -30,7 +30,7 @@ public class MusicLoader {
                 .collect(Collectors.toList());
     }
 
-    static private boolean isValidFormat(Path filePath){
+    static private boolean isValidFormat(Path filePath) {
         String fileName = filePath.getFileName().toString();
         return fileName.endsWith(".mp3") || fileName.endsWith(".wav");
     }

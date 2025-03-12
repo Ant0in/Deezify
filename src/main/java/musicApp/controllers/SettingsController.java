@@ -55,37 +55,44 @@ public class SettingsController {
 
     /**
      * Get the settings view.
+     *
      * @return The settings view.
      */
-    public StringProperty getMusicDirectoryPath(){return musicDirectoryPath;}
+    public StringProperty getMusicDirectoryPath() {
+        return musicDirectoryPath;
+    }
 
     /**
      * Set the music directory path.
+     *
      * @param path The path to set.
      */
-    public void setMusicDirectoryPath(String path){
+    public void setMusicDirectoryPath(String path) {
         musicDirectoryPath.set(path);
         metaController.setMusicDirectoryPath(Paths.get(path));
     }
 
     /**
-     * Set the balance of the application.
-     * @param balance The balance to set.
+     * Handle when settings are changed
      */
-    public void setBalance(double balance) {
-        metaController.updateBalance(balance);
+    public void onSettingsChanged(Settings newSettings) {
     }
 
     /**
-     * Handle when settings are changed
-     */
-    public void onSettingsChanged(Settings newSettings) {}
-
-    /**
      * Get the balance of the application.
+     *
      * @return The balance of the application.
      */
     public double getBalance() {
         return metaController.getSettings().getBalance();
+    }
+
+    /**
+     * Set the balance of the application.
+     *
+     * @param balance The balance to set.
+     */
+    public void setBalance(double balance) {
+        metaController.updateBalance(balance);
     }
 }

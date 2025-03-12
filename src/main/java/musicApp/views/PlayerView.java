@@ -2,8 +2,10 @@ package MusicApp.Views;
 
 import MusicApp.utils.LanguageManager;
 import MusicApp.Models.Song;
+
 import java.util.List;
 import java.util.Arrays;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -85,6 +87,7 @@ public class PlayerView {
 
     /**
      * Initialize the FXML scene.
+     *
      * @param fxmlPath The path to the FXML file.
      * @throws IOException If an error occurs while loading the FXML file.
      */
@@ -99,7 +102,7 @@ public class PlayerView {
     /**
      * Initialize the view.
      */
-    public void initialize(){
+    public void initialize() {
         initBindings();
         initSongInput();
         initSpeed();
@@ -142,7 +145,7 @@ public class PlayerView {
     /**
      * Bind the buttons.
      */
-    private void bindButtons(){
+    private void bindButtons() {
         deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
         addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
 
@@ -170,7 +173,7 @@ public class PlayerView {
      */
     private void initSpeed() {
         speedBox.getItems().clear();
-        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x","1.25x", "1.5x", "1.75x", "2x");
+        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x");
         speedBox.setValue("1x");
         speedBox.setOnAction(e -> {
             String speed = speedBox.getValue();
@@ -182,7 +185,7 @@ public class PlayerView {
     /**
      * Bind the song progress bar and label.
      */
-    private void bindSongProgress(){
+    private void bindSongProgress() {
         songProgressBar.progressProperty().bind(playerController.progressProperty());
         songProgressTimeLabel.textProperty().bind(
                 Bindings.createStringBinding(
@@ -198,6 +201,7 @@ public class PlayerView {
 
     /**
      * Get the formatted song progress.
+     *
      * @return The formatted song progress.
      */
     private String getFormattedSongProgress() {
@@ -215,7 +219,7 @@ public class PlayerView {
     /**
      * Bind the visibility of the playing song anchor (the controls at the bottom).
      */
-    private void bindPlayingSongAnchor(){
+    private void bindPlayingSongAnchor() {
         controls.setVisible(true);
     }
 
@@ -248,7 +252,7 @@ public class PlayerView {
     /**
      * Bind the current song controls (name and artist).
      */
-    private void bindCurrentSongControls(){
+    private void bindCurrentSongControls() {
         currentSongLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         () -> {
@@ -297,6 +301,7 @@ public class PlayerView {
 
     /**
      * Load the default cover image.
+     *
      * @return The default cover image.
      */
     private Image loadDefaultCoverImage() {
@@ -348,7 +353,7 @@ public class PlayerView {
 
 
     private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider);
+        List<Control> controls = Arrays.asList(pauseSongButton, nextSongButton, previousSongButton, shuffleToggle, speedBox, volumeSlider);
         updateControlsState(controls, true);
         playerController.currentSongProperty().addListener((obs, oldVal, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
@@ -370,7 +375,7 @@ public class PlayerView {
         addSongButton.disableProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNull());
         deleteSongButton.disableProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNull());
         clearQueueButton.disableProperty().bind(Bindings.isEmpty(queueListView.getItems()));
-    
+
         applyDisableStyleListener(addSongButton);
         applyDisableStyleListener(deleteSongButton);
         applyDisableStyleListener(clearQueueButton);
@@ -413,7 +418,7 @@ public class PlayerView {
     /**
      * Enable the shuffle toggle.
      */
-    public void enableShuffleToggle(){
+    public void enableShuffleToggle() {
         shuffleToggle.setOnAction(event -> {
             playerController.toggleShuffle(shuffleToggle.isSelected());
             updatePlayListView(); // Update the play list view to show the new order
@@ -423,7 +428,7 @@ public class PlayerView {
     /**
      * Enable double click to play
      */
-    public void enableDoubleClickToPlay(){
+    public void enableDoubleClickToPlay() {
         playListView.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 handlePlaySong();
@@ -439,7 +444,7 @@ public class PlayerView {
     /**
      * Enable double click to grow (fullscreen)
      */
-    public void enableDoubleClickToGrow(Stage stage){
+    public void enableDoubleClickToGrow(Stage stage) {
         labelContainer.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 stage.setFullScreen(true);
@@ -449,6 +454,7 @@ public class PlayerView {
 
     /**
      * Setup the window close handler.
+     *
      * @param stage The stage to setup the handler for.
      */
     private void setupWindowCloseHandler(Stage stage) {
@@ -475,6 +481,7 @@ public class PlayerView {
 
     /**
      * Get the title of the application.
+     *
      * @return The title of the application.
      */
     public String getTitle() {
@@ -483,6 +490,7 @@ public class PlayerView {
 
     /**
      * Show the stage.
+     *
      * @param stage The stage to show.
      */
     public void show(Stage stage) {
@@ -498,6 +506,7 @@ public class PlayerView {
 
     /**
      * Format a duration to a string.
+     *
      * @param duration The duration to format.
      * @return The formatted duration.
      */
@@ -539,7 +548,7 @@ public class PlayerView {
      * Clears the selection in both the queue and playlist ListViews.
      */
 
-    private void clearSelections(){
+    private void clearSelections() {
         queueListView.getSelectionModel().clearSelection();
         playListView.getSelectionModel().clearSelection();
     }
@@ -551,12 +560,12 @@ public class PlayerView {
     private void handlePlaySong() {
         int songIndexFromQueue = queueListView.getSelectionModel().getSelectedIndex();
         int songIndexFromLibrary = playListView.getSelectionModel().getSelectedIndex();
-        if (songIndexFromQueue!=-1){
+        if (songIndexFromQueue != -1) {
             System.out.println("The selected song index : " + songIndexFromQueue);
             playerController.playFromQueue(songIndexFromQueue);
-        }else if (songIndexFromLibrary != -1){
+        } else if (songIndexFromLibrary != -1) {
             playerController.playFromLibrary(songIndexFromLibrary);
-        }else{
+        } else {
             System.out.println("No song selected.");
         }
         updateQueueListView();
@@ -659,8 +668,9 @@ public class PlayerView {
 
     /**
      * Handle the drag detected event.
+     *
      * @param event The mouse event.
-     * @param cell The list cell.
+     * @param cell  The list cell.
      */
     private void onDragDetected(MouseEvent event, ListCell<Song> cell) {
         if (!cell.isEmpty()) {
@@ -674,8 +684,9 @@ public class PlayerView {
 
     /**
      * Handle the drag over event.
+     *
      * @param event The drag event.
-     * @param cell The list cell.
+     * @param cell  The list cell.
      */
     private void onDragOver(DragEvent event, ListCell<Song> cell) {
         if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
@@ -686,8 +697,9 @@ public class PlayerView {
 
     /**
      * Handle the drag dropped event.
+     *
      * @param event The drag event.
-     * @param cell The list cell.
+     * @param cell  The list cell.
      */
     private void onDragDropped(DragEvent event, ListCell<Song> cell) {
         Dragboard db = event.getDragboard();
@@ -714,6 +726,7 @@ public class PlayerView {
 
     /**
      * Handle the settings button.
+     *
      * @param event The action event.
      */
     @FXML
@@ -723,6 +736,7 @@ public class PlayerView {
 
     /**
      * Change the language of the application.
+     *
      * @param languageCode The language code. (e.g. "en", "fr", "nl")
      */
     private void switchLanguage(String languageCode) {

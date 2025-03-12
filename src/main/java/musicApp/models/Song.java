@@ -9,21 +9,22 @@ import javafx.util.Duration;
 
 public class Song {
 
+    private final Path filePath;
     private String songName;
     private String artistName;
     private String style;
     private String cover;
-    private final Path filePath;
     private Duration duration;
 
     /**
      * Constructor
-     * @param songName The name of the song.
+     *
+     * @param songName   The name of the song.
      * @param artistName The name of the artist.
-     * @param style The style of the song.
-     * @param cover Base64 representation of the image.
-     * @param filePath The path to the music file.
-     * @param duration The duration of the song.
+     * @param style      The style of the song.
+     * @param cover      Base64 representation of the image.
+     * @param filePath   The path to the music file.
+     * @param duration   The duration of the song.
      */
     public Song(String songName, String artistName, String style, String cover, Path filePath, Duration duration) {
         this.songName = songName;
@@ -36,11 +37,12 @@ public class Song {
 
     /**
      * Constructor using the metadata map from MetadataReader.
+     *
      * @param metadata The metadata of the song.
      * @param filePath The path to the music file.
      */
     public Song(Metadata metadata, Path filePath) {
-        
+
         this.songName = metadata.getTitle();
         this.artistName = metadata.getArtist();
         this.style = metadata.getGenre();
@@ -52,35 +54,88 @@ public class Song {
 
     /**
      * Get song file path
+     *
      * @return The Path to the song file.
      */
-    public Path getFilePath() { return filePath; }
+    public Path getFilePath() {
+        return filePath;
+    }
+
     /**
      * Get the name of the song.
+     *
      * @return The name of the song.
      */
-    public String getSongName() { return songName; }
+    public String getSongName() {
+        return songName;
+    }
+
+    /**
+     * Set the name of the song.
+     *
+     * @param songName The name of the song.
+     */
+    public void setSongName(String songName) {
+        this.songName = songName;
+    }
 
     /**
      * Get the name of the artist.
+     *
      * @return The name of the artist.
      */
-    public String getArtistName() { return artistName; }
+    public String getArtistName() {
+        return artistName;
+    }
+
+    /**
+     * Set the name of the artist.
+     *
+     * @param artistName The name of the artist.
+     */
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
 
     /**
      * Get the style of the song.
+     *
      * @return The style of the song.
      */
-    public String getStyle() { return style; }
+    public String getStyle() {
+        return style;
+    }
+
+    /**
+     * Set the style of the song.
+     *
+     * @param style The style of the song.
+     */
+    public void setStyle(String style) {
+        this.style = style;
+    }
 
     /**
      * Get the path to the cover image.
+     *
      * @return The path to the cover image.
      */
-    public String getCover() { return cover; }
+    public String getCover() {
+        return cover;
+    }
+
+    /**
+     * Set the path to the cover image.
+     *
+     * @param cover the cover in base64.
+     */
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     /**
      * Get the cover as a JavaFX Image.
+     *
      * @return The cover image.
      */
     public Image getCoverImage() {
@@ -89,7 +144,7 @@ public class Song {
         }
 
         try {
-            byte [] imageData = Base64.getDecoder().decode(cover);
+            byte[] imageData = Base64.getDecoder().decode(cover);
             return new Image(new ByteArrayInputStream(imageData));
         } catch (Exception e) {
             return new Image(getClass().getResource("/images/song.png").toExternalForm());
@@ -98,42 +153,25 @@ public class Song {
 
     /**
      * Get the duration of the song.
+     *
      * @return The duration of the song.
      */
-    public Duration getDuration() { return duration; }
-
-    /**
-     * Set the name of the song.
-     * @param songName The name of the song.
-     */
-    public void setSongName(String songName) { this.songName = songName; }
-
-    /**
-     * Set the name of the artist.
-     * @param artistName The name of the artist.
-     */
-    public void setArtistName(String artistName) { this.artistName = artistName; }
-
-    /**
-     * Set the style of the song.
-     * @param style The style of the song.
-     */
-    public void setStyle(String style) { this.style = style; }
-
-    /**
-     * Set the path to the cover image.
-     * @param cover the cover in base64.
-     */
-    public void setCover(String cover) { this.cover = cover; }
+    public Duration getDuration() {
+        return duration;
+    }
 
     /**
      * Set the duration of the song.
+     *
      * @param duration The duration of the song.
      */
-    public void setDuration(Duration duration) { this.duration = duration; }
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
 
     /**
      * Get the string representation of the song.
+     *
      * @return The string representation of the song.
      */
     @Override
@@ -143,6 +181,7 @@ public class Song {
 
     /**
      * Check if two songs are equal by comparing their file paths.
+     *
      * @param obj The object to compare.
      * @return True if the songs are equal, false otherwise.
      */

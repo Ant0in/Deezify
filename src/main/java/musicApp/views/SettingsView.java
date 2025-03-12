@@ -23,6 +23,7 @@ import java.util.Locale;
 
 public class SettingsView {
     private final Scene scene;
+    private final SettingsController settingsController;
     @FXML
     private ComboBox<String> languageComboBox;
     @FXML
@@ -35,9 +36,7 @@ public class SettingsView {
     private Button browseButton;
     @FXML
     private Label directoryLabel;
-
     private String title;
-    private final SettingsController settingsController;
     private String originalLanguage;
 
     public SettingsView(SettingsController settingsController) throws IOException {
@@ -52,6 +51,7 @@ public class SettingsView {
 
     /**
      * Show the settings view.
+     *
      * @param stage The stage to show the view on.
      */
     public void show(Stage stage) {
@@ -75,7 +75,7 @@ public class SettingsView {
     /**
      * Update the language combobox to display the current language.
      */
-    private void updateLanguageComboBox(){
+    private void updateLanguageComboBox() {
         String currentLanguage = LanguageManager.getCurrentLocale().getLanguage();
         if (currentLanguage.equals("en")) {
             languageComboBox.getSelectionModel().select(0);
@@ -151,13 +151,13 @@ public class SettingsView {
     private void initButtons() {
         saveButton.setOnMouseClicked(event -> handleSave());
         cancelButton.setOnMouseClicked(event -> handleCancel());
-        browseButton.setOnMouseClicked(event->handleBrowseDirectory());
+        browseButton.setOnMouseClicked(event -> handleBrowseDirectory());
     }
 
     /**
      * Initialize the binding of the view.
      */
-    private void initBinding(){
+    private void initBinding() {
         directoryLabel.textProperty().bind(settingsController.getMusicDirectoryPath());
     }
 
@@ -198,6 +198,7 @@ public class SettingsView {
 
     /**
      * Get the title of the view.
+     *
      * @return The title of the view.
      */
     public String getTitle() {
@@ -206,6 +207,7 @@ public class SettingsView {
 
     /**
      * Get the scene of the view.
+     *
      * @return The scene of the view.
      */
     public Scene getScene() {

@@ -1,5 +1,5 @@
-
 package MusicApp.utils;
+
 import java.io.File;
 import java.util.Base64;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import MusicApp.Exceptions.ID3TagException;
 enum FileType {
     MP3,
     WAV,
-//    FLAC,
+    //    FLAC,
 //    OGG
     NONE
 }
@@ -26,9 +26,10 @@ public class MetadataReader {
 
     /**
      * This method returns an enum based on the extension of a file
+     *
      * @param fd : File Object
      * @return FileType enum
-    */
+     */
     private static FileType getFileExtension(File fd) {
         String fileName = fd.getName();
         String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -43,14 +44,13 @@ public class MetadataReader {
     }
 
     /**
-     * 
      * This method reads the metadata of a file and returns it in a hashmap
      * Fields included in the hashmap are : title, artist, genre, cover, duration
+     *
      * @param fd : mp3 File Object
      * @return HashMap<String, String> containing relevant tags mentioned above
      * @throws ID3TagException (if no ID3v2 tags are found)
-     * 
-    */
+     */
 
     public static Metadata getMetadata(File fd) throws ID3TagException, BadFileTypeException {
 
@@ -85,9 +85,10 @@ public class MetadataReader {
 
     /**
      * This method reads the tag of an AudioFile and returns it
+     *
      * @param fd : AudioFile Object
      * @return Tag object
-    */
+     */
 
     private static Tag readTag(AudioFile fd) {
         return fd.getTag();
@@ -95,6 +96,7 @@ public class MetadataReader {
 
     /**
      * This method reads the file and returns it as an AudioFile object
+     *
      * @param fd : WAV File Object
      * @return AudioFile object
      * @throws RuntimeException (can be IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException)
@@ -114,10 +116,11 @@ public class MetadataReader {
 
     /**
      * This method reads the file and returns it as an AudioFile object
+     *
      * @param fd : mp3 File Object
      * @return AudioFile object
      * @throws RuntimeException (can be IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException)
-    */
+     */
 
     private static AudioFile readMP3File(File fd) throws RuntimeException {
 
@@ -139,9 +142,10 @@ public class MetadataReader {
     /**
      * This method reads the file and returns it as an AudioFile object
      * currently supports MP3 and WAV files only
+     *
      * @param fd : File Object
      * @return AudioFile object
-    */
+     */
     private static AudioFile readFile(File fd) throws BadFileTypeException {
         FileType ext = getFileExtension(fd);
 

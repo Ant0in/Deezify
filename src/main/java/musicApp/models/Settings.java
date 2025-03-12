@@ -13,7 +13,8 @@ public class Settings {
 
     /**
      * Constructor
-     * @param balance The balance of the application.
+     *
+     * @param balance     The balance of the application.
      * @param musicFolder The path to the music folder.
      */
     public Settings(double balance, Path musicFolder) {
@@ -28,6 +29,7 @@ public class Settings {
      * musicFolder=/path/to/music/folder
      * if the settings string is null or empty, an IllegalArgumentException is thrown.
      * if the settings string does not contain one of the required fields, it will take the default value.
+     *
      * @param settings The settings string.
      * @return The Settings object.
      */
@@ -63,6 +65,7 @@ public class Settings {
 
     /**
      * Get the balance of the settings.
+     *
      * @return The balance.
      */
     public double getBalance() {
@@ -70,15 +73,8 @@ public class Settings {
     }
 
     /**
-     * Get the music folder of the settings.
-     * @return The music folder.
-     */
-    public Path getMusicDirectory() {
-        return this.musicDirectory;
-    }
-
-    /**
      * Set the balance of the settings.
+     *
      * @param balance The balance.
      */
     public void setBalance(double balance) {
@@ -86,7 +82,17 @@ public class Settings {
     }
 
     /**
+     * Get the music folder of the settings.
+     *
+     * @return The music folder.
+     */
+    public Path getMusicDirectory() {
+        return this.musicDirectory;
+    }
+
+    /**
      * Set the music folder of the settings.
+     *
      * @param musicDirectory The music folder.
      */
     public void setMusicFolder(Path musicDirectory) {
