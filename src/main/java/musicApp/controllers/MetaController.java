@@ -1,8 +1,8 @@
 package musicApp.controllers;
 
+import javafx.stage.Stage;
 import musicApp.models.Settings;
 import musicApp.utils.DataProvider;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,6 +13,7 @@ public class MetaController {
     private final DataProvider dataProvider = new DataProvider();
     private final PlayerController playerController;
     private final SettingsController settingsController;
+
     public MetaController(Stage stage) throws IOException {
         this.stage = stage;
         this.playerController = new PlayerController(this);

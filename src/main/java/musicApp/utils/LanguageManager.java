@@ -12,13 +12,10 @@ public class LanguageManager {
     private static final Preferences prefs = Preferences.userNodeForPackage(LanguageManager.class);
     private static final String DEFAULT_LANGUAGE = "en"; // default language if pc language is not supported
     private static final String[] SUPPORTED_LANGUAGES = {"fr", "en", "nl"}; // supported languages
+    private static final String[] BUNDLE_NAMES = {"lang.messages", "lang.general", "lang.errors", "lang.buttons", "lang.settings", "lang.default_values"};
+    private static final ResourceBundle[] bundles = new ResourceBundle[BUNDLE_NAMES.length];
     private static Locale currentLocale;
 
-    private static ResourceBundle messages;
-    private static ResourceBundle general;
-    private static ResourceBundle errors;
-    private static ResourceBundle buttons;
-    private static ResourceBundle settings;
 
     static {
         // gets the language saved in the preferences, or the default language
@@ -36,21 +33,18 @@ public class LanguageManager {
             languageCode = DEFAULT_LANGUAGE; // set default language if not supported
         }
         currentLocale = Locale.forLanguageTag(languageCode);
-        messages = ResourceBundle.getBundle("lang.messages", currentLocale);
-        general = ResourceBundle.getBundle("lang.general", currentLocale);
-        errors = ResourceBundle.getBundle("lang.errors", currentLocale);
-        buttons = ResourceBundle.getBundle("lang.buttons", currentLocale);
-        settings = ResourceBundle.getBundle("lang.settings", currentLocale);
+
+        for (int i = 0; i < BUNDLE_NAMES.length; i++) {
+            bundles[i] = ResourceBundle.getBundle(BUNDLE_NAMES[i], currentLocale);
+        }
 
         prefs.put("language", languageCode); // save the language in the preferences
     }
 
     public static String get(String key) {
-        if (messages.containsKey(key)) return messages.getString(key);
-        if (general.containsKey(key)) return general.getString(key);
-        if (buttons.containsKey(key)) return buttons.getString(key);
-        if (errors.containsKey(key)) return errors.getString(key);
-        if (settings.containsKey(key)) return settings.getString(key);
+        for (ResourceBundle messages : bundles) {
+            if (messages.containsKey(key)) return messages.getString(key);
+        }
         return "???" + key + "???";
     }
 

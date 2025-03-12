@@ -14,8 +14,8 @@ module musicApp {
     exports musicApp.utils;
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media;
-    opens musicApp.Controllers to javafx.fxml, javafx.controls, javafx.media;
-    opens musicApp.Models to javafx.fxml, javafx.controls, javafx.media;
-    opens musicApp.Views to javafx.fxml, javafx.controls, javafx.media;
+    opens musicApp.controllers to javafx.fxml, javafx.controls, javafx.media;
+    opens musicApp.models to javafx.fxml, javafx.controls, javafx.media;
+    opens musicApp.views to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.utils to javafx.fxml, javafx.controls, javafx.media;
 }

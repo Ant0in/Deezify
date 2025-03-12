@@ -1,21 +1,21 @@
 package musicApp.controllers;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
-import musicApp.models.*;
-import musicApp.views.PlayerView;
-import musicApp.utils.MetadataReader;
-import musicApp.utils.MusicLoader;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.exceptions.ID3TagException;
+import musicApp.models.*;
+import musicApp.utils.MetadataReader;
+import musicApp.utils.MusicLoader;
+import musicApp.views.PlayerView;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller class for the music player.
@@ -75,8 +75,8 @@ public class PlayerController {
         for (Path songPath : songs) {
 
             try {
-
-                Metadata metadata = MetadataReader.getMetadata(songPath.toFile());
+                MetadataReader reader = new MetadataReader();
+                Metadata metadata = reader.getMetadata(songPath.toFile());
 
                 library.add(new Song(
                         metadata,      // metadata
@@ -378,7 +378,7 @@ public class PlayerController {
         for (Song song : library.toList()) {
             if (song.getSongName().toLowerCase().contains(query.toLowerCase()) ||
                     song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
-                    song.getStyle().toLowerCase().contains(query.toLowerCase())) {
+                    song.getGenre().toLowerCase().contains(query.toLowerCase())) {
                 results.add(song);
             }
         }
@@ -435,7 +435,7 @@ public class PlayerController {
      *
      * @return The path to the cover image.
      */
-    public String getCover(Song song) {
+    public byte[] getCover(Song song) {
         return song.getCover();
     }
 

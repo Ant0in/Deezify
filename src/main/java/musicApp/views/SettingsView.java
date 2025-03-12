@@ -1,10 +1,7 @@
 package musicApp.views;
 
-import musicApp.controllers.SettingsController;
-import musicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -12,14 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import musicApp.controllers.SettingsController;
+import musicApp.utils.LanguageManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Locale;
 
 public class SettingsView {
     private final Scene scene;

@@ -1,9 +1,9 @@
 package musicApp.models;
 
 import javafx.beans.property.*;
-import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 /**
  * AudioPlayer

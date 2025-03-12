@@ -1,6 +1,5 @@
 package musicApp.utils;
 
-import musicApp.utils.MusicLoader;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -9,7 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 public class TestMusicLoader {
     @Test

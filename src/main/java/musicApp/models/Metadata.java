@@ -1,9 +1,7 @@
 package musicApp.models;
 
 import javafx.util.Duration;
-
-import java.util.HashMap;
-import java.util.Optional;
+import musicApp.utils.LanguageManager;
 
 /**
  * Represents metadata associated with a song.
@@ -11,19 +9,11 @@ import java.util.Optional;
  * and cover image in Base64 format.
  */
 public class Metadata {
-    private final HashMap<String, String> _metadata;
-
-    private String title;
-    private String artist;
-    private String genre;
-    private Duration duration;
-    private byte[] cover;
-
-    private String getMetadataOrDefault(String key, String defaultValue) {
-        String value = _metadata.getOrDefault(key, defaultValue);
-        return (value == null || value.isEmpty()) ? defaultValue : value;
-    }
-
+    private String title = LanguageManager.get("metadata.title");
+    private String artist = LanguageManager.get("metadata.artist");
+    private String genre = LanguageManager.get("metadata.genre");
+    private Duration duration = Duration.ZERO;
+    private byte[] cover = null;
 
     /**
      * Retrieves the title of the song.
@@ -32,7 +22,18 @@ public class Metadata {
      * @return The title of the song.
      */
     public String getTitle() {
-        return getMetadataOrDefault("title", "Unknown Title");
+        return this.title;
+    }
+
+    /**
+     * Sets the title of the song.
+     *
+     * @param title The title of the song.
+     */
+    public void setTitle(String title) {
+        if (title != null && !title.isEmpty()) {
+            this.title = title;
+        }
     }
 
     /**
@@ -42,7 +43,18 @@ public class Metadata {
      * @return The artist of the song.
      */
     public String getArtist() {
-        return getMetadataOrDefault("artist", "Unknown Artist");
+        return this.artist;
+    }
+
+    /**
+     * Sets the artist of the song.
+     *
+     * @param artist The artist of the song.
+     */
+    public void setArtist(String artist) {
+        if (artist != null && !artist.isEmpty()) {
+            this.artist = artist;
+        }
     }
 
     /**
@@ -52,7 +64,18 @@ public class Metadata {
      * @return The genre of the song.
      */
     public String getGenre() {
-        return getMetadataOrDefault("genre", "Unknown Genre");
+        return this.genre;
+    }
+
+    /**
+     * Sets the genre of the song.
+     *
+     * @param genre The genre of the song.
+     */
+    public void setGenre(String genre) {
+        if (genre != null && !genre.isEmpty()) {
+            this.genre = genre;
+        }
     }
 
     /**
@@ -62,7 +85,18 @@ public class Metadata {
      * @return The duration of the media item as a Duration object.
      */
     public Duration getDuration() {
-        return _metadata.get("duration") != null ? Duration.seconds(Double.parseDouble(_metadata.get("duration"))) : Duration.seconds(0);
+        return this.duration;
+    }
+
+    /**
+     * Sets the duration of the song.
+     *
+     * @param duration The duration of the song.
+     */
+    public void setDuration(Duration duration) {
+        if (duration != null && duration.greaterThan(Duration.ZERO)) {
+            this.duration = duration;
+        }
     }
 
     /**
@@ -71,10 +105,18 @@ public class Metadata {
      *
      * @return An Optional containing the cover image in Base64 format or empty if not available.
      */
-    public Optional<String> getCoverBytesBase64() {
-        String cover = _metadata.get("cover");
-        return Optional.ofNullable(cover);
+    public byte[] getCover() {
+        return this.cover;
     }
 
-
+    /**
+     * Sets the cover image in Base64 encoding.
+     *
+     * @param cover The cover image in Base64 format.
+     */
+    public void setCover(byte[] cover) {
+        if (cover != null && cover.length > 0) {
+            this.cover = cover;
+        }
+    }
 }

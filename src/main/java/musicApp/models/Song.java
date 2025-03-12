@@ -1,42 +1,22 @@
 package musicApp.models;
 
-import java.io.ByteArrayInputStream;
-import java.nio.file.Path;
-import java.util.Base64;
-
 import javafx.scene.image.Image;
 import javafx.util.Duration;
+
+import java.io.ByteArrayInputStream;
+import java.nio.file.Path;
 
 public class Song {
 
     private final Path filePath;
     private String songName;
     private String artistName;
-    private String style;
-    private String cover;
+    private String genre;
+    private byte[] cover;
     private Duration duration;
 
     /**
-     * Constructor
-     *
-     * @param songName   The name of the song.
-     * @param artistName The name of the artist.
-     * @param style      The style of the song.
-     * @param cover      Base64 representation of the image.
-     * @param filePath   The path to the music file.
-     * @param duration   The duration of the song.
-     */
-    public Song(String songName, String artistName, String style, String cover, Path filePath, Duration duration) {
-        this.songName = songName;
-        this.artistName = artistName;
-        this.style = style;
-        this.cover = cover;
-        this.filePath = filePath;
-        this.duration = duration;
-    }
-
-    /**
-     * Constructor using the metadata map from MetadataReader.
+     * Constructor from MetadataReader.
      *
      * @param metadata The metadata of the song.
      * @param filePath The path to the music file.
@@ -44,8 +24,8 @@ public class Song {
     public Song(Metadata metadata, Path filePath) {
         this.songName = metadata.getTitle();
         this.artistName = metadata.getArtist();
-        this.style = metadata.getGenre();
-        this.cover = metadata.getCoverBytesBase64().orElse(null);
+        this.genre = metadata.getGenre();
+        this.cover = metadata.getCover();
         this.filePath = filePath;
         this.duration = metadata.getDuration();
     }
@@ -96,21 +76,21 @@ public class Song {
     }
 
     /**
-     * Get the style of the song.
+     * Get the genre of the song.
      *
-     * @return The style of the song.
+     * @return The genre of the song.
      */
-    public String getStyle() {
-        return style;
+    public String getGenre() {
+        return genre;
     }
 
     /**
-     * Set the style of the song.
+     * Set the genre of the song.
      *
-     * @param style The style of the song.
+     * @param genre The genre of the song.
      */
-    public void setStyle(String style) {
-        this.style = style;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     /**
@@ -118,7 +98,7 @@ public class Song {
      *
      * @return The path to the cover image.
      */
-    public String getCover() {
+    public byte[] getCover() {
         return cover;
     }
 
@@ -127,7 +107,7 @@ public class Song {
      *
      * @param cover the cover in base64.
      */
-    public void setCover(String cover) {
+    public void setCover(byte[] cover) {
         this.cover = cover;
     }
 
@@ -142,8 +122,7 @@ public class Song {
         }
 
         try {
-            byte[] imageData = Base64.getDecoder().decode(cover);
-            return new Image(new ByteArrayInputStream(imageData));
+            return new Image(new ByteArrayInputStream(cover));
         } catch (Exception e) {
             return new Image(getClass().getResource("/images/song.png").toExternalForm());
         }

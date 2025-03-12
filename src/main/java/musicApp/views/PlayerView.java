@@ -1,36 +1,29 @@
 package musicApp.views;
 
-import musicApp.utils.LanguageManager;
-import musicApp.models.Song;
-
-import java.util.List;
-import java.util.Arrays;
-
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.beans.binding.Bindings;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import musicApp.controllers.PlayerController;
-import javafx.event.ActionEvent;
-import javafx.stage.StageStyle;
-import javafx.scene.paint.Color;
-
+import musicApp.models.Song;
+import musicApp.utils.LanguageManager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 

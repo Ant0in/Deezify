@@ -1,19 +1,15 @@
 package musicApp.utils;
 
+import javafx.util.Duration;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.exceptions.ID3TagException;
+import musicApp.models.Metadata;
+import org.junit.Test;
+
 import java.io.File;
 import java.nio.file.Paths;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.models.Metadata;
-import javafx.util.Duration;
-import org.junit.Test;
-
-import musicApp.utils.MetadataReader;
-import musicApp.exceptions.ID3TagException;
+import static org.junit.Assert.*;
 
 
 public class TestMetadataReader {
@@ -25,9 +21,10 @@ public class TestMetadataReader {
         // check if the metadata reader can handle a mp3 file with valid metadata
         File file = Paths.get("src", "test", "resources", "goodTestMP3.mp3").toFile();
         boolean hasExceptionOccured = false;
+        MetadataReader reader = new MetadataReader();
 
         try {
-            MetadataReader.getMetadata(file);
+            reader.getMetadata(file);
         } catch (Exception e) {
             hasExceptionOccured = true;
         }
@@ -41,9 +38,10 @@ public class TestMetadataReader {
 
         // check if the metadata reader can handle a mp3 file with no ID3v2 tags
         File file = Paths.get("src", "test", "resources", "noID3TagMP3.mp3").toFile();
+        MetadataReader reader = new MetadataReader();
 
         assertThrows(ID3TagException.class, () -> {
-            MetadataReader.getMetadata(file);
+            reader.getMetadata(file);
         });
 
     }
@@ -54,9 +52,10 @@ public class TestMetadataReader {
         // check if the metadata reader can handle a mp3 file with valid metadata
         File file = Paths.get("src", "test", "resources", "goodTestMP3.mp3").toFile();
         Metadata metadata;
+        MetadataReader reader = new MetadataReader();
 
         try {
-            metadata = MetadataReader.getMetadata(file);
+            metadata = reader.getMetadata(file);
         } catch (ID3TagException | BadFileTypeException e) {
             e.printStackTrace();
             assert false;
@@ -78,9 +77,10 @@ public class TestMetadataReader {
         // check if the metadata reader can handle a mp3 file with valid metadata
         File file = Paths.get("src", "test", "resources", "goodTestWAV.wav").toFile();
         Metadata metadata;
+        MetadataReader reader = new MetadataReader();
 
         try {
-            metadata = MetadataReader.getMetadata(file);
+            metadata = reader.getMetadata(file);
         } catch (ID3TagException e) {
             e.printStackTrace();
             assert false;
@@ -95,7 +95,7 @@ public class TestMetadataReader {
         assertEquals("3seconds", metadata.getTitle());
         assertEquals("Sample", metadata.getArtist());
         assertEquals("Celtic", metadata.getGenre());
-        // cover is not tested smh
+        assertNull(metadata.getCover());
         assertEquals(Duration.seconds(Double.parseDouble("3")), metadata.getDuration());
     }
 
@@ -104,12 +104,13 @@ public class TestMetadataReader {
 
         // check if the metadata reader can handle a mp3 file with no ID3v2 tags
         File file = Paths.get("src", "test", "resources", "noTagWAV.wav").toFile();
+        MetadataReader reader = new MetadataReader();
 
         try {
-            System.out.println(MetadataReader.getMetadata(file));
-            assertEquals("Unknown Title", MetadataReader.getMetadata(file).getTitle());
-            assertEquals("Unknown Artist", MetadataReader.getMetadata(file).getArtist());
-            assertEquals("Unknown Genre", MetadataReader.getMetadata(file).getGenre());
+            System.out.println(reader.getMetadata(file));
+            assertEquals(LanguageManager.get("metadata.title"), reader.getMetadata(file).getTitle());
+            assertEquals(LanguageManager.get("metadata.artist"), reader.getMetadata(file).getArtist());
+            assertEquals(LanguageManager.get("metadata.genre"), reader.getMetadata(file).getGenre());
         } catch (ID3TagException e) {
             e.printStackTrace();
             assert false;
@@ -124,9 +125,10 @@ public class TestMetadataReader {
 
         // check if the metadata reader can handle a file with an invalid extension
         File file = Paths.get("src", "test", "resources", "badFileType.opus").toFile();
+        MetadataReader reader = new MetadataReader();
 
         assertThrows(BadFileTypeException.class, () -> {
-            MetadataReader.getMetadata(file);
+            reader.getMetadata(file);
         });
     }
 
