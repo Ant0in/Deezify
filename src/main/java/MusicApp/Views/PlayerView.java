@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.beans.binding.Bindings;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -34,8 +35,6 @@ public class PlayerView {
     private Scene scene;
 
 
-    @FXML
-    private Button exitButton, btnSettings;
 
 
     @FXML
@@ -46,6 +45,8 @@ public class PlayerView {
     private TextField songInput;
     @FXML
     private VBox controls;
+    @FXML
+    private HBox toolBar;
 
     @FXML
     private Pane labelContainer;
@@ -81,7 +82,7 @@ public class PlayerView {
      */
     @FXML
     public void initialize(){
-        initControlPanel();
+        initPanes();
         initBindings();
         initSongInput();
         initPlayListView();
@@ -94,10 +95,22 @@ public class PlayerView {
         initTranslation();
     }
 
+    private void initPanes(){
+        initControlPanel();
+        initToolBar();
+    }
+
     private void initControlPanel(){
-        Pane controlPanel = playerController.getRoot();
+        Pane controlPanel = playerController.getControlPanelRoot();
         controls.getChildren().setAll(controlPanel);
     }
+
+    private void initToolBar(){
+        Pane toolBarPane = playerController.getToolBarRoot();
+        toolBar.getChildren().setAll(toolBarPane);
+    }
+
+
 
     /**
      * Initialize the translations of the texts in the view.
@@ -115,7 +128,6 @@ public class PlayerView {
     private void initBindings() {
         bindButtons();
         bindPlayingSongAnchor();
-        bindButtonsImages();
         bindQueueButtonsActivation();
     }
 
@@ -142,22 +154,7 @@ public class PlayerView {
 
 
 
-    /**
-     * Bind the images of the buttons.
-     */
-    private void bindButtonsImages() {
-        ImageView exitIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/cross.png")).toExternalForm());
-        exitIcon.setFitWidth(20);
-        exitIcon.setFitHeight(20);
-        exitButton.setGraphic(exitIcon);
 
-
-        ImageView settingsIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/settings.png")).toExternalForm());
-        settingsIcon.setFitWidth(20);
-        settingsIcon.setFitHeight(20);
-        btnSettings.setGraphic(settingsIcon);
-
-    }
 
 
 
@@ -376,14 +373,6 @@ public class PlayerView {
         updateQueueListView();
     }
 
-    /**
-     * Handle the exit button
-     */
-    @FXML
-    private void handleExitApp() {
-        Platform.exit();
-    }
-
     private void enableQueueDragAndDrop() {
         queueListView.setCellFactory(lv -> {
             ListCell<Song> cell = new ListCell<Song>() {
@@ -462,14 +451,6 @@ public class PlayerView {
         event.consume();
     }
 
-    /**
-     * Handle the settings button.
-     * @param event The action event.
-     */
-    @FXML
-    private void handleSettings(ActionEvent event) {
-        playerController.openSettings();
-    }
 
     /**
      * Change the language of the application.

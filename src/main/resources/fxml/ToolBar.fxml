@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/style2.css">
+    <Button fx:id="btnSettings"  styleClass="settingsbtn" />
+    <Region fx:id="spacer" HBox.hgrow="ALWAYS" />
+    <Button fx:id="exitButton"  styleClass="exitbtn" />
+</HBox>

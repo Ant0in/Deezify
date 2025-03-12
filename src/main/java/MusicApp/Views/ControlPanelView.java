@@ -160,9 +160,27 @@ public class ControlPanelView {
         speedBox.setValue("1x");
         speedBox.setOnAction(e -> {
             String speed = speedBox.getValue();
-            double rate = controlPanelController.getSpeedValue(speed);
+            double rate = getSpeedValue(speed);
             controlPanelController.changeSpeed(rate);
         });
+    }
+
+    /**
+     * Get the current speed value.
+     * @param speedLabel The speed label.
+     * @return The speed value.
+     */
+    private double getSpeedValue(String speedLabel) {
+        return switch (speedLabel) {
+            case "0.25x" -> 0.25;
+            case "0.5x" -> 0.5;
+            case "0.75x" -> 0.75;
+            case "1.25x" -> 1.25;
+            case "1.5x" -> 1.5;
+            case "1.75x" -> 1.75;
+            case "2x" -> 2.0;
+            default -> 1.0;
+        };
     }
 
     /**

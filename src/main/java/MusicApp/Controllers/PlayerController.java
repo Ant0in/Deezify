@@ -11,12 +11,8 @@ import MusicApp.Models.*;
 import MusicApp.Views.PlayerView;
 import MusicApp.utils.MetadataReader;
 import MusicApp.utils.MusicLoader;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  * Controller class for the music player.
@@ -26,16 +22,16 @@ import javafx.util.Duration;
  * It also allows to add songs to a queue and play them in the order they were added.
  */
 public class PlayerController {
-    private final AudioPlayer audioPlayer;
+
     private final Library library;
     private final Queue queue;
     private final PlaylistManager playlistManager;
     private int currentIndex;
-    private double currentSpeed = 1.0;
 
     private PlayerView playerView;
     private final MetaController metaController;
     private ControlPanelController controlPanelController;
+    private ToolBarController toolBarController;
 
 
 
@@ -44,15 +40,16 @@ public class PlayerController {
      */
     public PlayerController(MetaController metaController) throws IOException {
         this.metaController = metaController;
-        this.audioPlayer = new AudioPlayer();
         this.library = new Library();
         this.queue = new Queue();
         this.playlistManager = new PlaylistManager(library);
+        this.controlPanelController = new ControlPanelController(this);
+        this.toolBarController = new ToolBarController(this);
         Settings settings = metaController.getSettings();
-        this.audioPlayer.setBalance(settings.getBalance());
+        this.controlPanelController.setBalance(settings.getBalance());
         this.loadLibrary(settings.getMusicDirectory());
 
-        this.controlPanelController = new ControlPanelController(this);
+
 
         initPlayerView();
         // this.playerView = new PlayerView(this);
@@ -62,7 +59,7 @@ public class PlayerController {
         this.playerView = new PlayerView();
         this.playerView.setPlayerController(this);
         try {
-            this.playerView.initializeScene("/fxml/main_layout.fxml");
+            this.playerView.initializeScene("/fxml/MainLayout.fxml");
             this.playerView.initialize();
         } catch (IOException e) {
             e.printStackTrace();
@@ -127,12 +124,14 @@ public class PlayerController {
         if (queue.isEmpty()) {
             if (currentIndex < library.size() - 1) {
                 currentIndex++;
-                playCurrent();
+                this.controlPanelController.playCurrent(getCurrentSong());
             }
         } else {
             playFromQueue(0);
         }
     }
+
+
 
     /**
      * Go back to the previous song in the library.
@@ -140,22 +139,8 @@ public class PlayerController {
     public void prec() {
         if (currentIndex > 0) {
             currentIndex--;
-            playCurrent();
+            this.controlPanelController.playCurrent(getCurrentSong());
         }
-    }
-
-    /**
-     * Pause the currently playing song.
-     */
-    public void pause() {
-        audioPlayer.pause();
-    }
-
-    /**
-     * Unpause the currently paused song.
-     */
-    public void unpause() {
-        audioPlayer.unpause();
     }
 
     /**
@@ -165,73 +150,18 @@ public class PlayerController {
     public void goTo(int index) {
         if (index >= 0 && index < library.size()) {
             currentIndex = index;
-            playCurrent();
+            this.controlPanelController.playCurrent(getCurrentSong());
         }
     }
 
-    /**
-     * Load and Play the currently selected song.
-     */
-    private void playCurrent() {
-        if (currentIndex >= 0 && currentIndex < library.size()) {
-            Song song = library.get(currentIndex);
-            audioPlayer.loadSong(song);
-            applyCurrentSpeed();
-            audioPlayer.setOnEndOfMedia(this::skip);
-            audioPlayer.unpause();
-            System.out.println("Playing: " + song.getSongName());
-        }
-    }
+
     
 
     /**
      * Get the audio player.
      * @return The audio player.
      */
-    public AudioPlayer getAudioPlayer() { return audioPlayer; }
-
-
-    /**
-     * Set the volume of the audio player.
-     * @param volume The volume level (0.0 to 1.0).
-     */
-    public void setVolume(double volume) {
-        getAudioPlayer().setVolume(volume);
-    }
-
-    /**
-     * Get the current speed value.
-     * @param speedLabel The speed label.
-     * @return The speed value.
-     */
-    public double getSpeedValue(String speedLabel) {
-        return switch (speedLabel) {
-            case "0.25x" -> 0.25;
-            case "0.5x" -> 0.5;
-            case "0.75x" -> 0.75;
-            case "1.25x" -> 1.25;
-            case "1.5x" -> 1.5;
-            case "1.75x" -> 1.75;
-            case "2x" -> 2.0;
-            default -> 1.0;
-        };
-    }
-
-    /**
-     * Change speed of the currently playing song.
-     * @param speed The speed to set.
-     */
-    public void changeSpeed(double speed) {
-        this.currentSpeed = speed;
-        audioPlayer.changeSpeed(speed);
-    }
-
-    /**
-     * Apply the current speed to the audio player.
-     */
-    public void applyCurrentSpeed() {
-        audioPlayer.changeSpeed(currentSpeed);
-    }
+    // public AudioPlayer getAudioPlayer() { return audioPlayer; }
 
 
     /**
@@ -300,7 +230,7 @@ public class PlayerController {
     public void playFromLibrary(int index) {
         if (index >= 0 && index < library.size()) {
             currentIndex = index;
-            playCurrent();
+            this.controlPanelController.playCurrent(getCurrentSong());
         }
     }
 
@@ -311,63 +241,15 @@ public class PlayerController {
     public void playFromQueue(int index) {
         if (index >= 0 && index < queue.size()) {
             Song song = queue.get(index);
-            audioPlayer.loadSong(song);
-            applyCurrentSpeed();
-            audioPlayer.setOnEndOfMedia(this::skip);
-            audioPlayer.unpause();
+            this.controlPanelController.playCurrent(song);
             removeFromQueue(song);
             playerView.updateQueueListView();
             System.out.println("Playing from queue: " + song.getSongName());
         }
     }
 
-    /**
-     * Get the current time of the song.
-     * @return The current time of the song.
-     */
-    public Duration getCurrentTime() {
-        return getAudioPlayer().getCurrentTime();
-    }
 
-    /**
-     * Get the total duration of the song.
-     * @return The total duration of the song.
-     */
-    public Duration getTotalDuration() {
-        return getAudioPlayer().getTotalDuration();
-    }
 
-    /**
-     * Get the progress of the song.
-     * @return The progress of the song.
-     */
-    public javafx.beans.property.DoubleProperty progressProperty() {
-        return getAudioPlayer().progressProperty();
-    }
-
-    /**
-     * Return whether the song is playing.
-     * @return Whether the song is playing.
-     */
-    public BooleanProperty isPlaying() {
-        return getAudioPlayer().isPlaying();
-    }
-
-    /**
-     * Get the current song property.
-     * @return The current song property.
-     */
-    public StringProperty currentSongProperty() {
-        return getAudioPlayer().currentSongStringProperty();
-    }
-
-    /**
-     * Seek to a specific duration in the song.
-     * @param duration The duration to seek to.
-     */
-    public void seek(double duration) {
-        getAudioPlayer().seek(duration);
-    }
 
     /**
      * Search the library for songs that match the query.
@@ -419,13 +301,7 @@ public class PlayerController {
         return queue.get(index);
     }
 
-    /**
-     * Get the volume property.
-     * @return The volume property.
-     */
-    public DoubleProperty volumeProperty() {
-        return getAudioPlayer().volumeProperty();
-    }
+
 
     /**
      * Get the cover image of the song.
@@ -440,18 +316,17 @@ public class PlayerController {
      * @return The current song.
      */
     public Song getCurrentSong() {
-        if (audioPlayer.isPlaying() != null) {
-            return audioPlayer.getCurrentSong();
-        } else {
+        if (currentIndex < 0 || currentIndex >= library.size()) {
             return null;
         }
+        return library.get(currentIndex);
     }
 
     /**
      * Close the audio player.
      */
     public void close() {
-        audioPlayer.close();
+        this.controlPanelController.close();
     }
 
     /**
@@ -490,21 +365,18 @@ public class PlayerController {
      * @param newSettings The new settings.
      */
     public void onSettingsChanged(Settings newSettings) {
-        audioPlayer.setBalance(newSettings.getBalance());
+        this.controlPanelController.setBalance(newSettings.getBalance());
         loadLibrary(newSettings.getMusicDirectory());
     }
 
-    public Pane getRoot() {
+    public Pane getControlPanelRoot() {
         return this.controlPanelController.getRoot();
     }
 
-    public void handlePauseSong(){
-        if (isPlaying().get()) {
-            pause();
-        } else {
-            unpause();
-        }
+    public Pane getToolBarRoot(){
+        return this.toolBarController.getRoot();
     }
+
 
     /**
      * Handle the next song button.

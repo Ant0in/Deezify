@@ -4,7 +4,6 @@ import MusicApp.Controllers.SettingsController;
 import MusicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -12,14 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Locale;
 
 public class SettingsView {
     private final Scene scene;
@@ -42,7 +38,7 @@ public class SettingsView {
 
     public SettingsView(SettingsController settingsController) throws IOException {
         this.settingsController = settingsController;
-        URL url = PlayerView.class.getResource("/fxml/settings.fxml");
+        URL url = PlayerView.class.getResource("/fxml/Settings.fxml");
         FXMLLoader loader = new FXMLLoader(url);
         loader.setController((Object) this);
         Pane root = loader.load();
