@@ -116,4 +116,17 @@ public class Library {
     public void clear() {
         songList.clear();
     }
+
+    /**
+     * Search for songs in the library.
+     *
+     * @param text The text to search for.
+     * @return The list of songs that contain the text.
+     */
+    public List<Song> search(String text) {
+        return songList
+                .stream()
+                .filter(s -> s.containsText(text))
+                .toList();
+    }
 }

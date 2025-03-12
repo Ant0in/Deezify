@@ -105,12 +105,13 @@ public class TestMetadataReader {
         // check if the metadata reader can handle a mp3 file with no ID3v2 tags
         File file = Paths.get("src", "test", "resources", "noTagWAV.wav").toFile();
         MetadataReader reader = new MetadataReader();
+        LanguageManager languageManager = LanguageManager.getInstance();
 
         try {
             System.out.println(reader.getMetadata(file));
-            assertEquals(LanguageManager.get("metadata.title"), reader.getMetadata(file).getTitle());
-            assertEquals(LanguageManager.get("metadata.artist"), reader.getMetadata(file).getArtist());
-            assertEquals(LanguageManager.get("metadata.genre"), reader.getMetadata(file).getGenre());
+            assertEquals(languageManager.get("metadata.title"), reader.getMetadata(file).getTitle());
+            assertEquals(languageManager.get("metadata.artist"), reader.getMetadata(file).getArtist());
+            assertEquals(languageManager.get("metadata.genre"), reader.getMetadata(file).getGenre());
         } catch (ID3TagException e) {
             e.printStackTrace();
             assert false;

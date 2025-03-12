@@ -34,6 +34,7 @@ import java.util.Objects;
 public class PlayerView {
 
     private final PlayerController playerController;
+    private final LanguageManager languageManager = LanguageManager.getInstance();
     private Scene scene;
 
     @FXML
@@ -114,10 +115,10 @@ public class PlayerView {
      * Initialize the translations of the texts in the view.
      */
     private void initTranslation() {
-        addSongButton.setText(LanguageManager.get("button.add"));
-        deleteSongButton.setText(LanguageManager.get("button.delete"));
-        clearQueueButton.setText(LanguageManager.get("button.clear"));
-        songInput.setPromptText(LanguageManager.get("search"));
+        addSongButton.setText(languageManager.get("button.add"));
+        deleteSongButton.setText(languageManager.get("button.delete"));
+        clearQueueButton.setText(languageManager.get("button.clear"));
+        songInput.setPromptText(languageManager.get("search"));
     }
 
     /**
@@ -413,8 +414,7 @@ public class PlayerView {
      */
     public void enableShuffleToggle() {
         shuffleToggle.setOnAction(event -> {
-            playerController.toggleShuffle(shuffleToggle.isSelected());
-            updatePlayListView(); // Update the play list view to show the new order
+            playerController.toggleShuffle();
         });
     }
 
@@ -478,7 +478,7 @@ public class PlayerView {
      * @return The title of the application.
      */
     public String getTitle() {
-        return LanguageManager.get("app.title");
+        return languageManager.get("app.title");
     }
 
     /**
@@ -733,7 +733,7 @@ public class PlayerView {
      * @param languageCode The language code. (e.g. "en", "fr", "nl")
      */
     private void switchLanguage(String languageCode) {
-        LanguageManager.setLanguage(languageCode);
+        languageManager.setLanguage(languageCode);
         refreshUI();
     }
 
@@ -743,6 +743,6 @@ public class PlayerView {
     public void refreshUI() {
         initTranslation();
         Stage stage = (Stage) scene.getWindow();
-        stage.setTitle(LanguageManager.get("app.title"));
+        stage.setTitle(languageManager.get("app.title"));
     }
 }

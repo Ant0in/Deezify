@@ -170,6 +170,17 @@ public class Song {
         return false;
     }
 
+    /**
+     * Check if the song contains the given text.
+     *
+     * @param text The text to search for.
+     * @return True if the song contains the text, false otherwise.
+     */
+    public Boolean containsText(String text) {
+        return this.songName.toLowerCase().contains(text.toLowerCase())
+                || this.artistName.toLowerCase().contains(text.toLowerCase())
+                || this.genre.toLowerCase().contains(text.toLowerCase());
+    }
 
 }
 

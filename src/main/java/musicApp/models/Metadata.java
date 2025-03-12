@@ -9,9 +9,10 @@ import musicApp.utils.LanguageManager;
  * and cover image in Base64 format.
  */
 public class Metadata {
-    private String title = LanguageManager.get("metadata.title");
-    private String artist = LanguageManager.get("metadata.artist");
-    private String genre = LanguageManager.get("metadata.genre");
+    private LanguageManager languageManager = LanguageManager.getInstance();
+    private String title = languageManager.get("metadata.title");
+    private String artist = languageManager.get("metadata.artist");
+    private String genre = languageManager.get("metadata.genre");
     private Duration duration = Duration.ZERO;
     private byte[] cover = null;
 

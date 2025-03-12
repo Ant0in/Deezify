@@ -20,6 +20,7 @@ import java.net.URL;
 public class SettingsView {
     private final Scene scene;
     private final SettingsController settingsController;
+    private final LanguageManager languageManager;
     @FXML
     private ComboBox<String> languageComboBox;
     @FXML
@@ -37,6 +38,7 @@ public class SettingsView {
 
     public SettingsView(SettingsController settingsController) throws IOException {
         this.settingsController = settingsController;
+        this.languageManager = LanguageManager.getInstance();
         URL url = PlayerView.class.getResource("/fxml/settings.fxml");
         FXMLLoader loader = new FXMLLoader(url);
         loader.setController((Object) this);
@@ -60,7 +62,7 @@ public class SettingsView {
      * Initialize the settings view.
      */
     private void init() {
-        originalLanguage = LanguageManager.getCurrentLocale().getLanguage();
+        originalLanguage = languageManager.getCurrentLocale().getLanguage();
         initComboBox();
         initSlider();
         initTranslations();
@@ -72,7 +74,7 @@ public class SettingsView {
      * Update the language combobox to display the current language.
      */
     private void updateLanguageComboBox() {
-        String currentLanguage = LanguageManager.getCurrentLocale().getLanguage();
+        String currentLanguage = languageManager.getCurrentLocale().getLanguage();
         if (currentLanguage.equals("en")) {
             languageComboBox.getSelectionModel().select(0);
         } else if (currentLanguage.equals("fr")) {
@@ -98,11 +100,11 @@ public class SettingsView {
     private void handleLanguageChange() {
         String selected = languageComboBox.getSelectionModel().getSelectedItem();
         if (selected.equals("English")) {
-            LanguageManager.setLanguage("en");
+            languageManager.setLanguage("en");
         } else if (selected.equals("Français")) {
-            LanguageManager.setLanguage("fr");
+            languageManager.setLanguage("fr");
         } else if (selected.equals("Nederlands")) {
-            LanguageManager.setLanguage("nl");
+            languageManager.setLanguage("nl");
         }
         refreshLanguage();
     }
@@ -122,15 +124,15 @@ public class SettingsView {
      * Initialize the translations of the view.
      */
     private void initTranslations() {
-        languageTitle.setText(LanguageManager.get("settings.lang_title"));
-        languageSelect.setText(LanguageManager.get("settings.lang_select"));
-        left.setText(LanguageManager.get("settings.left"));
-        right.setText(LanguageManager.get("settings.right"));
-        balanceTitle.setText(LanguageManager.get("settings.balance_title"));
-        title = LanguageManager.get("settings.title");
-        saveButton.setText(LanguageManager.get("settings.save"));
-        cancelButton.setText(LanguageManager.get("settings.cancel"));
-        browseButton.setText(LanguageManager.get("settings.select_music_folder"));
+        languageTitle.setText(languageManager.get("settings.lang_title"));
+        languageSelect.setText(languageManager.get("settings.lang_select"));
+        left.setText(languageManager.get("settings.left"));
+        right.setText(languageManager.get("settings.right"));
+        balanceTitle.setText(languageManager.get("settings.balance_title"));
+        title = languageManager.get("settings.title");
+        saveButton.setText(languageManager.get("settings.save"));
+        cancelButton.setText(languageManager.get("settings.cancel"));
+        browseButton.setText(languageManager.get("settings.select_music_folder"));
     }
 
     /**
@@ -172,7 +174,7 @@ public class SettingsView {
      */
     @FXML
     public void handleCancel() {
-        LanguageManager.setLanguage(originalLanguage);
+        languageManager.setLanguage(originalLanguage);
         settingsController.refreshLanguage();
         settingsController.close();
     }

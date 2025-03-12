@@ -17,6 +17,7 @@ public class AudioPlayer {
     private MediaPlayer mediaPlayer;
     private Song currentSong = null;
     private double balance = 0.0;
+    private double speed = 1.0;
 
     /**
      * Load a song into the player.
@@ -34,6 +35,7 @@ public class AudioPlayer {
         currentSongString.set(song.toString());
         mediaPlayer.volumeProperty().bind(volume);
         mediaPlayer.setBalance(balance);
+        mediaPlayer.setRate(speed);
 
         // Mettre à jour la propriété de progression pendant la lecture
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
@@ -67,6 +69,7 @@ public class AudioPlayer {
      * Change speed of the loaded song.
      */
     public void changeSpeed(double speed) {
+        this.speed = speed;
         if (mediaPlayer != null) {
             mediaPlayer.setRate(speed);
         }

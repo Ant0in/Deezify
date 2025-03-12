@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Controller class for the music player.
@@ -24,15 +25,14 @@ import java.util.List;
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
  */
-public class PlayerController {
+public class PlayerController extends MusicLoader {
     private final AudioPlayer audioPlayer;
     private final Library library;
     private final Queue queue;
-    private final PlaylistManager playlistManager;
     private final PlayerView playerView;
     private final MetaController metaController;
     private int currentIndex;
-    private double currentSpeed = 1.0;
+    private Boolean shuffle = false;
 
 
     /**
@@ -43,7 +43,6 @@ public class PlayerController {
         this.audioPlayer = new AudioPlayer();
         this.library = new Library();
         this.queue = new Queue();
-        this.playlistManager = new PlaylistManager(library);
         Settings settings = metaController.getSettings();
         this.audioPlayer.setBalance(settings.getBalance());
         this.loadLibrary(settings.getMusicDirectory());
@@ -65,7 +64,7 @@ public class PlayerController {
     public void loadLibrary(Path folderPath) {
         List<Path> songs;
         try {
-            songs = MusicLoader.getAllSongPaths(folderPath);
+            songs = getAllSongPaths(folderPath);
         } catch (IOException e) {
             System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
             return;
@@ -103,8 +102,12 @@ public class PlayerController {
      */
     public void skip() {
         if (queue.isEmpty()) {
-            if (currentIndex < library.size() - 1) {
-                currentIndex++;
+            if (isShuffle()) {
+                Random random = new Random();
+                currentIndex = random.nextInt(library.size());
+                playCurrent();
+            } else {
+                currentIndex = (currentIndex + 1) % library.size();
                 playCurrent();
             }
         } else {
@@ -155,7 +158,6 @@ public class PlayerController {
         if (currentIndex >= 0 && currentIndex < library.size()) {
             Song song = library.get(currentIndex);
             audioPlayer.loadSong(song);
-            applyCurrentSpeed();
             audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
             System.out.println("Playing: " + song.getSongName());
@@ -207,17 +209,8 @@ public class PlayerController {
      * @param speed The speed to set.
      */
     public void changeSpeed(double speed) {
-        this.currentSpeed = speed;
         audioPlayer.changeSpeed(speed);
     }
-
-    /**
-     * Apply the current speed to the audio player.
-     */
-    public void applyCurrentSpeed() {
-        audioPlayer.changeSpeed(currentSpeed);
-    }
-
 
     /**
      * Get the list of songs in the library.
@@ -304,7 +297,6 @@ public class PlayerController {
         if (index >= 0 && index < queue.size()) {
             Song song = queue.get(index);
             audioPlayer.loadSong(song);
-            applyCurrentSpeed();
             audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
             removeFromQueue(song);
@@ -374,15 +366,7 @@ public class PlayerController {
      * @return A list of song names that match the query.
      */
     public List<Song> searchLibrary(String query) {
-        List<Song> results = new ArrayList<>();
-        for (Song song : library.toList()) {
-            if (song.getSongName().toLowerCase().contains(query.toLowerCase()) ||
-                    song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
-                    song.getGenre().toLowerCase().contains(query.toLowerCase())) {
-                results.add(song);
-            }
-        }
-        return results;
+        return library.search(query);
     }
 
     /**
@@ -475,19 +459,9 @@ public class PlayerController {
 
     /**
      * Toggle the shuffle mode.
-     *
-     * @param isEnabled The shuffle button state.
      */
-    public void toggleShuffle(boolean isEnabled) {
-        Song currentSong = (currentIndex >= 0 && currentIndex < library.size()) ? library.get(currentIndex) : null;
-        playlistManager.toggleShuffle(isEnabled, currentSong);
-        if (currentSong != null) {
-            int newIndex = isEnabled ? 0 : playlistManager.getOriginalIndex(currentSong);
-            if (newIndex != -1) {
-                currentIndex = newIndex;
-                goTo(currentIndex);
-            }
-        }
+    public void toggleShuffle() {
+        this.shuffle = !this.shuffle;
     }
 
     /**
@@ -498,6 +472,15 @@ public class PlayerController {
     public void onSettingsChanged(Settings newSettings) {
         audioPlayer.setBalance(newSettings.getBalance());
         loadLibrary(newSettings.getMusicDirectory());
+    }
+
+    /**
+     * Get the random mode.
+     *
+     * @return The random mode.
+     */
+    public boolean isShuffle() {
+        return this.shuffle;
     }
 }
 
