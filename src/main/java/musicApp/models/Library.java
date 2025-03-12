@@ -1,4 +1,4 @@
-package MusicApp.Models;
+package musicApp.models;
 
 import java.util.ArrayList;
 import java.util.List;

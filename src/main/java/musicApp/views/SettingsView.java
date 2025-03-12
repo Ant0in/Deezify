@@ -1,7 +1,7 @@
-package MusicApp.Views;
+package musicApp.views;
 
-import MusicApp.Controllers.SettingsController;
-import MusicApp.utils.LanguageManager;
+import musicApp.controllers.SettingsController;
+import musicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

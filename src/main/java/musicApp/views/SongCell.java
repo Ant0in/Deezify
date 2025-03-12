@@ -1,7 +1,7 @@
-package MusicApp.Views;
+package musicApp.views;
 
-import MusicApp.Controllers.PlayerController;
-import MusicApp.Models.Song;
+import musicApp.controllers.PlayerController;
+import musicApp.models.Song;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;

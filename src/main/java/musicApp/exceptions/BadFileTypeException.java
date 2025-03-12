@@ -1,4 +1,4 @@
-package MusicApp.Exceptions;
+package musicApp.exceptions;
 
 
 public class BadFileTypeException extends Exception {

@@ -1,4 +1,4 @@
-package MusicApp.Exceptions;
+package musicApp.exceptions;
 
 
 public class ID3TagException extends Exception {

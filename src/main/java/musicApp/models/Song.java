@@ -1,4 +1,4 @@
-package MusicApp.Models;
+package musicApp.models;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
@@ -42,14 +42,12 @@ public class Song {
      * @param filePath The path to the music file.
      */
     public Song(Metadata metadata, Path filePath) {
-
         this.songName = metadata.getTitle();
         this.artistName = metadata.getArtist();
         this.style = metadata.getGenre();
         this.cover = metadata.getCoverBytesBase64().orElse(null);
         this.filePath = filePath;
         this.duration = metadata.getDuration();
-
     }
 
     /**

@@ -1,4 +1,4 @@
-package MusicApp.Models;
+package musicApp.models;
 
 import javafx.beans.property.*;
 import javafx.util.Duration;

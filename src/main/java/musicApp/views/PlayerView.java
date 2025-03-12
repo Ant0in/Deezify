@@ -1,7 +1,7 @@
-package MusicApp.Views;
+package musicApp.views;
 
-import MusicApp.utils.LanguageManager;
-import MusicApp.Models.Song;
+import musicApp.utils.LanguageManager;
+import musicApp.models.Song;
 
 import java.util.List;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import MusicApp.Controllers.PlayerController;
+import musicApp.controllers.PlayerController;
 import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;

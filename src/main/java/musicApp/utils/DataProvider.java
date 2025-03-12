@@ -1,6 +1,6 @@
-package MusicApp.utils;
+package musicApp.utils;
 
-import MusicApp.Models.Settings;
+import musicApp.models.Settings;
 
 import java.io.IOException;
 import java.nio.file.Files;

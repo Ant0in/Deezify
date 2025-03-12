@@ -1,4 +1,4 @@
-package MusicApp.Utils;
+package musicApp.utils;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -7,13 +7,13 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
-import MusicApp.Exceptions.BadFileTypeException;
-import MusicApp.Models.Metadata;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.models.Metadata;
 import javafx.util.Duration;
 import org.junit.Test;
 
-import MusicApp.utils.MetadataReader;
-import MusicApp.Exceptions.ID3TagException;
+import musicApp.utils.MetadataReader;
+import musicApp.exceptions.ID3TagException;
 
 
 public class TestMetadataReader {

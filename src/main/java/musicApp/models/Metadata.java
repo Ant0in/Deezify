@@ -1,4 +1,4 @@
-package MusicApp.Models;
+package musicApp.models;
 
 import javafx.util.Duration;
 
@@ -13,14 +13,17 @@ import java.util.Optional;
 public class Metadata {
     private final HashMap<String, String> _metadata;
 
-    public Metadata(HashMap<String, String> metadata) {
-        _metadata = metadata;
-    }
+    private String title;
+    private String artist;
+    private String genre;
+    private Duration duration;
+    private byte[] cover;
 
     private String getMetadataOrDefault(String key, String defaultValue) {
         String value = _metadata.getOrDefault(key, defaultValue);
         return (value == null || value.isEmpty()) ? defaultValue : value;
     }
+
 
     /**
      * Retrieves the title of the song.
@@ -72,4 +75,6 @@ public class Metadata {
         String cover = _metadata.get("cover");
         return Optional.ofNullable(cover);
     }
+
+
 }

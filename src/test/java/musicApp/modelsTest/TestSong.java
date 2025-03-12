@@ -1,12 +1,12 @@
-package MusicApp.ModelsTest;
+package musicApp.modelsTest;
 
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import MusicApp.Models.Metadata;
+import musicApp.models.Metadata;
 import org.junit.Test;
 
-import MusicApp.Models.Song;
+import musicApp.models.Song;
 import javafx.util.Duration;
 
 public class TestSong {

@@ -1,16 +1,16 @@
-package MusicApp.Controllers;
+package musicApp.controllers;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import MusicApp.Exceptions.BadFileTypeException;
-import MusicApp.Exceptions.ID3TagException;
-import MusicApp.Models.*;
-import MusicApp.Views.PlayerView;
-import MusicApp.utils.MetadataReader;
-import MusicApp.utils.MusicLoader;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.exceptions.ID3TagException;
+import musicApp.models.*;
+import musicApp.views.PlayerView;
+import musicApp.utils.MetadataReader;
+import musicApp.utils.MusicLoader;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;

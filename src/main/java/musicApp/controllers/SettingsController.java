@@ -1,8 +1,8 @@
-package MusicApp.Controllers;
+package musicApp.controllers;
 
-import MusicApp.Models.Settings;
-import MusicApp.Views.SettingsView;
-import MusicApp.utils.DataProvider;
+import musicApp.models.Settings;
+import musicApp.views.SettingsView;
+import musicApp.utils.DataProvider;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;

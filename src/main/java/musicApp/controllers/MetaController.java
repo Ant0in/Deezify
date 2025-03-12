@@ -1,7 +1,7 @@
-package MusicApp.Controllers;
+package musicApp.controllers;
 
-import MusicApp.Models.Settings;
-import MusicApp.utils.DataProvider;
+import musicApp.models.Settings;
+import musicApp.utils.DataProvider;
 import javafx.stage.Stage;
 
 import java.io.IOException;

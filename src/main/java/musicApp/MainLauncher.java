@@ -1,4 +1,4 @@
-package MusicApp;
+package musicApp;
 
 /**
  * Launcher class that works around JavaFX module system requirements.

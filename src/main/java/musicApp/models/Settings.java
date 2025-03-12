@@ -1,6 +1,6 @@
-package MusicApp.Models;
+package musicApp.models;
 
-import MusicApp.utils.DataProvider;
+import musicApp.utils.DataProvider;
 
 import java.nio.file.Path;
 

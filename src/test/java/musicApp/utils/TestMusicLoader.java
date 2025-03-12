@@ -1,6 +1,6 @@
-package MusicApp.Utils;
+package musicApp.utils;
 
-import MusicApp.utils.MusicLoader;
+import musicApp.utils.MusicLoader;
 import org.junit.Test;
 
 import java.io.IOException;

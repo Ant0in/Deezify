@@ -1,18 +1,18 @@
-package MusicApp.utils;
+package musicApp.utils;
 
 import java.io.File;
 import java.util.Base64;
 import java.util.HashMap;
 
-import MusicApp.Exceptions.BadFileTypeException;
-import MusicApp.Models.Metadata;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.models.Metadata;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.mp3.MP3FileReader;
 import org.jaudiotagger.audio.wav.WavFileReader;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
-import MusicApp.Exceptions.ID3TagException;
+import musicApp.exceptions.ID3TagException;
 
 enum FileType {
     MP3,
@@ -54,7 +54,7 @@ public class MetadataReader {
 
     public static Metadata getMetadata(File fd) throws ID3TagException, BadFileTypeException {
 
-        HashMap<String, String> metadata = new HashMap<>();
+        Metadata metadata = new Metadata();
         AudioFile file = readFile(fd);
         Tag tag = readTag(file);
         if (tag == null) {
@@ -66,9 +66,11 @@ public class MetadataReader {
 
         // TODO : add more if needed
 
+        // getFirst: empty strsing
         metadata.put("title", tag.getFirst(FieldKey.TITLE));
         metadata.put("artist", tag.getFirst(FieldKey.ARTIST));
         metadata.put("genre", tag.getFirst(FieldKey.GENRE));
+        // check > 0
         metadata.put("duration", String.valueOf(file.getAudioHeader().getTrackLength()));
 
         try {

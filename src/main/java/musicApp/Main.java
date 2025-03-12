@@ -1,6 +1,6 @@
-package MusicApp;
+package musicApp;
 
-import MusicApp.Controllers.MetaController;
+import musicApp.controllers.MetaController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

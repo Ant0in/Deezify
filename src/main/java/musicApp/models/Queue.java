@@ -1,4 +1,4 @@
-package MusicApp.Models;
+package musicApp.models;
 
 /**
  * Queue class to store songs.
