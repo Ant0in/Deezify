@@ -15,7 +15,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<BorderPane fx:id="labelContainer" prefHeight="500" prefWidth="920" styleClass="body" stylesheets="@/css/style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.layout.Pane?>
+<BorderPane fx:id="labelContainer" prefHeight="500" prefWidth="920" styleClass="body" stylesheets="@../css/style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 5;">
          <Button fx:id="btnSettings" onAction="#handleSettings" styleClass="settingsbtn" />
@@ -39,38 +40,8 @@
    </center>
 
    <bottom>
-      <VBox fx:id="controls" spacing="10" style="-fx-padding: 10;">
-         <HBox alignment="CENTER_LEFT" spacing="10">
-            <ProgressBar fx:id="songProgressBar" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-            <Label fx:id="songProgressTimeLabel" styleClass="timeText" text="00:00/00:00" />
-         </HBox>
-         <HBox alignment="CENTER" spacing="10" styleClass="runningSong">
-            <!-- Left side: Cover and Title -->
-            <HBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-               <ImageView fx:id="imageCover" fitHeight="57.0" fitWidth="60.0" preserveRatio="true">
-                  <clip>
-                     <Rectangle arcHeight="10" arcWidth="10" height="${imageCover.fitHeight}" width="${imageCover.fitWidth}" />
-                  </clip>
-               </ImageView>
-               <VBox alignment="CENTER_LEFT">
-                  <Label fx:id="currentSongLabel" styleClass="currentSong" text="None" />
-                  <Label fx:id="currentArtistLabel" styleClass="currentArtist" text="" />
-               </VBox>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10">
-               <Button fx:id="previousSongButton" onAction="#handlePreviousSong" styleClass="previousbtn" />
-               <Button fx:id="pauseSongButton" onAction="#handlePauseSong" styleClass="pausebtn" />
-               <Button fx:id="nextSongButton" onAction="#handleNextSong" styleClass="nextbtn" />
-            </HBox>
-            <HBox alignment="CENTER_RIGHT" spacing="10" HBox.hgrow="ALWAYS">
-               <ToggleButton fx:id="shuffleToggle" styleClass="shuffle-btn" mnemonicParsing="false" />
-               <ComboBox fx:id="speedBox" styleClass="speed-box" prefHeight="15.0" prefWidth="95.0" />
-               <Label styleClass="volumeText" text="Vol" />
-               <Slider fx:id="volumeSlider" prefWidth="80" styleClass="volume" />
-               <Label fx:id="volumeLabel" styleClass="volumeText" text="50" />
-            </HBox>
-         </HBox>
-      </VBox>
+      <VBox fx:id="controls"/>
+
    </bottom>
 
 </BorderPane>

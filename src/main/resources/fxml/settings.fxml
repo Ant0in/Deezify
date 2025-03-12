@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="300" prefWidth="400" style="-fx-padding: 20;" stylesheets="@/css/style_settings.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="300" prefWidth="400" style="-fx-padding: 20;" stylesheets="@../css/style_settings.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
         <VBox alignment="CENTER" spacing="20">

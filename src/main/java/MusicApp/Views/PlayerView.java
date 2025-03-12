@@ -2,25 +2,17 @@ package MusicApp.Views;
 
 import MusicApp.utils.LanguageManager;
 import MusicApp.Models.Song;
-import java.util.List;
-import java.util.Arrays;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.beans.binding.Bindings;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import MusicApp.Controllers.PlayerController;
 import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
@@ -38,49 +30,37 @@ import java.util.Objects;
  */
 public class PlayerView {
 
-    private final PlayerController playerController;
+    private PlayerController playerController;
     private Scene scene;
 
-    @FXML
-    private Button pauseSongButton, nextSongButton, previousSongButton;
+
     @FXML
     private Button exitButton, btnSettings;
-    @FXML
-    private Label volumeLabel, songProgressTimeLabel;
-    @FXML
-    private Slider volumeSlider;
-    @FXML
-    private ProgressBar songProgressBar;
+
+
     @FXML
     private ListView<Song> playListView, queueListView;
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
     @FXML
-    private Label currentSongLabel, currentArtistLabel;
-    @FXML
     private TextField songInput;
     @FXML
     private VBox controls;
-    @FXML
-    private ImageView imageCover;
+
     @FXML
     private Pane labelContainer;
-    @FXML
-    private ToggleButton shuffleToggle;
-    @FXML
-    private ComboBox<String> speedBox;
 
-    //private static final String PLAY_ICON = "▶";
-    //private static final String PAUSE_ICON = "⏸";
+
 
     /* To enable drag */
     private double xOffset = 0;
     private double yOffset = 0;
 
-    public PlayerView(PlayerController playerController) throws IOException {
+    public PlayerView() throws IOException {
+    }
+
+    public void setPlayerController(PlayerController playerController) {
         this.playerController = playerController;
-        initializeScene("/fxml/main_layout.fxml");
-        initialize();
     }
 
     /**
@@ -99,19 +79,24 @@ public class PlayerView {
     /**
      * Initialize the view.
      */
+    @FXML
     public void initialize(){
+        initControlPanel();
         initBindings();
         initSongInput();
-        initSpeed();
         initPlayListView();
         updatePlayListView();
         updateQueueListView();
         enableQueueDragAndDrop();
         setupListSelectionListeners();
         enableDoubleClickToPlay();
-        enableShuffleToggle();
         setupListSelectionListeners();
         initTranslation();
+    }
+
+    private void initControlPanel(){
+        Pane controlPanel = playerController.getRoot();
+        controls.getChildren().setAll(controlPanel);
     }
 
     /**
@@ -129,13 +114,8 @@ public class PlayerView {
      */
     private void initBindings() {
         bindButtons();
-        bindSongProgress();
         bindPlayingSongAnchor();
-        bindCurrentSongCover();
-        bindVolumeControls();
-        bindCurrentSongControls();
         bindButtonsImages();
-        bindAllControlActivation();
         bindQueueButtonsActivation();
     }
 
@@ -145,71 +125,10 @@ public class PlayerView {
     private void bindButtons(){
         deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
         addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
-
-        ImageView playIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/play_white.png")).toExternalForm()));
-        playIcon.setFitWidth(20);
-        playIcon.setFitHeight(20);
-
-        ImageView pauseIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/pause_white.png")).toExternalForm()));
-        pauseIcon.setFitWidth(20);
-        pauseIcon.setFitHeight(20);
-
-        playerController.isPlaying().addListener((obs, wasPlaying, isPlaying) -> {
-            if (isPlaying) {
-                pauseSongButton.setGraphic(pauseIcon);
-                currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");
-            } else {
-                pauseSongButton.setGraphic(playIcon);
-                currentSongLabel.setStyle("-fx-text-fill: white;");
-            }
-        });
     }
 
-    /**
-     * Initialize speed box.
-     */
-    private void initSpeed() {
-        speedBox.getItems().clear();
-        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x","1.25x", "1.5x", "1.75x", "2x");
-        speedBox.setValue("1x");
-        speedBox.setOnAction(e -> {
-            String speed = speedBox.getValue();
-            double rate = playerController.getSpeedValue(speed);
-            playerController.changeSpeed(rate);
-        });
-    }
 
-    /**
-     * Bind the song progress bar and label.
-     */
-    private void bindSongProgress(){
-        songProgressBar.progressProperty().bind(playerController.progressProperty());
-        songProgressTimeLabel.textProperty().bind(
-                Bindings.createStringBinding(
-                        this::getFormattedSongProgress,  // Extracted method
-                        playerController.progressProperty()
-                )
-        );
-        songProgressBar.setOnMouseClicked(e -> {
-            double progress = e.getX() / songProgressBar.getWidth();
-            playerController.seek(progress);
-        });
-    }
 
-    /**
-     * Get the formatted song progress.
-     * @return The formatted song progress.
-     */
-    private String getFormattedSongProgress() {
-        Duration currentTime = playerController.getCurrentTime();
-        Duration totalDuration = playerController.getTotalDuration();
-
-        if (totalDuration == null || totalDuration.isUnknown()) {
-            return formatDuration(currentTime) + " / --:--";
-        }
-
-        return formatDuration(currentTime) + " / " + formatDuration(totalDuration);
-    }
 
 
     /**
@@ -219,97 +138,9 @@ public class PlayerView {
         controls.setVisible(true);
     }
 
-    /**
-     * Initialize the volume controls.
-     */
-    private void bindVolumeControls() {
-        volumeSlider.setValue(50);
-        volumeLabel.textProperty().bind(
-                volumeSlider.valueProperty().asString("%.0f")
-        );
-        playerController.volumeProperty().bind(
-                volumeSlider.valueProperty().divide(100)
-        );
 
-        // For gradual filling
-        volumeSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
-            double percentage = 100.0 * newValue.doubleValue() / volumeSlider.getMax();
-            String style = String.format(
-                    "-track-color: linear-gradient(to right, " +
-                            "white 0%%, " +
-                            "white %1$.1f%%, " +
-                            "-default-track-color %1$.1f%%, " +
-                            "-default-track-color 100%%);",
-                    percentage);
-            volumeSlider.setStyle(style);
-        });
-    }
 
-    /**
-     * Bind the current song controls (name and artist).
-     */
-    private void bindCurrentSongControls(){
-        currentSongLabel.textProperty().bind(
-                Bindings.createStringBinding(
-                        () -> {
-                            Song currentSong = playerController.getCurrentSong();
-                            return currentSong == null ? "" : currentSong.getSongName();
-                        },
-                        playerController.currentSongProperty()
-                )
-        );
 
-        currentArtistLabel.textProperty().bind(
-                Bindings.createStringBinding(
-                        () -> {
-                            Song currentSong = playerController.getCurrentSong();
-                            return currentSong == null ? "" : currentSong.getArtistName();
-                        },
-                        playerController.currentSongProperty()
-                )
-        );
-    }
-
-    /**
-     * Bind the current song cover.
-     */
-    private void bindCurrentSongCover() {
-        Image defaultCoverImage = loadDefaultCoverImage();
-        imageCover.imageProperty().bind(
-                Bindings.createObjectBinding(
-                        () -> {
-                            Song currentSong = playerController.getCurrentSong();
-                            if (currentSong == null || currentSong.getCover() == null) {
-                                return defaultCoverImage;
-                            }
-                            try {
-                                Image coverImage = currentSong.getCoverImage();
-                                return coverImage != null ? coverImage : defaultCoverImage;
-                            } catch (Exception e) {
-                                System.err.println("Failed to load cover image for song: " + currentSong.getSongName());
-                                return defaultCoverImage;
-                            }
-                        },
-                        playerController.currentSongProperty()
-                )
-        );
-    }
-
-    /**
-     * Load the default cover image.
-     * @return The default cover image.
-     */
-    private Image loadDefaultCoverImage() {
-        try {
-            return new Image(Objects.requireNonNull(
-                    getClass().getResourceAsStream("/images/song.png"),
-                    "Default cover image not found"
-            ));
-        } catch (Exception e) {
-            System.err.println("Failed to load default cover image");
-            return null;
-        }
-    }
 
     /**
      * Bind the images of the buttons.
@@ -320,51 +151,17 @@ public class PlayerView {
         exitIcon.setFitHeight(20);
         exitButton.setGraphic(exitIcon);
 
-        ImageView playIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play_white.png")).toExternalForm());
-        playIcon.setFitWidth(20);
-        playIcon.setFitHeight(20);
-        pauseSongButton.setGraphic(playIcon);
-
-        ImageView nextIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/next_white.png")).toExternalForm());
-        nextIcon.setFitWidth(20);
-        nextIcon.setFitHeight(20);
-        nextSongButton.setGraphic(nextIcon);
-
-        ImageView previousIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/previous_white.png")).toExternalForm());
-        previousIcon.setFitWidth(20);
-        previousIcon.setFitHeight(20);
-        previousSongButton.setGraphic(previousIcon);
 
         ImageView settingsIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/settings.png")).toExternalForm());
         settingsIcon.setFitWidth(20);
         settingsIcon.setFitHeight(20);
         btnSettings.setGraphic(settingsIcon);
 
-        ImageView shuffleIcon = new ImageView(getClass().getResource("/images/shuffle.png").toExternalForm());
-        shuffleIcon.setFitWidth(20);
-        shuffleIcon.setFitHeight(20);
-        shuffleToggle.setGraphic(shuffleIcon);
     }
 
 
-    private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider);
-        updateControlsState(controls, true);
-        playerController.currentSongProperty().addListener((obs, oldVal, newVal) -> {
-            boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
-            updateControlsState(controls, !songIsPlaying);
-        });
-    }
 
-    private void updateControlsState(List<Control> controls, boolean disable) {
-        for (Control c : controls) {
-            c.setDisable(disable);
-            c.getStyleClass().remove("disabled-btn");
-            if (disable) {
-                c.getStyleClass().add("disabled-btn");
-            }
-        }
-    }
+
 
     private void bindQueueButtonsActivation() {
         addSongButton.disableProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNull());
@@ -410,15 +207,7 @@ public class PlayerView {
         updatePlayListView();
     }
 
-    /**
-     * Enable the shuffle toggle.
-     */
-    public void enableShuffleToggle(){
-        shuffleToggle.setOnAction(event -> {
-            playerController.toggleShuffle(shuffleToggle.isSelected());
-            updatePlayListView(); // Update the play list view to show the new order
-        });
-    }
+
 
     /**
      * Enable double click to play
@@ -496,16 +285,6 @@ public class PlayerView {
         stage.show();
     }
 
-    /**
-     * Format a duration to a string.
-     * @param duration The duration to format.
-     * @return The formatted duration.
-     */
-    private String formatDuration(Duration duration) {
-        int minutes = (int) duration.toMinutes();
-        int seconds = (int) (duration.toSeconds() % 60);
-        return String.format("%02d:%02d", minutes, seconds);
-    }
 
     /**
      * Setup the list selection listeners.
@@ -561,35 +340,6 @@ public class PlayerView {
         }
         updateQueueListView();
         clearSelections();
-    }
-
-    /**
-     * Handle the pause song button.
-     */
-    @FXML
-    private void handlePauseSong() {
-        if (playerController.isPlaying().get()) {
-            playerController.pause();
-        } else {
-            playerController.unpause();
-        }
-    }
-
-    /**
-     * Handle the previous song button.
-     */
-    @FXML
-    private void handlePreviousSong() {
-        playerController.prec();
-    }
-
-    /**
-     * Handle the next song button.
-     */
-    @FXML
-    private void handleNextSong() {
-        playerController.skip();
-        updateQueueListView();
     }
 
     /**

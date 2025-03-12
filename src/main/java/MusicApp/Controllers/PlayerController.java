@@ -14,6 +14,7 @@ import MusicApp.utils.MusicLoader;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -32,8 +33,10 @@ public class PlayerController {
     private int currentIndex;
     private double currentSpeed = 1.0;
 
-    private final PlayerView playerView;
+    private PlayerView playerView;
     private final MetaController metaController;
+    private ControlPanelController controlPanelController;
+
 
 
     /**
@@ -48,7 +51,22 @@ public class PlayerController {
         Settings settings = metaController.getSettings();
         this.audioPlayer.setBalance(settings.getBalance());
         this.loadLibrary(settings.getMusicDirectory());
-        this.playerView = new PlayerView(this);
+
+        this.controlPanelController = new ControlPanelController(this);
+
+        initPlayerView();
+        // this.playerView = new PlayerView(this);
+    }
+
+    private void initPlayerView() throws IOException {
+        this.playerView = new PlayerView();
+        this.playerView.setPlayerController(this);
+        try {
+            this.playerView.initializeScene("/fxml/main_layout.fxml");
+            this.playerView.initialize();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -94,6 +112,10 @@ public class PlayerController {
             this.playerView.updatePlayListView();
         }
 
+    }
+
+    public void updatePlaylistView(){
+        this.playerView.updatePlayListView();
     }
 
     /**
@@ -460,6 +482,7 @@ public class PlayerController {
                 goTo(currentIndex);
             }
         }
+        this.playerView.updatePlayListView();
     }
 
     /**
@@ -470,5 +493,33 @@ public class PlayerController {
         audioPlayer.setBalance(newSettings.getBalance());
         loadLibrary(newSettings.getMusicDirectory());
     }
+
+    public Pane getRoot() {
+        return this.controlPanelController.getRoot();
+    }
+
+    public void handlePauseSong(){
+        if (isPlaying().get()) {
+            pause();
+        } else {
+            unpause();
+        }
+    }
+
+    /**
+     * Handle the next song button.
+     */
+    public void handleNextSong() {
+        skip();
+        this.playerView.updateQueueListView();
+    }
+
+    /**
+     * Handle the previous song button.
+     */
+    public void handlePreviousSong() {
+        prec();
+    }
+
 }
 
