@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-public class ToolBarView {
-    private Scene scene;
+public class ToolBarView extends View {
     private ToolBarController toolBarController;
     private Pane toolBarRoot;
 
@@ -27,6 +26,7 @@ public class ToolBarView {
     private Region spacer;
 
     public ToolBarView(){
+        super();
     }
 
     public void setController(ToolBarController toolBarController){

@@ -17,10 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ControlPanelView {
+public class ControlPanelView extends View {
 
     private ControlPanelController controlPanelController;
-    private Scene scene;
 
     @FXML
     private Button pauseSongButton, nextSongButton, previousSongButton;
@@ -36,8 +35,6 @@ public class ControlPanelView {
     private Slider volumeSlider;
     @FXML
     private ToggleButton shuffleToggle;
-
-    private Pane controlPanelRoot;
 
     public ControlPanelView(){
     }

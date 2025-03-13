@@ -21,7 +21,7 @@ import javafx.stage.Stage;
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
  */
-public class PlayerController {
+public class PlayerController extends ViewController {
 
     private final Library library;
     private final Queue queue;
@@ -32,8 +32,6 @@ public class PlayerController {
     private final MetaController metaController;
     private ControlPanelController controlPanelController;
     private ToolBarController toolBarController;
-
-
 
     /**
      * Constructor
@@ -55,11 +53,12 @@ public class PlayerController {
         // this.playerView = new PlayerView(this);
     }
 
-    private void initPlayerView() throws IOException {
+    private void initView() throws IOException {
         this.playerView = new PlayerView();
+        super.initView("/fxml/MainLayout.fxml");
         this.playerView.setPlayerController(this);
         try {
-            this.playerView.initializeScene("/fxml/MainLayout.fxml");
+            this.playerView.initializeScene();
             this.playerView.initialize();
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,8 +130,6 @@ public class PlayerController {
         }
     }
 
-
-
     /**
      * Go back to the previous song in the library.
      */
@@ -153,16 +150,6 @@ public class PlayerController {
             this.controlPanelController.playCurrent(getCurrentSong());
         }
     }
-
-
-    
-
-    /**
-     * Get the audio player.
-     * @return The audio player.
-     */
-    // public AudioPlayer getAudioPlayer() { return audioPlayer; }
-
 
     /**
      * Get the list of songs in the library.
@@ -248,9 +235,6 @@ public class PlayerController {
         }
     }
 
-
-
-
     /**
      * Search the library for songs that match the query.
      * @param query The query to search for.
@@ -273,7 +257,6 @@ public class PlayerController {
      * @param fromIndex The initial index of the song.
      * @param toIndex The index where the song should be placed.
      */
-
     public void reorderQueue(int fromIndex, int toIndex) {
         if (fromIndex >= 0 && fromIndex < queue.size() && toIndex >= 0 && toIndex <= queue.size()) {
             Song song = queue.get(fromIndex);
@@ -291,7 +274,6 @@ public class PlayerController {
         return library.get(index);
     }
 
-
     /**
      * Get a song from the queue.
      * @param index The index of the song in the queue.
@@ -300,8 +282,6 @@ public class PlayerController {
     public Song getFromQueue(int index) {
         return queue.get(index);
     }
-
-
 
     /**
      * Get the cover image of the song.

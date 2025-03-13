@@ -38,7 +38,6 @@ public class ControlPanelController {
     }
 
     /**
-     * Return whether the song is playing.
      * @return Whether the song is playing.
      */
     public BooleanProperty isPlaying(){

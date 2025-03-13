@@ -30,13 +30,9 @@ import java.util.Objects;
  * PlayerView
  * Class that represents the view of the music player.
  */
-public class PlayerView {
+public class PlayerView extends View {
 
     private PlayerController playerController;
-    private Scene scene;
-
-
-
 
     @FXML
     private ListView<Song> playListView, queueListView;
@@ -138,26 +134,12 @@ public class PlayerView {
         addSongButton.visibleProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNotNull());
     }
 
-
-
-
-
     /**
      * Bind the visibility of the playing song anchor (the controls at the bottom).
      */
     private void bindPlayingSongAnchor(){
         controls.setVisible(true);
     }
-
-
-
-
-
-
-
-
-
-
 
     private void bindQueueButtonsActivation() {
         addSongButton.disableProperty().bind(playListView.getSelectionModel().selectedItemProperty().isNull());
@@ -202,8 +184,6 @@ public class PlayerView {
         playListView.setCellFactory(lv -> new SongCell(playerController));
         updatePlayListView();
     }
-
-
 
     /**
      * Enable double click to play
