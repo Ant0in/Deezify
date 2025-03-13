@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.beans.binding.Bindings;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -45,11 +46,9 @@ public class PlayerView {
     private TextField songInput;
     @FXML
     private VBox controls;
-    @FXML
-    private HBox toolBar;
 
     @FXML
-    private Pane labelContainer;
+    private BorderPane labelContainer;
 
 
 
@@ -107,7 +106,7 @@ public class PlayerView {
 
     private void initToolBar(){
         Pane toolBarPane = playerController.getToolBarRoot();
-        toolBar.getChildren().setAll(toolBarPane);
+        labelContainer.setTop(toolBarPane);
     }
 
 
