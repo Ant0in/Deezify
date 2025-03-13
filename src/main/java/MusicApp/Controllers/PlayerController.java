@@ -11,6 +11,7 @@ import MusicApp.Models.*;
 import MusicApp.Views.PlayerView;
 import MusicApp.utils.MetadataReader;
 import MusicApp.utils.MusicLoader;
+import javafx.beans.binding.BooleanBinding;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -30,6 +31,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     private final MetaController metaController;
     private ControlPanelController controlPanelController;
     private ToolBarController toolBarController;
+    private PlayListController playListController;
 
     /**
      * Constructor
@@ -40,20 +42,22 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         this.library = new Library();
         this.queue = new Queue();
         this.playlistManager = new PlaylistManager(library);
-        this.controlPanelController = new ControlPanelController(this);
-        this.toolBarController = new ToolBarController(this);
+        initSubControllers();
         initView("/fxml/MainLayout.fxml");
         Settings settings = metaController.getSettings();
         this.controlPanelController.setBalance(settings.getBalance());
         this.loadLibrary(settings.getMusicDirectory());
-
-
-
     }
 
+    private void initSubControllers() {
+        this.controlPanelController = new ControlPanelController(this);
+        this.toolBarController = new ToolBarController(this);
+        this.playListController = new PlayListController(this);
+    }
 
     /**
      * Show the player view.
+     *
      * @param stage The stage to show the view on.
      */
     public void show(Stage stage) {
@@ -88,17 +92,15 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
             } catch (BadFileTypeException e) {
                 System.out.println("Bad file type: " + e.getMessage());
             }
-            
-
         }
-        if (this.view != null){
-            this.view.updatePlayListView();
+        if (this.view != null) {
+            updatePlayListView();
         }
 
     }
 
-    public void updatePlaylistView(){
-        this.view.updatePlayListView();
+    public void updatePlayListView() {
+        this.playListController.updatePlayListView();
     }
 
     /**
@@ -129,6 +131,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Go to a specific song in the library.
+     *
      * @param index The index of the song in the library.
      */
     public void goTo(int index) {
@@ -140,6 +143,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Get the list of songs in the library.
+     *
      * @return The list of songs in the library.
      */
     public List<String> getLibraryNames() {
@@ -152,6 +156,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Get the library.
+     *
      * @return The library.
      */
     public Library getLibrary() {
@@ -160,6 +165,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Get the list of songs in the queue.
+     *
      * @return The list of songs in the queue.
      */
     public List<String> getQueueNames() {
@@ -176,6 +182,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Add a song to the queue.
+     *
      * @param song The song to add.
      */
     public void addToQueue(Song song) {
@@ -184,6 +191,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Remove a song from the queue.
+     *
      * @param song The song to remove.
      */
     public void removeFromQueue(Song song) {
@@ -196,9 +204,10 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public void clearQueue() {
         queue.clear();
     }
-    
+
     /**
      * Play a song from the library.
+     *
      * @param index The index of the song in the library.
      */
     public void playFromLibrary(int index) {
@@ -210,6 +219,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Play a song from the queue.
+     *
      * @param index The index of the song in the queue.
      */
     public void playFromQueue(int index) {
@@ -224,6 +234,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Search the library for songs that match the query.
+     *
      * @param query The query to search for.
      * @return A list of song names that match the query.
      */
@@ -231,18 +242,19 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         List<Song> results = new ArrayList<>();
         for (Song song : library.toList()) {
             if (song.getSongName().toLowerCase().contains(query.toLowerCase()) ||
-                song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
-                song.getStyle().toLowerCase().contains(query.toLowerCase())) {
+                    song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
+                    song.getStyle().toLowerCase().contains(query.toLowerCase())) {
                 results.add(song);
             }
         }
         return results;
     }
-    
+
     /**
      * Reorganize the queue by moving a song from one index to another.
+     *
      * @param fromIndex The initial index of the song.
-     * @param toIndex The index where the song should be placed.
+     * @param toIndex   The index where the song should be placed.
      */
     public void reorderQueue(int fromIndex, int toIndex) {
         if (fromIndex >= 0 && fromIndex < queue.size() && toIndex >= 0 && toIndex <= queue.size()) {
@@ -254,6 +266,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Get a song from the library.
+     *
      * @param index The index of the song in the library.
      * @return The song at the specified index.
      */
@@ -263,6 +276,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Get a song from the queue.
+     *
      * @param index The index of the song in the queue.
      * @return The song at the specified index.
      */
@@ -272,6 +286,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Get the cover image of the song.
+     *
      * @return The path to the cover image.
      */
     public String getCover(Song song) {
@@ -280,6 +295,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Get the current song.
+     *
      * @return The current song.
      */
     public Song getCurrentSong() {
@@ -312,6 +328,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Toggle the shuffle mode.
+     *
      * @param isEnabled The shuffle button state.
      */
     public void toggleShuffle(boolean isEnabled) {
@@ -324,11 +341,12 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
                 goTo(currentIndex);
             }
         }
-        this.view.updatePlayListView();
+        updatePlayListView();
     }
 
     /**
      * Actions to do when the settings are changed
+     *
      * @param newSettings The new settings.
      */
     public void onSettingsChanged(Settings newSettings) {
@@ -340,10 +358,13 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         return this.controlPanelController.getRoot();
     }
 
-    public Pane getToolBarRoot(){
+    public Pane getToolBarRoot() {
         return this.toolBarController.getRoot();
     }
 
+    public Pane getPlayListRoot() {
+        return this.playListController.getRoot();
+    }
 
     /**
      * Handle the next song button.
@@ -360,5 +381,32 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         prec();
     }
 
-}
+    public BooleanBinding isPlaylistItemSelected() {
+        return playListController.isSelected();
+    }
 
+    public void clearPlayListViewSelection() {
+        playListController.clearSelection();
+    }
+
+    public int getSelectedPlayListSongIndex() {
+        return playListController.getSelectedIndex();
+    }
+
+    /*
+        to be replaced by method prom player
+     */
+    public void clearSelections() {
+        playListController.clearSelection();
+    }
+
+    public void clearQueueSelection() {
+        view.clearQueueListView();
+    }
+
+    public void handlePlaySong() {
+        view.handlePlaySong();
+    }
+
+
+}
