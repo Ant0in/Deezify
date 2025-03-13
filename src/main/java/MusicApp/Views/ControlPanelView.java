@@ -17,9 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ControlPanelView extends View {
-
-    private ControlPanelController controlPanelController;
+public class ControlPanelView extends View<ControlPanelView,ControlPanelController> {
 
     @FXML
     private Button pauseSongButton, nextSongButton, previousSongButton;
@@ -39,27 +37,8 @@ public class ControlPanelView extends View {
     public ControlPanelView(){
     }
 
-    public void setControlPanelController(ControlPanelController controlPanelController){
-        this.controlPanelController = controlPanelController;
-    }
-
-    /**
-     * Initialize the FXML scene.
-     * @param fxmlPath The path to the FXML file.
-     * @throws IOException If an error occurs while loading the FXML file.
-     */
-    public void initializeScene(String fxmlPath) throws IOException {
-        URL url = PlayerView.class.getResource(fxmlPath);
-        FXMLLoader loader = new FXMLLoader(url);
-        loader.setController((Object) this);
-        controlPanelRoot = loader.load();
-        this.scene = new Scene(controlPanelRoot);
-    }
-
-    public Pane getRoot(){
-        return controlPanelRoot;
-    }
-    public void initialize(){
+    @Override
+    public void init(){
         initBindings();
         initSpeed();
         setButtonActions();
@@ -67,11 +46,11 @@ public class ControlPanelView extends View {
 
 
     private void setButtonActions() {
-        pauseSongButton.setOnAction(event -> controlPanelController.handlePauseSong());
-        nextSongButton.setOnAction(event -> controlPanelController.handleNextSong());
-        previousSongButton.setOnAction(event -> controlPanelController.handlePreviousSong());
+        pauseSongButton.setOnAction(event -> viewController.handlePauseSong());
+        nextSongButton.setOnAction(event -> viewController.handleNextSong());
+        previousSongButton.setOnAction(event -> viewController.handlePreviousSong());
         shuffleToggle.setOnAction(event -> {
-            controlPanelController.toggleShuffle(shuffleToggle.isSelected());
+            viewController.toggleShuffle(shuffleToggle.isSelected());
         });
     }
     private void initBindings(){
@@ -93,7 +72,7 @@ public class ControlPanelView extends View {
         pauseIcon.setFitWidth(20);
         pauseIcon.setFitHeight(20);
 
-        this.controlPanelController.isPlaying().addListener((obs, wasPlaying, isPlaying) -> {
+        this.viewController.isPlaying().addListener((obs, wasPlaying, isPlaying) -> {
             if (isPlaying) {
                 pauseSongButton.setGraphic(pauseIcon);
                 currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");
@@ -109,16 +88,16 @@ public class ControlPanelView extends View {
      * Bind the song progress bar and label.
      */
     private void bindSongProgress(){
-        songProgressBar.progressProperty().bind(controlPanelController.progressProperty());
+        songProgressBar.progressProperty().bind(viewController.progressProperty());
         songProgressTimeLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         this::getFormattedSongProgress,  // Extracted method
-                        controlPanelController.progressProperty()
+                        viewController.progressProperty()
                 )
         );
         songProgressBar.setOnMouseClicked(e -> {
             double progress = e.getX() / songProgressBar.getWidth();
-            controlPanelController.seek(progress);
+            viewController.seek(progress);
         });
     }
 
@@ -127,8 +106,8 @@ public class ControlPanelView extends View {
      * @return The formatted song progress.
      */
     private String getFormattedSongProgress() {
-        Duration currentTime = controlPanelController.getCurrentTime();
-        Duration totalDuration = controlPanelController.getTotalDuration();
+        Duration currentTime = viewController.getCurrentTime();
+        Duration totalDuration = viewController.getTotalDuration();
 
         if (totalDuration == null || totalDuration.isUnknown()) {
             return formatDuration(currentTime) + " / --:--";
@@ -158,7 +137,7 @@ public class ControlPanelView extends View {
         speedBox.setOnAction(e -> {
             String speed = speedBox.getValue();
             double rate = getSpeedValue(speed);
-            controlPanelController.changeSpeed(rate);
+            viewController.changeSpeed(rate);
         });
     }
 
@@ -188,7 +167,7 @@ public class ControlPanelView extends View {
         volumeLabel.textProperty().bind(
                 volumeSlider.valueProperty().asString("%.0f")
         );
-        controlPanelController.volumeProperty().bind(
+        viewController.volumeProperty().bind(
                 volumeSlider.valueProperty().divide(100)
         );
 
@@ -206,7 +185,6 @@ public class ControlPanelView extends View {
         });
     }
 
-
     /**
      * Bind the current song controls (name and artist).
      */
@@ -214,20 +192,20 @@ public class ControlPanelView extends View {
         currentSongLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         () -> {
-                            Song currentSong = controlPanelController.getCurrentSong();
+                            Song currentSong = viewController.getCurrentSong();
                             return currentSong == null ? "" : currentSong.getSongName();
                         },
-                        controlPanelController.currentSongProperty()
+                        viewController.currentSongProperty()
                 )
         );
 
         currentArtistLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         () -> {
-                            Song currentSong = controlPanelController.getCurrentSong();
+                            Song currentSong = viewController.getCurrentSong();
                             return currentSong == null ? "" : currentSong.getArtistName();
                         },
-                        controlPanelController.currentSongProperty()
+                        viewController.currentSongProperty()
                 )
         );
     }
@@ -240,7 +218,7 @@ public class ControlPanelView extends View {
         imageCover.imageProperty().bind(
                 Bindings.createObjectBinding(
                         () -> {
-                            Song currentSong = controlPanelController.getCurrentSong();
+                            Song currentSong = viewController.getCurrentSong();
                             if (currentSong == null || currentSong.getCover() == null) {
                                 return defaultCoverImage;
                             }
@@ -252,7 +230,7 @@ public class ControlPanelView extends View {
                                 return defaultCoverImage;
                             }
                         },
-                        controlPanelController.currentSongProperty()
+                        viewController.currentSongProperty()
                 )
         );
     }
@@ -304,7 +282,7 @@ public class ControlPanelView extends View {
     private void bindAllControlActivation() {
         List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider);
         updateControlsState(controls, true);
-        controlPanelController.currentSongProperty().addListener((obs, oldVal, newVal) -> {
+        viewController.currentSongProperty().addListener((obs, oldVal, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
             updateControlsState(controls, !songIsPlaying);
         });

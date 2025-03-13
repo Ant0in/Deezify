@@ -6,36 +6,20 @@ import MusicApp.Views.ControlPanelView;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-import java.io.IOException;
-
-public class ControlPanelController {
+public class ControlPanelController extends ViewController<ControlPanelView, ControlPanelController> {
     private final PlayerController playerController;
-    private ControlPanelView controlPanelView;
     private final AudioPlayer audioPlayer;
     private double currentSpeed = 1.0;
 
     public ControlPanelController(PlayerController playerController){
+        super(new ControlPanelView());
         this.playerController = playerController;
         audioPlayer = new AudioPlayer();
-        initControlPanelView();
+        initView("/fxml/ControlPanel.fxml");
     }
 
-    private void initControlPanelView(){
-        this.controlPanelView = new ControlPanelView();
-        this.controlPanelView.setControlPanelController(this);
-        try {
-            this.controlPanelView.initializeScene("/fxml/ControlPanel.fxml");
-            this.controlPanelView.initialize();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public Pane getRoot() {
-        return controlPanelView.getRoot();
-    }
 
     /**
      * @return Whether the song is playing.

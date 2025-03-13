@@ -21,14 +21,12 @@ import javafx.stage.Stage;
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
  */
-public class PlayerController extends ViewController {
+public class PlayerController extends ViewController<PlayerView,PlayerController> {
 
     private final Library library;
     private final Queue queue;
     private final PlaylistManager playlistManager;
     private int currentIndex;
-
-    private PlayerView playerView;
     private final MetaController metaController;
     private ControlPanelController controlPanelController;
     private ToolBarController toolBarController;
@@ -37,40 +35,29 @@ public class PlayerController extends ViewController {
      * Constructor
      */
     public PlayerController(MetaController metaController) throws IOException {
+        super(new PlayerView());
         this.metaController = metaController;
         this.library = new Library();
         this.queue = new Queue();
         this.playlistManager = new PlaylistManager(library);
         this.controlPanelController = new ControlPanelController(this);
         this.toolBarController = new ToolBarController(this);
+        initView("/fxml/MainLayout.fxml");
         Settings settings = metaController.getSettings();
         this.controlPanelController.setBalance(settings.getBalance());
         this.loadLibrary(settings.getMusicDirectory());
 
 
 
-        initPlayerView();
-        // this.playerView = new PlayerView(this);
     }
 
-    private void initView() throws IOException {
-        this.playerView = new PlayerView();
-        super.initView("/fxml/MainLayout.fxml");
-        this.playerView.setPlayerController(this);
-        try {
-            this.playerView.initializeScene();
-            this.playerView.initialize();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Show the player view.
      * @param stage The stage to show the view on.
      */
     public void show(Stage stage) {
-        this.playerView.show(stage);
+        this.view.show(stage);
     }
 
     /**
@@ -104,14 +91,14 @@ public class PlayerController extends ViewController {
             
 
         }
-        if (this.playerView != null){
-            this.playerView.updatePlayListView();
+        if (this.view != null){
+            this.view.updatePlayListView();
         }
 
     }
 
     public void updatePlaylistView(){
-        this.playerView.updatePlayListView();
+        this.view.updatePlayListView();
     }
 
     /**
@@ -230,7 +217,7 @@ public class PlayerController extends ViewController {
             Song song = queue.get(index);
             this.controlPanelController.playCurrent(song);
             removeFromQueue(song);
-            playerView.updateQueueListView();
+            view.updateQueueListView();
             System.out.println("Playing from queue: " + song.getSongName());
         }
     }
@@ -320,7 +307,7 @@ public class PlayerController extends ViewController {
      * Refresh the UI.
      */
     public void refreshUI() {
-        playerView.refreshUI();
+        view.refreshUI();
     }
 
     /**
@@ -337,7 +324,7 @@ public class PlayerController extends ViewController {
                 goTo(currentIndex);
             }
         }
-        this.playerView.updatePlayListView();
+        this.view.updatePlayListView();
     }
 
     /**
@@ -363,7 +350,7 @@ public class PlayerController extends ViewController {
      */
     public void handleNextSong() {
         skip();
-        this.playerView.updateQueueListView();
+        this.view.updateQueueListView();
     }
 
     /**

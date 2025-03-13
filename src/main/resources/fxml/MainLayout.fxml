@@ -35,7 +35,6 @@
    </center>
 
    <bottom>
-      <VBox fx:id="controls"/>
    </bottom>
 
 </BorderPane>

@@ -30,9 +30,7 @@ import java.util.Objects;
  * PlayerView
  * Class that represents the view of the music player.
  */
-public class PlayerView extends View {
-
-    private PlayerController playerController;
+public class PlayerView extends View<PlayerView,PlayerController> {
 
     @FXML
     private ListView<Song> playListView, queueListView;
@@ -41,7 +39,7 @@ public class PlayerView extends View {
     @FXML
     private TextField songInput;
     @FXML
-    private VBox controls;
+    private Pane controls;
 
     @FXML
     private BorderPane labelContainer;
@@ -52,31 +50,12 @@ public class PlayerView extends View {
     private double xOffset = 0;
     private double yOffset = 0;
 
-    public PlayerView() throws IOException {
+    public PlayerView()  {
     }
 
-    public void setPlayerController(PlayerController playerController) {
-        this.playerController = playerController;
-    }
 
-    /**
-     * Initialize the FXML scene.
-     * @param fxmlPath The path to the FXML file.
-     * @throws IOException If an error occurs while loading the FXML file.
-     */
-    public void initializeScene(String fxmlPath) throws IOException {
-        URL url = PlayerView.class.getResource(fxmlPath);
-        FXMLLoader loader = new FXMLLoader(url);
-        loader.setController((Object) this);
-        Pane root = loader.load();
-        this.scene = new Scene(root);
-    }
-
-    /**
-     * Initialize the view.
-     */
-    @FXML
-    public void initialize(){
+    @Override
+    public void init(){
         initPanes();
         initBindings();
         initSongInput();
@@ -96,12 +75,12 @@ public class PlayerView extends View {
     }
 
     private void initControlPanel(){
-        Pane controlPanel = playerController.getControlPanelRoot();
-        controls.getChildren().setAll(controlPanel);
+        controls = viewController.getControlPanelRoot();
+        labelContainer.setBottom(controls);
     }
 
     private void initToolBar(){
-        Pane toolBarPane = playerController.getToolBarRoot();
+        Pane toolBarPane = viewController.getToolBarRoot();
         labelContainer.setTop(toolBarPane);
     }
 
@@ -170,7 +149,7 @@ public class PlayerView extends View {
     private void initSongInput() {
         songInput.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null && !newVal.isEmpty()) {
-                playListView.getItems().setAll(playerController.searchLibrary(newVal));
+                playListView.getItems().setAll(viewController.searchLibrary(newVal));
             } else {
                 updatePlayListView();
             }
@@ -181,7 +160,7 @@ public class PlayerView extends View {
      * Initialize the playlist view.
      */
     private void initPlayListView() {
-        playListView.setCellFactory(lv -> new SongCell(playerController));
+        playListView.setCellFactory(lv -> new SongCell(viewController));
         updatePlayListView();
     }
 
@@ -218,7 +197,7 @@ public class PlayerView extends View {
      */
     private void setupWindowCloseHandler(Stage stage) {
         stage.setOnCloseRequest(e -> {
-            playerController.close();
+            viewController.close();
             Platform.exit();
         });
     }
@@ -279,14 +258,14 @@ public class PlayerView extends View {
      * Update the play list view.
      */
     public void updatePlayListView() {
-        playListView.getItems().setAll(playerController.getLibrary().toList());
+        playListView.getItems().setAll(viewController.getLibrary().toList());
     }
 
     /**
      * Update the queue list view.
      */
     public void updateQueueListView() {
-        queueListView.getItems().setAll(playerController.getQueue().toList());
+        queueListView.getItems().setAll(viewController.getQueue().toList());
     }
 
 
@@ -308,9 +287,9 @@ public class PlayerView extends View {
         int songIndexFromLibrary = playListView.getSelectionModel().getSelectedIndex();
         if (songIndexFromQueue!=-1){
             System.out.println("The selected song index : " + songIndexFromQueue);
-            playerController.playFromQueue(songIndexFromQueue);
+            viewController.playFromQueue(songIndexFromQueue);
         }else if (songIndexFromLibrary != -1){
-            playerController.playFromLibrary(songIndexFromLibrary);
+            viewController.playFromLibrary(songIndexFromLibrary);
         }else{
             System.out.println("No song selected.");
         }
@@ -324,9 +303,9 @@ public class PlayerView extends View {
     @FXML
     private void handleAddSong() {
         int index = playListView.getSelectionModel().getSelectedIndex();
-        Song selectedSong = playerController.getFromLibrary(index);
+        Song selectedSong = viewController.getFromLibrary(index);
         if (index != -1) {
-            playerController.addToQueue(selectedSong);
+            viewController.addToQueue(selectedSong);
             updateQueueListView();
         }
     }
@@ -338,7 +317,7 @@ public class PlayerView extends View {
     private void handleDeleteSong() {
         int index = queueListView.getSelectionModel().getSelectedIndex();
         if (index != -1) {
-            playerController.removeFromQueue(playerController.getQueue().get(index));
+            viewController.removeFromQueue(viewController.getQueue().get(index));
             updateQueueListView();
         }
     }
@@ -348,7 +327,7 @@ public class PlayerView extends View {
      */
     @FXML
     private void handleClearQueue() {
-        playerController.clearQueue();
+        viewController.clearQueue();
         updateQueueListView();
     }
 
@@ -420,7 +399,7 @@ public class PlayerView extends View {
                 int dropIndex = cell.getIndex();
 
                 if (draggedIndex != dropIndex) {
-                    playerController.reorderQueue(draggedIndex, dropIndex);
+                    viewController.reorderQueue(draggedIndex, dropIndex);
                     updateQueueListView();
                 }
 

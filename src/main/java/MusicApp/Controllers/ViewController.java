@@ -2,20 +2,20 @@ package MusicApp.Controllers;
 
 import MusicApp.Views.View;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-public abstract class ViewController {
-    protected View view;
 
-    public ViewController(){
+public abstract class ViewController<V extends View<V, C>, C extends ViewController<V, C>> {
+    protected V view;
+
+    public ViewController(V view) {
+        this.view = view;
+        this.view.setViewController((C) this);
     }
 
-    protected void initView(String fxmlPath){
-        this.view = view;
-        this.view.setController(this);
+    protected void initView(String fxmlPath) {
         try {
-            this.view.initializeScene(fxmlPath);
-            this.view.initialize();
+            view.initializeScene(fxmlPath);
+            view.init();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -24,7 +24,7 @@ public abstract class ViewController {
     /**
      * @return The root Pane of the view
      */
-    public Pane getRoot(){
+    public Pane getRoot() {
         return view.getRoot();
     }
 

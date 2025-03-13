@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-public class ToolBarView extends View {
-    private ToolBarController toolBarController;
+public class ToolBarView extends View<ToolBarView,ToolBarController> {
     private Pane toolBarRoot;
 
     @FXML
@@ -26,31 +25,12 @@ public class ToolBarView extends View {
     private Region spacer;
 
     public ToolBarView(){
-        super();
+
     }
 
-    public void setController(ToolBarController toolBarController){
-        this.toolBarController = toolBarController;
-    }
 
-    /**
-     * Initialize the FXML scene.
-     * @param fxmlPath The path to the FXML file.
-     * @throws IOException If an error occurs while loading the FXML file.
-     */
-    public void initializeScene(String fxmlPath) throws IOException {
-        URL url = PlayerView.class.getResource(fxmlPath);
-        FXMLLoader loader = new FXMLLoader(url);
-        loader.setController((Object) this);
-        toolBarRoot = loader.load();
-        this.scene = new Scene(toolBarRoot);
-    }
 
-    public Pane getRoot(){
-        return toolBarRoot;
-    }
-
-    public void initialize(){
+    public void init(){
         bindButtonsImages();
         setButtonActions();
     }
@@ -85,7 +65,7 @@ public class ToolBarView extends View {
      * @param event The action event.
      */
     private void handleSettings(ActionEvent event) {
-        toolBarController.openSettings();
+        viewController.openSettings();
     }
 
     /**

@@ -8,36 +8,26 @@ import javafx.scene.layout.Pane;
 import java.io.IOException;
 import java.net.URL;
 
-public abstract class View {
+public abstract class View<V extends View<V, C>, C extends ViewController<V, C>> {
     protected Scene scene;
-    protected ViewController viewController;
+    protected C viewController;
     protected Pane rootPane;
 
-    public View(){
-    }
-
-    public void setController(ViewController viewController){
+    public void setViewController(C viewController) {
         this.viewController = viewController;
     }
 
-    /**
-     * Initialize the FXML scene.
-     * @param fxmlPath The path to the FXML file.
-     * @throws IOException If an error occurs while loading the FXML file.
-     */
     public void initializeScene(String fxmlPath) throws IOException {
-        URL url = View.class.getResource(fxmlPath);
+        URL url = getClass().getResource(fxmlPath);
         FXMLLoader loader = new FXMLLoader(url);
-        loader.setController((Object) this);
+        loader.setController(this);
         rootPane = loader.load();
-        this.scene = new Scene(rootPane);
+        scene = new Scene(rootPane);
     }
 
-    public Pane getRoot(){
+    public Pane getRoot() {
         return rootPane;
     }
 
-    public void initialize(){
-    }
-
+    public abstract void init();
 }
