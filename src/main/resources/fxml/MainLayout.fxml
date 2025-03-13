@@ -20,8 +20,9 @@
    <top>
    </top>
    <center>
-      <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+      <HBox fx:id="playerContainer" alignment="CENTER" spacing="10" style="-fx-padding: 10;">
          <Pane fx:id="playListContainer">
+
          </Pane>
          <VBox spacing="5">
             <ListView fx:id="queueListView" prefWidth="160" styleClass="queue" VBox.vgrow="ALWAYS" />

@@ -6,6 +6,7 @@ import MusicApp.Models.Song;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -39,7 +40,8 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     private Button addSongButton, deleteSongButton, clearQueueButton;
     @FXML
     private Pane controls, playListContainer;
-
+    @FXML
+    private HBox playerContainer;
     @FXML
     private BorderPane labelContainer;
 
@@ -81,8 +83,19 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         labelContainer.setTop(toolBarPane);
     }
 
+    /**
+     * ! check this method
+     * Initialize the play list.
+     */
     private void initPlayList(){
-        playListContainer = viewController.getPlayListRoot();
+//        playListContainer.getChildren().setAll(viewController.getPlayListRoot());
+        Parent parent = playListContainer.getParent();
+        if (parent instanceof Pane) {
+            Pane pane = (Pane) parent;
+            int index = pane.getChildren().indexOf(playListContainer);
+            pane.getChildren().set(index, viewController.getPlayListRoot());
+        }
+//        playerContainer.getChildren().add(playListContainer);
     }
 
     /**

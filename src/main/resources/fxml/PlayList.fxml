@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="5" HBox.hgrow="ALWAYS">
+<VBox spacing="5" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml/1">
     <TextField fx:id="songInput" promptText="Search..." styleClass="input" />
     <ListView fx:id="playListView" styleClass="songs" VBox.vgrow="ALWAYS" />
 </VBox>
