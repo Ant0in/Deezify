@@ -64,9 +64,9 @@ public class SongCell extends ListCell<Song> {
             setGraphic(null);
         } else {
             imageView.setImage(song.getCoverImage());
-            titleLabel.setText(song.getSongName());
+            titleLabel.setText(song.getTitle());
             titleLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
-            artistLabel.setText(song.getArtistName());
+            artistLabel.setText(song.getArtist());
             durationLabel.setText(String.format("%d:%02d", (int) song.getDuration().toMinutes(), (int) song.getDuration().toSeconds() % 60));
             durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
             setGraphic(hbox);

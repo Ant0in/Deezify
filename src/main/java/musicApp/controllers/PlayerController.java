@@ -5,10 +5,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
 import musicApp.models.*;
-import musicApp.utils.MetadataReader;
 import musicApp.utils.MusicLoader;
 import musicApp.views.PlayerView;
 
@@ -25,7 +22,7 @@ import java.util.Random;
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
  */
-public class PlayerController extends MusicLoader {
+public class PlayerController {
     private final AudioPlayer audioPlayer;
     private final Library library;
     private final Queue queue;
@@ -62,37 +59,10 @@ public class PlayerController extends MusicLoader {
      * Loads the library with some sample songs from a settings folder
      */
     public void loadLibrary(Path folderPath) {
-        List<Path> songs;
-        try {
-            songs = getAllSongPaths(folderPath);
-        } catch (IOException e) {
-            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
-            return;
-        }
-
-        library.clear();
-        for (Path songPath : songs) {
-
-            try {
-                MetadataReader reader = new MetadataReader();
-                Metadata metadata = reader.getMetadata(songPath.toFile());
-
-                library.add(new Song(
-                        metadata,      // metadata
-                        songPath       // file path
-                ));
-            } catch (ID3TagException e) {
-                System.out.println("Error while reading metadata: " + e.getMessage());
-            } catch (BadFileTypeException e) {
-                System.out.println("Bad file type: " + e.getMessage());
-            }
-
-
-        }
+        library.load(folderPath);
         if (this.playerView != null) {
             this.playerView.updatePlayListView();
         }
-
     }
 
     /**
@@ -160,7 +130,7 @@ public class PlayerController extends MusicLoader {
             audioPlayer.loadSong(song);
             audioPlayer.setOnEndOfMedia(this::skip);
             audioPlayer.unpause();
-            System.out.println("Playing: " + song.getSongName());
+            System.out.println("Playing: " + song.getTitle());
         }
     }
 
@@ -301,7 +271,7 @@ public class PlayerController extends MusicLoader {
             audioPlayer.unpause();
             removeFromQueue(song);
             playerView.updateQueueListView();
-            System.out.println("Playing from queue: " + song.getSongName());
+            System.out.println("Playing from queue: " + song.getTitle());
         }
     }
 

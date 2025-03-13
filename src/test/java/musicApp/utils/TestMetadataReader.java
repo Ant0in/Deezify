@@ -17,7 +17,6 @@ public class TestMetadataReader {
 
     @Test
     public void testReadValidFile() {
-
         // check if the metadata reader can handle a mp3 file with valid metadata
         File file = Paths.get("src", "test", "resources", "goodTestMP3.mp3").toFile();
         boolean hasExceptionOccured = false;
@@ -35,7 +34,6 @@ public class TestMetadataReader {
 
     @Test
     public void testNoTagsMP3() {
-
         // check if the metadata reader can handle a mp3 file with no ID3v2 tags
         File file = Paths.get("src", "test", "resources", "noID3TagMP3.mp3").toFile();
         MetadataReader reader = new MetadataReader();
@@ -48,7 +46,6 @@ public class TestMetadataReader {
 
     @Test
     public void testCheckMetadataMP3() {
-
         // check if the metadata reader can handle a mp3 file with valid metadata
         File file = Paths.get("src", "test", "resources", "goodTestMP3.mp3").toFile();
         Metadata metadata;
@@ -101,7 +98,6 @@ public class TestMetadataReader {
 
     @Test
     public void testNoTagsWAV() {
-
         // check if the metadata reader can handle a mp3 file with no ID3v2 tags
         File file = Paths.get("src", "test", "resources", "noTagWAV.wav").toFile();
         MetadataReader reader = new MetadataReader();

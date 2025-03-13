@@ -251,7 +251,7 @@ public class PlayerView {
                 Bindings.createStringBinding(
                         () -> {
                             Song currentSong = playerController.getCurrentSong();
-                            return currentSong == null ? "" : currentSong.getSongName();
+                            return currentSong == null ? "" : currentSong.getTitle();
                         },
                         playerController.currentSongProperty()
                 )
@@ -261,7 +261,7 @@ public class PlayerView {
                 Bindings.createStringBinding(
                         () -> {
                             Song currentSong = playerController.getCurrentSong();
-                            return currentSong == null ? "" : currentSong.getArtistName();
+                            return currentSong == null ? "" : currentSong.getArtist();
                         },
                         playerController.currentSongProperty()
                 )
@@ -284,7 +284,7 @@ public class PlayerView {
                                 Image coverImage = currentSong.getCoverImage();
                                 return coverImage != null ? coverImage : defaultCoverImage;
                             } catch (Exception e) {
-                                System.err.println("Failed to load cover image for song: " + currentSong.getSongName());
+                                System.err.println("Failed to load cover image for song: " + currentSong.getTitle());
                                 return defaultCoverImage;
                             }
                         },
@@ -642,7 +642,7 @@ public class PlayerView {
                 @Override
                 protected void updateItem(Song item, boolean empty) {
                     super.updateItem(item, empty);
-                    setText(empty ? null : item.getSongName());
+                    setText(empty ? null : item.getTitle());
                 }
             };
 
@@ -669,7 +669,7 @@ public class PlayerView {
         if (!cell.isEmpty()) {
             Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putString(cell.getItem().getSongName());
+            content.putString(cell.getItem().getTitle());
             db.setContent(content);
             event.consume();
         }
@@ -698,7 +698,7 @@ public class PlayerView {
         Dragboard db = event.getDragboard();
         if (db.hasString()) {
             Song draggedSong = queueListView.getItems().stream()
-                    .filter(song -> song.getSongName().equals(db.getString()))
+                    .filter(song -> song.getTitle().equals(db.getString()))
                     .findFirst()
                     .orElse(null);
 

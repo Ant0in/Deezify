@@ -216,18 +216,18 @@ public class AudioPlayer {
     }
 
     /**
-     * Get the balance of the song.
+     * Get the balance of the AudioPlayer.
      *
-     * @return The balance of the song.
+     * @return The balance of the AudioPlayer.
      */
     public double getBalance() {
         return balance;
     }
 
     /**
-     * Get the volume of the song.
+     * Set the balance of the AudioPlayer.
      *
-     * @return The volume of the song.
+     * @param balance The balance of the AudioPlayer.
      */
     public void setBalance(double balance) {
         this.balance = balance;
