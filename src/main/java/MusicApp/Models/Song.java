@@ -155,5 +155,11 @@ public class Song {
     }
 
 
+    public boolean containsText(String lowerQuery){
+        return songName.toLowerCase().contains(lowerQuery) ||
+                artistName.toLowerCase().contains(lowerQuery) ||
+                style.toLowerCase().contains(lowerQuery);
+    }
+
 }
 

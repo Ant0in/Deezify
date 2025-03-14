@@ -83,10 +83,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         labelContainer.setTop(toolBarPane);
     }
 
-    /**
-     * ! check this method
-     * Initialize the play list.
-     */
+
     private void initPlayList(){
         playerContainer.getChildren().set(0,viewController.getPlayListRoot());
     }
@@ -125,10 +122,10 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     }
 
     private void bindQueueButtonsActivation() {
-//        addSongButton.disableProperty().bind(viewController.isPlaylistItemSelected().not());
-//        deleteSongButton.disableProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNull());
-//        clearQueueButton.disableProperty().bind(Bindings.isEmpty(queueListView.getItems()));
-//
+        addSongButton.disableProperty().bind(viewController.isPlaylistItemSelected().not());
+        deleteSongButton.disableProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNull());
+        clearQueueButton.disableProperty().bind(Bindings.isEmpty(queueListView.getItems()));
+
         applyDisableStyleListener(addSongButton);
         applyDisableStyleListener(deleteSongButton);
         applyDisableStyleListener(clearQueueButton);
@@ -260,15 +257,12 @@ public class PlayerView extends View<PlayerView,PlayerController> {
      * ! move to Controller
      * Handle the play song button.
      */
-    @FXML
+    //@FXML
     public void handlePlaySong() {
         int songIndexFromQueue = queueListView.getSelectionModel().getSelectedIndex();
-        int songIndexFromLibrary = viewController.getSelectedPlayListSongIndex();
         if (songIndexFromQueue!=-1){
             System.out.println("The selected song index : " + songIndexFromQueue);
             viewController.playFromQueue(songIndexFromQueue);
-        }else if (songIndexFromLibrary != -1){
-            viewController.playFromLibrary(songIndexFromLibrary);
         }else{
             System.out.println("No song selected.");
         }

@@ -107,4 +107,10 @@ public class Library {
     public void clear() {
         songList.clear();
     }
+
+    public List<Song> search(String lowerQuery){
+        return songList.stream().
+                filter(song -> song.containsText(lowerQuery)).
+                toList();
+    }
 }

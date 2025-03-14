@@ -24,10 +24,7 @@ import javafx.stage.Stage;
  */
 public class PlayerController extends ViewController<PlayerView,PlayerController> {
 
-    private final Library library;
     private final Queue queue;
-    private final PlaylistManager playlistManager;
-    private int currentIndex;
     private final MetaController metaController;
     private ControlPanelController controlPanelController;
     private ToolBarController toolBarController;
@@ -39,20 +36,19 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public PlayerController(MetaController metaController) throws IOException {
         super(new PlayerView());
         this.metaController = metaController;
-        this.library = new Library();
         this.queue = new Queue();
-        this.playlistManager = new PlaylistManager(library);
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
         Settings settings = metaController.getSettings();
         this.controlPanelController.setBalance(settings.getBalance());
-        this.loadLibrary(settings.getMusicDirectory());
+        this.playListController.loadLibrary(settings.getMusicDirectory());
     }
 
     private void initSubControllers() {
+        this.playListController = new PlayListController(this);
         this.controlPanelController = new ControlPanelController(this);
         this.toolBarController = new ToolBarController(this);
-        this.playListController = new PlayListController(this);
+
     }
 
     /**
@@ -64,43 +60,8 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         this.view.show(stage);
     }
 
-    /**
-     * Loads the library with some sample songs from a settings folder
-     */
-    public void loadLibrary(Path folderPath) {
-        List<Path> songs;
-        try {
-            songs = MusicLoader.getAllSongPaths(folderPath);
-        } catch (IOException e) {
-            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
-            return;
-        }
-
-        library.clear();
-        for (Path songPath : songs) {
-
-            try {
-
-                Metadata metadata = MetadataReader.getMetadata(songPath.toFile());
-
-                library.add(new Song(
-                        metadata,      // metadata
-                        songPath       // file path
-                ));
-            } catch (ID3TagException e) {
-                System.out.println("Error while reading metadata: " + e.getMessage());
-            } catch (BadFileTypeException e) {
-                System.out.println("Bad file type: " + e.getMessage());
-            }
-        }
-        if (this.view != null) {
-            updatePlayListView();
-        }
-
-    }
-
-    public void updatePlayListView() {
-        this.playListController.updatePlayListView();
+    public void playSong(Song song) {
+        this.controlPanelController.playCurrent(song);
     }
 
     /**
@@ -110,58 +71,36 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      */
     public void skip() {
         if (queue.isEmpty()) {
-            if (currentIndex < library.size() - 1) {
-                currentIndex++;
-                this.controlPanelController.playCurrent(getCurrentSong());
-            }
+            this.playListController.skip();
         } else {
             playFromQueue(0);
         }
     }
 
-    /**
-     * Go back to the previous song in the library.
-     */
-    public void prec() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            this.controlPanelController.playCurrent(getCurrentSong());
-        }
-    }
 
-    /**
-     * Go to a specific song in the library.
-     *
-     * @param index The index of the song in the library.
-     */
-    public void goTo(int index) {
-        if (index >= 0 && index < library.size()) {
-            currentIndex = index;
-            this.controlPanelController.playCurrent(getCurrentSong());
-        }
-    }
+
 
     /**
      * Get the list of songs in the library.
      *
      * @return The list of songs in the library.
      */
-    public List<String> getLibraryNames() {
+    /*public List<String> getLibraryNames() {
         List<String> songNames = new ArrayList<>();
         for (Song song : library.toList()) {
             songNames.add(song.toString());
         }
         return songNames;
-    }
+    }*/
 
     /**
      * Get the library.
      *
      * @return The library.
      */
-    public Library getLibrary() {
+    /*public Library getLibrary() {
         return library;
-    }
+    }*/
 
     /**
      * Get the list of songs in the queue.
@@ -210,12 +149,12 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      *
      * @param index The index of the song in the library.
      */
-    public void playFromLibrary(int index) {
+    /*public void playFromLibrary(int index) {
         if (index >= 0 && index < library.size()) {
             currentIndex = index;
             this.controlPanelController.playCurrent(getCurrentSong());
         }
-    }
+    }*/
 
     /**
      * Play a song from the queue.
@@ -232,23 +171,6 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         }
     }
 
-    /**
-     * Search the library for songs that match the query.
-     *
-     * @param query The query to search for.
-     * @return A list of song names that match the query.
-     */
-    public List<Song> searchLibrary(String query) {
-        List<Song> results = new ArrayList<>();
-        for (Song song : library.toList()) {
-            if (song.getSongName().toLowerCase().contains(query.toLowerCase()) ||
-                    song.getArtistName().toLowerCase().contains(query.toLowerCase()) ||
-                    song.getStyle().toLowerCase().contains(query.toLowerCase())) {
-                results.add(song);
-            }
-        }
-        return results;
-    }
 
     /**
      * Reorganize the queue by moving a song from one index to another.
@@ -265,13 +187,14 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     }
 
     /**
+     * !! need to be removed !!
      * Get a song from the library.
      *
      * @param index The index of the song in the library.
      * @return The song at the specified index.
      */
     public Song getFromLibrary(int index) {
-        return library.get(index);
+        return this.playListController.getSong(index);
     }
 
     /**
@@ -280,30 +203,19 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * @param index The index of the song in the queue.
      * @return The song at the specified index.
      */
-    public Song getFromQueue(int index) {
+    /*public Song getFromQueue(int index) {
         return queue.get(index);
-    }
+    }*/
 
     /**
      * Get the cover image of the song.
      *
      * @return The path to the cover image.
      */
-    public String getCover(Song song) {
+    /*public String getCover(Song song) {
         return song.getCover();
-    }
+    }*/
 
-    /**
-     * Get the current song.
-     *
-     * @return The current song.
-     */
-    public Song getCurrentSong() {
-        if (currentIndex < 0 || currentIndex >= library.size()) {
-            return null;
-        }
-        return library.get(currentIndex);
-    }
 
     /**
      * Close the audio player.
@@ -332,16 +244,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * @param isEnabled The shuffle button state.
      */
     public void toggleShuffle(boolean isEnabled) {
-        Song currentSong = (currentIndex >= 0 && currentIndex < library.size()) ? library.get(currentIndex) : null;
-        playlistManager.toggleShuffle(isEnabled, currentSong);
-        if (currentSong != null) {
-            int newIndex = isEnabled ? 0 : playlistManager.getOriginalIndex(currentSong);
-            if (newIndex != -1) {
-                currentIndex = newIndex;
-                goTo(currentIndex);
-            }
-        }
-        updatePlayListView();
+        this.playListController.toggleShuffle(isEnabled);
     }
 
     /**
@@ -351,7 +254,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      */
     public void onSettingsChanged(Settings newSettings) {
         this.controlPanelController.setBalance(newSettings.getBalance());
-        loadLibrary(newSettings.getMusicDirectory());
+        this.playListController.loadLibrary(newSettings.getMusicDirectory());
     }
 
     public Pane getControlPanelRoot() {
@@ -378,7 +281,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * Handle the previous song button.
      */
     public void handlePreviousSong() {
-        prec();
+        this.playListController.prec();
     }
 
     public BooleanBinding isPlaylistItemSelected() {
@@ -407,6 +310,5 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public void handlePlaySong() {
         view.handlePlaySong();
     }
-
 
 }

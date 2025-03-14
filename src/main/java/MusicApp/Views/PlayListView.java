@@ -55,14 +55,14 @@ public class PlayListView extends View<PlayListView, PlayListController> {
      * Update the play list view.
      */
     public void updatePlayListView() {
-        playListView.getItems().setAll(viewController.getPlayerController().getLibrary().toList());
+        playListView.getItems().setAll(viewController.libraryToList());
     }
 
     /**
      * Initialize the playlist view.
      */
     private void initPlayListView() {
-        playListView.setCellFactory(lv -> new SongCell(viewController.getPlayerController()));
+        playListView.setCellFactory(lv -> new SongCell(viewController));
         updatePlayListView();
     }
 
@@ -72,7 +72,7 @@ public class PlayListView extends View<PlayListView, PlayListController> {
     private void setupListSelectionListeners() {
         playListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null){
-                viewController.getPlayerController().clearQueueSelection();
+                viewController.clearQueueSelection();
             }
         });
     }
@@ -88,7 +88,7 @@ public class PlayListView extends View<PlayListView, PlayListController> {
     public void enableDoubleClick() {
         playListView.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                viewController.getPlayerController().handlePlaySong();
+                viewController.handlePlaySong();
             }
         });
     }

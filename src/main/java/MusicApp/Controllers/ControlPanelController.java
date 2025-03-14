@@ -78,7 +78,7 @@ public class ControlPanelController extends ViewController<ControlPanelView, Con
     }
 
     public Song getCurrentSong() {
-        return this.playerController.getCurrentSong();
+        return audioPlayer.getCurrentSong();
     }
 
     /**
