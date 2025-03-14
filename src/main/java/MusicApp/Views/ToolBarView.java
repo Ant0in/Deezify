@@ -1,19 +1,14 @@
 package MusicApp.Views;
 
-import MusicApp.Controllers.ControlPanelController;
 import MusicApp.Controllers.ToolBarController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
 
 public class ToolBarView extends View<ToolBarView,ToolBarController> {

@@ -7,15 +7,10 @@ import javafx.beans.binding.BooleanBinding;
 
 import java.util.List;
 
-public class QueueController extends ViewController<QueueView, QueueController> {
-    private final Queue queue;
-    PlayerController playerController;
-
+public class QueueController extends PlayListController<QueueView, QueueController> {
 
     public QueueController(PlayerController playerController) {
-        super(new QueueView());
-        this.queue = new Queue();
-        this.playerController = playerController;
+        super(new QueueView(), playerController);
         initView("/fxml/Queue.fxml");
     }
 
@@ -23,9 +18,6 @@ public class QueueController extends ViewController<QueueView, QueueController> 
         return playerController.isPlaylistItemSelected();
     }
 
-    public List<Song> queueToList(){
-        return queue.toList();
-    }
 
     /**
      * Reorganize the queue by moving a song from one index to another.
@@ -34,10 +26,10 @@ public class QueueController extends ViewController<QueueView, QueueController> 
      * @param toIndex   The index where the song should be placed.
      */
     public void reorderQueue(int fromIndex, int toIndex) {
-        if (fromIndex >= 0 && fromIndex < queue.size() && toIndex >= 0 && toIndex <= queue.size()) {
-            Song song = queue.get(fromIndex);
-            queue.remove(song);
-            queue.add(toIndex, song);
+        if (fromIndex >= 0 && fromIndex < library.size() && toIndex >= 0 && toIndex <= library.size()) {
+            Song song = getSong(fromIndex);
+            library.remove(song);
+            library.add(toIndex, song);
         }
     }
 
@@ -45,47 +37,29 @@ public class QueueController extends ViewController<QueueView, QueueController> 
         playerController.clearPlayListViewSelection();
     }
 
-    public void handlePlaySong(){
-        int songIndex = view.getSelectedSongIndex();
-        if (songIndex != -1){
-            playSong(songIndex);
-        }
-    }
 
-    private Song getSong(int index){
-        if (index < 0 || index >= queue.size()){
-            return null;
-        }
-        return queue.get(index);
-    }
-
-    public void playSong(int songIndex){
-        Song song = getSong(songIndex);
-        queue.remove(song);
-        playerController.playSong(song);
-        view.updateQueueListView();
-        clearSelection();
-    }
-
-    public void clearSelection() {
-        view.clearSelection();
+    @Override
+    protected void playSong(Song song){
+        library.remove(song);
+        super.playSong(song);
+        this.view.updateListView();
     }
 
     public void handleAddSong(){
         Song song = playerController.getSelectedPlayListSong();
-        queue.add(song);
-        this.view.updateQueueListView();
+        library.add(song);
+        this.view.updateListView();
     }
 
     public void handleDeleteSong(){
-        Song song = queue.get(this.view.getSelectedSongIndex());
-        queue.remove(song);
-        this.view.updateQueueListView();
+        Song song = library.get(this.view.getSelectedSongIndex());
+        library.remove(song);
+        this.view.updateListView();
     }
 
     public void handleClearQueue(){
-        queue.clear();
-        this.view.updateQueueListView();
+        library.clear();
+        this.view.updateListView();
     }
 
     public void refreshUI(){
@@ -93,6 +67,6 @@ public class QueueController extends ViewController<QueueView, QueueController> 
     }
 
     public boolean queueIsEmpty(){
-        return queue.isEmpty();
+        return library.isEmpty();
     }
 }

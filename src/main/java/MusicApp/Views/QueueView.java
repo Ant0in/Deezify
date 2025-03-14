@@ -11,9 +11,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.*;
 
-public class QueueView extends View<QueueView, QueueController> {
-    @FXML
-    private ListView<Song> queueListView;
+public class QueueView extends PlayListView<QueueView, QueueController> {
+
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
 
@@ -24,7 +23,7 @@ public class QueueView extends View<QueueView, QueueController> {
     @Override
     public void init() {
         initBindings();
-        updateQueueListView();
+        updateListView();
         enableQueueDragAndDrop();
         setupListSelectionListeners();
         enableDoubleClickToPlay();
@@ -48,14 +47,14 @@ public class QueueView extends View<QueueView, QueueController> {
      * Bind the buttons.
      */
     private void bindButtons(){
-        deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
+        deleteSongButton.visibleProperty().bind(isSelected());
         addSongButton.visibleProperty().bind(viewController.isPlaylistItemSelected());
     }
 
     private void bindQueueButtonsActivation() {
         addSongButton.disableProperty().bind(viewController.isPlaylistItemSelected().not());
-        deleteSongButton.disableProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNull());
-        clearQueueButton.disableProperty().bind(Bindings.isEmpty(queueListView.getItems()));
+        deleteSongButton.disableProperty().bind(listView.getSelectionModel().selectedItemProperty().isNull());
+        clearQueueButton.disableProperty().bind(Bindings.isEmpty(listView.getItems()));
 
         applyDisableStyleListener(addSongButton);
         applyDisableStyleListener(deleteSongButton);
@@ -74,15 +73,9 @@ public class QueueView extends View<QueueView, QueueController> {
         });
     }
 
-    /**
-     * Update the queue list view.
-     */
-    public void updateQueueListView() {
-        queueListView.getItems().setAll(viewController.queueToList());
-    }
 
     private void enableQueueDragAndDrop() {
-        queueListView.setCellFactory(lv -> {
+        listView.setCellFactory(lv -> {
             ListCell<Song> cell = new ListCell<Song>() {
                 @Override
                 protected void updateItem(Song item, boolean empty) {
@@ -139,18 +132,18 @@ public class QueueView extends View<QueueView, QueueController> {
     private void onDragDropped(DragEvent event, ListCell<Song> cell) {
         Dragboard db = event.getDragboard();
         if (db.hasString()) {
-            Song draggedSong = queueListView.getItems().stream()
+            Song draggedSong = listView.getItems().stream()
                     .filter(song -> song.getSongName().equals(db.getString()))
                     .findFirst()
                     .orElse(null);
 
             if (draggedSong != null) {
-                int draggedIndex = queueListView.getItems().indexOf(draggedSong);
+                int draggedIndex = listView.getItems().indexOf(draggedSong);
                 int dropIndex = cell.getIndex();
 
                 if (draggedIndex != dropIndex) {
                     viewController.reorderQueue(draggedIndex, dropIndex);
-                    updateQueueListView();
+                    updateListView();
                 }
 
                 event.setDropCompleted(true);
@@ -163,22 +156,11 @@ public class QueueView extends View<QueueView, QueueController> {
      * Setup the list selection listeners.
      */
     private void setupListSelectionListeners() {
-        queueListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+        listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) viewController.clearPlayListViewSelection();
         });
     }
 
-    /**
-     * Enable double click to play
-     */
-    public void enableDoubleClickToPlay(){
-
-        queueListView.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                viewController.handlePlaySong();
-            }
-        });
-    }
 
     /**
      * Initialize the translations of the texts in the view.
@@ -189,13 +171,7 @@ public class QueueView extends View<QueueView, QueueController> {
         clearQueueButton.setText(LanguageManager.get("button.clear"));
     }
 
-    public int getSelectedSongIndex() {
-        return queueListView.getSelectionModel().getSelectedIndex();
-    }
 
-    public void clearSelection() {
-        queueListView.getSelectionModel().clearSelection();
-    }
 
     public void refreshUI(){
         initTranslation();

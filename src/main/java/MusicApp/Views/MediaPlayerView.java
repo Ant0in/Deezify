@@ -1,23 +1,19 @@
 package MusicApp.Views;
 
-import MusicApp.Controllers.ControlPanelController;
+import MusicApp.Controllers.MediaPlayerController;
 import MusicApp.Models.Song;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import java.io.IOException;
-import java.net.URL;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ControlPanelView extends View<ControlPanelView,ControlPanelController> {
+public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController> {
 
     @FXML
     private Button pauseSongButton, nextSongButton, previousSongButton;
@@ -34,7 +30,7 @@ public class ControlPanelView extends View<ControlPanelView,ControlPanelControll
     @FXML
     private ToggleButton shuffleToggle;
 
-    public ControlPanelView(){
+    public MediaPlayerView(){
     }
 
     @Override

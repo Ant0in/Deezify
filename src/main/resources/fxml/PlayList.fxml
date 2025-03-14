@@ -7,5 +7,5 @@
 
 <VBox spacing="5" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml/1">
     <TextField fx:id="songInput" promptText="Search..." styleClass="input" />
-    <ListView fx:id="playListView" styleClass="songs" VBox.vgrow="ALWAYS" />
+    <ListView fx:id="listView" styleClass="songs" VBox.vgrow="ALWAYS" />
 </VBox>

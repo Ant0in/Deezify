@@ -1,18 +1,14 @@
 package MusicApp.Views;
 
-import MusicApp.Controllers.PlayListController;
-import MusicApp.Controllers.PlayerController;
+import MusicApp.Controllers.MainLibraryController;
 import MusicApp.Models.Song;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-
-import java.util.Objects;
 
 /**
  * SongCell
@@ -29,7 +25,7 @@ public class SongCell extends ListCell<Song> {
     /**
      * Constructor
      */
-    public SongCell(PlayListController playListController) {
+    public SongCell(MainLibraryController mainLibraryController) {
         imageView.setFitWidth(25);
         imageView.setFitHeight(25);
         imageView.setPreserveRatio(true);
@@ -43,7 +39,7 @@ public class SongCell extends ListCell<Song> {
         playButton.setOnMouseClicked(event -> {
             Song song = getItem();
             if (song != null) {
-                playListController.goToSong(song);
+                mainLibraryController.goToSong(song);
             }
         });
 

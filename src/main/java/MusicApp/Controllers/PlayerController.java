@@ -17,9 +17,9 @@ import javafx.stage.Stage;
 public class PlayerController extends ViewController<PlayerView,PlayerController> {
 
     private final MetaController metaController;
-    private ControlPanelController controlPanelController;
+    private MediaPlayerController mediaPlayerController;
     private ToolBarController toolBarController;
-    private PlayListController playListController;
+    private MainLibraryController mainLibraryController;
     private QueueController queueController;
 
     /**
@@ -31,14 +31,14 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
         Settings settings = metaController.getSettings();
-        this.controlPanelController.setBalance(settings.getBalance());
-        this.playListController.loadLibrary(settings.getMusicDirectory());
+        this.mediaPlayerController.setBalance(settings.getBalance());
+        this.mainLibraryController.loadLibrary(settings.getMusicDirectory());
     }
 
     private void initSubControllers() {
-        this.playListController = new PlayListController(this);
+        this.mainLibraryController = new MainLibraryController(this);
         this.queueController = new QueueController(this);
-        this.controlPanelController = new ControlPanelController(this);
+        this.mediaPlayerController = new MediaPlayerController(this);
         this.toolBarController = new ToolBarController(this);
 
     }
@@ -53,7 +53,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     }
 
     public void playSong(Song song) {
-        this.controlPanelController.playCurrent(song);
+        this.mediaPlayerController.playCurrent(song);
     }
 
     /**
@@ -63,7 +63,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      */
     public void skip() {
         if (this.queueController.queueIsEmpty()) {
-            this.playListController.skip();
+            this.mainLibraryController.skip();
         } else {
             this.queueController.playSong(0);
         }
@@ -73,7 +73,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * Handle the previous song
      */
     public void handlePreviousSong() {
-        this.playListController.prec();
+        this.mainLibraryController.prec();
     }
 
 
@@ -81,7 +81,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * Close the audio player.
      */
     public void close() {
-        this.controlPanelController.close();
+        this.mediaPlayerController.close();
     }
 
     /**
@@ -105,7 +105,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * @param isEnabled The shuffle button state.
      */
     public void toggleShuffle(boolean isEnabled) {
-        this.playListController.toggleShuffle(isEnabled);
+        this.mainLibraryController.toggleShuffle(isEnabled);
     }
 
     /**
@@ -114,12 +114,12 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * @param newSettings The new settings.
      */
     public void onSettingsChanged(Settings newSettings) {
-        this.controlPanelController.setBalance(newSettings.getBalance());
-        this.playListController.loadLibrary(newSettings.getMusicDirectory());
+        this.mediaPlayerController.setBalance(newSettings.getBalance());
+        this.mainLibraryController.loadLibrary(newSettings.getMusicDirectory());
     }
 
     public Pane getControlPanelRoot() {
-        return this.controlPanelController.getRoot();
+        return this.mediaPlayerController.getRoot();
     }
 
     public Pane getToolBarRoot() {
@@ -127,26 +127,26 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     }
 
     public Pane getPlayListRoot() {
-        return this.playListController.getRoot();
+        return this.mainLibraryController.getRoot();
     }
 
     public Pane getQueueRoot() { return this.queueController.getRoot();}
 
 
     public BooleanBinding isPlaylistItemSelected() {
-        return playListController.isSelected();
+        return mainLibraryController.isSelected();
     }
 
     public void clearPlayListViewSelection() {
-        playListController.clearSelection();
+        mainLibraryController.clearSelection();
     }
 
     public Song getSelectedPlayListSong() {
-        return playListController.getSelectedSong();
+        return mainLibraryController.getSelectedSong();
     }
 
     public void clearQueueSelection() {
-        this.queueController.clearSelection();
+        queueController.clearSelection();
     }
 
 }

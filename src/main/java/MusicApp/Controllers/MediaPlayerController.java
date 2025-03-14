@@ -2,18 +2,18 @@ package MusicApp.Controllers;
 
 import MusicApp.Models.AudioPlayer;
 import MusicApp.Models.Song;
-import MusicApp.Views.ControlPanelView;
+import MusicApp.Views.MediaPlayerView;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 
-public class ControlPanelController extends ViewController<ControlPanelView, ControlPanelController> {
+public class MediaPlayerController extends ViewController<MediaPlayerView, MediaPlayerController> {
     private final PlayerController playerController;
     private final AudioPlayer audioPlayer;
 
-    public ControlPanelController(PlayerController playerController){
-        super(new ControlPanelView());
+    public MediaPlayerController(PlayerController playerController){
+        super(new MediaPlayerView());
         this.playerController = playerController;
         audioPlayer = new AudioPlayer();
         initView("/fxml/ControlPanel.fxml");
