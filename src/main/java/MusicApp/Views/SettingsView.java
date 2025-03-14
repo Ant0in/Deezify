@@ -1,6 +1,7 @@
 package MusicApp.Views;
 
 import MusicApp.Controllers.SettingsController;
+import MusicApp.Controllers.ViewController;
 import MusicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class SettingsView {
-    private final Scene scene;
+public class SettingsView extends View<SettingsView, SettingsController> {
+    // private final Scene scene;
     @FXML
     private ComboBox<String> languageComboBox;
     @FXML
@@ -33,17 +34,9 @@ public class SettingsView {
     private Label directoryLabel;
 
     private String title;
-    private final SettingsController settingsController;
     private String originalLanguage;
 
-    public SettingsView(SettingsController settingsController) throws IOException {
-        this.settingsController = settingsController;
-        URL url = PlayerView.class.getResource("/fxml/Settings.fxml");
-        FXMLLoader loader = new FXMLLoader(url);
-        loader.setController((Object) this);
-        Pane root = loader.load();
-        this.scene = new Scene(root);
-        init();
+    public SettingsView() {
     }
 
     /**
@@ -59,7 +52,8 @@ public class SettingsView {
     /**
      * Initialize the settings view.
      */
-    private void init() {
+    @Override
+    public void init() {
         originalLanguage = LanguageManager.getCurrentLocale().getLanguage();
         initComboBox();
         initSlider();
@@ -111,8 +105,8 @@ public class SettingsView {
      * Initialize the balance slider.
      */
     private void initSlider() {
-        balanceSlider.setValue(settingsController.getBalance());
-        balanceLabel.setText(String.format("%.2f", settingsController.getBalance()));
+        balanceSlider.setValue(this.viewController.getBalance());
+        balanceLabel.setText(String.format("%.2f", this.viewController.getBalance()));
         balanceSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             balanceLabel.setText(String.format("%.2f", newVal.doubleValue()));
         });
@@ -154,7 +148,7 @@ public class SettingsView {
      * Initialize the binding of the view.
      */
     private void initBinding(){
-        directoryLabel.textProperty().bind(settingsController.getMusicDirectoryPath());
+        directoryLabel.textProperty().bind(this.viewController.getMusicDirectoryPath());
     }
 
     /**
@@ -162,9 +156,9 @@ public class SettingsView {
      */
     @FXML
     public void handleSave() {
-        settingsController.refreshLanguage();
-        settingsController.setBalance(balanceSlider.getValue());
-        settingsController.close();
+        this.viewController.refreshLanguage();
+        this.viewController.setBalance(balanceSlider.getValue());
+        this.viewController.close();
     }
 
     /**
@@ -173,8 +167,8 @@ public class SettingsView {
     @FXML
     public void handleCancel() {
         LanguageManager.setLanguage(originalLanguage);
-        settingsController.refreshLanguage();
-        settingsController.close();
+        this.viewController.refreshLanguage();
+        this.viewController.close();
     }
 
     /**
@@ -188,7 +182,7 @@ public class SettingsView {
 
         File selectedDirectory = directoryChooser.showDialog(null);
         if (selectedDirectory != null) {
-            settingsController.setMusicDirectoryPath(selectedDirectory.getAbsolutePath());
+            this.viewController.setMusicDirectoryPath(selectedDirectory.getAbsolutePath());
         }
     }
 

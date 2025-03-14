@@ -11,7 +11,6 @@ import javafx.util.Duration;
 public class ControlPanelController extends ViewController<ControlPanelView, ControlPanelController> {
     private final PlayerController playerController;
     private final AudioPlayer audioPlayer;
-    private double currentSpeed = 1.0;
 
     public ControlPanelController(PlayerController playerController){
         super(new ControlPanelView());
@@ -65,8 +64,7 @@ public class ControlPanelController extends ViewController<ControlPanelView, Con
      * @param speed The speed to set.
      */
     public void changeSpeed(double speed) {
-        this.currentSpeed = speed;
-        applyCurrentSpeed();
+        audioPlayer.changeSpeed(speed);
     }
 
     /**
@@ -143,18 +141,10 @@ public class ControlPanelController extends ViewController<ControlPanelView, Con
     }
 
     /**
-     * Apply the current speed to the audio player.
-     */
-    public void applyCurrentSpeed() {
-        audioPlayer.changeSpeed(currentSpeed);
-    }
-
-    /**
      * Load and Play the currently selected song.
      */
     public void playCurrent(Song song) {
         audioPlayer.loadSong(song);
-        applyCurrentSpeed();
         audioPlayer.setOnEndOfMedia(this.playerController::skip);
         audioPlayer.unpause();
         System.out.println("Playing: " + song.getSongName());

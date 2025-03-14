@@ -5,26 +5,27 @@ import MusicApp.Views.SettingsView;
 import MusicApp.utils.DataProvider;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 
-public class SettingsController {
+public class SettingsController extends ViewController<SettingsView, SettingsController> {
     private Stage settingsStage;
-    private SettingsView settingsView;
     private MetaController metaController;
     private StringProperty musicDirectoryPath = new SimpleStringProperty("None");
 
     public SettingsController(MetaController metaController) throws IOException {
+        super(new SettingsView());
         this.metaController = metaController;
-        this.settingsView = new SettingsView(this);
+        initView("/fxml/Settings.fxml");
         this.settingsStage = new Stage();
         this.settingsStage.initModality(Modality.APPLICATION_MODAL);
         this.settingsStage.setResizable(false);
         this.settingsStage.setTitle("Settings");
-        this.settingsStage.setScene(settingsView.getScene());
+        this.settingsStage.setScene(this.view.getScene());
         this.musicDirectoryPath.set(metaController.getSettings().getMusicDirectory().toString());
     }
 
