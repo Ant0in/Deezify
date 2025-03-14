@@ -20,18 +20,6 @@ public class Song {
     private Duration duration;
 
     /**
-     * Loads Metadata from MetadataReader.
-     *
-     * @param metadata The metadata of the song.
-     */
-    private void loadMetadata(Metadata metadata) {
-        this.title = metadata.getTitle();
-        this.artist = metadata.getArtist();
-        this.genre = metadata.getGenre();
-        this.cover = metadata.getCover();
-        this.duration = metadata.getDuration();
-    }
-    /**
      * Constructor from MetadataReader.
      *
      * @param filePath The path to the music file.
@@ -49,6 +37,19 @@ public class Song {
             Metadata defaultMetadata = new Metadata();
             this.loadMetadata(defaultMetadata);
         }
+    }
+
+    /**
+     * Loads Metadata from MetadataReader.
+     *
+     * @param metadata The metadata of the song.
+     */
+    private void loadMetadata(Metadata metadata) {
+        this.title = metadata.getTitle();
+        this.artist = metadata.getArtist();
+        this.genre = metadata.getGenre();
+        this.cover = metadata.getCover();
+        this.duration = metadata.getDuration();
     }
 
     /**

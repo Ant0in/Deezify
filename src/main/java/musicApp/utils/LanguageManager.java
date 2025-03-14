@@ -10,15 +10,13 @@ import java.util.prefs.Preferences;
  * The class is a singleton and uses the Preferences API to store the selected language.
  */
 public class LanguageManager {
+    private static LanguageManager instance;
     private final Preferences prefs = Preferences.userNodeForPackage(LanguageManager.class);
     private final String DEFAULT_LANGUAGE = "en"; // default language if pc language is not supported
     private final String[] SUPPORTED_LANGUAGES = {"fr", "en", "nl"}; // supported languages
     private final String[] BUNDLE_NAMES = {"lang.messages", "lang.general", "lang.errors", "lang.buttons", "lang.settings", "lang.default_values"};
-
     private final ResourceBundle[] bundles = new ResourceBundle[BUNDLE_NAMES.length];
     private Locale currentLocale;
-
-    private static LanguageManager instance;
 
 
     public LanguageManager() {
@@ -31,6 +29,18 @@ public class LanguageManager {
 
     public LanguageManager(String language) {
         setLanguage(language);
+    }
+
+    /**
+     * Get the instance of the LanguageManager.
+     *
+     * @return The instance of the LanguageManager.
+     */
+    public static LanguageManager getInstance() {
+        if (instance == null) {
+            instance = new LanguageManager();
+        }
+        return instance;
     }
 
     /**
@@ -86,18 +96,6 @@ public class LanguageManager {
             }
         }
         return false;
-    }
-
-    /**
-     * Get the instance of the LanguageManager.
-     *
-     * @return The instance of the LanguageManager.
-     */
-    public static LanguageManager getInstance() {
-        if (instance == null) {
-            instance = new LanguageManager();
-        }
-        return instance;
     }
 }
 

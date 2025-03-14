@@ -1,15 +1,11 @@
 package musicApp.modelsTest;
 
 import javafx.util.Duration;
-import musicApp.models.Metadata;
 import musicApp.models.Song;
-import musicApp.models.Metadata;
 import musicApp.utils.LanguageManager;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.nio.file.Paths;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -50,7 +46,7 @@ public class TestSong {
     }
 
     @Test
-    public void testDifferent(){
+    public void testDifferent() {
         // Test that song are different if they have the same title, artiste and genre but different file path
         Song song = new Song(Paths.get("src", "test", "resources", "noID3TagMP3.mp3"));
         Song song2 = new Song(Paths.get("src", "test", "resources", "noTagWAV.wav"));

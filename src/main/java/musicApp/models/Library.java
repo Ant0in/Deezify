@@ -25,7 +25,8 @@ public class Library {
     /**
      * Constructor to create an empty library.
      */
-    public Library() { }
+    public Library() {
+    }
 
     /**
      * Constructor to create a library initialized with folder content.

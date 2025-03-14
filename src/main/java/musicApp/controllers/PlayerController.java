@@ -6,7 +6,6 @@ import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.models.*;
-import musicApp.utils.MusicLoader;
 import musicApp.views.PlayerView;
 
 import java.io.IOException;

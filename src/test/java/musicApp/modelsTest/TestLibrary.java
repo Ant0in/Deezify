@@ -1,7 +1,6 @@
 package musicApp.modelsTest;
 
 import musicApp.models.Library;
-import musicApp.models.Song;
 import musicApp.utils.MusicLoader;
 import org.junit.Test;
 
@@ -14,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class TestLibrary extends MusicLoader {
     @Test
-    public void testLoad(){
+    public void testLoad() {
         // Test that the library is loaded with the correct number of songs
         Library library = new Library();
         Path songFolder = Paths.get("src", "test", "resources");
