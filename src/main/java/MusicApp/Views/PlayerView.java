@@ -39,7 +39,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
     @FXML
-    private Pane controls, playListContainer;
+    private Pane controls;
     @FXML
     private HBox playerContainer;
     @FXML
@@ -88,14 +88,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
      * Initialize the play list.
      */
     private void initPlayList(){
-//        playListContainer.getChildren().setAll(viewController.getPlayListRoot());
-        Parent parent = playListContainer.getParent();
-        if (parent instanceof Pane) {
-            Pane pane = (Pane) parent;
-            int index = pane.getChildren().indexOf(playListContainer);
-            pane.getChildren().set(index, viewController.getPlayListRoot());
-        }
-//        playerContainer.getChildren().add(playListContainer);
+        playerContainer.getChildren().set(0,viewController.getPlayListRoot());
     }
 
     /**

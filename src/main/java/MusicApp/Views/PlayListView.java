@@ -24,6 +24,8 @@ public class PlayListView extends View<PlayListView, PlayListController> {
         initPlayListView();
         updatePlayListView();
         initTranslation();
+        setupListSelectionListeners();
+        enableDoubleClick();
     }
 
     public BooleanBinding isSelected() {

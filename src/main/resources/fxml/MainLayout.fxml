@@ -21,9 +21,7 @@
    </top>
    <center>
       <HBox fx:id="playerContainer" alignment="CENTER" spacing="10" style="-fx-padding: 10;">
-         <Pane fx:id="playListContainer">
-
-         </Pane>
+         <Pane />
          <VBox spacing="5">
             <ListView fx:id="queueListView" prefWidth="160" styleClass="queue" VBox.vgrow="ALWAYS" />
             <Button fx:id="addSongButton" maxWidth="Infinity" onAction="#handleAddSong" styleClass="queueButton" text="ADD" />
