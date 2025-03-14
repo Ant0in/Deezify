@@ -127,7 +127,7 @@ public class ControlPanelController extends ViewController<ControlPanelView, Con
      * Handle the next song button.
      */
     public void handleNextSong() {
-        this.playerController.handleNextSong();
+        this.playerController.skip();
     }
 
     /**

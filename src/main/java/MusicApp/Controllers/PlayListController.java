@@ -124,8 +124,8 @@ public class PlayListController extends ViewController<PlayListView, PlayListCon
         view.clearSelection();
     }
 
-    public int getSelectedIndex() {
-        return view.getSelectedSongIndex();
+    public Song getSelectedSong() {
+        return getSong(view.getSelectedSongIndex());
     }
 
     public void updatePlayListView() {
@@ -153,7 +153,7 @@ public class PlayListController extends ViewController<PlayListView, PlayListCon
      * @param isEnabled The shuffle button state.
      */
     public void toggleShuffle(boolean isEnabled) {
-        Song currentSong = (currentIndex >= 0 && currentIndex < library.size()) ? library.get(currentIndex) : null;
+        Song currentSong = getCurrentSong();
         playlistManager.toggleShuffle(isEnabled, currentSong);
         if (currentSong != null) {
             int newIndex = isEnabled ? 0 : playlistManager.getOriginalIndex(currentSong);

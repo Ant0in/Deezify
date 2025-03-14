@@ -5,20 +5,11 @@ import MusicApp.Models.Song;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
-import javafx.beans.binding.Bindings;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import MusicApp.Controllers.PlayerController;
-import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
 
@@ -33,19 +24,12 @@ import java.util.Objects;
  * Class that represents the view of the music player.
  */
 public class PlayerView extends View<PlayerView,PlayerController> {
-
-    @FXML
-    private ListView<Song> queueListView;
-    @FXML
-    private Button addSongButton, deleteSongButton, clearQueueButton;
     @FXML
     private Pane controls;
     @FXML
     private HBox playerContainer;
     @FXML
     private BorderPane labelContainer;
-
-
 
     /* To enable drag */
     private double xOffset = 0;
@@ -59,18 +43,13 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     public void init(){
         initPanes();
         initBindings();
-        updateQueueListView();
-        enableQueueDragAndDrop();
-        setupListSelectionListeners();
-        enableDoubleClickToPlay();
-        setupListSelectionListeners();
-        initTranslation();
     }
 
     private void initPanes(){
         initControlPanel();
         initToolBar();
         initPlayList();
+        initQueue();
     }
 
     private void initControlPanel(){
@@ -88,31 +67,18 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         playerContainer.getChildren().set(0,viewController.getPlayListRoot());
     }
 
-    /**
-     * Initialize the translations of the texts in the view.
-     */
-    private void initTranslation() {
-        addSongButton.setText(LanguageManager.get("button.add"));
-        deleteSongButton.setText(LanguageManager.get("button.delete"));
-        clearQueueButton.setText(LanguageManager.get("button.clear"));
+    private void initQueue(){
+        playerContainer.getChildren().set(1,viewController.getQueueRoot());
     }
+
 
     /**
      * Initialize the bindings between the view and the controller.
      */
     private void initBindings() {
-        bindButtons();
         bindPlayingSongAnchor();
-        bindQueueButtonsActivation();
     }
 
-    /**
-     * Bind the buttons.
-     */
-    private void bindButtons(){
-        deleteSongButton.visibleProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNotNull());
-        addSongButton.visibleProperty().bind(viewController.isPlaylistItemSelected());
-    }
 
     /**
      * Bind the visibility of the playing song anchor (the controls at the bottom).
@@ -121,39 +87,6 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         controls.setVisible(true);
     }
 
-    private void bindQueueButtonsActivation() {
-        addSongButton.disableProperty().bind(viewController.isPlaylistItemSelected().not());
-        deleteSongButton.disableProperty().bind(queueListView.getSelectionModel().selectedItemProperty().isNull());
-        clearQueueButton.disableProperty().bind(Bindings.isEmpty(queueListView.getItems()));
-
-        applyDisableStyleListener(addSongButton);
-        applyDisableStyleListener(deleteSongButton);
-        applyDisableStyleListener(clearQueueButton);
-    }
-
-    private void applyDisableStyleListener(Control control) {
-        control.disableProperty().addListener((obs, wasDisabled, isDisabled) -> {
-            if (isDisabled) {
-                if (!control.getStyleClass().contains("disabled-btn")) {
-                    control.getStyleClass().add("disabled-btn");
-                }
-            } else {
-                control.getStyleClass().remove("disabled-btn");
-            }
-        });
-    }
-
-    /**
-     * Enable double click to play
-     */
-    public void enableDoubleClickToPlay(){
-
-        queueListView.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                handlePlaySong();
-            }
-        });
-    }
 
     /**
      * Enable double click to grow (fullscreen)
@@ -215,172 +148,8 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         stage.show();
     }
 
-    /*
-    to be moved to controller
-     */
-    public void clearQueueListView() {
-        queueListView.getSelectionModel().clearSelection();
-    }
-
-    /**
-     * Setup the list selection listeners.
-     */
-    private void setupListSelectionListeners() {
-//        playListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-//            if (newVal != null) queueListView.getSelectionModel().clearSelection();
-//        });
-
-        queueListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) viewController.clearPlayListViewSelection();
-        });
-    }
-
-    /**
-     * Update the queue list view.
-     */
-    public void updateQueueListView() {
-        queueListView.getItems().setAll(viewController.getQueue().toList());
-    }
 
 
-    /**
-     * ! move to controller
-     * Clears the selection in both the queue and playlist ListViews.
-     */
-
-    private void clearSelections(){
-        queueListView.getSelectionModel().clearSelection();
-        viewController.clearSelections();
-    }
-
-    /**
-     * ! move to Controller
-     * Handle the play song button.
-     */
-    //@FXML
-    public void handlePlaySong() {
-        int songIndexFromQueue = queueListView.getSelectionModel().getSelectedIndex();
-        if (songIndexFromQueue!=-1){
-            System.out.println("The selected song index : " + songIndexFromQueue);
-            viewController.playFromQueue(songIndexFromQueue);
-        }else{
-            System.out.println("No song selected.");
-        }
-        updateQueueListView();
-        clearSelections();
-    }
-
-    /**
-     * Handle the add song button.
-     */
-    @FXML
-    private void handleAddSong() {
-        int index = viewController.getSelectedPlayListSongIndex();
-        Song selectedSong = viewController.getFromLibrary(index);
-        if (index != -1) {
-            viewController.addToQueue(selectedSong);
-            updateQueueListView();
-        }
-    }
-
-    /**
-     * Handle the delete song button.
-     */
-    @FXML
-    private void handleDeleteSong() {
-        int index = queueListView.getSelectionModel().getSelectedIndex();
-        if (index != -1) {
-            viewController.removeFromQueue(viewController.getQueue().get(index));
-            updateQueueListView();
-        }
-    }
-
-    /**
-     * Handle the clear queue button.
-     */
-    @FXML
-    private void handleClearQueue() {
-        viewController.clearQueue();
-        updateQueueListView();
-    }
-
-    private void enableQueueDragAndDrop() {
-        queueListView.setCellFactory(lv -> {
-            ListCell<Song> cell = new ListCell<Song>() {
-                @Override
-                protected void updateItem(Song item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty ? null : item.getSongName());
-                }
-            };
-
-            // Start of dragging
-            cell.setOnDragDetected(event -> onDragDetected(event, cell));
-
-            // Allows receiving the dragged element
-            cell.setOnDragOver(event -> onDragOver(event, cell));
-
-            // When the element is released
-            cell.setOnDragDropped(event -> onDragDropped(event, cell));
-
-            return cell;
-        });
-    }
-
-    /**
-     * Handle the drag detected event.
-     * @param event The mouse event.
-     * @param cell The list cell.
-     */
-    private void onDragDetected(MouseEvent event, ListCell<Song> cell) {
-        if (!cell.isEmpty()) {
-            Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.putString(cell.getItem().getSongName());
-            db.setContent(content);
-            event.consume();
-        }
-    }
-
-    /**
-     * Handle the drag over event.
-     * @param event The drag event.
-     * @param cell The list cell.
-     */
-    private void onDragOver(DragEvent event, ListCell<Song> cell) {
-        if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
-            event.acceptTransferModes(TransferMode.MOVE);
-        }
-        event.consume();
-    }
-
-    /**
-     * Handle the drag dropped event.
-     * @param event The drag event.
-     * @param cell The list cell.
-     */
-    private void onDragDropped(DragEvent event, ListCell<Song> cell) {
-        Dragboard db = event.getDragboard();
-        if (db.hasString()) {
-            Song draggedSong = queueListView.getItems().stream()
-                    .filter(song -> song.getSongName().equals(db.getString()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (draggedSong != null) {
-                int draggedIndex = queueListView.getItems().indexOf(draggedSong);
-                int dropIndex = cell.getIndex();
-
-                if (draggedIndex != dropIndex) {
-                    viewController.reorderQueue(draggedIndex, dropIndex);
-                    updateQueueListView();
-                }
-
-                event.setDropCompleted(true);
-            }
-        }
-        event.consume();
-    }
 
 
     /**
@@ -396,7 +165,6 @@ public class PlayerView extends View<PlayerView,PlayerController> {
      * Refresh the UI.
      */
     public void refreshUI() {
-        initTranslation();
         Stage stage = (Stage) scene.getWindow();
         stage.setTitle(LanguageManager.get("app.title"));
     }

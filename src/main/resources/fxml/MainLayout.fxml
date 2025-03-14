@@ -22,12 +22,7 @@
    <center>
       <HBox fx:id="playerContainer" alignment="CENTER" spacing="10" style="-fx-padding: 10;">
          <Pane />
-         <VBox spacing="5">
-            <ListView fx:id="queueListView" prefWidth="160" styleClass="queue" VBox.vgrow="ALWAYS" />
-            <Button fx:id="addSongButton" maxWidth="Infinity" onAction="#handleAddSong" styleClass="queueButton" text="ADD" />
-            <Button fx:id="deleteSongButton" maxWidth="Infinity" onAction="#handleDeleteSong" styleClass="queueButton" text="DEL" />
-            <Button fx:id="clearQueueButton" maxWidth="Infinity" onAction="#handleClearQueue" styleClass="queueButton" text="CLEAR" />
-         </VBox>
+         <Pane />
       </HBox>
    </center>
 

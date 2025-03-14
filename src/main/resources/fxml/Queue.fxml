@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="5" xmlns:fx="http://javafx.com/fxml/1">
+    <ListView fx:id="queueListView" prefWidth="160" styleClass="queue" VBox.vgrow="ALWAYS" />
+    <Button fx:id="addSongButton" maxWidth="Infinity" styleClass="queueButton" text="ADD" />
+    <Button fx:id="deleteSongButton" maxWidth="Infinity" styleClass="queueButton" text="DEL" />
+    <Button fx:id="clearQueueButton" maxWidth="Infinity" styleClass="queueButton" text="CLEAR" />
+</VBox>
