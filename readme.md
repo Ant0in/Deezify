@@ -1,4 +1,4 @@
-<div style="text-align: center">
+<div align="center">
   <h1>Deezify</h1>
   <p>🎸A fully-fledged music player.</p>
 <p><i>INFOF-307 at <a href="http://ulb.be">ULB</a></i></p>
