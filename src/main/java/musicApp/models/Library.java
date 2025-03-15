@@ -1,9 +1,11 @@
 package musicApp.models;
 
 import musicApp.utils.MusicLoader;
+import musicApp.utils.RadioLoader;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
  */
 public class Library {
     List<Song> songList = new ArrayList<>();
+    List<Radio> radioList = new ArrayList<>();
 
     /**
      * Constructor
@@ -51,6 +54,24 @@ public class Library {
         for (Path songPath : songs) {
             this.add(new Song(songPath));
         }
+
+        Path radiosPath = Paths.get("/radios");
+        RadioLoader radioLoader = new RadioLoader();
+
+        try {
+            List<Path> m3uFiles = radioLoader.loadM3UFiles(radiosPath);
+
+            for (Path m3uFile : m3uFiles) {
+                List<String> urls = radioLoader.parseM3U(m3uFile);
+                for (String url : urls) {
+                    this.add(new Radio(url));
+                    System.out.println(url);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error while loading radios : " + e.getMessage());
+        }
+
     }
 
     /**
@@ -65,6 +86,20 @@ public class Library {
         }
         songList.add(song);
     }
+
+    /**
+     * Add a radio to the library.
+     *
+     * @param radio The radio to add.
+     */
+    public void add(Radio radio) {
+        if (this.radioList.contains(radio)) {
+            System.err.println("Radio already in library");
+            return;
+        }
+        radioList.add(radio);
+    }
+
 
     /**
      * Add a song to the library at a specific index.
@@ -92,6 +127,17 @@ public class Library {
     }
 
     /**
+     * Add a list of radios to the library.
+     *
+     * @param radios The list of radios to add.
+     */
+    public void addRadios(List<Radio> radios) {
+        for (Radio radio : radios) {
+            add(radio);
+        }
+    }
+
+    /**
      * Remove a song from the library.
      *
      * @param song The song to remove.
@@ -108,9 +154,7 @@ public class Library {
      *
      * @return The size of the library.
      */
-    public int size() {
-        return songList.size();
-    }
+    public int size() { return songList.size(); }
 
     /**
      * Check if the library is empty.
@@ -141,10 +185,18 @@ public class Library {
     }
 
     /**
+     * Get the list of radios.
+     *
+     * @return The list of radios.
+     */
+    public List<Radio> getRadioList() { return radioList; }
+
+    /**
      * Clear the library.
      */
     public void clear() {
         songList.clear();
+        radioList.clear();
     }
 
     /**
