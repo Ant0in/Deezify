@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 
+import javafx.beans.property.StringProperty;
 import musicApp.models.Song;
 import musicApp.views.MainLibraryView;
 import javafx.beans.binding.BooleanBinding;
@@ -130,5 +131,12 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
 
     public void toggleShuffle() {
         this.shuffle = !this.shuffle;
+    }
+
+    public Song getCurrentlyPlayingSong() {
+        return playerController.getCurrentlyPlayingSong();
+    }
+    public StringProperty getCurrentlyPlayingSongStringProperty(){
+        return playerController.getCurrentlyPlayingSongStringProperty();
     }
 }

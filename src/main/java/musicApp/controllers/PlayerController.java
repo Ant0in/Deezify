@@ -1,6 +1,8 @@
 package musicApp.controllers;
 
 import java.io.IOException;
+
+import javafx.beans.property.StringProperty;
 import musicApp.models.*;
 import musicApp.views.PlayerView;
 import javafx.beans.binding.BooleanBinding;
@@ -191,4 +193,11 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         queueController.clearSelection();
     }
 
+    public Song getCurrentlyPlayingSong() {
+        return mediaPlayerController.getCurrentSong();
+    }
+
+    public StringProperty getCurrentlyPlayingSongStringProperty() {
+        return mediaPlayerController.currentSongProperty();
+    }
 }

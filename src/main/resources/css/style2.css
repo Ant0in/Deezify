@@ -215,3 +215,11 @@
 .speed-box .list-cell:hover {
     -fx-background-color: #333939;
 }
+
+.song-playing {
+    -fx-background-color: #2f508e;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: #007BFF;
+    -fx-border-radius: 8px;
+}

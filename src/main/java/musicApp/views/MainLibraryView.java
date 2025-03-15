@@ -1,6 +1,7 @@
 package musicApp.views;
 
 import musicApp.controllers.MainLibraryController;
+import musicApp.controllers.SongController;
 import musicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -55,7 +56,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
      * Initialize the playlist view.
      */
     private void initPlayListView() {
-        listView.setCellFactory(_ -> new SongCell(viewController));
+        listView.setCellFactory(_ -> new SongCell(new SongController(viewController)));
         updateListView();
     }
 
