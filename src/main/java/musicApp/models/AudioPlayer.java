@@ -32,7 +32,7 @@ public class AudioPlayer {
         Media media = new Media(song.getFilePath().toUri().toString());
         mediaPlayer = new MediaPlayer(media);
 
-        currentSongString.set(song.toString());
+        currentSongString.set(song.getFilePath().toString());
         mediaPlayer.volumeProperty().bind(volume);
         mediaPlayer.setBalance(balance);
         mediaPlayer.setRate(speed);

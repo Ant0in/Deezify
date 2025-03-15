@@ -59,6 +59,7 @@ public class SongView  extends  View<SongView,SongController>{
         artistLabel.setText(song.getArtist());
         durationLabel.setText(String.format("%d:%02d", (int) song.getDuration().toMinutes(), (int) song.getDuration().toSeconds() % 60));
         durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
+        updatePlayButtonIcon();
     }
 
     private void setButtonActions() {
