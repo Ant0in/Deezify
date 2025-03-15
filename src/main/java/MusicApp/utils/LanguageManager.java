@@ -1,4 +1,4 @@
-package MusicApp.utils;
+package MusicApp.Utils;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

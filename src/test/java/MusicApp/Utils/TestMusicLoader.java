@@ -1,6 +1,5 @@
 package MusicApp.Utils;
 
-import MusicApp.utils.MusicLoader;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,9 +14,7 @@ public class TestMusicLoader {
     @Test
     public void testNonExistentFolder(){
         Path nonExistentFolder = Paths.get("fdsf");
-        assertThrows(IOException.class, () -> {
-            MusicLoader.getAllSongPaths(nonExistentFolder);
-        });
+        assertThrows(IOException.class, () -> MusicLoader.getAllSongPaths(nonExistentFolder));
     }
 
     @Test

@@ -11,11 +11,11 @@ module MusicApp {
     exports MusicApp.Exceptions;
     exports MusicApp.Models;
     exports MusicApp.Views;
-    exports MusicApp.utils;
+    exports MusicApp.Utils;
 
     opens MusicApp to javafx.fxml, javafx.controls, javafx.media;
     opens MusicApp.Controllers to javafx.fxml, javafx.controls, javafx.media;
     opens MusicApp.Models to javafx.fxml, javafx.controls, javafx.media;
     opens MusicApp.Views to javafx.fxml, javafx.controls, javafx.media;
-    opens MusicApp.utils to javafx.fxml, javafx.controls, javafx.media;
+    opens MusicApp.Utils to javafx.fxml, javafx.controls, javafx.media;
 }

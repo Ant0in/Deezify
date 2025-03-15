@@ -13,9 +13,7 @@ import MusicApp.Models.Metadata;
 import javafx.util.Duration;
 import org.junit.Test;
 
-import MusicApp.utils.MetadataReader;
 import MusicApp.Exceptions.ID3TagException;
-
 
 public class TestMetadataReader {
 
@@ -43,9 +41,7 @@ public class TestMetadataReader {
         // check if the metadata reader can handle a mp3 file with no ID3v2 tags
         File file = Paths.get("src", "test", "resources", "noID3TagMP3.mp3").toFile();
 
-        assertThrows(ID3TagException.class, () -> {
-            MetadataReader.getMetadata(file);
-        });
+        assertThrows(ID3TagException.class, () -> MetadataReader.getMetadata(file));
 
     }
 
@@ -82,11 +78,7 @@ public class TestMetadataReader {
 
         try {
             metadata = MetadataReader.getMetadata(file);
-        } catch (ID3TagException e) {
-            e.printStackTrace();
-            assert false;
-            return;
-        } catch (BadFileTypeException e) {
+        } catch (ID3TagException | BadFileTypeException e) {
             e.printStackTrace();
             assert false;
             return;
@@ -111,10 +103,7 @@ public class TestMetadataReader {
             assertEquals("Unknown Title", MetadataReader.getMetadata(file).getTitle());
             assertEquals("Unknown Artist", MetadataReader.getMetadata(file).getArtist());
             assertEquals("Unknown Genre", MetadataReader.getMetadata(file).getGenre());
-        } catch (ID3TagException e) {
-            e.printStackTrace();
-            assert false;
-        } catch (BadFileTypeException e) {
+        } catch (ID3TagException | BadFileTypeException e) {
             e.printStackTrace();
             assert false;
         }
@@ -126,9 +115,7 @@ public class TestMetadataReader {
         // check if the metadata reader can handle a file with an invalid extension
         File file = Paths.get("src", "test", "resources", "badFileType.opus").toFile();
 
-        assertThrows(BadFileTypeException.class, () -> {
-            MetadataReader.getMetadata(file);
-        });
+        assertThrows(BadFileTypeException.class, () -> MetadataReader.getMetadata(file));
     }
 
 }

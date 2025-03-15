@@ -2,15 +2,15 @@ package MusicApp.Views;
 
 import MusicApp.Controllers.QueueController;
 import MusicApp.Models.Song;
-import MusicApp.utils.LanguageManager;
+import MusicApp.Utils.LanguageManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.input.*;
 
+@SuppressWarnings("unused")
 public class QueueView extends PlayListView<QueueView, QueueController> {
 
     @FXML
@@ -33,9 +33,9 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
 
 
     private void setButtonActions() {
-        addSongButton.setOnAction(event -> this.viewController.handleAddSong());
-        deleteSongButton.setOnAction(event -> this.viewController.handleDeleteSong());
-        clearQueueButton.setOnAction(event -> this.viewController.handleClearQueue());
+        addSongButton.setOnAction(_ -> this.viewController.handleAddSong());
+        deleteSongButton.setOnAction(_ -> this.viewController.handleDeleteSong());
+        clearQueueButton.setOnAction(_ -> this.viewController.handleClearQueue());
     }
 
     private void initBindings() {
@@ -62,7 +62,7 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
     }
 
     private void applyDisableStyleListener(Control control) {
-        control.disableProperty().addListener((obs, wasDisabled, isDisabled) -> {
+        control.disableProperty().addListener((_, _, isDisabled) -> {
             if (isDisabled) {
                 if (!control.getStyleClass().contains("disabled-btn")) {
                     control.getStyleClass().add("disabled-btn");
@@ -75,8 +75,8 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
 
 
     private void enableQueueDragAndDrop() {
-        listView.setCellFactory(lv -> {
-            ListCell<Song> cell = new ListCell<Song>() {
+        listView.setCellFactory(_ -> {
+            ListCell<Song> cell = new ListCell<>() {
                 @Override
                 protected void updateItem(Song item, boolean empty) {
                     super.updateItem(item, empty);
@@ -156,7 +156,7 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
      * Setup the list selection listeners.
      */
     private void setupListSelectionListeners() {
-        listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+        listView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
             if (newVal != null) viewController.clearPlayListViewSelection();
         });
     }

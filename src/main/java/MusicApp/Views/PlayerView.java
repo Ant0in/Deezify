@@ -1,8 +1,6 @@
 package MusicApp.Views;
 
-import MusicApp.utils.LanguageManager;
-import MusicApp.Models.Song;
-
+import MusicApp.Utils.LanguageManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
@@ -12,12 +10,6 @@ import javafx.stage.Stage;
 import MusicApp.Controllers.PlayerController;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
-
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
-
 
 /**
  * PlayerView
@@ -104,7 +96,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
      * @param stage The stage to setup the handler for.
      */
     private void setupWindowCloseHandler(Stage stage) {
-        stage.setOnCloseRequest(e -> {
+        stage.setOnCloseRequest(_ -> {
             viewController.close();
             Platform.exit();
         });
@@ -146,19 +138,6 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         enableDoubleClickToGrow(stage);
         setupWindowCloseHandler(stage);
         stage.show();
-    }
-
-
-
-
-
-    /**
-     * Change the language of the application.
-     * @param languageCode The language code. (e.g. "en", "fr", "nl")
-     */
-    private void switchLanguage(String languageCode) {
-        LanguageManager.setLanguage(languageCode);
-        refreshUI();
     }
 
     /**

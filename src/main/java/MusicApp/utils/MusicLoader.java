@@ -1,4 +1,4 @@
-package MusicApp.utils;
+package MusicApp.Utils;
 
 import java.io.IOException;
 import java.nio.file.Files;

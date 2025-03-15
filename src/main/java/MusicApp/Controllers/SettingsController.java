@@ -2,10 +2,8 @@ package MusicApp.Controllers;
 
 import MusicApp.Models.Settings;
 import MusicApp.Views.SettingsView;
-import MusicApp.utils.DataProvider;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
 
@@ -13,9 +11,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 public class SettingsController extends ViewController<SettingsView, SettingsController> {
-    private Stage settingsStage;
-    private MetaController metaController;
-    private StringProperty musicDirectoryPath = new SimpleStringProperty("None");
+    private final Stage settingsStage;
+    private final MetaController metaController;
+    private final StringProperty musicDirectoryPath = new SimpleStringProperty("None");
 
     public SettingsController(MetaController metaController) throws IOException {
         super(new SettingsView());
@@ -76,11 +74,6 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     public void setBalance(double balance) {
         metaController.updateBalance(balance);
     }
-
-    /**
-     * Handle when settings are changed
-     */
-    public void onSettingsChanged(Settings newSettings) {}
 
     /**
      * Get the balance of the application.

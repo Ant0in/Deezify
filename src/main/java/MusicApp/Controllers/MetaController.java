@@ -1,11 +1,12 @@
 package MusicApp.Controllers;
 
+import MusicApp.Utils.DataProvider;
 import MusicApp.Models.Settings;
-import MusicApp.utils.DataProvider;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class MetaController {
 
@@ -33,8 +34,8 @@ public class MetaController {
      * @param scene The scene to switch to.
      */
     public final void switchScene(Scenes scene) {
-        switch (scene) {
-            case Scenes.MAINWINDOW ->this.playerController.show(this.stage);
+        if (Objects.requireNonNull(scene) == Scenes.MAINWINDOW) {
+            this.playerController.show(this.stage);
         }
     }
 
@@ -46,25 +47,10 @@ public class MetaController {
     }
 
     /**
-     * Closes the settings window.
-     */
-    public final void closeSettings() {
-        this.settingsController.close();
-    }
-
-    /**
      * Refreshes the UI.
      */
     public final void refreshUI() {
         this.playerController.refreshUI();
-    }
-
-    /**
-     * Get the player controller.
-     * @return The player controller.
-     */
-    public PlayerController getPlayerController() {
-        return playerController;
     }
 
     /**
@@ -75,7 +61,7 @@ public class MetaController {
         try {
             return dataProvider.readSettings();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             return null;
         }
     }
@@ -88,9 +74,8 @@ public class MetaController {
         try {
             dataProvider.writeSettings(newSettings);
             playerController.onSettingsChanged(newSettings);
-            settingsController.onSettingsChanged(newSettings);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
@@ -104,7 +89,7 @@ public class MetaController {
             settings.setBalance(balance);
             notifySettingsChanged(settings);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
@@ -118,7 +103,7 @@ public class MetaController {
             settings.setMusicFolder(path);
             notifySettingsChanged(settings);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 

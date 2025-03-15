@@ -1,5 +1,5 @@
+package MusicApp.Utils;
 
-package MusicApp.utils;
 import java.io.File;
 import java.util.Base64;
 import java.util.HashMap;

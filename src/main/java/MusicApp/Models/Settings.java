@@ -1,6 +1,6 @@
 package MusicApp.Models;
 
-import MusicApp.utils.DataProvider;
+import MusicApp.Utils.DataProvider;
 
 import java.nio.file.Path;
 
@@ -99,10 +99,9 @@ public class Settings {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof Settings)) {
+        if (!(obj instanceof Settings settings)) {
             return false;
         }
-        Settings settings = (Settings) obj;
         return settings.getBalance() == this.getBalance() && settings.getMusicDirectory().equals(this.getMusicDirectory());
     }
 

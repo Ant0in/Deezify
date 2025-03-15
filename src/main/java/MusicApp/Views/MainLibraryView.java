@@ -1,12 +1,11 @@
 package MusicApp.Views;
 
 import MusicApp.Controllers.MainLibraryController;
-import MusicApp.Models.Song;
-import javafx.beans.binding.BooleanBinding;
+import MusicApp.Utils.LanguageManager;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
+@SuppressWarnings("unused")
 public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryController> {
 
     @FXML
@@ -29,7 +28,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
      * Initialize the song input for the search
      */
     private void initSongInput() {
-        songInput.textProperty().addListener((obs, oldVal, newVal) -> {
+        songInput.textProperty().addListener((_, _, newVal) -> {
             if (newVal != null && !newVal.isEmpty()) {
                 listView.getItems().setAll(viewController.searchLibrary(newVal));
             } else {
@@ -42,7 +41,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
      * Initialize the translations of the texts in the view.
      */
     public void initTranslation() {
-        songInput.setPromptText(MusicApp.utils.LanguageManager.get("search"));
+        songInput.setPromptText(LanguageManager.get("search"));
     }
 
 
@@ -50,7 +49,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
      * Initialize the playlist view.
      */
     private void initPlayListView() {
-        listView.setCellFactory(lv -> new SongCell(viewController));
+        listView.setCellFactory(_ -> new SongCell(viewController));
         updateListView();
     }
 
@@ -58,7 +57,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
      * Setup the list selection listeners.
      */
     private void setupListSelectionListeners() {
-        listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+        listView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
             if (newVal != null){
                 viewController.clearQueueSelection();
             }

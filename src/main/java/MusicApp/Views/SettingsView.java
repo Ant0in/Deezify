@@ -1,23 +1,18 @@
 package MusicApp.Views;
 
 import MusicApp.Controllers.SettingsController;
-import MusicApp.Controllers.ViewController;
-import MusicApp.utils.LanguageManager;
+import MusicApp.Utils.LanguageManager;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
+@SuppressWarnings("unused")
 public class SettingsView extends View<SettingsView, SettingsController> {
     // private final Scene scene;
     @FXML
@@ -67,12 +62,10 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     private void updateLanguageComboBox(){
         String currentLanguage = LanguageManager.getCurrentLocale().getLanguage();
-        if (currentLanguage.equals("en")) {
-            languageComboBox.getSelectionModel().select(0);
-        } else if (currentLanguage.equals("fr")) {
-            languageComboBox.getSelectionModel().select(1);
-        } else if (currentLanguage.equals("nl")) {
-            languageComboBox.getSelectionModel().select(2);
+        switch (currentLanguage) {
+            case "en" -> languageComboBox.getSelectionModel().select(0);
+            case "fr" -> languageComboBox.getSelectionModel().select(1);
+            case "nl" -> languageComboBox.getSelectionModel().select(2);
         }
     }
 
@@ -83,7 +76,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         languageComboBox.getItems().clear();
         languageComboBox.getItems().addAll("English", "Français", "Nederlands");
         updateLanguageComboBox();
-        languageComboBox.setOnAction(e -> handleLanguageChange());
+        languageComboBox.setOnAction(_ -> handleLanguageChange());
     }
 
     /**
@@ -91,12 +84,10 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     private void handleLanguageChange() {
         String selected = languageComboBox.getSelectionModel().getSelectedItem();
-        if (selected.equals("English")) {
-            LanguageManager.setLanguage("en");
-        } else if (selected.equals("Français")) {
-            LanguageManager.setLanguage("fr");
-        } else if (selected.equals("Nederlands")) {
-            LanguageManager.setLanguage("nl");
+        switch (selected) {
+            case "English" -> LanguageManager.setLanguage("en");
+            case "Français" -> LanguageManager.setLanguage("fr");
+            case "Nederlands" -> LanguageManager.setLanguage("nl");
         }
         refreshLanguage();
     }
@@ -107,9 +98,8 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     private void initSlider() {
         balanceSlider.setValue(this.viewController.getBalance());
         balanceLabel.setText(String.format("%.2f", this.viewController.getBalance()));
-        balanceSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            balanceLabel.setText(String.format("%.2f", newVal.doubleValue()));
-        });
+        balanceSlider.valueProperty().addListener((_, _, newVal)
+                -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
     }
 
     /**
@@ -139,9 +129,9 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Initialize the buttons of the view.
      */
     private void initButtons() {
-        saveButton.setOnMouseClicked(event -> handleSave());
-        cancelButton.setOnMouseClicked(event -> handleCancel());
-        browseButton.setOnMouseClicked(event->handleBrowseDirectory());
+        saveButton.setOnMouseClicked(_ -> handleSave());
+        cancelButton.setOnMouseClicked(_ -> handleCancel());
+        browseButton.setOnMouseClicked(_->handleBrowseDirectory());
     }
 
     /**
