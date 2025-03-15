@@ -13,6 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The MediaPlayer view.
+ */
 public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController> {
 
     @FXML
@@ -30,6 +33,9 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     @FXML
     private ToggleButton shuffleToggle;
 
+    /**
+     * Instantiates a new Media player view.
+     */
     public MediaPlayerView(){
     }
 
@@ -42,12 +48,10 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
 
 
     private void setButtonActions() {
-        pauseSongButton.setOnAction(event -> viewController.handlePauseSong());
-        nextSongButton.setOnAction(event -> viewController.handleNextSong());
-        previousSongButton.setOnAction(event -> viewController.handlePreviousSong());
-        shuffleToggle.setOnAction(event -> {
-            viewController.toggleShuffle(shuffleToggle.isSelected());
-        });
+        pauseSongButton.setOnAction(_ -> viewController.handlePauseSong());
+        nextSongButton.setOnAction(_ -> viewController.handleNextSong());
+        previousSongButton.setOnAction(_ -> viewController.handlePreviousSong());
+        shuffleToggle.setOnAction(_ -> viewController.toggleShuffle(shuffleToggle.isSelected()));
     }
     private void initBindings(){
         bindButtons();
@@ -59,6 +63,9 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         bindAllControlActivation();
     }
 
+    /**
+     * Bind buttons.
+     */
     public void bindButtons(){
         ImageView playIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/play_white.png")).toExternalForm()));
         playIcon.setFitWidth(20);
@@ -68,7 +75,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         pauseIcon.setFitWidth(20);
         pauseIcon.setFitHeight(20);
 
-        this.viewController.isPlaying().addListener((obs, wasPlaying, isPlaying) -> {
+        this.viewController.isPlaying().addListener((_, _, isPlaying) -> {
             if (isPlaying) {
                 pauseSongButton.setGraphic(pauseIcon);
                 currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");
@@ -130,7 +137,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         speedBox.getItems().clear();
         speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x","1.25x", "1.5x", "1.75x", "2x");
         speedBox.setValue("1x");
-        speedBox.setOnAction(e -> {
+        speedBox.setOnAction(_ -> {
             String speed = speedBox.getValue();
             double rate = getSpeedValue(speed);
             viewController.changeSpeed(rate);
@@ -168,7 +175,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         );
 
         // For gradual filling
-        volumeSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+        volumeSlider.valueProperty().addListener((_, _, newValue) -> {
             double percentage = 100.0 * newValue.doubleValue() / volumeSlider.getMax();
             String style = String.format(
                     "-track-color: linear-gradient(to right, " +
@@ -267,18 +274,21 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         previousIcon.setFitHeight(20);
         previousSongButton.setGraphic(previousIcon);
 
-
-        ImageView shuffleIcon = new ImageView(getClass().getResource("/images/shuffle.png").toExternalForm());
-        shuffleIcon.setFitWidth(20);
-        shuffleIcon.setFitHeight(20);
-        shuffleToggle.setGraphic(shuffleIcon);
+        try {
+            ImageView shuffleIcon = new ImageView(getClass().getResource("/images/shuffle.png").toExternalForm());
+            shuffleIcon.setFitWidth(20);
+            shuffleIcon.setFitHeight(20);
+            shuffleToggle.setGraphic(shuffleIcon);
+        } catch (NullPointerException e) {
+            System.err.println("Failed to load shuffle icon");
+        }
     }
 
 
     private void bindAllControlActivation() {
         List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider);
         updateControlsState(controls, true);
-        viewController.currentSongProperty().addListener((obs, oldVal, newVal) -> {
+        viewController.currentSongProperty().addListener((_, _, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
             updateControlsState(controls, !songIsPlaying);
         });

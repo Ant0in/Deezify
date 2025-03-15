@@ -10,11 +10,20 @@ import javafx.stage.Modality;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+/**
+ * The type Settings controller.
+ */
 public class SettingsController extends ViewController<SettingsView, SettingsController> {
     private final Stage settingsStage;
     private final MetaController metaController;
     private final StringProperty musicDirectoryPath = new SimpleStringProperty("None");
 
+    /**
+     * Instantiates a new Settings controller.
+     *
+     * @param metaController the meta controller
+     * @throws IOException the io exception
+     */
     public SettingsController(MetaController metaController) throws IOException {
         super(new SettingsView());
         this.metaController = metaController;
@@ -54,12 +63,14 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
 
     /**
      * Get the settings view.
+     *
      * @return The settings view.
      */
     public StringProperty getMusicDirectoryPath(){return musicDirectoryPath;}
 
     /**
      * Set the music directory path.
+     *
      * @param path The path to set.
      */
     public void setMusicDirectoryPath(String path){
@@ -69,6 +80,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
 
     /**
      * Set the balance of the application.
+     *
      * @param balance The balance to set.
      */
     public void setBalance(double balance) {
@@ -77,6 +89,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
 
     /**
      * Get the balance of the application.
+     *
      * @return The balance of the application.
      */
     public double getBalance() {

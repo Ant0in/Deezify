@@ -10,12 +10,18 @@ import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.input.*;
 
+/**
+ * The Queue view.
+ */
 @SuppressWarnings("unused")
 public class QueueView extends PlayListView<QueueView, QueueController> {
 
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
 
+    /**
+     * Instantiates a new Queue view.
+     */
     public QueueView() {
     }
 
@@ -172,7 +178,9 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
     }
 
 
-
+    /**
+     * Refresh ui.
+     */
     public void refreshUI(){
         initTranslation();
     }

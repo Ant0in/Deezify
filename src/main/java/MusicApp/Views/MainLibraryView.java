@@ -5,12 +5,18 @@ import MusicApp.Utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+/**
+ * The MainLibrary view.
+ */
 @SuppressWarnings("unused")
 public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryController> {
 
     @FXML
     private TextField songInput;
 
+    /**
+     * Instantiates a new Main library view.
+     */
     public MainLibraryView() {
     }
 

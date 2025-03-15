@@ -4,13 +4,26 @@ import MusicApp.Models.Song;
 import MusicApp.Views.QueueView;
 import javafx.beans.binding.BooleanBinding;
 
+/**
+ * The type Queue controller.
+ */
 public class QueueController extends PlayListController<QueueView, QueueController> {
 
+    /**
+     * Instantiates a new Queue controller.
+     *
+     * @param playerController the player controller
+     */
     public QueueController(PlayerController playerController) {
         super(new QueueView(), playerController);
         initView("/fxml/Queue.fxml");
     }
 
+    /**
+     * Is playlist item selected boolean binding.
+     *
+     * @return the boolean binding
+     */
     public BooleanBinding isPlaylistItemSelected() {
         return playerController.isPlaylistItemSelected();
     }
@@ -30,6 +43,9 @@ public class QueueController extends PlayListController<QueueView, QueueControll
         }
     }
 
+    /**
+     * Clear play list view selection.
+     */
     public void clearPlayListViewSelection(){
         playerController.clearPlayListViewSelection();
     }
@@ -42,6 +58,9 @@ public class QueueController extends PlayListController<QueueView, QueueControll
         this.view.updateListView();
     }
 
+    /**
+     * Handle add song.
+     */
     public void handleAddSong(){
         Song song = playerController.getSelectedPlayListSong();
         try {
@@ -52,21 +71,35 @@ public class QueueController extends PlayListController<QueueView, QueueControll
         }
     }
 
+    /**
+     * Handle delete song.
+     */
     public void handleDeleteSong(){
         Song song = library.get(this.view.getSelectedSongIndex());
         library.remove(song);
         this.view.updateListView();
     }
 
+    /**
+     * Handle clear queue.
+     */
     public void handleClearQueue(){
         library.clear();
         this.view.updateListView();
     }
 
+    /**
+     * Refresh ui.
+     */
     public void refreshUI(){
         this.view.refreshUI();
     }
 
+    /**
+     * Queue is empty boolean.
+     *
+     * @return the boolean
+     */
     public boolean queueIsEmpty(){
         return library.isEmpty();
     }

@@ -15,10 +15,18 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * The controller for the Main Library view.
+ */
 public class MainLibraryController extends PlayListController<MainLibraryView, MainLibraryController> {
     private int currentIndex;
     private final PlaylistManager playlistManager;
 
+    /**
+     * Instantiates a new Main library controller.
+     *
+     * @param controller the controller
+     */
     public MainLibraryController(PlayerController controller) {
         super(new MainLibraryView(),controller);
         this.playlistManager = new PlaylistManager(library);
@@ -27,6 +35,8 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
 
     /**
      * Loads the library with some sample songs from a settings folder
+     *
+     * @param folderPath the folder path
      */
     public void loadLibrary(Path folderPath) {
         List<Path> songs;
@@ -39,9 +49,7 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
 
         library.clear();
         for (Path songPath : songs) {
-
             try {
-
                 Metadata metadata = MetadataReader.getMetadata(songPath.toFile());
 
                 library.add(new Song(
@@ -57,9 +65,11 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         if (this.view != null) {
             updateListView();
         }
-
     }
 
+    /**
+     * Skip to the next song in the library.
+     */
     public void skip(){
         if (currentIndex < library.size() - 1) {
             this.playSong(currentIndex+1);
@@ -86,14 +96,27 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         return library.search(query.toLowerCase());
     }
 
+    /**
+     * Gets the boolean binding of the selected song.
+     *
+     * @return the boolean binding
+     */
     public BooleanBinding isSelected() {
         return view.isSelected();
     }
 
+    /**
+     * Gets selected song.
+     *
+     * @return the selected song
+     */
     public Song getSelectedSong() {
         return getSong(view.getSelectedSongIndex());
     }
 
+    /**
+     * Update list view.
+     */
     public void updateListView() {
         view.updateListView();
     }
@@ -102,6 +125,11 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         return library.toList().indexOf(song);
     }
 
+    /**
+     * Go to song.
+     *
+     * @param song the song
+     */
     public void goToSong(Song song){
         int index = getSongIndex(song);
         if (index != -1){
@@ -132,6 +160,9 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         super.playSong(index);
     }
 
+    /**
+     * Clear queue selection.
+     */
     public void clearQueueSelection(){
         playerController.clearQueueSelection();
     }

@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * The Meta controller.
+ */
 public class MetaController {
 
     /**
@@ -15,6 +18,9 @@ public class MetaController {
      * NOTE: settings is not a scene but a pop-up window.
      */
     public enum Scenes {
+        /**
+         * Mainwindow scenes.
+         */
         MAINWINDOW
     }
 
@@ -23,6 +29,12 @@ public class MetaController {
     private final PlayerController playerController;
     private final SettingsController settingsController;
 
+    /**
+     * Instantiates a new Meta controller.
+     *
+     * @param stage the stage
+     * @throws IOException the io exception
+     */
     public MetaController(Stage stage) throws IOException {
         this.stage = stage;
         this.playerController = new PlayerController(this);
@@ -31,6 +43,7 @@ public class MetaController {
 
     /**
      * Switches the scene to the specified scene.
+     *
      * @param scene The scene to switch to.
      */
     public final void switchScene(Scenes scene) {
@@ -55,6 +68,7 @@ public class MetaController {
 
     /**
      * Get the current settings of the application.
+     *
      * @return The current settings.
      */
     public Settings getSettings() {
@@ -81,6 +95,7 @@ public class MetaController {
 
     /**
      * Update the balance of the application.
+     *
      * @param balance The new balance.
      */
     public void updateBalance(double balance) {
@@ -95,6 +110,7 @@ public class MetaController {
 
     /**
      * Set the music directory path and notify the change to the controllers.
+     *
      * @param path The path to the music directory.
      */
     public void setMusicDirectoryPath(Path path) {

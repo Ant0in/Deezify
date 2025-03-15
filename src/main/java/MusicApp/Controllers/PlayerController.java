@@ -24,6 +24,9 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Constructor
+     *
+     * @param metaController the meta controller
+     * @throws IOException the io exception
      */
     public PlayerController(MetaController metaController) throws IOException {
         super(new PlayerView());
@@ -52,6 +55,11 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         this.view.show(stage);
     }
 
+    /**
+     * Play song.
+     *
+     * @param song the song
+     */
     public void playSong(Song song) {
         this.mediaPlayerController.playCurrent(song);
     }
@@ -118,33 +126,69 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         this.mainLibraryController.loadLibrary(newSettings.getMusicDirectory());
     }
 
+    /**
+     * Gets control panel root.
+     *
+     * @return the control panel root
+     */
     public Pane getControlPanelRoot() {
         return this.mediaPlayerController.getRoot();
     }
 
+    /**
+     * Gets tool bar root.
+     *
+     * @return the tool bar root
+     */
     public Pane getToolBarRoot() {
         return this.toolBarController.getRoot();
     }
 
+    /**
+     * Gets play list root.
+     *
+     * @return the play list root
+     */
     public Pane getPlayListRoot() {
         return this.mainLibraryController.getRoot();
     }
 
+    /**
+     * Gets queue root.
+     *
+     * @return the queue root
+     */
     public Pane getQueueRoot() { return this.queueController.getRoot();}
 
 
+    /**
+     * Is playlist item selected boolean binding.
+     *
+     * @return the boolean binding
+     */
     public BooleanBinding isPlaylistItemSelected() {
         return mainLibraryController.isSelected();
     }
 
+    /**
+     * Clear play list view selection.
+     */
     public void clearPlayListViewSelection() {
         mainLibraryController.clearSelection();
     }
 
+    /**
+     * Gets selected play list song.
+     *
+     * @return the selected play list song
+     */
     public Song getSelectedPlayListSong() {
         return mainLibraryController.getSelectedSong();
     }
 
+    /**
+     * Clear queue selection.
+     */
     public void clearQueueSelection() {
         queueController.clearSelection();
     }

@@ -6,18 +6,42 @@ import MusicApp.Views.PlayListView;
 
 import java.util.List;
 
+/**
+ * The  Playlist controller.
+ *
+ * @param <V> the View class
+ * @param <C> the Controller class
+ */
 public abstract class PlayListController<V extends PlayListView<V, C>, C extends PlayListController<V, C>>
         extends ViewController<V, C> {
 
+    /**
+     * The Player controller.
+     */
     protected PlayerController playerController;
+    /**
+     * The Library.
+     */
     protected final Library library;
 
+    /**
+     * Instantiates a new Play list controller.
+     *
+     * @param view             the view
+     * @param playerController the player controller
+     */
     public PlayListController(V view, PlayerController playerController) {
         super(view);
         this.playerController = playerController;
         this.library = new Library();
     }
 
+    /**
+     * Gets song.
+     *
+     * @param index the index
+     * @return the song
+     */
     protected Song getSong(int index) {
         if (index < 0 || index >= library.size()) {
             view.displayError("Invalid song index: " + index);
@@ -27,6 +51,11 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
         return library.get(index);
     }
 
+    /**
+     * Play song.
+     *
+     * @param song the song
+     */
     protected void playSong(Song song) {
         if (playerController == null) {
             view.displayError("PlayerController is not initialized!");
@@ -39,6 +68,11 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
         this.playerController.playSong(song);
     }
 
+    /**
+     * Play song.
+     *
+     * @param index the index
+     */
     protected void playSong(int index) {
         if (index < 0 || index >= library.size()) {
             view.displayError("Invalid song index: " + index);
@@ -53,10 +87,18 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
     }
 
 
+    /**
+     * To list list.
+     *
+     * @return the list
+     */
     public List<Song> toList(){
         return library.toList();
     }
 
+    /**
+     * Handle play song.
+     */
     public void handlePlaySong(){
         int songIndex = view.getSelectedSongIndex();
         if (songIndex != -1){
@@ -64,6 +106,9 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
         }
     }
 
+    /**
+     * Clear selection.
+     */
     public void clearSelection() {
         this.view.clearSelection();
     }

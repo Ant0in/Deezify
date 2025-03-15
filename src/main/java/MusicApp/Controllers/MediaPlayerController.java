@@ -8,10 +8,18 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 
+/**
+ * The  MediaPlayer controller.
+ */
 public class MediaPlayerController extends ViewController<MediaPlayerView, MediaPlayerController> {
     private final PlayerController playerController;
     private final AudioPlayer audioPlayer;
 
+    /**
+     * Instantiates a new Media player controller.
+     *
+     * @param playerController the player controller
+     */
     public MediaPlayerController(PlayerController playerController){
         super(new MediaPlayerView());
         this.playerController = playerController;
@@ -21,6 +29,8 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
 
     /**
+     * Is playing boolean property.
+     *
      * @return Whether the song is playing.
      */
     public BooleanProperty isPlaying(){
@@ -29,6 +39,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
     /**
      * Get the progress of the song.
+     *
      * @return The progress of the song.
      */
     public DoubleProperty progressProperty() {
@@ -37,6 +48,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
     /**
      * Get the current time of the song.
+     *
      * @return The current time of the song.
      */
     public Duration getCurrentTime() {
@@ -45,6 +57,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
     /**
      * Get the total duration of the song.
+     *
      * @return The total duration of the song.
      */
     public Duration getTotalDuration(){
@@ -53,6 +66,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
     /**
      * Seek to a specific duration in the song.
+     *
      * @param duration The duration to seek to.
      */
     public void seek(double duration){
@@ -61,6 +75,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
     /**
      * Change speed of the currently playing song.
+     *
      * @param speed The speed to set.
      */
     public void changeSpeed(double speed) {
@@ -69,34 +84,49 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
     /**
      * Get the volume property.
+     *
      * @return The volume property.
      */
     public DoubleProperty volumeProperty() {
         return audioPlayer.volumeProperty();
     }
 
+    /**
+     * Gets current song.
+     *
+     * @return the current song
+     */
     public Song getCurrentSong() {
         return audioPlayer.getCurrentSong();
     }
 
     /**
      * Get the current song property.
+     *
      * @return The current song property.
      */
     public StringProperty currentSongProperty() {
         return audioPlayer.currentSongStringProperty();
     }
 
+    /**
+     * Toggle shuffle.
+     *
+     * @param isEnabled the is enabled
+     */
     public void toggleShuffle(boolean isEnabled) {
         this.playerController.toggleShuffle(isEnabled);
     }
 
+    /**
+     * Close the audio player.
+     */
     public void close(){
         audioPlayer.close();
     }
 
     /**
-     * Handle the pause song button.
+     * Methode that handles the pause song button.
      */
     public void handlePauseSong(){
         if (isPlaying().get()) {
@@ -122,26 +152,33 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
 
     /**
-     * Handle the next song button.
+     * Method that handles the next song button.
      */
     public void handleNextSong() {
         this.playerController.skip();
     }
 
     /**
-     * Handle the previous song button.
+     * Method that handles the previous song button.
      */
     public void handlePreviousSong() {
         playerController.handlePreviousSong();
     }
 
 
+    /**
+     * Sets balance.
+     *
+     * @param balance the balance
+     */
     public void setBalance(double balance) {
         this.audioPlayer.setBalance(balance);
     }
 
     /**
      * Load and Play the currently selected song.
+     *
+     * @param song the song
      */
     public void playCurrent(Song song) {
         audioPlayer.loadSong(song);
@@ -154,6 +191,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
     /**
      * !! This method is not used in the current implementation !!
      * Set the volume of the audio player.
+     *
      * @param volume The volume level (0.0 to 1.0).
      */
     public void setVolume(double volume) {

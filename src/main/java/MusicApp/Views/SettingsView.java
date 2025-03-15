@@ -12,6 +12,9 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import java.io.File;
 
+/**
+ * The Settings view.
+ */
 @SuppressWarnings("unused")
 public class SettingsView extends View<SettingsView, SettingsController> {
     // private final Scene scene;
@@ -31,11 +34,15 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     private String title;
     private String originalLanguage;
 
+    /**
+     * Instantiates a new Settings view.
+     */
     public SettingsView() {
     }
 
     /**
      * Show the settings view.
+     *
      * @param stage The stage to show the view on.
      */
     public void show(Stage stage) {
@@ -178,6 +185,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
 
     /**
      * Get the title of the view.
+     *
      * @return The title of the view.
      */
     public String getTitle() {
@@ -186,6 +194,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
 
     /**
      * Get the scene of the view.
+     *
      * @return The scene of the view.
      */
     public Scene getScene() {

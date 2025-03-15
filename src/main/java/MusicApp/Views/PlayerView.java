@@ -27,6 +27,9 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     private double xOffset = 0;
     private double yOffset = 0;
 
+    /**
+     * Instantiates a new Player view.
+     */
     public PlayerView()  {
     }
 
@@ -82,6 +85,8 @@ public class PlayerView extends View<PlayerView,PlayerController> {
 
     /**
      * Enable double click to grow (fullscreen)
+     *
+     * @param stage the stage
      */
     public void enableDoubleClickToGrow(Stage stage){
         labelContainer.setOnMouseClicked(e -> {
@@ -119,6 +124,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
 
     /**
      * Get the title of the application.
+     *
      * @return The title of the application.
      */
     public String getTitle() {
@@ -127,6 +133,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
 
     /**
      * Show the stage.
+     *
      * @param stage The stage to show.
      */
     public void show(Stage stage) {
