@@ -30,10 +30,7 @@ public class Song {
         try {
             Metadata metadata = metadataReader.getMetadata(filePath.toFile());
             this.loadMetadata(metadata);
-        } catch (ID3TagException e) {
-            Metadata defaultMetadata = new Metadata();
-            this.loadMetadata(defaultMetadata);
-        } catch (BadFileTypeException e) {
+        } catch (ID3TagException | BadFileTypeException e) {
             Metadata defaultMetadata = new Metadata();
             this.loadMetadata(defaultMetadata);
         }

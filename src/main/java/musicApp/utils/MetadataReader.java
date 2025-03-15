@@ -15,7 +15,7 @@ import java.io.File;
 enum FileType {
     MP3,
     WAV,
-    //    FLAC,
+//    FLAC,
 //    OGG
     NONE
 }

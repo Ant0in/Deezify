@@ -1,26 +1,23 @@
 package musicApp.views;
 
+import musicApp.controllers.SettingsController;
+import musicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import musicApp.controllers.SettingsController;
-import musicApp.utils.LanguageManager;
-
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
-public class SettingsView {
-    private final Scene scene;
-    private final SettingsController settingsController;
-    private final LanguageManager languageManager;
+/**
+ * The Settings view.
+ */
+@SuppressWarnings("unused")
+public class SettingsView extends View<SettingsView, SettingsController> {
+    // private final Scene scene;
     @FXML
     private ComboBox<String> languageComboBox;
     @FXML
@@ -33,18 +30,14 @@ public class SettingsView {
     private Button browseButton;
     @FXML
     private Label directoryLabel;
+
     private String title;
     private String originalLanguage;
 
-    public SettingsView(SettingsController settingsController) throws IOException {
-        this.settingsController = settingsController;
-        this.languageManager = LanguageManager.getInstance();
-        URL url = PlayerView.class.getResource("/fxml/settings.fxml");
-        FXMLLoader loader = new FXMLLoader(url);
-        loader.setController((Object) this);
-        Pane root = loader.load();
-        this.scene = new Scene(root);
-        init();
+    /**
+     * Instantiates a new Settings view.
+     */
+    public SettingsView() {
     }
 
     /**
@@ -61,8 +54,9 @@ public class SettingsView {
     /**
      * Initialize the settings view.
      */
-    private void init() {
-        originalLanguage = languageManager.getCurrentLocale().getLanguage();
+    @Override
+    public void init() {
+        originalLanguage = LanguageManager.getInstance().getCurrentLocale().getLanguage();
         initComboBox();
         initSlider();
         initTranslations();
@@ -73,14 +67,12 @@ public class SettingsView {
     /**
      * Update the language combobox to display the current language.
      */
-    private void updateLanguageComboBox() {
-        String currentLanguage = languageManager.getCurrentLocale().getLanguage();
-        if (currentLanguage.equals("en")) {
-            languageComboBox.getSelectionModel().select(0);
-        } else if (currentLanguage.equals("fr")) {
-            languageComboBox.getSelectionModel().select(1);
-        } else if (currentLanguage.equals("nl")) {
-            languageComboBox.getSelectionModel().select(2);
+    private void updateLanguageComboBox(){
+        String currentLanguage = LanguageManager.getInstance().getCurrentLocale().getLanguage();
+        switch (currentLanguage) {
+            case "en" -> languageComboBox.getSelectionModel().select(0);
+            case "fr" -> languageComboBox.getSelectionModel().select(1);
+            case "nl" -> languageComboBox.getSelectionModel().select(2);
         }
     }
 
@@ -91,7 +83,7 @@ public class SettingsView {
         languageComboBox.getItems().clear();
         languageComboBox.getItems().addAll("English", "Français", "Nederlands");
         updateLanguageComboBox();
-        languageComboBox.setOnAction(e -> handleLanguageChange());
+        languageComboBox.setOnAction(_ -> handleLanguageChange());
     }
 
     /**
@@ -99,12 +91,10 @@ public class SettingsView {
      */
     private void handleLanguageChange() {
         String selected = languageComboBox.getSelectionModel().getSelectedItem();
-        if (selected.equals("English")) {
-            languageManager.setLanguage("en");
-        } else if (selected.equals("Français")) {
-            languageManager.setLanguage("fr");
-        } else if (selected.equals("Nederlands")) {
-            languageManager.setLanguage("nl");
+        switch (selected) {
+            case "English" -> LanguageManager.getInstance().setLanguage("en");
+            case "Français" -> LanguageManager.getInstance().setLanguage("fr");
+            case "Nederlands" -> LanguageManager.getInstance().setLanguage("nl");
         }
         refreshLanguage();
     }
@@ -113,17 +103,17 @@ public class SettingsView {
      * Initialize the balance slider.
      */
     private void initSlider() {
-        balanceSlider.setValue(settingsController.getBalance());
-        balanceLabel.setText(String.format("%.2f", settingsController.getBalance()));
-        balanceSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            balanceLabel.setText(String.format("%.2f", newVal.doubleValue()));
-        });
+        balanceSlider.setValue(this.viewController.getBalance());
+        balanceLabel.setText(String.format("%.2f", this.viewController.getBalance()));
+        balanceSlider.valueProperty().addListener((_, _, newVal)
+                -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
     }
 
     /**
      * Initialize the translations of the view.
      */
     private void initTranslations() {
+        LanguageManager languageManager = LanguageManager.getInstance();
         languageTitle.setText(languageManager.get("settings.lang_title"));
         languageSelect.setText(languageManager.get("settings.lang_select"));
         left.setText(languageManager.get("settings.left"));
@@ -147,16 +137,16 @@ public class SettingsView {
      * Initialize the buttons of the view.
      */
     private void initButtons() {
-        saveButton.setOnMouseClicked(event -> handleSave());
-        cancelButton.setOnMouseClicked(event -> handleCancel());
-        browseButton.setOnMouseClicked(event -> handleBrowseDirectory());
+        saveButton.setOnMouseClicked(_ -> handleSave());
+        cancelButton.setOnMouseClicked(_ -> handleCancel());
+        browseButton.setOnMouseClicked(_->handleBrowseDirectory());
     }
 
     /**
      * Initialize the binding of the view.
      */
-    private void initBinding() {
-        directoryLabel.textProperty().bind(settingsController.getMusicDirectoryPath());
+    private void initBinding(){
+        directoryLabel.textProperty().bind(this.viewController.getMusicDirectoryPath());
     }
 
     /**
@@ -164,9 +154,9 @@ public class SettingsView {
      */
     @FXML
     public void handleSave() {
-        settingsController.refreshLanguage();
-        settingsController.setBalance(balanceSlider.getValue());
-        settingsController.close();
+        this.viewController.refreshLanguage();
+        this.viewController.setBalance(balanceSlider.getValue());
+        this.viewController.close();
     }
 
     /**
@@ -174,9 +164,9 @@ public class SettingsView {
      */
     @FXML
     public void handleCancel() {
-        languageManager.setLanguage(originalLanguage);
-        settingsController.refreshLanguage();
-        settingsController.close();
+        LanguageManager.getInstance().setLanguage(originalLanguage);
+        this.viewController.refreshLanguage();
+        this.viewController.close();
     }
 
     /**
@@ -190,13 +180,12 @@ public class SettingsView {
 
         File selectedDirectory = directoryChooser.showDialog(null);
         if (selectedDirectory != null) {
-            settingsController.setMusicDirectoryPath(selectedDirectory.getAbsolutePath());
+            this.viewController.setMusicDirectoryPath(selectedDirectory.getAbsolutePath());
         }
     }
 
     /**
      * Get the title of the view.
-     *
      * @return The title of the view.
      */
     public String getTitle() {
@@ -205,7 +194,6 @@ public class SettingsView {
 
     /**
      * Get the scene of the view.
-     *
      * @return The scene of the view.
      */
     public Scene getScene() {
