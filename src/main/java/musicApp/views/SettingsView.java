@@ -56,7 +56,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     @Override
     public void init() {
-        originalLanguage = LanguageManager.getCurrentLocale().getLanguage();
+        originalLanguage = LanguageManager.getInstance().getCurrentLocale().getLanguage();
         initComboBox();
         initSlider();
         initTranslations();
@@ -68,7 +68,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Update the language combobox to display the current language.
      */
     private void updateLanguageComboBox(){
-        String currentLanguage = LanguageManager.getCurrentLocale().getLanguage();
+        String currentLanguage = LanguageManager.getInstance().getCurrentLocale().getLanguage();
         switch (currentLanguage) {
             case "en" -> languageComboBox.getSelectionModel().select(0);
             case "fr" -> languageComboBox.getSelectionModel().select(1);
@@ -92,9 +92,9 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     private void handleLanguageChange() {
         String selected = languageComboBox.getSelectionModel().getSelectedItem();
         switch (selected) {
-            case "English" -> LanguageManager.setLanguage("en");
-            case "Français" -> LanguageManager.setLanguage("fr");
-            case "Nederlands" -> LanguageManager.setLanguage("nl");
+            case "English" -> LanguageManager.getInstance().setLanguage("en");
+            case "Français" -> LanguageManager.getInstance().setLanguage("fr");
+            case "Nederlands" -> LanguageManager.getInstance().setLanguage("nl");
         }
         refreshLanguage();
     }
@@ -113,15 +113,16 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Initialize the translations of the view.
      */
     private void initTranslations() {
-        languageTitle.setText(LanguageManager.get("settings.lang_title"));
-        languageSelect.setText(LanguageManager.get("settings.lang_select"));
-        left.setText(LanguageManager.get("settings.left"));
-        right.setText(LanguageManager.get("settings.right"));
-        balanceTitle.setText(LanguageManager.get("settings.balance_title"));
-        title = LanguageManager.get("settings.title");
-        saveButton.setText(LanguageManager.get("settings.save"));
-        cancelButton.setText(LanguageManager.get("settings.cancel"));
-        browseButton.setText(LanguageManager.get("settings.select_music_folder"));
+        LanguageManager languageManager = LanguageManager.getInstance();
+        languageTitle.setText(languageManager.get("settings.lang_title"));
+        languageSelect.setText(languageManager.get("settings.lang_select"));
+        left.setText(languageManager.get("settings.left"));
+        right.setText(languageManager.get("settings.right"));
+        balanceTitle.setText(languageManager.get("settings.balance_title"));
+        title = languageManager.get("settings.title");
+        saveButton.setText(languageManager.get("settings.save"));
+        cancelButton.setText(languageManager.get("settings.cancel"));
+        browseButton.setText(languageManager.get("settings.select_music_folder"));
     }
 
     /**
@@ -163,7 +164,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     @FXML
     public void handleCancel() {
-        LanguageManager.setLanguage(originalLanguage);
+        LanguageManager.getInstance().setLanguage(originalLanguage);
         this.viewController.refreshLanguage();
         this.viewController.close();
     }
@@ -185,7 +186,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
 
     /**
      * Get the title of the view.
-     *
      * @return The title of the view.
      */
     public String getTitle() {
@@ -194,7 +194,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
 
     /**
      * Get the scene of the view.
-     *
      * @return The scene of the view.
      */
     public Scene getScene() {

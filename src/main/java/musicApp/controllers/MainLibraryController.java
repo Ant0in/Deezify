@@ -1,26 +1,20 @@
 package musicApp.controllers;
 
 
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
-import musicApp.models.Metadata;
-import musicApp.models.PlaylistManager;
 import musicApp.models.Song;
 import musicApp.views.MainLibraryView;
-import musicApp.utils.MetadataReader;
-import musicApp.utils.MusicLoader;
 import javafx.beans.binding.BooleanBinding;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Random;
 
 /**
  * The controller for the Main Library view.
  */
 public class MainLibraryController extends PlayListController<MainLibraryView, MainLibraryController> {
     private int currentIndex;
-    private final PlaylistManager playlistManager;
+    private Boolean shuffle = false;
 
     /**
      * Instantiates a new Main library controller.
@@ -29,7 +23,6 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      */
     public MainLibraryController(PlayerController controller) {
         super(new MainLibraryView(),controller);
-        this.playlistManager = new PlaylistManager(library);
         initView("/fxml/MainLibrary.fxml");
     }
 
@@ -39,40 +32,21 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      * @param folderPath the folder path
      */
     public void loadLibrary(Path folderPath) {
-        List<Path> songs;
-        try {
-            songs = MusicLoader.getAllSongPaths(folderPath);
-        } catch (IOException e) {
-            view.displayError("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
-            return;
-        }
-
-        library.clear();
-        for (Path songPath : songs) {
-            try {
-                Metadata metadata = MetadataReader.getMetadata(songPath.toFile());
-
-                library.add(new Song(
-                        metadata,      // metadata
-                        songPath       // file path
-                ));
-            } catch (ID3TagException e) {
-                System.err.println("Error while reading metadata: " + e.getMessage());
-            } catch (BadFileTypeException e) {
-                System.err.println("Bad file type: " + e.getMessage());
-            }
-        }
-        if (this.view != null) {
-            updateListView();
-        }
+        library.load(folderPath);
+        view.updateListView();
     }
 
     /**
      * Skip to the next song in the library.
      */
     public void skip(){
-        if (currentIndex < library.size() - 1) {
-            this.playSong(currentIndex+1);
+        if (shuffle) {
+            Random random = new Random();
+            this.playSong(random.nextInt(library.size()));
+        } else {
+            if (currentIndex < library.size() - 1) {
+                this.playSong(currentIndex + 1);
+            }
         }
     }
 
@@ -137,23 +111,6 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         }
     }
 
-    /**
-     * Toggle the shuffle mode.
-     *
-     * @param isEnabled The shuffle button state.
-     */
-    public void toggleShuffle(boolean isEnabled) {
-        Song currentSong = getSong(currentIndex);
-        playlistManager.toggleShuffle(isEnabled, currentSong);
-        if (currentSong != null) {
-            int newIndex = isEnabled ? 0 : playlistManager.getOriginalIndex(currentSong);
-            if (newIndex != -1) {
-                this.playSong(newIndex);
-            }
-        }
-        updateListView();
-    }
-
     @Override
     protected void playSong(int index) {
         currentIndex = index;
@@ -165,5 +122,13 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      */
     public void clearQueueSelection(){
         playerController.clearQueueSelection();
+    }
+
+    public Boolean isShuffle() {
+        return this.shuffle;
+    }
+
+    public void toggleShuffle() {
+        this.shuffle = !this.shuffle;
     }
 }

@@ -1,8 +1,8 @@
 package musicApp.controllers;
 
-import musicApp.utils.DataProvider;
-import musicApp.models.Settings;
 import javafx.stage.Stage;
+import musicApp.models.Settings;
+import musicApp.utils.DataProvider;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -82,6 +82,7 @@ public class MetaController {
 
     /**
      * Notify the controllers that the settings have changed.
+     *
      * @param newSettings The new settings.
      */
     private void notifySettingsChanged(Settings newSettings) {

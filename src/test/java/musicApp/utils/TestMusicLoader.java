@@ -8,26 +8,29 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
-public class TestMusicLoader {
+public class TestMusicLoader extends MusicLoader {
     @Test
-    public void testNonExistentFolder(){
+    public void testNonExistentFolder() {
         Path nonExistentFolder = Paths.get("fdsf");
-        assertThrows(IOException.class, () -> MusicLoader.getAllSongPaths(nonExistentFolder));
+        assertThrows(IOException.class, () -> {
+            getAllSongPaths(nonExistentFolder);
+        });
     }
 
     @Test
     public void testEmptyFolder() throws IOException {
         Path tempFolder = Files.createTempDirectory("testFolder");
-        assertTrue(MusicLoader.getAllSongPaths(tempFolder).isEmpty());
+        assertTrue(getAllSongPaths(tempFolder).isEmpty());
     }
 
     @Test
     public void testNonValidFormat() throws IOException {
         Path tempFolder = Files.createTempDirectory("testFolder");
         Files.createTempFile(tempFolder, "tempFile", ".txt");
-        assertTrue(MusicLoader.getAllSongPaths(tempFolder).isEmpty());
+        assertTrue(getAllSongPaths(tempFolder).isEmpty());
     }
 
     @Test
@@ -35,7 +38,7 @@ public class TestMusicLoader {
         Path tempFolder = Files.createTempDirectory("testFolder");
         Path validFormatTempFileWav = Files.createTempFile(tempFolder, "tempFileWav", ".wav");
         Path validFormatTempFileMp3 = Files.createTempFile(tempFolder, "tempFileMp3", ".mp3");
-        List<Path> allSongs = MusicLoader.getAllSongPaths(tempFolder);
+        List<Path> allSongs = getAllSongPaths(tempFolder);
         assertTrue(allSongs.contains(validFormatTempFileMp3));
         assertTrue(allSongs.contains(validFormatTempFileWav));
     }

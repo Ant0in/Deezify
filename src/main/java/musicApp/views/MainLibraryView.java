@@ -47,7 +47,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
      * Initialize the translations of the texts in the view.
      */
     public void initTranslation() {
-        songInput.setPromptText(LanguageManager.get("search"));
+        songInput.setPromptText(LanguageManager.getInstance().get("search"));
     }
 
 

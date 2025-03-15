@@ -3,8 +3,9 @@ package musicApp.controllers;
 import musicApp.views.SettingsView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.stage.Stage;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
+import musicApp.models.Settings;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -65,7 +66,9 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      *
      * @return The settings view.
      */
-    public StringProperty getMusicDirectoryPath(){return musicDirectoryPath;}
+    public StringProperty getMusicDirectoryPath() {
+        return musicDirectoryPath;
+    }
 
     /**
      * Set the music directory path.
@@ -84,6 +87,12 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      */
     public void setBalance(double balance) {
         metaController.updateBalance(balance);
+    }
+
+    /**
+     * Handle when settings are changed
+     */
+    public void onSettingsChanged(Settings newSettings) {
     }
 
     /**

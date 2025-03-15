@@ -109,11 +109,9 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     /**
      * Toggle the shuffle mode.
-     *
-     * @param isEnabled The shuffle button state.
      */
-    public void toggleShuffle(boolean isEnabled) {
-        this.mainLibraryController.toggleShuffle(isEnabled);
+    public void toggleShuffle() {
+        this.mainLibraryController.toggleShuffle();
     }
 
     /**

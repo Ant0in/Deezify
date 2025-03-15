@@ -19,23 +19,23 @@ public class MusicLoader {
      * @return A list of paths to valid song files (MP3 or WAV) in the specified folder.
      * @throws IOException If the folder does not exist, is not a directory, or if an error occurs while reading files.
      */
-    static public List<Path> getAllSongPaths(Path folderPath) throws IOException {
+    public List<Path> getAllSongPaths(Path folderPath) throws IOException {
         // Checks that folder exists and that path is a folder path
         if (!Files.exists(folderPath) || !Files.isDirectory(folderPath)) {
             throw new IOException("The specified path is not valid");
         }
         // Filters files by formats
         return getAllFiles(folderPath).stream()
-                .filter(MusicLoader::isValidFormat)
+                .filter(this::isValidFormat)
                 .collect(Collectors.toList());
     }
 
-    static private boolean isValidFormat(Path filePath){
+    private boolean isValidFormat(Path filePath) {
         String fileName = filePath.getFileName().toString();
         return fileName.endsWith(".mp3") || fileName.endsWith(".wav");
     }
 
-    static private List<Path> getAllFiles(Path folderPath) throws IOException {
+    private List<Path> getAllFiles(Path folderPath) throws IOException {
         // Ignore every subfolders
         try (Stream<Path> stream = Files.list(folderPath)) {
             return stream

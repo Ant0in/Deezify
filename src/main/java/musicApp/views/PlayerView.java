@@ -128,7 +128,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
      * @return The title of the application.
      */
     public String getTitle() {
-        return LanguageManager.get("app.title");
+        return LanguageManager.getInstance().get("app.title");
     }
 
     /**
@@ -152,6 +152,6 @@ public class PlayerView extends View<PlayerView,PlayerController> {
      */
     public void refreshUI() {
         Stage stage = (Stage) scene.getWindow();
-        stage.setTitle(LanguageManager.get("app.title"));
+        stage.setTitle(LanguageManager.getInstance().get("app.title"));
     }
 }

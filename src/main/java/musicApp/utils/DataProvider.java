@@ -1,6 +1,7 @@
 package musicApp.utils;
 
 import musicApp.models.Settings;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,12 +29,13 @@ public class DataProvider {
      */
     public DataProvider() {
         String os = System.getProperty("os.name").toLowerCase();
+        String configFileName = "musicapp.conf";
         if (os.contains("win")) {
-            this.settingFile = Path.of(System.getenv("APPDATA"), "musicapp");
+            this.settingFile = Path.of(System.getenv("APPDATA"), configFileName);
         } else if (os.contains("mac")) {
-            this.settingFile = Path.of(System.getProperty("user.home"), "Library", "Application Support", "musicapp");
+            this.settingFile = Path.of(System.getProperty("user.home"), "Library", "Application Support", configFileName);
         } else {
-            this.settingFile = Path.of(System.getProperty("user.home"), ".config", "musicapp");
+            this.settingFile = Path.of(System.getProperty("user.home"), ".config", configFileName);
         }
     }
 
@@ -43,38 +45,40 @@ public class DataProvider {
      *
      * @return The default music directory.
      */
-    public static Path getDefaultMusicDir() {
+    public static Path getDefaultMusicFolder() {
         String os = System.getProperty("os.name").toLowerCase();
-        Path defaultMusicDir;
-        Path fallbackMusicDir;
+        Path defaultMusicFolder;
+        Path fallbackMusicFolder;
+        String musicFolderName = "Music";
+        String fallbackMusicFolderName = "MusicApp";
 
         if (os.contains("win")) {
-            defaultMusicDir = Path.of(System.getenv("USERPROFILE"), "Music");
-            fallbackMusicDir = Path.of(System.getenv("USERPROFILE"), "musicApp");
+            defaultMusicFolder = Path.of(System.getenv("USERPROFILE"), musicFolderName);
+            fallbackMusicFolder = Path.of(System.getenv("USERPROFILE"), fallbackMusicFolderName);
         } else if (os.contains("mac")) {
-            defaultMusicDir = Path.of(System.getProperty("user.home"), "Music");
-            fallbackMusicDir = Path.of(System.getProperty("user.home"), "musicApp");
+            defaultMusicFolder = Path.of(System.getProperty("user.home"), musicFolderName);
+            fallbackMusicFolder = Path.of(System.getProperty("user.home"), fallbackMusicFolderName);
         } else {
             try {
                 Process process = new ProcessBuilder("xdg-user-dir", "MUSIC").start();
-                defaultMusicDir = Path.of(new String(process.getInputStream().readAllBytes()).trim());
+                defaultMusicFolder = Path.of(new String(process.getInputStream().readAllBytes()).trim());
             } catch (IOException e) {
-                defaultMusicDir = Path.of(System.getProperty("user.home"), "Music");
+                defaultMusicFolder = Path.of(System.getProperty("user.home"), musicFolderName);
             }
-            fallbackMusicDir = Path.of(System.getProperty("user.home"), "musicApp");
+            fallbackMusicFolder = Path.of(System.getProperty("user.home"), fallbackMusicFolderName);
         }
-        if (Files.exists(defaultMusicDir)) {
-            return defaultMusicDir;
+        if (Files.exists(defaultMusicFolder)) {
+            return defaultMusicFolder;
         }
 
-        if (!Files.exists(fallbackMusicDir)) {
+        if (!Files.exists(fallbackMusicFolder)) {
             try {
-                Files.createDirectories(fallbackMusicDir);
+                Files.createDirectories(fallbackMusicFolder);
             } catch (IOException e) {
-                System.err.println("An error occurred while creating the default music directory");
+                System.out.println("An error occurred while creating the default music directory");
             }
         }
-        return fallbackMusicDir;
+        return fallbackMusicFolder;
     }
 
     /**
@@ -88,7 +92,7 @@ public class DataProvider {
             writer.write(settings.toString());
             writer.close();
         } catch (Exception e) {
-            System.err.println("An error occurred while writing the settings file");
+            System.out.println("An error occurred while writing the settings file");
         }
     }
 
@@ -100,10 +104,20 @@ public class DataProvider {
      * @throws IOException If an error occurs while reading the settings file.
      */
     public Settings readSettings() throws IOException {
-        if (!Files.exists(settingFile)) {
-            writeSettings(new Settings(0.0, getDefaultMusicDir()));
-            return new Settings(0.0, getDefaultMusicDir());
+        String settingsBytes = readFileBytes(settingFile);
+        if (settingsBytes == null) {
+            Settings defaultSettings = new Settings(0.0, getDefaultMusicFolder());
+            writeSettings(defaultSettings);
+            return defaultSettings;
         }
-        return Settings.fromString(new String(Files.readAllBytes(settingFile)));
+        return new Settings(settingsBytes);
+    }
+
+    public String readFileBytes(Path path) {
+        try {
+            return new String(Files.readAllBytes(path));
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

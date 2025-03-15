@@ -51,7 +51,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         pauseSongButton.setOnAction(_ -> viewController.handlePauseSong());
         nextSongButton.setOnAction(_ -> viewController.handleNextSong());
         previousSongButton.setOnAction(_ -> viewController.handlePreviousSong());
-        shuffleToggle.setOnAction(_ -> viewController.toggleShuffle(shuffleToggle.isSelected()));
+        shuffleToggle.setOnAction(_ -> viewController.toggleShuffle());
     }
     private void initBindings(){
         bindButtons();
@@ -196,7 +196,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
                 Bindings.createStringBinding(
                         () -> {
                             Song currentSong = viewController.getCurrentSong();
-                            return currentSong == null ? "" : currentSong.getSongName();
+                            return currentSong == null ? "" : currentSong.getTitle();
                         },
                         viewController.currentSongProperty()
                 )
@@ -206,7 +206,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
                 Bindings.createStringBinding(
                         () -> {
                             Song currentSong = viewController.getCurrentSong();
-                            return currentSong == null ? "" : currentSong.getArtistName();
+                            return currentSong == null ? "" : currentSong.getArtist();
                         },
                         viewController.currentSongProperty()
                 )
@@ -229,7 +229,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
                                 Image coverImage = currentSong.getCoverImage();
                                 return coverImage != null ? coverImage : defaultCoverImage;
                             } catch (Exception e) {
-                                System.err.println("Failed to load cover image for song: " + currentSong.getSongName());
+                                System.err.println("Failed to load cover image for song: " + currentSong.getTitle());
                                 return defaultCoverImage;
                             }
                         },
@@ -275,7 +275,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         previousSongButton.setGraphic(previousIcon);
 
         try {
-            ImageView shuffleIcon = new ImageView(getClass().getResource("/images/shuffle.png").toExternalForm());
+            ImageView shuffleIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/shuffle.png")).toExternalForm());
             shuffleIcon.setFitWidth(20);
             shuffleIcon.setFitHeight(20);
             shuffleToggle.setGraphic(shuffleIcon);

@@ -86,7 +86,7 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
                 @Override
                 protected void updateItem(Song item, boolean empty) {
                     super.updateItem(item, empty);
-                    setText(empty ? null : item.getSongName());
+                    setText(empty ? null : item.getTitle());
                 }
             };
 
@@ -112,7 +112,7 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
         if (!cell.isEmpty()) {
             Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putString(cell.getItem().getSongName());
+            content.putString(cell.getItem().getTitle());
             db.setContent(content);
             event.consume();
         }
@@ -139,7 +139,7 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
         Dragboard db = event.getDragboard();
         if (db.hasString()) {
             Song draggedSong = listView.getItems().stream()
-                    .filter(song -> song.getSongName().equals(db.getString()))
+                    .filter(song -> song.getTitle().equals(db.getString()))
                     .findFirst()
                     .orElse(null);
 
@@ -172,9 +172,9 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
      * Initialize the translations of the texts in the view.
      */
     private void initTranslation() {
-        addSongButton.setText(LanguageManager.get("button.add"));
-        deleteSongButton.setText(LanguageManager.get("button.delete"));
-        clearQueueButton.setText(LanguageManager.get("button.clear"));
+        addSongButton.setText(LanguageManager.getInstance().get("button.add"));
+        deleteSongButton.setText(LanguageManager.getInstance().get("button.delete"));
+        clearQueueButton.setText(LanguageManager.getInstance().get("button.clear"));
     }
 
 

@@ -111,11 +111,9 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
     /**
      * Toggle shuffle.
-     *
-     * @param isEnabled the is enabled
      */
-    public void toggleShuffle(boolean isEnabled) {
-        this.playerController.toggleShuffle(isEnabled);
+    public void toggleShuffle() {
+        this.playerController.toggleShuffle();
     }
 
     /**
@@ -184,7 +182,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
         audioPlayer.loadSong(song);
         audioPlayer.setOnEndOfMedia(this.playerController::skip);
         audioPlayer.unpause();
-        System.out.println("Playing: " + song.getSongName());
+        System.out.println("Playing: " + song.getTitle());
 
     }
 

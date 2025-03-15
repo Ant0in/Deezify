@@ -1,112 +1,55 @@
 package musicApp.modelsTest;
 
-import java.nio.file.Paths;
-import java.util.HashMap;
-
-import musicApp.Models.Metadata;
+import javafx.util.Duration;
+import musicApp.models.Song;
+import musicApp.utils.LanguageManager;
 import org.junit.Test;
 
-import musicApp.Models.Song;
-import javafx.util.Duration;
+import java.nio.file.Paths;
+
+import static org.junit.Assert.*;
 
 public class TestSong {
     @Test
-    public void testGetSongName() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        assert (song.getSongName().equals("Song1"));
+    public void testSong() {
+        // Test that the song is created with the correct metadata
+        Song song = new Song(Paths.get("src", "test", "resources", "goodTestWAV.wav"));
+        assertEquals("3seconds", song.getTitle());
+        assertEquals("Sample", song.getArtist());
+        assertEquals("Celtic", song.getGenre());
+        assertNull(song.getCover());
+        assertEquals(javafx.util.Duration.seconds(Double.parseDouble("3")), song.getDuration());
+
+        // Test default metadata when the song has no ID3 tag
+        Song song2 = new Song(Paths.get("src", "test", "resources", "noID3TagMP3.mp3"));
+        assertEquals(LanguageManager.getInstance().get("metadata.title"), song2.getTitle());
+        assertEquals(LanguageManager.getInstance().get("metadata.artist"), song2.getArtist());
+        assertEquals(LanguageManager.getInstance().get("metadata.genre"), song2.getGenre());
+        assertNull(song2.getCover());
+        assertEquals(Duration.ZERO, song2.getDuration());
     }
 
     @Test
-    public void testGetArtistName() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        assert (song.getArtistName().equals("Artist1"));
+    public void testContainsText() {
+        Song song = new Song(Paths.get("src", "test", "resources", "goodTestMP3.mp3"));
+        song.setTitle("songName");
+        song.setArtist("artistName");
+        song.setGenre("genre");
+        String[] trueAssert = {"s", "song", "songName", "artist", "artistName", "genre", "ngn", ""};
+        for (String s : trueAssert) {
+            assertTrue(song.containsText(s));
+        }
+        String[] falseAssert = {"aaa", "cover", "134"};
+        for (String s : falseAssert) {
+            assertFalse(song.containsText(s));
+        }
     }
 
     @Test
-    public void testGetStyle() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        assert (song.getStyle().equals("Style1"));
+    public void testDifferent() {
+        // Test that song are different if they have the same title, artiste and genre but different file path
+        Song song = new Song(Paths.get("src", "test", "resources", "noID3TagMP3.mp3"));
+        Song song2 = new Song(Paths.get("src", "test", "resources", "noTagWAV.wav"));
+        assertNotEquals(song, song2);
     }
-
-    @Test
-    public void testGetCoverPath() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        assert (song.getCover().equals("Cover1"));
-    }
-
-    @Test
-    public void testGetDuration() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        assert (song.getDuration().equals(Duration.millis(1000)));
-    }
-
-    @Test
-    public void testSetSongName() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        song.setSongName("Song2");
-        assert (song.getSongName().equals("Song2"));
-    }
-
-    @Test
-    public void testSetArtistName() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        song.setArtistName("Artist2");
-        assert (song.getArtistName().equals("Artist2"));
-    }
-
-    @Test
-    public void testSetStyle() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        song.setStyle("Style2");
-        assert (song.getStyle().equals("Style2"));
-    }
-
-    @Test
-    public void testSetCoverPath() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        song.setCover("Cover2");
-        assert (song.getCover().equals("Cover2"));
-    }
-
-    @Test
-    public void testSetDuration() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        song.setDuration(Duration.millis(2000));
-        assert (song.getDuration().equals(Duration.millis(2000)));
-    }
-
-    @Test
-    public void testToString() {
-        Song song = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        assert (song.toString().equals("Song1 - Artist1"));
-    }
-
-    @Test
-    public void testEquals() {
-        Song song1 = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        Song song2 = new Song("Song1", "Artist1", "Style1", "Cover1", Paths.get("file1.mp3"), Duration.millis(1000));
-        assert (song1.equals(song2));
-    }
-
-    @Test
-    public void testSongFromMetadata() {
-
-        HashMap<String, String> metadata = new HashMap<>();
-        metadata.put("title", "Song1");
-        metadata.put("artist", "Artist1");
-        metadata.put("genre", "Style1");
-        metadata.put("cover", "Cover1");
-        metadata.put("duration", "1000");
-
-        Song song = new Song(new Metadata(metadata), Paths.get("file1.mp3"));
-
-        assert (song.getSongName().equals("Song1"));
-        assert (song.getArtistName().equals("Artist1"));
-        assert (song.getStyle().equals("Style1"));
-        assert (song.getCover().equals("Cover1"));
-        assert (song.getDuration().equals(Duration.seconds(1000)));
-        
-    }
-
 }
-

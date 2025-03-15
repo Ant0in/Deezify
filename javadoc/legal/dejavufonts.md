@@ -1,6 +1,7 @@
 ## DejaVu fonts v2.37
 
 ### DejaVu License
+
 <pre>
 Fonts are (c) Bitstream (see below). DejaVu changes are in public domain.
 Glyphs imported from Arev fonts are (c) Tavmjong Bah (see below)
