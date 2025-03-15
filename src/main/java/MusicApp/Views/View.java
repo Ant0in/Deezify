@@ -30,4 +30,8 @@ public abstract class View<V extends View<V, C>, C extends ViewController<V, C>>
     }
 
     public abstract void init();
+
+    public void displayError(String message) {
+        System.err.println(message);
+    }
 }

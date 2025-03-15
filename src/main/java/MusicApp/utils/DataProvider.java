@@ -1,7 +1,6 @@
-package MusicApp.utils;
+package MusicApp.Utils;
 
 import MusicApp.Models.Settings;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -72,7 +71,7 @@ public class DataProvider {
             try {
                 Files.createDirectories(fallbackMusicDir);
             } catch (IOException e) {
-                System.out.println("An error occurred while creating the default music directory");
+                System.err.println("An error occurred while creating the default music directory");
             }
         }
         return fallbackMusicDir;
@@ -89,7 +88,7 @@ public class DataProvider {
             writer.write(settings.toString());
             writer.close();
         } catch (Exception e) {
-            System.out.println("An error occurred while writing the settings file");
+            System.err.println("An error occurred while writing the settings file");
         }
     }
 

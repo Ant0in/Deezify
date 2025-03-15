@@ -1,11 +1,8 @@
 package MusicApp.Controllers;
 
-import MusicApp.Models.Queue;
 import MusicApp.Models.Song;
 import MusicApp.Views.QueueView;
 import javafx.beans.binding.BooleanBinding;
-
-import java.util.List;
 
 public class QueueController extends PlayListController<QueueView, QueueController> {
 
@@ -51,8 +48,7 @@ public class QueueController extends PlayListController<QueueView, QueueControll
             library.add(song);
             this.view.updateListView();
         } catch (IllegalArgumentException e) {
-//            this.view.displayError("Song already in queue");
-            System.err.println("Song already in queue");
+            this.view.displayError("Song already in queue");
         }
     }
 

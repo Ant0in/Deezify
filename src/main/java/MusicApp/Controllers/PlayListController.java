@@ -20,7 +20,7 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
 
     protected Song getSong(int index) {
         if (index < 0 || index >= library.size()) {
-            System.err.println("Invalid song index: " + index);
+            view.displayError("Invalid song index: " + index);
             return null;
         }
 
@@ -29,11 +29,11 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
 
     protected void playSong(Song song) {
         if (playerController == null) {
-            System.err.println("PlayerController is not initialized!");
+            view.displayError("PlayerController is not initialized!");
             return;
         }
         if (song == null) {
-            System.err.println("Cannot play a null song.");
+            view.displayError("Cannot play a null song.");
             return;
         }
         this.playerController.playSong(song);
@@ -41,12 +41,12 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
 
     protected void playSong(int index) {
         if (index < 0 || index >= library.size()) {
-            System.err.println("Invalid song index: " + index);
+            view.displayError("Invalid song index: " + index);
             return;
         }
         Song song = this.getSong(index);
         if (song == null) {
-            System.err.println("No song found at index: " + index);
+            view.displayError("No song found at index: " + index);
             return;
         }
         playSong(song);

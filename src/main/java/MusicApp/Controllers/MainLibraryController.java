@@ -7,8 +7,8 @@ import MusicApp.Models.Metadata;
 import MusicApp.Models.PlaylistManager;
 import MusicApp.Models.Song;
 import MusicApp.Views.MainLibraryView;
-import MusicApp.utils.MetadataReader;
-import MusicApp.utils.MusicLoader;
+import MusicApp.Utils.MetadataReader;
+import MusicApp.Utils.MusicLoader;
 import javafx.beans.binding.BooleanBinding;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         try {
             songs = MusicLoader.getAllSongPaths(folderPath);
         } catch (IOException e) {
-            System.err.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
+            view.displayError("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
             return;
         }
 
