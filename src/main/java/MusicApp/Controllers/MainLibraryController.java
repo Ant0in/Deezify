@@ -3,7 +3,6 @@ package MusicApp.Controllers;
 
 import MusicApp.Exceptions.BadFileTypeException;
 import MusicApp.Exceptions.ID3TagException;
-import MusicApp.Models.Library;
 import MusicApp.Models.Metadata;
 import MusicApp.Models.PlaylistManager;
 import MusicApp.Models.Song;
@@ -23,7 +22,7 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
     public MainLibraryController(PlayerController controller) {
         super(new MainLibraryView(),controller);
         this.playlistManager = new PlaylistManager(library);
-        initView("/fxml/PlayList.fxml");
+        initView("/fxml/MainLibrary.fxml");
     }
 
     /**
@@ -34,7 +33,7 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         try {
             songs = MusicLoader.getAllSongPaths(folderPath);
         } catch (IOException e) {
-            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
+            System.err.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
             return;
         }
 
@@ -50,9 +49,9 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
                         songPath       // file path
                 ));
             } catch (ID3TagException e) {
-                System.out.println("Error while reading metadata: " + e.getMessage());
+                System.err.println("Error while reading metadata: " + e.getMessage());
             } catch (BadFileTypeException e) {
-                System.out.println("Bad file type: " + e.getMessage());
+                System.err.println("Bad file type: " + e.getMessage());
             }
         }
         if (this.view != null) {

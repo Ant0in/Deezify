@@ -47,8 +47,13 @@ public class QueueController extends PlayListController<QueueView, QueueControll
 
     public void handleAddSong(){
         Song song = playerController.getSelectedPlayListSong();
-        library.add(song);
-        this.view.updateListView();
+        try {
+            library.add(song);
+            this.view.updateListView();
+        } catch (IllegalArgumentException e) {
+//            this.view.displayError("Song already in queue");
+            System.err.println("Song already in queue");
+        }
     }
 
     public void handleDeleteSong(){

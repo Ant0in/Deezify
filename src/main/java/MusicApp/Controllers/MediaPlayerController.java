@@ -16,7 +16,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
         super(new MediaPlayerView());
         this.playerController = playerController;
         audioPlayer = new AudioPlayer();
-        initView("/fxml/ControlPanel.fxml");
+        initView("/fxml/MediaPlayer.fxml");
     }
 
 

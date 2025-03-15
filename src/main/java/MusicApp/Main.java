@@ -5,8 +5,11 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- * Hello world!
+ * Main class that extends the JavaFX Application class.
+ * This class is NOT the entry point of the application.
  *
+ * @see Application
+ * @see MetaController
  */
 public class Main extends Application {
 
