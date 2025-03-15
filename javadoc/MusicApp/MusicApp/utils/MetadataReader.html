@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="dc.created" content="2025-03-10">
-<meta name="description" content="declaration: module: MusicApp, package: MusicApp.utils, class: MetadataReader">
+<meta name="description" content="declaration: module: musicApp, package: musicApp.utils, class: MetadataReader">
 <meta name="generator" content="javadoc/ClassWriter">
 <link rel="stylesheet" type="text/css" href="../../../resource-files/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../resource-files/stylesheet.css" title="Style">
@@ -41,8 +41,8 @@ loadScripts(document, 'script');</script>
 <div class="sub-nav">
 <div class="nav-content">
 <ol class="sub-nav-list">
-<li><a href="../../module-summary.html">MusicApp</a></li>
-<li><a href="package-summary.html">MusicApp.utils</a></li>
+<li><a href="../../module-summary.html">musicApp</a></li>
+<li><a href="package-summary.html">musicApp.utils</a></li>
 <li><a href="MetadataReader.html" class="current-selection">MetadataReader</a></li>
 </ol>
 <div class="nav-list-search">
@@ -83,7 +83,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class MetadataReader" class="title">Class MetadataReader</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">MusicApp.utils.MetadataReader</div>
+<div class="inheritance">musicApp.utils.MetadataReader</div>
 </div>
 <section class="class-description" id="class-description">
 <div class="horizontal-scroll">
@@ -118,7 +118,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Models/Metadata.html" title="class in MusicApp.Models">Metadata</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Models/Metadata.html" title="class in musicApp.models">Metadata</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getMetadata(java.io.File)" class="member-name-link">getMetadata</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;fd)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">This method reads the metadata of a file and returns it in a hashmap
@@ -161,9 +161,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getMetadata(java.io.File)">
 <h3>getMetadata</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Models/Metadata.html" title="class in MusicApp.Models">Metadata</a></span>&nbsp;<span class="element-name">getMetadata</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;fd)</span>
-                            throws <span class="exceptions"><a href="../Exceptions/ID3TagException.html" title="class in MusicApp.Exceptions">ID3TagException</a>,
-<a href="../Exceptions/BadFileTypeException.html" title="class in MusicApp.Exceptions">BadFileTypeException</a></span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Models/Metadata.html" title="class in musicApp.models">Metadata</a></span>&nbsp;<span class="element-name">getMetadata</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;fd)</span>
+                            throws <span class="exceptions"><a href="../Exceptions/ID3TagException.html" title="class in musicApp.exceptions">ID3TagException</a>,
+<a href="../Exceptions/BadFileTypeException.html" title="class in musicApp.exceptions">BadFileTypeException</a></span></div>
 <div class="block">This method reads the metadata of a file and returns it in a hashmap
  Fields included in the hashmap are : title, artist, genre, cover, duration</div>
 <dl class="notes">
@@ -172,8 +172,8 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>HashMap<span class="invalid-tag">invalid input: '&lt;'</span>String, String&gt; containing relevant tags mentioned above</dd>
 <dt>Throws:</dt>
-<dd><code><a href="../Exceptions/ID3TagException.html" title="class in MusicApp.Exceptions">ID3TagException</a></code> - (if no ID3v2 tags are found)</dd>
-<dd><code><a href="../Exceptions/BadFileTypeException.html" title="class in MusicApp.Exceptions">BadFileTypeException</a></code></dd>
+<dd><code><a href="../Exceptions/ID3TagException.html" title="class in musicApp.exceptions">ID3TagException</a></code> - (if no ID3v2 tags are found)</dd>
+<dd><code><a href="../Exceptions/BadFileTypeException.html" title="class in musicApp.exceptions">BadFileTypeException</a></code></dd>
 </dl>
 </div>
 </section>
