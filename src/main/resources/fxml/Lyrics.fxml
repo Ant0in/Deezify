@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10"
+      alignment="CENTER"
+      maxWidth="200" maxHeight="Infinity">
+
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" maxHeight="Infinity">
+        <content>
+            <VBox fx:id="lyricsContainer" spacing="5" maxWidth="Infinity">
+            </VBox>
+        </content>
+    </ScrollPane>
+
+</VBox>
+
+
+

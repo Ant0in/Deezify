@@ -24,6 +24,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     private ToolBarController toolBarController;
     private MainLibraryController mainLibraryController;
     private QueueController queueController;
+    private LyricsController lyricsController;
 
     /**
      * Constructor
@@ -46,6 +47,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         this.queueController = new QueueController(this);
         this.mediaPlayerController = new MediaPlayerController(this);
         this.toolBarController = new ToolBarController(this);
+        this.lyricsController = new LyricsController(this);
 
     }
 
@@ -243,6 +245,14 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      */
     public BooleanProperty isPlayingProperty() {
         return mediaPlayerController.isPlayingProperty();
+    }
+
+    public void toggleLyrics(boolean show) {
+        this.view.toggleLyrics(show);
+    }
+
+    public Pane getLyricsRoot() {
+        return this.lyricsController.getRoot();
     }
 
 }

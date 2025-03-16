@@ -31,7 +31,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     @FXML
     private Slider volumeSlider;
     @FXML
-    private ToggleButton shuffleToggle;
+    private ToggleButton shuffleToggle, lyricsToggle;
 
     /**
      * Instantiates a new Media player view.
@@ -52,6 +52,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         nextSongButton.setOnAction(_ -> viewController.handleNextSong());
         previousSongButton.setOnAction(_ -> viewController.handlePreviousSong());
         shuffleToggle.setOnAction(_ -> viewController.toggleShuffle());
+        lyricsToggle.setOnAction(event -> viewController.toggleLyrics(lyricsToggle.isSelected()));
     }
     private void initBindings(){
         bindButtons();
@@ -282,11 +283,20 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         } catch (NullPointerException e) {
             System.err.println("Failed to load shuffle icon");
         }
+
+        try {
+            ImageView lyricsIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/lyrics.png")).toExternalForm());
+            lyricsIcon.setFitWidth(20);
+            lyricsIcon.setFitHeight(20);
+            lyricsToggle.setGraphic(lyricsIcon);
+        } catch (NullPointerException e) {
+            System.err.println("Failed to load lyrics icon");
+        }
     }
 
 
     private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider);
+        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle);
         updateControlsState(controls, true);
         viewController.currentSongProperty().addListener((_, _, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));

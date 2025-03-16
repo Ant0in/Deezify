@@ -154,4 +154,12 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         Stage stage = (Stage) scene.getWindow();
         stage.setTitle(LanguageManager.getInstance().get("app.title"));
     }
+
+    public void toggleLyrics(boolean show) {
+        if (show) {
+            labelContainer.setLeft(viewController.getLyricsRoot());
+        }else{
+            labelContainer.setLeft(null);
+        }
+    }
 }

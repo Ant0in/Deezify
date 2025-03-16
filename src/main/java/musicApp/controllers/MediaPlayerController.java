@@ -204,4 +204,9 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
     public void setVolume(double volume) {
         audioPlayer.setVolume(volume);
     }
+
+
+    public void toggleLyrics(boolean show) {
+        playerController.toggleLyrics(show);
+    }
 }
