@@ -13,9 +13,10 @@ public class AudioPlayer {
     private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
     private final StringProperty currentSongString = new SimpleStringProperty("None");
     private final BooleanProperty isPlaying = new SimpleBooleanProperty(false);
+    private final BooleanProperty isLoaded = new SimpleBooleanProperty(false);
     private final DoubleProperty volume = new SimpleDoubleProperty(1.0);
     private MediaPlayer mediaPlayer;
-    private Song currentSong = null;
+    private Song loadedSong = null;
     private double balance = 0.0;
     private double speed = 1.0;
 
@@ -28,14 +29,17 @@ public class AudioPlayer {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
-        this.currentSong = song;
+        this.loadedSong = song;
         Media media = new Media(song.getFilePath().toUri().toString());
         mediaPlayer = new MediaPlayer(media);
 
-        currentSongString.set(song.toString());
+        currentSongString.set(song.getFilePath().toString());
         mediaPlayer.volumeProperty().bind(volume);
         mediaPlayer.setBalance(balance);
         mediaPlayer.setRate(speed);
+        mediaPlayer.setOnReady(() -> {
+            isLoaded.set(true);
+        });
 
         // Mettre à jour la propriété de progression pendant la lecture
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
@@ -132,6 +136,10 @@ public class AudioPlayer {
         return isPlaying;
     }
 
+    public BooleanProperty isLoaded() {
+        return isLoaded;
+    }
+
     /**
      * Get the current song property.
      *
@@ -150,8 +158,13 @@ public class AudioPlayer {
         return currentSongString.get();
     }
 
-    public Song getCurrentSong() {
-        return currentSong;
+    /**
+     * Get the loaded song.
+     *
+     * @return The loaded song.
+     */
+    public Song getLoadedSong() {
+        return loadedSong;
     }
 
     /**
