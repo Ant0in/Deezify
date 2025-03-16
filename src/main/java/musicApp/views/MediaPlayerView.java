@@ -195,7 +195,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         currentSongLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         () -> {
-                            Song currentSong = viewController.getCurrentSong();
+                            Song currentSong = viewController.getLoadedSong();
                             return currentSong == null ? "" : currentSong.getTitle();
                         },
                         viewController.currentSongProperty()
@@ -205,7 +205,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         currentArtistLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         () -> {
-                            Song currentSong = viewController.getCurrentSong();
+                            Song currentSong = viewController.getLoadedSong();
                             return currentSong == null ? "" : currentSong.getArtist();
                         },
                         viewController.currentSongProperty()
@@ -221,7 +221,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         imageCover.imageProperty().bind(
                 Bindings.createObjectBinding(
                         () -> {
-                            Song currentSong = viewController.getCurrentSong();
+                            Song currentSong = viewController.getLoadedSong();
                             if (currentSong == null || currentSong.getCover() == null) {
                                 return defaultCoverImage;
                             }

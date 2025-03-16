@@ -33,7 +33,10 @@ public class SongView  extends  View<SongView,SongController>{
         playIcon.setFitHeight(20);
         playButton.setGraphic(playIcon);
 
-        viewController.getCurrentlyPlayingSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
+        viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
+            updatePlayButtonIcon();
+        });
+        viewController.isPlayingProperty().addListener((obs, oldValue, newValue) -> {
             updatePlayButtonIcon();
         });
     }
@@ -41,11 +44,18 @@ public class SongView  extends  View<SongView,SongController>{
     private void updatePlayButtonIcon() {
         getRoot().getStyleClass().remove("song-playing");
         ImageView icon;
-        if (viewController.isPlaying()) {
-            icon = new ImageView(getClass().getResource("/images/pause.png").toExternalForm());
+        if (viewController.isLoaded()) {
             getRoot().getStyleClass().add("song-playing");
+            if (viewController.isPlaying()) {
+                icon = new ImageView(getClass().getResource("/images/pause.png").toExternalForm());
+                playButton.setOnAction(_ -> viewController.handlePause());
+            } else {
+                icon = new ImageView(getClass().getResource("/images/play2.png").toExternalForm());
+                playButton.setOnAction(_ -> viewController.handleUnpause());
+            }
         } else {
             icon = new ImageView(getClass().getResource("/images/play2.png").toExternalForm());
+            playButton.setOnAction(_ -> viewController.handlePlay());
         }
         icon.setFitWidth(20);
         icon.setFitHeight(20);

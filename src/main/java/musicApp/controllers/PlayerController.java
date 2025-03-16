@@ -2,6 +2,7 @@ package musicApp.controllers;
 
 import java.io.IOException;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.models.*;
 import musicApp.views.PlayerView;
@@ -64,6 +65,20 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      */
     public void playSong(Song song) {
         this.mediaPlayerController.playCurrent(song);
+    }
+
+    /**
+     * Pause the song
+     */
+    public void pause() {
+        this.mediaPlayerController.pause();
+    }
+
+    /**
+     * Unpause the song
+     */
+    public void unpause() {
+        mediaPlayerController.unpause();
     }
 
     /**
@@ -193,11 +208,41 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         queueController.clearSelection();
     }
 
-    public Song getCurrentlyPlayingSong() {
-        return mediaPlayerController.getCurrentSong();
+    /**
+     * Get the currently loaded song.
+     *
+     * @return The currently loaded song.
+     */
+    public Song getCurrentlyLoadedSong() {
+        return mediaPlayerController.getLoadedSong();
     }
 
-    public StringProperty getCurrentlyPlayingSongStringProperty() {
+    /**
+     * Returns if the player is currently playing a song.
+     *
+     * @return True if the player is playing a song, false if its paused.
+     */
+    public boolean isPlaying() {
+        return mediaPlayerController.isPlaying().get();
+    }
+
+    /**
+     * Get the currently loaded song string property.
+     *
+     * @return The currently loaded song string property.
+     */
+    public StringProperty getCurrentlyLoadedSongStringProperty() {
         return mediaPlayerController.currentSongProperty();
     }
+
+    /**
+     * Get the isPlaying property.
+     * True if unpaused, false if paused.
+     *
+     * @return The is playing property.
+     */
+    public BooleanProperty isPlayingProperty() {
+        return mediaPlayerController.isPlayingProperty();
+    }
+
 }
