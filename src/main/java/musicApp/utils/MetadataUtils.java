@@ -5,10 +5,14 @@ import musicApp.exceptions.BadFileTypeException;
 import musicApp.exceptions.ID3TagException;
 import musicApp.models.Metadata;
 import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.mp3.MP3FileReader;
 import org.jaudiotagger.audio.wav.WavFileReader;
+import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
+import org.jaudiotagger.tag.wav.WavTag;
 
 import java.io.File;
 
@@ -20,7 +24,7 @@ enum FileType {
     NONE
 }
 
-public class MetadataReader {
+public class MetadataUtils {
 
     /**
      * This method returns an enum based on the extension of a file
@@ -67,6 +71,48 @@ public class MetadataReader {
         }
 
         return metadata;
+    }
+
+    /**
+     * This method writes the passed metadata to the file at the given path
+     *
+     * @param metadata : Metadata object to write to the given song file
+     * @param fd : File object corresponding to the song to modify (wav or mp3)
+     *
+     */
+    public void setMetadata(Metadata metadata, File fd) throws BadFileTypeException, FieldDataInvalidException, CannotWriteException {
+        AudioFile audioFile = readFile(fd);
+
+        Tag tag = switch (getFileExtension(fd)) {
+            case MP3 -> createMP3Tag(audioFile, metadata);
+            case WAV -> createWAVTag(audioFile, metadata);
+            default -> throw new BadFileTypeException("Invalid File Extension for file : " + fd.getName(), new Throwable());
+        };
+
+        audioFile.setTag(tag);
+        audioFile.commit();
+
+    }
+
+    private Tag createMP3Tag(AudioFile audioFile, Metadata metadata) throws CannotWriteException, FieldDataInvalidException {
+        Tag tag = audioFile.createDefaultTag();
+
+        // !!  FieldDataInvalidException can technically be thrown but could not be triggered artificially by us.
+        tag.addField(FieldKey.ARTIST, metadata.getArtist());
+        tag.addField(FieldKey.TITLE, metadata.getTitle());
+        tag.addField(FieldKey.GENRE, metadata.getGenre());
+
+        return tag;
+    }
+    private Tag createWAVTag(AudioFile audioFile, Metadata metadata) throws CannotWriteException, FieldDataInvalidException {
+
+        AbstractID3v2Tag tag = WavTag.createDefaultID3Tag();
+
+        tag.addField(FieldKey.ARTIST, metadata.getArtist());
+        tag.addField(FieldKey.TITLE, metadata.getTitle());
+        tag.addField(FieldKey.GENRE, metadata.getGenre());
+
+        return tag;
     }
 
     /**

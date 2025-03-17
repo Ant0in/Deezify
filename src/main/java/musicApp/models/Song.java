@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadFileTypeException;
 import musicApp.exceptions.ID3TagException;
-import musicApp.utils.MetadataReader;
+import musicApp.utils.MetadataUtils;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
@@ -26,7 +26,7 @@ public class Song {
      */
     public Song(Path filePath) {
         this.filePath = filePath;
-        MetadataReader metadataReader = new MetadataReader();
+        MetadataUtils metadataReader = new MetadataUtils();
         try {
             Metadata metadata = metadataReader.getMetadata(filePath.toFile());
             this.loadMetadata(metadata);
