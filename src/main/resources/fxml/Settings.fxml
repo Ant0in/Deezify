@@ -35,6 +35,11 @@
                <Label fx:id="directoryLabel" prefHeight="17.0" prefWidth="161.0" text="None" />
             </children>
          </HBox>
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="equalizerButton" mnemonicParsing="false" text="Manage Audio Equalizer" />
+            </children>
+         </HBox>
         </VBox>
     </center>
 

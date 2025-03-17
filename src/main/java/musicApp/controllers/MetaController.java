@@ -124,4 +124,8 @@ public class MetaController {
         }
     }
 
+    public void updateEqualizerBand(int bandIndex, double value){
+        playerController.updateEqualizerBand(bandIndex, value);
+    }
+
 }

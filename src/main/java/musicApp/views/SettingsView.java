@@ -27,7 +27,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     @FXML
     private Button saveButton, cancelButton;
     @FXML
-    private Button browseButton;
+    private Button browseButton, equalizerButton;
     @FXML
     private Label directoryLabel;
 
@@ -123,6 +123,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         saveButton.setText(languageManager.get("settings.save"));
         cancelButton.setText(languageManager.get("settings.cancel"));
         browseButton.setText(languageManager.get("settings.select_music_folder"));
+        equalizerButton.setText(languageManager.get("settings.manage_audio_equalizer"));
     }
 
     /**
@@ -140,6 +141,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         saveButton.setOnMouseClicked(_ -> handleSave());
         cancelButton.setOnMouseClicked(_ -> handleCancel());
         browseButton.setOnMouseClicked(_->handleBrowseDirectory());
+        equalizerButton.setOnMouseClicked(_->viewController.openEqualizer());
     }
 
     /**

@@ -1,5 +1,6 @@
 package musicApp.controllers;
 
+import musicApp.views.EqualizerView;
 import musicApp.views.SettingsView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -17,6 +18,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     private final Stage settingsStage;
     private final MetaController metaController;
     private final StringProperty musicDirectoryPath = new SimpleStringProperty("None");
+    private final EqualizerController equalizerController;
 
     /**
      * Instantiates a new Settings controller.
@@ -27,6 +29,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     public SettingsController(MetaController metaController) throws IOException {
         super(new SettingsView());
         this.metaController = metaController;
+        this.equalizerController = new EqualizerController(this);
         initView("/fxml/Settings.fxml");
         this.settingsStage = new Stage();
         this.settingsStage.initModality(Modality.APPLICATION_MODAL);
@@ -102,5 +105,14 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      */
     public double getBalance() {
         return metaController.getSettings().getBalance();
+    }
+
+    public void openEqualizer() {
+        close();
+        equalizerController.show();
+    }
+
+    public void updateEqualizerBand(int bandIndex, double value){
+        metaController.updateEqualizerBand(bandIndex, value);
     }
 }

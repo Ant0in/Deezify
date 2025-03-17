@@ -245,4 +245,8 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         return mediaPlayerController.isPlayingProperty();
     }
 
+    public void updateEqualizerBand(int bandIndex, double value){
+        mediaPlayerController.updateEqualizerBand(bandIndex, value);
+    }
+
 }
