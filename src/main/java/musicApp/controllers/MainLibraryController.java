@@ -1,6 +1,8 @@
 package musicApp.controllers;
 
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import musicApp.models.Song;
 import musicApp.views.MainLibraryView;
 import javafx.beans.binding.BooleanBinding;
@@ -45,7 +47,8 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
             this.playSong(random.nextInt(library.size()));
         } else {
             if (currentIndex < library.size() - 1) {
-                this.playSong(currentIndex + 1);
+                this.currentIndex++;
+                this.playSong(this.currentIndex);
             }
         }
     }
@@ -117,6 +120,12 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         super.playSong(index);
     }
 
+    @Override
+    protected void playSong(Song song) {
+        currentIndex = getSongIndex(song);
+        super.playSong(song);
+    }
+
     /**
      * Clear queue selection.
      */
@@ -124,11 +133,46 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         playerController.clearQueueSelection();
     }
 
+    /**
+     * Is shuffle boolean.
+     *
+     * @return the boolean
+     */
     public Boolean isShuffle() {
         return this.shuffle;
     }
 
+    /**
+     * Toggle shuffle.
+     */
     public void toggleShuffle() {
         this.shuffle = !this.shuffle;
+    }
+
+    /**
+     * Gets the currently loaded song.
+     *
+     * @return the currently loaded song
+     */
+    public Song getCurrentlyLoadedSong() {
+        return playerController.getCurrentlyLoadedSong();
+    }
+
+    /**
+     * Gets the currently loaded song string property.
+     *
+     * @return the currently loaded song string property
+     */
+    public StringProperty getCurrentlyLoadedSongStringProperty(){
+        return playerController.getCurrentlyLoadedSongStringProperty();
+    }
+
+    /**
+     * Returns if the player is currently playing a song.
+     *
+     * @return the boolean property
+     */
+    public BooleanProperty isPlayingProperty() {
+        return playerController.isPlayingProperty();
     }
 }

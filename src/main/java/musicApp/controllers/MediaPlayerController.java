@@ -33,7 +33,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @return Whether the song is playing.
      */
-    public BooleanProperty isPlaying(){
+    public BooleanProperty isPlaying() {
         return audioPlayer.isPlaying();
     }
 
@@ -96,8 +96,8 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @return the current song
      */
-    public Song getCurrentSong() {
-        return audioPlayer.getCurrentSong();
+    public Song getLoadedSong() {
+        return audioPlayer.getLoadedSong();
     }
 
     /**
@@ -107,6 +107,15 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      */
     public StringProperty currentSongProperty() {
         return audioPlayer.currentSongStringProperty();
+    }
+
+    /**
+     * Get the isPlaying property.
+     *
+     * @return The isPlaying property.
+     */
+    public BooleanProperty isPlayingProperty() {
+        return audioPlayer.isPlaying();
     }
 
     /**

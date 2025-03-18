@@ -86,6 +86,18 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
         playSong(song);
     }
 
+    protected void pause() {
+        playerController.pause();
+    }
+
+    protected void unpause() {
+        playerController.unpause();
+    }
+
+    protected boolean isPlaying() {
+        return playerController.isPlaying();
+    }
+
 
     /**
      * To list list.

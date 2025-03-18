@@ -58,7 +58,7 @@ public class MetadataReader {
             metadata.setTitle(fd.getName().substring(0, fd.getName().length() - ".m3u".length()));
             metadata.setArtist("N/A");
             metadata.setGenre("Radio");
-            metadata.setDuration(Duration.minutes(0));
+            metadata.setDuration(Duration.ZERO);
             return metadata;
         }
         AudioFile file = readFile(fd);
