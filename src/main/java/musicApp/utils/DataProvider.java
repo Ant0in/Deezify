@@ -97,7 +97,7 @@ public class DataProvider {
             return defaultMusicFolder;
         }
 
-        createFolderIfNotExists(defaultMusicFolder);
+        createFolderIfNotExists(fallbackMusicFolder);
         return fallbackMusicFolder;
     }
 
