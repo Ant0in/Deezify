@@ -4,9 +4,11 @@ package musicApp.controllers;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.models.Song;
+import musicApp.utils.MusicLoader;
 import musicApp.views.MainLibraryView;
 import javafx.beans.binding.BooleanBinding;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Random;
@@ -34,7 +36,18 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      * @param folderPath the folder path
      */
     public void loadLibrary(Path folderPath) {
-        library.load(folderPath);
+        List<Path> songs;
+        try {
+            MusicLoader loader = new MusicLoader();
+            songs = loader.getAllSongPaths(folderPath);
+        } catch (IOException e) {
+            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
+            return;
+        }
+        this.library.clear();
+        for (Path songPath : songs) {
+            this.library.add(new Song(songPath));
+        }
         view.updateListView();
     }
 

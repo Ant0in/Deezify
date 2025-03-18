@@ -11,10 +11,11 @@ import java.nio.file.Path;
 import static org.junit.Assert.assertEquals;
 
 public class TestSettings {
+    private DataProvider dataProvider = new DataProvider();
 
     @Test
     public void testStringParser() throws IOException {
-        Settings defaultSettings = new Settings(0.0, DataProvider.getDefaultMusicFolder());
+        Settings defaultSettings = new Settings(0.0, dataProvider.getDefaultMusicFolder());
         Path tempFolder = Files.createTempDirectory("testFolder");
 
         String[] valid = new String[]{
@@ -27,11 +28,11 @@ public class TestSettings {
         };
 
         Settings[] validSettings = new Settings[]{
-                new Settings(1.0, DataProvider.getDefaultMusicFolder()),
+                new Settings(1.0, dataProvider.getDefaultMusicFolder()),
                 new Settings(0.0, tempFolder),
                 new Settings(-1.0, tempFolder),
-                new Settings(1.0, DataProvider.getDefaultMusicFolder()),
-                new Settings(-1.0, DataProvider.getDefaultMusicFolder()),
+                new Settings(1.0, dataProvider.getDefaultMusicFolder()),
+                new Settings(-1.0, dataProvider.getDefaultMusicFolder()),
                 new Settings(0.0, tempFolder),
         };
 
@@ -53,7 +54,7 @@ public class TestSettings {
 
         Settings[] invalidSettings = new Settings[]{
                 defaultSettings,
-                new Settings(1.0, DataProvider.getDefaultMusicFolder()),
+                new Settings(1.0, dataProvider.getDefaultMusicFolder()),
                 defaultSettings,
                 defaultSettings,
                 defaultSettings,
