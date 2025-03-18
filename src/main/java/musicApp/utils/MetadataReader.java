@@ -15,6 +15,7 @@ import java.io.File;
 enum FileType {
     MP3,
     WAV,
+    M3U,
 //    FLAC,
 //    OGG
     NONE
@@ -36,6 +37,8 @@ public class MetadataReader {
             return FileType.MP3;
         } else if (ext.equals("wav")) {
             return FileType.WAV;
+        }else if(ext.equals("m3u")) {
+            return FileType.M3U;
         } else {
             return FileType.NONE;
         }
@@ -51,6 +54,13 @@ public class MetadataReader {
      */
     public Metadata getMetadata(File fd) throws ID3TagException, BadFileTypeException {
         Metadata metadata = new Metadata();
+        if (getFileExtension(fd) == FileType.M3U) {
+            metadata.setTitle(fd.getName());
+            metadata.setArtist("RadioArtist");
+            metadata.setGenre("RadioGenre");
+            metadata.setDuration(Duration.minutes(1));
+            return metadata;
+        }
         AudioFile file = readFile(fd);
         Tag tag = readTag(file);
         if (tag == null) {

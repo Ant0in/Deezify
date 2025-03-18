@@ -15,6 +15,7 @@ import java.util.List;
 public class Library {
     List<Song> songList = new ArrayList<>();
     List<Radio> radioList = new ArrayList<>();
+    List<Song> mediaList = new ArrayList<>();
 
     /**
      * Constructor
@@ -23,6 +24,8 @@ public class Library {
      */
     public Library(List<Song> songList) {
         this.songList = songList;
+        this.mediaList = songList;
+        this.mediaList.addAll(radioList);
     }
 
     /**
@@ -55,18 +58,15 @@ public class Library {
             this.add(new Song(songPath));
         }
 
-        Path radiosPath = Paths.get("/radios");
+        Path radiosPath = Paths.get("src/main/resources/radios");
         RadioLoader radioLoader = new RadioLoader();
 
         try {
             List<Path> m3uFiles = radioLoader.loadM3UFiles(radiosPath);
+            System.out.println(m3uFiles.toString());
 
-            for (Path m3uFile : m3uFiles) {
-                List<String> urls = radioLoader.parseM3U(m3uFile);
-                for (String url : urls) {
-                    this.add(new Radio(url));
-                    System.out.println(url);
-                }
+            for (Path m3ufilePath :m3uFiles){
+                this.add(new Radio(m3ufilePath));
             }
         } catch (IOException e) {
             System.err.println("Error while loading radios : " + e.getMessage());
@@ -154,7 +154,7 @@ public class Library {
      *
      * @return The size of the library.
      */
-    public int size() { return songList.size(); }
+    public int size() { return songList.size() +radioList.size(); }
 
     /**
      * Check if the library is empty.
@@ -172,7 +172,7 @@ public class Library {
      * @return The song at the index.
      */
     public Song get(int index) {
-        return songList.get(index);
+        return mediaList.get(index);
     }
 
     /**
@@ -181,7 +181,9 @@ public class Library {
      * @return The list of songs.
      */
     public List<Song> toList() {
-        return songList;
+        this.mediaList.addAll(songList);
+        this.mediaList.addAll(radioList);
+        return this.mediaList;
     }
 
     /**

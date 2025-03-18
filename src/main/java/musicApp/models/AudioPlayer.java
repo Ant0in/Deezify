@@ -29,7 +29,7 @@ public class AudioPlayer {
             mediaPlayer.stop();
         }
         this.currentSong = song;
-        Media media = new Media(song.getFilePath().toUri().toString());
+        Media media = new Media(song.getFilePathString());
         mediaPlayer = new MediaPlayer(media);
 
         currentSongString.set(song.toString());

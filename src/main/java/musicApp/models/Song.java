@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class Song {
 
-    private final Path filePath;
+    private Path filePath;
     private String title;
     private String artist;
     private String genre;
@@ -36,6 +36,7 @@ public class Song {
         }
     }
 
+
     /**
      * Loads Metadata from MetadataReader.
      *
@@ -56,6 +57,10 @@ public class Song {
      */
     public Path getFilePath() {
         return filePath;
+    }
+
+    public String getFilePathString() {
+        return filePath.toUri().toString();
     }
 
     /**

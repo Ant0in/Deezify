@@ -38,7 +38,7 @@ public class RadioLoader {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Impossible de lire " + m3uFile + " : " + e.getMessage());
+            System.err.println("Impossible to read " + m3uFile + " : " + e.getMessage());
         }
         return urls;
     }
