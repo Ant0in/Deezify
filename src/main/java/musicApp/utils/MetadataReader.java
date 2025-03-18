@@ -55,10 +55,10 @@ public class MetadataReader {
     public Metadata getMetadata(File fd) throws ID3TagException, BadFileTypeException {
         Metadata metadata = new Metadata();
         if (getFileExtension(fd) == FileType.M3U) {
-            metadata.setTitle(fd.getName());
-            metadata.setArtist("RadioArtist");
-            metadata.setGenre("RadioGenre");
-            metadata.setDuration(Duration.minutes(1));
+            metadata.setTitle(fd.getName().substring(0, fd.getName().length() - ".m3u".length()));
+            metadata.setArtist("N/A");
+            metadata.setGenre("Radio");
+            metadata.setDuration(Duration.minutes(0));
             return metadata;
         }
         AudioFile file = readFile(fd);

@@ -13,19 +13,15 @@ import java.util.List;
  * Library class to store songs.
  */
 public class Library {
-    List<Song> songList = new ArrayList<>();
-    List<Radio> radioList = new ArrayList<>();
     List<Song> mediaList = new ArrayList<>();
 
     /**
      * Constructor
      *
-     * @param songList The list of songs.
+     * @param mediaList The list of media.
      */
-    public Library(List<Song> songList) {
-        this.songList = songList;
-        this.mediaList = songList;
-        this.mediaList.addAll(radioList);
+    public Library(List<Song> mediaList) {
+        this.mediaList = mediaList;
     }
 
     /**
@@ -71,48 +67,33 @@ public class Library {
         } catch (IOException e) {
             System.err.println("Error while loading radios : " + e.getMessage());
         }
-
     }
 
     /**
-     * Add a song to the library.
+     * Add a media to the library.
      *
      * @param song The song to add.
      */
     public void add(Song song) {
-        if (this.songList.contains(song)) {
-            System.err.println("Song already in library");
+        if (this.mediaList.contains(song)) {
+            System.err.println("Media already in library");
             return;
         }
-        songList.add(song);
+        mediaList.add(song);
     }
 
     /**
-     * Add a radio to the library.
-     *
-     * @param radio The radio to add.
-     */
-    public void add(Radio radio) {
-        if (this.radioList.contains(radio)) {
-            System.err.println("Radio already in library");
-            return;
-        }
-        radioList.add(radio);
-    }
-
-
-    /**
-     * Add a song to the library at a specific index.
+     * Add a media to the library at a specific index.
      *
      * @param index The index to add the song.
-     * @param song  The song to add.
+     * @param song  The media to add.
      */
     public void add(int index, Song song) {
-        if (this.songList.contains(song)) {
-            System.err.println("Song already in library");
+        if (this.mediaList.contains(song)) {
+            System.err.println("Media already in library");
             return;
         }
-        songList.add(index, song);
+        mediaList.add(index, song);
     }
 
     /**
@@ -127,26 +108,15 @@ public class Library {
     }
 
     /**
-     * Add a list of radios to the library.
-     *
-     * @param radios The list of radios to add.
-     */
-    public void addRadios(List<Radio> radios) {
-        for (Radio radio : radios) {
-            add(radio);
-        }
-    }
-
-    /**
      * Remove a song from the library.
      *
      * @param song The song to remove.
      */
     public void remove(Song song) {
-        if (!this.songList.contains(song)) {
-            throw new IllegalArgumentException("Song not in library");
+        if (!mediaList.contains(song)) {
+            throw new IllegalArgumentException("Media not in library");
         }
-        songList.remove(song);
+        mediaList.remove(song);
     }
 
     /**
@@ -154,7 +124,7 @@ public class Library {
      *
      * @return The size of the library.
      */
-    public int size() { return songList.size() +radioList.size(); }
+    public int size() { return mediaList.size(); }
 
     /**
      * Check if the library is empty.
@@ -162,7 +132,7 @@ public class Library {
      * @return True if the library is empty, false otherwise.
      */
     public Boolean isEmpty() {
-        return songList.isEmpty();
+        return mediaList.isEmpty();
     }
 
     /**
@@ -181,24 +151,14 @@ public class Library {
      * @return The list of songs.
      */
     public List<Song> toList() {
-        this.mediaList.addAll(songList);
-        this.mediaList.addAll(radioList);
         return this.mediaList;
     }
-
-    /**
-     * Get the list of radios.
-     *
-     * @return The list of radios.
-     */
-    public List<Radio> getRadioList() { return radioList; }
 
     /**
      * Clear the library.
      */
     public void clear() {
-        songList.clear();
-        radioList.clear();
+        mediaList.clear();
     }
 
     /**
@@ -208,7 +168,7 @@ public class Library {
      * @return The list of songs that contain the text.
      */
     public List<Song> search(String text) {
-        return songList
+        return mediaList
                 .stream()
                 .filter(s -> s.containsText(text))
                 .toList();
