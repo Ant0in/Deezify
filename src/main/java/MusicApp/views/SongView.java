@@ -1,20 +1,28 @@
 package MusicApp.views;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import MusicApp.controllers.SongController;
 import MusicApp.models.Song;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 public class SongView  extends  View<SongView,SongController>{
 
     @FXML
     private Button playButton;
     @FXML
-    private Label songName, songArtist, titleLabel, artistLabel, durationLabel;
+    private Label titleLabel, artistLabel, genreLabel, durationLabel;
     @FXML
     private ImageView coverImage;
+
+    private ContextMenu contextMenu;
+    private MenuItem menuItem;
+
 
 
     public SongView(){
@@ -24,6 +32,7 @@ public class SongView  extends  View<SongView,SongController>{
     public void init() {
         initComponents();
         setButtonActions();
+        setupContextMenu();
     }
 
 
@@ -39,6 +48,54 @@ public class SongView  extends  View<SongView,SongController>{
         viewController.isPlayingProperty().addListener((obs, oldValue, newValue) -> {
             updatePlayButtonIcon();
         });
+    }
+
+    private void setupContextMenu() {
+        
+        // create the context menu (opened on right click)
+
+        contextMenu = new ContextMenu();
+        menuItem = new MenuItem("Edit Metadata");
+        menuItem.setOnAction(e -> {
+            openEditPopup();
+        });
+        contextMenu.getItems().add(menuItem);
+        coverImage.setOnContextMenuRequested(e -> {
+            contextMenu.show(coverImage, e.getScreenX(), e.getScreenY());
+        });
+
+    }
+
+    private void openEditPopup() {
+        
+        // Edit popup code here
+        Stage stage = new Stage();
+        stage.setTitle("Edit Metadata");
+
+        // create the edit fields
+        TextField titleField = new TextField();
+        TextField artistField = new TextField();
+        TextField genreField = new TextField();
+
+        titleField.setText(titleLabel.getText());
+        artistField.setText(artistLabel.getText());
+        genreField.setText(genreLabel.getText());
+        
+        // few buttons
+        Button saveButton = new Button("Save");
+        Button cancelButton = new Button("Cancel");
+
+        saveButton.setOnAction(e -> {
+            // !! update the song metadata here
+            stage.close();
+        });
+
+        cancelButton.setOnAction(e -> {
+            stage.close();
+        });
+
+        stage.close();
+
     }
 
     private void updatePlayButtonIcon() {
