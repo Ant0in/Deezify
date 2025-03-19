@@ -7,8 +7,8 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
     private final SettingsController settingsController;
     private final Stage stage;
 
-    public static final double MAX_EQUALIZER_GAIN_DB = 10.0;
-    public static final double MIN_EQUALIZER_GAIN_DB = -10.0;
+    public static final double MAX_EQUALIZER_GAIN_DB = 12.0;
+    public static final double MIN_EQUALIZER_GAIN_DB = -24.0;
     private final int[] bandFrequencies = {32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000};
 
     public EqualizerController(SettingsController settingsController) {

@@ -58,8 +58,6 @@ public class AudioPlayer {
     }
 
     private void applyEqualizerSettings() {
-        System.out.println("Setting equalizer settings");
-        System.out.println(equalizerSettings);
         for (int bandIndex = 0; bandIndex < equalizerSettings.size(); bandIndex++) {
             double gain = equalizerSettings.get(bandIndex);
             applyEqualizerBand(bandIndex, gain);
@@ -79,7 +77,6 @@ public class AudioPlayer {
 
     private void applyEqualizerBand(int bandIndex, double gain) {
         if (mediaPlayer == null) {
-            System.out.println("No mediaPlayer available");
             return;
         }
         AudioEqualizer audioEqualizer = mediaPlayer.getAudioEqualizer();
@@ -90,7 +87,6 @@ public class AudioPlayer {
 
         EqualizerBand bandToSet = audioEqualizer.getBands().get(bandIndex);
         bandToSet.setGain(gain);
-        System.out.println("Applied Equalizer Band: " + bandIndex + " Gain: " + bandToSet.getGain());
     }
 
 
