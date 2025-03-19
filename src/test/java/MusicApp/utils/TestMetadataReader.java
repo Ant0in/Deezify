@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -192,5 +194,71 @@ public class TestMetadataReader {
         Files.delete(songPath);
 
     }
+
+    /**
+     * Tests if UserTags are correctly formatted, written on file, read and parsed on wav file
+     * @throws IOException
+     * @throws CannotWriteException
+     * @throws FieldDataInvalidException
+     * @throws BadFileTypeException
+     * @throws ID3TagException
+     */
+    @Test
+    public void testWriteUserTagsWAV() throws IOException, CannotWriteException, FieldDataInvalidException, BadFileTypeException, ID3TagException {
+
+        Path defaultSongPath = Paths.get("src", "test", "resources", "defaultWritableTestWAV.wav");
+        Path songPath = Paths.get("src", "test", "resources", "writableTestWAV.wav");
+        Files.copy(defaultSongPath,songPath, StandardCopyOption.REPLACE_EXISTING);
+
+        Metadata metadata = new Metadata();
+
+        ArrayList<String> userTags = new ArrayList<String>(Arrays.asList("custom1", "custom2"));
+        metadata.setUserTags(userTags);
+
+        MetadataUtils metaUtils = new MetadataUtils();
+
+        metaUtils.setMetadata(metadata, songPath.toFile());
+
+        Metadata metadata2 = metaUtils.getMetadata(songPath.toFile());
+
+        assertEquals(metadata.getUserTags(), metadata2.getUserTags());
+
+        Files.delete(songPath);
+
+    }
+
+    /**
+     * Tests if UserTags are correctly formatted, written on file, read and parsed on mp3 file
+     * @throws IOException
+     * @throws CannotWriteException
+     * @throws FieldDataInvalidException
+     * @throws BadFileTypeException
+     * @throws ID3TagException
+     */
+    @Test
+    public void testWriteUserTagsMP3() throws IOException, CannotWriteException, FieldDataInvalidException, BadFileTypeException, ID3TagException {
+
+        Path defaultSongPath = Paths.get("src", "test", "resources", "defaultWritableTestMP3.mp3");
+        Path songPath = Paths.get("src", "test", "resources", "writableTestMP3.mp3");
+        Files.copy(defaultSongPath,songPath, StandardCopyOption.REPLACE_EXISTING);
+
+        Metadata metadata = new Metadata();
+
+        ArrayList<String> userTags = new ArrayList<String>(Arrays.asList("custom1", "custom2"));
+        metadata.setUserTags(userTags);
+
+        MetadataUtils metaUtils = new MetadataUtils();
+
+        metaUtils.setMetadata(metadata, songPath.toFile());
+
+        Metadata metadata2 = metaUtils.getMetadata(songPath.toFile());
+
+        assertEquals(metadata.getUserTags(), metadata2.getUserTags());
+
+        Files.delete(songPath);
+
+    }
+
+
 
 }

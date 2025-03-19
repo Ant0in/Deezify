@@ -3,6 +3,8 @@ package MusicApp.models;
 import javafx.util.Duration;
 import MusicApp.utils.LanguageManager;
 
+import java.util.ArrayList;
+
 /**
  * Represents metadata associated with a song.
  * Provides methods to retrieve details such as title, artist, genre, duration,
@@ -14,6 +16,7 @@ public class Metadata {
     private String genre;
     private Duration duration;
     private byte[] cover;
+    private ArrayList<String> userTags;
 
     /**
      * Constructor to create a new Metadata object with default values.
@@ -25,6 +28,7 @@ public class Metadata {
         this.genre = languageManager.get("metadata.genre");
         this.duration = Duration.ZERO;
         this.cover = null;
+        this.userTags = new ArrayList<>();
     }
 
     /**
@@ -129,6 +133,16 @@ public class Metadata {
     public void setCover(byte[] cover) {
         if (cover != null && cover.length > 0) {
             this.cover = cover;
+        }
+    }
+
+    public ArrayList<String> getUserTags() {
+        return this.userTags;
+    }
+
+    public void setUserTags(ArrayList<String> userTags) {
+        if (userTags != null) {
+            this.userTags = userTags;
         }
     }
 }

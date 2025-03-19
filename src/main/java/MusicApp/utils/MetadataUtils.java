@@ -16,6 +16,8 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.wav.WavTag;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 enum FileType {
     MP3,
@@ -66,6 +68,7 @@ public class MetadataUtils {
         metadata.setArtist(tag.getFirst(FieldKey.ARTIST));
         metadata.setGenre(tag.getFirst(FieldKey.GENRE));
         metadata.setDuration(Duration.seconds(file.getAudioHeader().getTrackLength()));
+        metadata.setUserTags(parseUserTags(tag.getFirst(FieldKey.CUSTOM1)));
 
         if (tag.getFirstArtwork() != null) {
             metadata.setCover(tag.getFirstArtwork().getBinaryData());
@@ -104,6 +107,7 @@ public class MetadataUtils {
         tag.addField(FieldKey.ARTIST, metadata.getArtist());
         tag.addField(FieldKey.TITLE, metadata.getTitle());
         tag.addField(FieldKey.GENRE, metadata.getGenre());
+        tag.addField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
 
         return tag;
     }
@@ -115,6 +119,7 @@ public class MetadataUtils {
         tag.setField(FieldKey.ARTIST, metadata.getArtist());
         tag.setField(FieldKey.TITLE, metadata.getTitle());
         tag.setField(FieldKey.GENRE, metadata.getGenre());
+        tag.addField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
 
         return tag;
     }
@@ -187,6 +192,31 @@ public class MetadataUtils {
             case WAV -> readWAVFile(fd);
             default -> throw new BadFileTypeException("Unsupported file type", new Throwable());
         };
+    }
+
+    /**
+     * Parses the user tags String into separate tag strings contained in an ArrayList
+     * @param userTagsString : The String to parse ( format : "tag1;tag2;tag3;")
+     * @return : ArrayList containing individual tag strings
+     */
+    static private ArrayList<String> parseUserTags(String userTagsString) {
+        // Replaces the string in case it is null
+        userTagsString = userTagsString == null ? "" : userTagsString;
+
+        String[] tagsArray = userTagsString.split(";", -1);
+
+        // Convert the String array to an ArrayList
+        return new ArrayList<>(Arrays.asList(tagsArray));
+    }
+
+    /**
+     * Formats a user tag ArrayList into a String
+     * @param userTags : The ArrayList to format
+     * @return : Formatted String
+     */
+    static private String formatUserTags(ArrayList<String> userTags) {
+
+        return String.join(";", userTags);
     }
 
 }
