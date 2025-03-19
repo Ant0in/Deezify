@@ -1,4 +1,4 @@
-module musicApp {
+module MusicApp {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
@@ -6,16 +6,16 @@ module musicApp {
 
     requires jaudiotagger;
 
-    exports musicApp;
-    exports musicApp.controllers;
-    exports musicApp.exceptions;
-    exports musicApp.models;
-    exports musicApp.views;
-    exports musicApp.utils;
+    exports MusicApp;
+    exports MusicApp.controllers;
+    exports MusicApp.exceptions;
+    exports MusicApp.models;
+    exports MusicApp.views;
+    exports MusicApp.utils;
 
-    opens musicApp to javafx.fxml, javafx.controls, javafx.media;
-    opens musicApp.controllers to javafx.fxml, javafx.controls, javafx.media;
-    opens musicApp.models to javafx.fxml, javafx.controls, javafx.media;
-    opens musicApp.views to javafx.fxml, javafx.controls, javafx.media;
-    opens musicApp.utils to javafx.fxml, javafx.controls, javafx.media;
+    opens MusicApp to javafx.fxml, javafx.controls, javafx.media;
+    opens MusicApp.controllers to javafx.fxml, javafx.controls, javafx.media;
+    opens MusicApp.models to javafx.fxml, javafx.controls, javafx.media;
+    opens MusicApp.views to javafx.fxml, javafx.controls, javafx.media;
+    opens MusicApp.utils to javafx.fxml, javafx.controls, javafx.media;
 }
