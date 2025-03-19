@@ -68,7 +68,14 @@ public class MetadataUtils {
         metadata.setArtist(tag.getFirst(FieldKey.ARTIST));
         metadata.setGenre(tag.getFirst(FieldKey.GENRE));
         metadata.setDuration(Duration.seconds(file.getAudioHeader().getTrackLength()));
-        metadata.setUserTags(parseUserTags(tag.getFirst(FieldKey.CUSTOM1)));
+        /* The following call to tag.getFirst can throw an unexpected error, we catch it and
+        * handle it by setting an empty user tag list
+        */
+        try {
+            metadata.setUserTags(parseUserTags(tag.getFirst(FieldKey.CUSTOM1)));
+        } catch(UnsupportedOperationException e)  {
+            metadata.setUserTags(new ArrayList<String>());
+        }
 
         if (tag.getFirstArtwork() != null) {
             metadata.setCover(tag.getFirstArtwork().getBinaryData());
