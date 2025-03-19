@@ -5,17 +5,17 @@ package musicApp.controllers;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.models.Song;
-import musicApp.views.SongView;
+import musicApp.views.SongCellView;
 
-public class SongController extends ViewController<SongView, SongController>{
+public class SongCellController extends ViewController<SongCellView, SongCellController>{
 
     private final MainLibraryController mainLibraryController;
     private Song song;
 
-    public SongController(MainLibraryController mainLibraryController) {
-        super(new SongView());
+    public SongCellController(MainLibraryController mainLibraryController) {
+        super(new SongCellView());
         this.mainLibraryController = mainLibraryController;
-        initView("/fxml/Song.fxml");
+        initView("/fxml/SongCell.fxml");
     }
 
     /**

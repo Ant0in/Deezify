@@ -1,0 +1,31 @@
+package musicApp.views.playlistNavigator;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import musicApp.controllers.PlaylistCellController;
+import musicApp.models.Library;
+import musicApp.views.View;
+
+public class PlaylistCellView extends View<PlaylistCellView, PlaylistCellController> {
+    @FXML
+    private ImageView imageCover;
+    @FXML
+    private Label playlistNameLabel, playlistSizeLabel;
+
+    @Override
+    public void init() {
+        initComponents();
+    }
+
+    private void initComponents() {
+        playlistNameLabel.setText(viewController.getLibrary().getName());
+        playlistSizeLabel.setText(viewController.getLibrary().size() + " songs");
+    }
+
+    public void update(Library library) {
+        playlistNameLabel.setText(library.getName());
+        playlistSizeLabel.setText(library.size() + " songs");
+        imageCover.setImage(library.getCoverImage());
+    }
+}

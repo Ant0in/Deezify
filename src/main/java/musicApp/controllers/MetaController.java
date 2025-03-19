@@ -1,11 +1,13 @@
 package musicApp.controllers;
 
 import javafx.stage.Stage;
+import musicApp.models.Playlist;
 import musicApp.models.Settings;
 import musicApp.utils.DataProvider;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -122,6 +124,10 @@ public class MetaController {
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    public List<Playlist> getPlaylists() {
+        return this.dataProvider.readPlaylists();
     }
 
 }

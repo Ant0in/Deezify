@@ -1,10 +1,14 @@
 package musicApp.models;
 
 import com.google.gson.annotations.Expose;
+import javafx.scene.image.Image;
 
+import java.io.ByteArrayInputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Library class to store songs.
@@ -12,6 +16,7 @@ import java.util.List;
 public class Library {
     @Expose
     List<Song> songList = new ArrayList<>();
+
 
     /**
      * Constructor
@@ -143,4 +148,21 @@ public class Library {
         }
         return null;
     }
+
+    public String getName() {
+        return "Library";
+    }
+
+    public Path getImage() throws URISyntaxException {
+        return Path.of(this.getClass().getResource("/images/playlist.png").toURI());
+    }
+
+    public Image getCoverImage() {
+        try {
+            return new Image(getImage().toUri().toURL().toExternalForm());
+        } catch (Exception e) {
+            return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
+        }
+    }
+
 }

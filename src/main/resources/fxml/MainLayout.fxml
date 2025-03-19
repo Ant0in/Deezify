@@ -13,7 +13,8 @@
          <Pane />
       </HBox>
    </center>
-
+   <left>
+   </left>
    <bottom>
    </bottom>
 

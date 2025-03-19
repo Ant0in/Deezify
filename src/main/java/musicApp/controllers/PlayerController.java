@@ -5,12 +5,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import musicApp.models.Playlist;
 import musicApp.models.Settings;
 import musicApp.models.Song;
 import musicApp.views.PlayerView;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Controller class for the music player.
@@ -26,7 +28,8 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     private ToolBarController toolBarController;
     private MainLibraryController mainLibraryController;
     private QueueController queueController;
-
+//    private PlaylistController playlistController;
+    private PlaylistNavigatorController playlistNavigatorController;
     /**
      * Constructor
      *
@@ -48,6 +51,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         this.queueController = new QueueController(this);
         this.mediaPlayerController = new MediaPlayerController(this);
         this.toolBarController = new ToolBarController(this);
+        this.playlistNavigatorController = new PlaylistNavigatorController(this);
 
     }
 
@@ -166,10 +170,18 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      *
      * @return the play list root
      */
-    public Pane getPlayListRoot() {
+    public Pane getMainLibraryRoot() {
         return this.mainLibraryController.getRoot();
     }
 
+    /**
+     * Gets play lists root.
+     *
+     * @return the play lists root
+     */
+    public Pane getPlaylistNavigatorRoot() {
+        return this.playlistNavigatorController.getRoot();
+    }
     /**
      * Gets queue root.
      *
@@ -249,6 +261,10 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
 
     public Song getSongByPathInMainLibrary(Path path) {
         return mainLibraryController.getSongByPath(path);
+    }
+
+    public List<Playlist> getPlaylists() {
+        return metaController.getPlaylists();
     }
 
 }

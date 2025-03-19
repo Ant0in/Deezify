@@ -11,20 +11,18 @@ public class Playlist extends Library {
     @Expose
     private Path image;
 
-//    private List<Path> songsPath;
-
-//    private
-
     public Playlist(String name, Path image, List<Song> songList) {
         super(songList);
         this.name = name;
         this.image = image;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Path getImage() {
         return image;
     }
@@ -36,4 +34,6 @@ public class Playlist extends Library {
     public void setImage(Path image) {
         this.image = image;
     }
+
+
 }

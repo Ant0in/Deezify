@@ -43,8 +43,9 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     private void initPanes(){
         initControlPanel();
         initToolBar();
-        initPlayList();
+        initMainLibrary();
         initQueue();
+        initPlaylistNavigator();
     }
 
     private void initControlPanel(){
@@ -58,8 +59,13 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     }
 
 
-    private void initPlayList(){
-        playerContainer.getChildren().set(0,viewController.getPlayListRoot());
+    private void initMainLibrary(){
+        playerContainer.getChildren().set(0,viewController.getMainLibraryRoot());
+    }
+
+    private void initPlaylistNavigator(){
+        Pane playListsPane = viewController.getPlaylistNavigatorRoot();
+        labelContainer.setLeft(playListsPane);
     }
 
     private void initQueue(){

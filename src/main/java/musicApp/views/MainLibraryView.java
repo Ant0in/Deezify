@@ -3,7 +3,7 @@ package musicApp.views;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import musicApp.controllers.MainLibraryController;
-import musicApp.controllers.SongController;
+import musicApp.controllers.SongCellController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
 
@@ -57,7 +57,7 @@ public class MainLibraryView extends SongContainerView<MainLibraryView, MainLibr
      * Initialize the playlist view.
      */
     private void initPlayListView() {
-        listView.setCellFactory(_ -> new SongCell(new SongController(viewController)));
+        listView.setCellFactory(_ -> new SongCell(new SongCellController(viewController)));
         updateListView();
     }
 

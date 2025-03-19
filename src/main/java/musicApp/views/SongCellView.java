@@ -4,10 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import musicApp.controllers.SongController;
+import musicApp.controllers.SongCellController;
 import musicApp.models.Song;
 
-public class SongView  extends  View<SongView,SongController>{
+public class SongCellView extends  View<SongCellView, SongCellController>{
 
     @FXML
     private Button playButton;
@@ -17,7 +17,7 @@ public class SongView  extends  View<SongView,SongController>{
     private ImageView coverImage;
 
 
-    public SongView(){
+    public SongCellView(){
     }
 
     @Override
