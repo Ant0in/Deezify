@@ -90,12 +90,6 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     }
 
     /**
-     * Handle when settings are changed
-     */
-    public void onSettingsChanged(Settings newSettings) {
-    }
-
-    /**
      * Get the balance of the application.
      *
      * @return The balance of the application.

@@ -1,23 +1,43 @@
 package musicApp.modelsTest;
 
 import musicApp.models.Library;
+import musicApp.models.Song;
 import musicApp.utils.MusicLoader;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.*;
 
 public class TestLibrary extends MusicLoader {
+    private Library loadLibrary() {
+        Library library = new Library();
+        Path folderPath = Paths.get("src", "test", "resources");
+        List<Path> songs;
+        try {
+            MusicLoader loader = new MusicLoader();
+            songs = loader.getAllSongPaths(folderPath);
+        } catch (IOException e) {
+            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
+            return null;
+        }
+        library.clear();
+        for (Path songPath : songs) {
+            library.add(new Song(songPath));
+        }
+        return library;
+    }
+
+
     @Test
     public void testLoad() {
         // Test that the library is loaded with the correct number of songs
-        Library library = new Library();
         Path songFolder = Paths.get("src", "test", "resources");
-        library.load(songFolder);
+        Library library = loadLibrary();
         try {
             assertEquals(this.getAllSongPaths(songFolder).size(), library.size());
         } catch (IOException e) {
@@ -27,8 +47,7 @@ public class TestLibrary extends MusicLoader {
 
     @Test
     public void testSearch() {
-        Library library = new Library();
-        library.load(Paths.get("src", "test", "resources"));
+        Library library = loadLibrary();
         String[] trueAssert = {"ant0in"};
         for (String s : trueAssert) {
             assertTrue(library.search(s).stream().anyMatch(song -> Objects.equals(song.getArtist(), s)));
