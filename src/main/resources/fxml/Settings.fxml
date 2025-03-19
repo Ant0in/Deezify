@@ -45,8 +45,8 @@
 
     <bottom>
         <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20;">
-            <Button fx:id="saveButton" onAction="#handleSave" text="Save" />
-            <Button fx:id="cancelButton" onAction="#handleCancel" text="Cancel" />
+            <Button fx:id="saveButton" text="Save" />
+            <Button fx:id="cancelButton" text="Cancel" />
         </HBox>
     </bottom>
 

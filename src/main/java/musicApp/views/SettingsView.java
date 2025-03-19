@@ -1,6 +1,8 @@
 package musicApp.views;
 
 import musicApp.controllers.SettingsController;
+import musicApp.enums.Language;
+import musicApp.models.Settings;
 import musicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -11,6 +13,8 @@ import javafx.scene.control.Slider;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * The Settings view.
@@ -32,7 +36,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     private Label directoryLabel;
 
     private String title;
-    private String originalLanguage;
 
     /**
      * Instantiates a new Settings view.
@@ -56,24 +59,23 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     @Override
     public void init() {
-        originalLanguage = LanguageManager.getInstance().getCurrentLocale().getLanguage();
         initComboBox();
         initSlider();
         initTranslations();
         initButtons();
-        initBinding();
+        initDirectoryLabel();
+    }
+
+    private void initDirectoryLabel() {
+        directoryLabel.setText(viewController.getMusicDirectory());
     }
 
     /**
      * Update the language combobox to display the current language.
      */
     private void updateLanguageComboBox(){
-        String currentLanguage = LanguageManager.getInstance().getCurrentLocale().getLanguage();
-        switch (currentLanguage) {
-            case "en" -> languageComboBox.getSelectionModel().select(0);
-            case "fr" -> languageComboBox.getSelectionModel().select(1);
-            case "nl" -> languageComboBox.getSelectionModel().select(2);
-        }
+        Language currentLang = LanguageManager.getInstance().getCurrentLanguage();
+        languageComboBox.getSelectionModel().select(currentLang.getDisplayName());
     }
 
     /**
@@ -81,22 +83,10 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     private void initComboBox() {
         languageComboBox.getItems().clear();
-        languageComboBox.getItems().addAll("English", "Français", "Nederlands");
-        updateLanguageComboBox();
-        languageComboBox.setOnAction(_ -> handleLanguageChange());
-    }
-
-    /**
-     * Handle the language change event.
-     */
-    private void handleLanguageChange() {
-        String selected = languageComboBox.getSelectionModel().getSelectedItem();
-        switch (selected) {
-            case "English" -> LanguageManager.getInstance().setLanguage("en");
-            case "Français" -> LanguageManager.getInstance().setLanguage("fr");
-            case "Nederlands" -> LanguageManager.getInstance().setLanguage("nl");
+        for (Language lang : Language.values()) {
+            languageComboBox.getItems().add(lang.getDisplayName());
         }
-        refreshLanguage();
+        updateLanguageComboBox();
     }
 
     /**
@@ -139,42 +129,14 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     private void initButtons() {
         saveButton.setOnMouseClicked(_ -> handleSave());
-        cancelButton.setOnMouseClicked(_ -> handleCancel());
+        cancelButton.setOnMouseClicked(_ -> viewController.handleCancel());
         browseButton.setOnMouseClicked(_->handleBrowseDirectory());
         equalizerButton.setOnMouseClicked(_->viewController.openEqualizer());
     }
 
     /**
-     * Initialize the binding of the view.
-     */
-    private void initBinding(){
-        directoryLabel.textProperty().bind(this.viewController.getMusicDirectoryPath());
-    }
-
-    /**
-     * Handle when the save button is pressed
-     */
-    @FXML
-    public void handleSave() {
-        this.viewController.refreshLanguage();
-        this.viewController.setBalance(balanceSlider.getValue());
-        this.viewController.close();
-    }
-
-    /**
-     * Handle when the cancel button is pressed
-     */
-    @FXML
-    public void handleCancel() {
-        LanguageManager.getInstance().setLanguage(originalLanguage);
-        this.viewController.refreshLanguage();
-        this.viewController.close();
-    }
-
-    /**
      * Handle when the browse button is pressed
      */
-    @FXML
     private void handleBrowseDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select Music Folder");
@@ -182,7 +144,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
 
         File selectedDirectory = directoryChooser.showDialog(null);
         if (selectedDirectory != null) {
-            this.viewController.setMusicDirectoryPath(selectedDirectory.getAbsolutePath());
+            this.directoryLabel.setText(selectedDirectory.getAbsolutePath());
         }
     }
 
@@ -203,4 +165,22 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     }
 
 
+    private Language getSelectedLanguage() {
+        String selectedDisplayName = languageComboBox.getSelectionModel().getSelectedItem();
+        return Language.fromDisplayName(selectedDisplayName);
+    }
+
+    private void handleSave(){
+        Language selectedLanguage = getSelectedLanguage();
+        double balance = balanceSlider.getValue();
+        Path musicDirectory = Paths.get(directoryLabel.getText());
+        viewController.handleSave(selectedLanguage, balance, musicDirectory);
+    }
+
+    public void updateView(Settings settings) {
+        initComboBox();
+        initTranslations();
+        balanceSlider.setValue(settings.getBalance());
+        directoryLabel.setText(settings.getMusicDirectory().toString());
+    }
 }

@@ -31,12 +31,11 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * @param metaController the meta controller
      * @throws IOException the io exception
      */
-    public PlayerController(MetaController metaController) throws IOException {
+    public PlayerController(MetaController metaController, Settings settings) throws IOException {
         super(new PlayerView());
         this.metaController = metaController;
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
-        Settings settings = metaController.getSettings();
         this.mediaPlayerController.setBalance(settings.getBalance());
         this.mainLibraryController.loadLibrary(settings.getMusicDirectory());
     }
@@ -122,6 +121,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public void refreshUI() {
         view.refreshUI();
         this.queueController.refreshUI();
+        this.mainLibraryController.refreshUI();
     }
 
     /**

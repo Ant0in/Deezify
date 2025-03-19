@@ -62,4 +62,13 @@ public abstract class PlayListView<V extends PlayListView<V, C>, C extends PlayL
     public BooleanBinding isSelected() {
         return listView.getSelectionModel().selectedItemProperty().isNotNull();
     }
+
+    /**
+     * Refresh ui.
+     */
+    public void refreshUI(){
+        initTranslation();
+    }
+
+    protected void initTranslation() {}
 }

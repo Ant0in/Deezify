@@ -171,17 +171,11 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
     /**
      * Initialize the translations of the texts in the view.
      */
-    private void initTranslation() {
+    @Override
+    protected void initTranslation() {
         addSongButton.setText(LanguageManager.getInstance().get("button.add"));
         deleteSongButton.setText(LanguageManager.getInstance().get("button.delete"));
         clearQueueButton.setText(LanguageManager.getInstance().get("button.clear"));
     }
 
-
-    /**
-     * Refresh ui.
-     */
-    public void refreshUI(){
-        initTranslation();
-    }
 }

@@ -12,6 +12,7 @@ module musicApp {
     exports musicApp.models;
     exports musicApp.views;
     exports musicApp.utils;
+    exports musicApp.enums;
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.controllers to javafx.fxml, javafx.controls, javafx.media;

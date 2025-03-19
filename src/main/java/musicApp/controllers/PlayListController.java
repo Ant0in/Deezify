@@ -124,5 +124,12 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
     public void clearSelection() {
         this.view.clearSelection();
     }
+
+    /**
+     * Refresh ui.
+     */
+    public void refreshUI(){
+        this.view.refreshUI();
+    }
 }
 

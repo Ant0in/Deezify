@@ -1,5 +1,8 @@
 package musicApp.controllers;
 
+import javafx.fxml.FXML;
+import musicApp.enums.Language;
+import musicApp.utils.LanguageManager;
 import musicApp.views.EqualizerView;
 import musicApp.views.SettingsView;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,6 +12,7 @@ import javafx.stage.Stage;
 import musicApp.models.Settings;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -17,8 +21,8 @@ import java.nio.file.Paths;
 public class SettingsController extends ViewController<SettingsView, SettingsController> {
     private final Stage settingsStage;
     private final MetaController metaController;
-    private final StringProperty musicDirectoryPath = new SimpleStringProperty("None");
     private final EqualizerController equalizerController;
+    private final Settings settings;
 
     /**
      * Instantiates a new Settings controller.
@@ -26,8 +30,9 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      * @param metaController the meta controller
      * @throws IOException the io exception
      */
-    public SettingsController(MetaController metaController) throws IOException {
+    public SettingsController(MetaController metaController, Settings settings) throws IOException {
         super(new SettingsView());
+        this.settings = settings;
         this.metaController = metaController;
         this.equalizerController = new EqualizerController(this);
         initView("/fxml/Settings.fxml");
@@ -36,7 +41,6 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         this.settingsStage.setResizable(false);
         this.settingsStage.setTitle("Settings");
         this.settingsStage.setScene(this.view.getScene());
-        this.musicDirectoryPath.set(metaController.getSettings().getMusicDirectory().toString());
     }
 
     /**
@@ -65,38 +69,23 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     }
 
     /**
-     * Get the settings view.
+     * Set the music directory path .
      *
-     * @return The settings view.
+     * @param path The path to the music directory.
      */
-    public StringProperty getMusicDirectoryPath() {
-        return musicDirectoryPath;
+    private void setMusicDirectoryPath(Path path) {
+        settings.setMusicFolder(path);
     }
 
     /**
-     * Set the music directory path.
+     * Update the balance of the application.
      *
-     * @param path The path to set.
+     * @param balance The new balance.
      */
-    public void setMusicDirectoryPath(String path){
-        musicDirectoryPath.set(path);
-        metaController.setMusicDirectoryPath(Paths.get(path));
+    private void setBalance(double balance) {
+        settings.setBalance(balance);
     }
 
-    /**
-     * Set the balance of the application.
-     *
-     * @param balance The balance to set.
-     */
-    public void setBalance(double balance) {
-        metaController.updateBalance(balance);
-    }
-
-    /**
-     * Handle when settings are changed
-     */
-    public void onSettingsChanged(Settings newSettings) {
-    }
 
     /**
      * Get the balance of the application.
@@ -104,7 +93,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      * @return The balance of the application.
      */
     public double getBalance() {
-        return metaController.getSettings().getBalance();
+        return settings.getBalance();
     }
 
     public void openEqualizer() {
@@ -114,5 +103,35 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
 
     public void updateEqualizerBand(int bandIndex, double value){
         metaController.updateEqualizerBand(bandIndex, value);
+    }
+
+    /**
+     * Handle when the save button is pressed
+     */
+    public void handleSave(Language language, double balance, Path musicDirectory) {
+        LanguageManager.getInstance().setLanguage(language);
+        refreshLanguage();
+        setBalance(balance);
+        setMusicDirectoryPath(musicDirectory);
+        metaController.notifySettingsChanged(settings);
+        updateView();
+        close();
+    }
+
+    private void updateView(){
+        view.updateView(settings);
+        refreshLanguage();
+    }
+
+    /**
+     * Handle when the cancel button is pressed
+     */
+    public void handleCancel() {
+        updateView();
+        close();
+    }
+
+    public String getMusicDirectory() {
+        return settings.getMusicDirectory().toString();
     }
 }

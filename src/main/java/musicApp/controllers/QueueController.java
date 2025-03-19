@@ -89,13 +89,6 @@ public class QueueController extends PlayListController<QueueView, QueueControll
     }
 
     /**
-     * Refresh ui.
-     */
-    public void refreshUI(){
-        this.view.refreshUI();
-    }
-
-    /**
      * Queue is empty boolean.
      *
      * @return the boolean
