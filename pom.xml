@@ -6,9 +6,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ulb</groupId>
-  <artifactId>MusicApp_groupe2</artifactId>
+  <artifactId>musicApp</artifactId>
   <version>0.1</version>
-  <name>MusicApp_groupe2</name>
+  <name>MusicApp</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -143,6 +143,26 @@
     </plugins>
     <pluginManagement>
       <plugins>
+        <!-- Maven Javadoc Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.5.0</version>
+          <configuration>
+            <!-- Specify the output directory for the generated Javadoc -->
+            <reportOutputDirectory>${project.basedir}</reportOutputDirectory>
+            <destDir>javadoc</destDir>
+
+            <!-- Optional configuration settings -->
+            <doctitle>${project.name} ${project.version} API</doctitle>
+            <windowtitle>${project.name} ${project.version} API</windowtitle>
+            <encoding>UTF-8</encoding>
+            <show>private</show> <!-- show all classes and members -->
+
+            <!-- If you're using Java 8+ and want to avoid strict Javadoc warnings -->
+            <additionalJOption>-Xdoclint:none</additionalJOption>
+          </configuration>
+        </plugin>
         <!-- Maven Clean Plugin -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
