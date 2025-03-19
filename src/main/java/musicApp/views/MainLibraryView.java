@@ -1,16 +1,17 @@
 package musicApp.views;
 
-import musicApp.controllers.MainLibraryController;
-import musicApp.controllers.SongController;
-import musicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import musicApp.controllers.MainLibraryController;
+import musicApp.controllers.SongController;
+import musicApp.models.Library;
+import musicApp.utils.LanguageManager;
 
 /**
  * The MainLibrary view.
  */
 @SuppressWarnings("unused")
-public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryController> {
+public class MainLibraryView extends SongContainerView<MainLibraryView, MainLibraryController, Library> {
 
     @FXML
     private TextField songInput;

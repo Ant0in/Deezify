@@ -1,8 +1,8 @@
 package musicApp;
 
-import musicApp.controllers.MetaController;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import musicApp.controllers.MetaController;
 
 /**
  * Main class that extends the JavaFX Application class.

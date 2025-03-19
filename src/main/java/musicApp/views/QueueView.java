@@ -1,20 +1,21 @@
 package musicApp.views;
 
-import musicApp.controllers.QueueController;
-import musicApp.models.Song;
-import musicApp.utils.LanguageManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.input.*;
+import musicApp.controllers.QueueController;
+import musicApp.models.Library;
+import musicApp.models.Song;
+import musicApp.utils.LanguageManager;
 
 /**
  * The Queue view.
  */
 @SuppressWarnings("unused")
-public class QueueView extends PlayListView<QueueView, QueueController> {
+public class QueueView extends SongContainerView<QueueView, QueueController, Library> {
 
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;

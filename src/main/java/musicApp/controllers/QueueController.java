@@ -1,13 +1,14 @@
 package musicApp.controllers;
 
+import javafx.beans.binding.BooleanBinding;
+import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.views.QueueView;
-import javafx.beans.binding.BooleanBinding;
 
 /**
  * The type Queue controller.
  */
-public class QueueController extends PlayListController<QueueView, QueueController> {
+public class QueueController extends SongContainerController<QueueView, QueueController, Library> {
 
     /**
      * Instantiates a new Queue controller.

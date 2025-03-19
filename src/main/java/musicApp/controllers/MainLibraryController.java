@@ -1,12 +1,13 @@
 package musicApp.controllers;
 
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.utils.MusicLoader;
 import musicApp.views.MainLibraryView;
-import javafx.beans.binding.BooleanBinding;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -16,7 +17,7 @@ import java.util.Random;
 /**
  * The controller for the Main Library view.
  */
-public class MainLibraryController extends PlayListController<MainLibraryView, MainLibraryController> {
+public class MainLibraryController extends SongContainerController<MainLibraryView, MainLibraryController, Library> {
     private int currentIndex;
     private Boolean shuffle = false;
 

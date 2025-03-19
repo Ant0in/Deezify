@@ -1,15 +1,15 @@
 package musicApp.views;
 
-import musicApp.utils.LanguageManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import musicApp.controllers.PlayerController;
-import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import musicApp.controllers.PlayerController;
+import musicApp.utils.LanguageManager;
 
 /**
  * PlayerView

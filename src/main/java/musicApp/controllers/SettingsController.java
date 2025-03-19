@@ -1,11 +1,10 @@
 package musicApp.controllers;
 
-import musicApp.views.SettingsView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import musicApp.models.Settings;
+import musicApp.views.SettingsView;
 
 import java.io.IOException;
 import java.nio.file.Paths;

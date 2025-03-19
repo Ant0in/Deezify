@@ -1,9 +1,9 @@
 package musicApp.utils;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import musicApp.models.Playlist;
 import musicApp.models.Settings;
@@ -66,39 +66,41 @@ public class DataProvider {
     }
 
     /**
+     * Returns the folder path based on the operating system.
+     *
+     * @param folderName The name of the folder.
+     * @return The folder path.
+     */
+    private Path getFolderByOS(String folderName) {
+        Path folderPath;
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("win")) {
+            folderPath = Path.of(System.getenv("USERPROFILE"), folderName);
+        } else if (os.contains("mac")) {
+            folderPath = Path.of(System.getProperty("user.home"), folderName);
+        } else {
+            folderPath = Path.of(System.getProperty("user.home"), folderName);
+        }
+        return folderPath;
+    }
+
+    /**
      * Returns the default music directory based on the operating system.
      * If the default music directory does not exist, it will be created.
      *
      * @return The default music directory.
      */
     public Path getDefaultMusicFolder() {
-        String os = System.getProperty("os.name").toLowerCase();
-        Path defaultMusicFolder;
-        Path fallbackMusicFolder;
-        String musicFolderName = "Music";
-        String fallbackMusicFolderName = "MusicApp";
+        Path musicFolder = getFolderByOS("Music");
+        Path backupMusicFolder = getFolderByOS("MusicApp");
 
-        if (os.contains("win")) {
-            defaultMusicFolder = Path.of(System.getenv("USERPROFILE"), musicFolderName);
-            fallbackMusicFolder = Path.of(System.getenv("USERPROFILE"), fallbackMusicFolderName);
-        } else if (os.contains("mac")) {
-            defaultMusicFolder = Path.of(System.getProperty("user.home"), musicFolderName);
-            fallbackMusicFolder = Path.of(System.getProperty("user.home"), fallbackMusicFolderName);
-        } else {
-            try {
-                Process process = new ProcessBuilder("xdg-user-dir", "MUSIC").start();
-                defaultMusicFolder = Path.of(new String(process.getInputStream().readAllBytes()).trim());
-            } catch (IOException e) {
-                defaultMusicFolder = Path.of(System.getProperty("user.home"), musicFolderName);
-            }
-            fallbackMusicFolder = Path.of(System.getProperty("user.home"), fallbackMusicFolderName);
-        }
-        if (Files.exists(defaultMusicFolder)) {
-            return defaultMusicFolder;
+        if (Files.exists(musicFolder)) {
+            return musicFolder;
         }
 
-        createFolderIfNotExists(fallbackMusicFolder);
-        return fallbackMusicFolder;
+        createFolderIfNotExists(backupMusicFolder);
+        return backupMusicFolder;
     }
 
     /**
@@ -176,7 +178,8 @@ public class DataProvider {
                     .registerTypeAdapter(Playlist.class, new PlaylistTypeAdapter())
                     .serializeNulls()
                     .create();
-            Type playlistListType = new TypeToken<List<Playlist>>(){}.getType();
+            Type playlistListType = new TypeToken<List<Playlist>>() {
+            }.getType();
             List<Playlist> playlists = gson.fromJson(reader, playlistListType);
             playlists.forEach(this::checkValidPlaylist);
             return playlists;

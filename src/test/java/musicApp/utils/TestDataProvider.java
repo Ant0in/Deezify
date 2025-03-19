@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class TestDataProvider extends DataProvider {
     @Test
     public void testGetPlaylist() {
-        readPlaylists();
+//        readPlaylists();
         List<Playlist> playlists = getPlaylists(Paths.get("src", "test", "resources", "playlists.json"));
         assertEquals(3, playlists.size());
         assertEquals("Playlist 1", playlists.getFirst().getName());

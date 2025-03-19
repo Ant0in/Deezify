@@ -1,14 +1,16 @@
 package musicApp.controllers;
 
-import java.io.IOException;
-
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import musicApp.models.*;
-import musicApp.views.PlayerView;
-import javafx.beans.binding.BooleanBinding;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import musicApp.models.Settings;
+import musicApp.models.Song;
+import musicApp.views.PlayerView;
+
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Controller class for the music player.
@@ -243,6 +245,10 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      */
     public BooleanProperty isPlayingProperty() {
         return mediaPlayerController.isPlayingProperty();
+    }
+
+    public Song getSongByPathInMainLibrary(Path path) {
+        return mainLibraryController.getSongByPath(path);
     }
 
 }

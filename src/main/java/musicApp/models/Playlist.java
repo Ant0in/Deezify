@@ -11,6 +11,10 @@ public class Playlist extends Library {
     @Expose
     private Path image;
 
+//    private List<Path> songsPath;
+
+//    private
+
     public Playlist(String name, Path image, List<Song> songList) {
         super(songList);
         this.name = name;

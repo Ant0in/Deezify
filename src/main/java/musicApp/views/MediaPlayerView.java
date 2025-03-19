@@ -1,13 +1,13 @@
 package musicApp.views;
 
-import musicApp.controllers.MediaPlayerController;
-import musicApp.models.Song;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import musicApp.controllers.MediaPlayerController;
+import musicApp.models.Song;
 
 import java.util.Arrays;
 import java.util.List;

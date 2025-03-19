@@ -1,7 +1,5 @@
 package musicApp.views;
 
-import musicApp.controllers.SettingsController;
-import musicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import musicApp.controllers.SettingsController;
+import musicApp.utils.LanguageManager;
+
 import java.io.File;
 
 /**
