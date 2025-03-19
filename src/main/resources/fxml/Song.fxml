@@ -13,6 +13,8 @@
     <ImageView fx:id="coverImage" fitWidth="25" fitHeight="25" preserveRatio="true" />
     <Label fx:id="titleLabel" style="-fx-text-fill: rgb(255, 255, 255);" />
     <Label fx:id="artistLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;" />
+    <Label fx:id="genreLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;" />
     <Region HBox.hgrow="ALWAYS" />
     <Label fx:id="durationLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;" />
+    <ImageView fx:id="editButton" fitWidth="20" fitHeight="20" preserveRatio="true" />
 </HBox>

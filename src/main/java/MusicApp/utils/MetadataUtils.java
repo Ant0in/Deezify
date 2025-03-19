@@ -108,13 +108,14 @@ public class MetadataUtils {
     }
 
     private Tag createMP3Tag(AudioFile audioFile, Metadata metadata) throws CannotWriteException, FieldDataInvalidException {
-        Tag tag = audioFile.createDefaultTag();
+        
+        Tag tag = audioFile.getTag();
 
         // !!  FieldDataInvalidException can technically be thrown but could not be triggered artificially by us.
-        tag.addField(FieldKey.ARTIST, metadata.getArtist());
-        tag.addField(FieldKey.TITLE, metadata.getTitle());
-        tag.addField(FieldKey.GENRE, metadata.getGenre());
-        tag.addField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
+        tag.setField(FieldKey.ARTIST, metadata.getArtist());
+        tag.setField(FieldKey.TITLE, metadata.getTitle());
+        tag.setField(FieldKey.GENRE, metadata.getGenre());
+        tag.setField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
 
         return tag;
     }
@@ -126,7 +127,7 @@ public class MetadataUtils {
         tag.setField(FieldKey.ARTIST, metadata.getArtist());
         tag.setField(FieldKey.TITLE, metadata.getTitle());
         tag.setField(FieldKey.GENRE, metadata.getGenre());
-        tag.addField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
+        tag.setField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
 
         return tag;
     }

@@ -2,16 +2,19 @@ package MusicApp.views;
 
 import MusicApp.controllers.SongController;
 import MusicApp.models.Song;
+import MusicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class SongView  extends  View<SongView,SongController>{
+public class SongView  extends  View<SongView, SongController>{
 
     @FXML
     private Button playButton;
@@ -19,13 +22,16 @@ public class SongView  extends  View<SongView,SongController>{
     private Label titleLabel, artistLabel, genreLabel, durationLabel;
     @FXML
     private ImageView coverImage;
+    @FXML
+    private ImageView editButton;
 
     private ContextMenu contextMenu;
     private MenuItem menuItem;
 
 
 
-    public SongView(){
+    public SongView() {
+
     }
 
     @Override
@@ -37,10 +43,13 @@ public class SongView  extends  View<SongView,SongController>{
 
 
     private void initComponents() {
+        
         ImageView playIcon = new ImageView(getClass().getResource("/images/play2.png").toExternalForm());
-        playIcon.setFitWidth(20);
-        playIcon.setFitHeight(20);
+        ImageView editIcon = new ImageView(getClass().getResource("/images/edit.png").toExternalForm());
+
         playButton.setGraphic(playIcon);
+        editButton.setImage(editIcon.getImage());
+        editButton.setPickOnBounds(true);
 
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
             updatePlayButtonIcon();
@@ -55,13 +64,14 @@ public class SongView  extends  View<SongView,SongController>{
         // create the context menu (opened on right click)
 
         contextMenu = new ContextMenu();
-        menuItem = new MenuItem("Edit Metadata");
+        menuItem = new MenuItem(LanguageManager.getInstance().get("button.editmetadata"));
         menuItem.setOnAction(e -> {
             openEditPopup();
         });
+
         contextMenu.getItems().add(menuItem);
-        coverImage.setOnContextMenuRequested(e -> {
-            contextMenu.show(coverImage, e.getScreenX(), e.getScreenY());
+        editButton.setOnMouseClicked(e -> {
+            contextMenu.show(editButton, e.getScreenX(), e.getScreenY());
         });
 
     }
@@ -70,7 +80,7 @@ public class SongView  extends  View<SongView,SongController>{
         
         // Edit popup code here
         Stage stage = new Stage();
-        stage.setTitle("Edit Metadata");
+        stage.setTitle(LanguageManager.getInstance().get("editmetadata.title"));
 
         // create the edit fields
         TextField titleField = new TextField();
@@ -82,11 +92,16 @@ public class SongView  extends  View<SongView,SongController>{
         genreField.setText(genreLabel.getText());
         
         // few buttons
-        Button saveButton = new Button("Save");
-        Button cancelButton = new Button("Cancel");
+        Button saveButton = new Button(LanguageManager.getInstance().get("settings.save"));
+        Button cancelButton = new Button(LanguageManager.getInstance().get("settings.cancel"));
 
         saveButton.setOnAction(e -> {
-            // !! update the song metadata here
+            this.viewController.handleEditMetadata(
+                titleField.getText(),
+                artistField.getText(),
+                genreField.getText(),
+                null
+            );
             stage.close();
         });
 
@@ -94,7 +109,15 @@ public class SongView  extends  View<SongView,SongController>{
             stage.close();
         });
 
-        stage.close();
+        VBox popupLayout = new VBox(10,
+            new Label(LanguageManager.getInstance().get("song.title")), titleField,
+            new Label(LanguageManager.getInstance().get("song.artist")), artistField,
+            new Label(LanguageManager.getInstance().get("song.genre")), genreField,
+        saveButton, cancelButton);
+        Scene popupScene = new Scene(popupLayout, 300, 250);
+
+        stage.setScene(popupScene);
+        stage.show();
 
     }
 
@@ -124,6 +147,8 @@ public class SongView  extends  View<SongView,SongController>{
         titleLabel.setText(song.getTitle());
         titleLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
         artistLabel.setText(song.getArtist());
+        genreLabel.setText(song.getGenre());
+        genreLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
         durationLabel.setText(String.format("%d:%02d", (int) song.getDuration().toMinutes(), (int) song.getDuration().toSeconds() % 60));
         durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
         updatePlayButtonIcon();

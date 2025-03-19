@@ -1,14 +1,15 @@
 package MusicApp.models;
 
-import javafx.scene.image.Image;
-import javafx.util.Duration;
+import java.io.ByteArrayInputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Objects;
+
 import MusicApp.exceptions.BadFileTypeException;
 import MusicApp.exceptions.ID3TagException;
 import MusicApp.utils.MetadataUtils;
-
-import java.io.ByteArrayInputStream;
-import java.nio.file.Path;
-import java.util.Objects;
+import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 public class Song {
 
@@ -17,6 +18,7 @@ public class Song {
     private String artist;
     private String genre;
     private byte[] cover;
+    private ArrayList<String> userTags;
     private Duration duration;
 
     /**
@@ -29,10 +31,10 @@ public class Song {
         MetadataUtils metadataReader = new MetadataUtils();
         try {
             Metadata metadata = metadataReader.getMetadata(filePath.toFile());
-            this.loadMetadata(metadata);
+            this.setMetadata(metadata);
         } catch (ID3TagException | BadFileTypeException e) {
             Metadata defaultMetadata = new Metadata();
-            this.loadMetadata(defaultMetadata);
+            this.setMetadata(defaultMetadata);
         }
     }
 
@@ -41,12 +43,29 @@ public class Song {
      *
      * @param metadata The metadata of the song.
      */
-    private void loadMetadata(Metadata metadata) {
+    private void setMetadata(Metadata metadata) {
         this.title = metadata.getTitle();
         this.artist = metadata.getArtist();
         this.genre = metadata.getGenre();
         this.cover = metadata.getCover();
+        this.userTags = metadata.getUserTags();
         this.duration = metadata.getDuration();
+    }
+
+    public void reloadMetadata() {
+
+        // ?? might wanna throw here idk
+
+        MetadataUtils metadataReader = new MetadataUtils();
+        
+        try {
+            Metadata metadata = metadataReader.getMetadata(filePath.toFile());
+            this.setMetadata(metadata);
+        } catch (ID3TagException | BadFileTypeException e) {
+            Metadata defaultMetadata = new Metadata();
+            this.setMetadata(defaultMetadata);
+        }
+        
     }
 
     /**
@@ -146,6 +165,14 @@ public class Song {
         }
     }
 
+    public ArrayList<String> getUserTags() {
+        return userTags;
+    }
+
+    public void setUserTags(ArrayList<String> userTags) {
+        this.userTags = userTags;
+    }
+
     /**
      * Get the duration of the song.
      *
@@ -162,6 +189,17 @@ public class Song {
      */
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public Metadata getMetadata() {
+        Metadata metadata = new Metadata();
+        metadata.setTitle(title);
+        metadata.setArtist(artist);
+        metadata.setGenre(genre);
+        metadata.setCover(cover);
+        metadata.setUserTags(userTags);
+        metadata.setDuration(duration);
+        return metadata;
     }
 
     /**

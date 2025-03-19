@@ -2,10 +2,14 @@
 package MusicApp.controllers;
 
 
+import java.util.ArrayList;
+
+import MusicApp.models.Metadata;
+import MusicApp.models.Song;
+import MusicApp.utils.MetadataUtils;
+import MusicApp.views.SongView;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import MusicApp.models.Song;
-import MusicApp.views.SongView;
 
 public class SongController extends ViewController<SongView, SongController>{
 
@@ -101,4 +105,39 @@ public class SongController extends ViewController<SongView, SongController>{
     public BooleanProperty isPlayingProperty(){
         return mainLibraryController.isPlayingProperty();
     }
+
+    /**
+     * Handle when the user wants to edit the metadata of the song.
+     * Leave the field to `null` if you don't want to change it.
+     *
+     * @param title the title
+     * @param artist the artist
+     * @param genre the genre
+     */
+    public void handleEditMetadata(String title, String artist, String genre, ArrayList<String> userTags){
+
+        if (song == null) {
+            view.displayError("No song to edit");
+            return;
+        }
+
+        Metadata newMetadata = song.getMetadata();
+        newMetadata.setTitle(title);
+        newMetadata.setArtist(artist);
+        newMetadata.setGenre(genre);
+        newMetadata.setUserTags(userTags);
+
+        MetadataUtils util = new MetadataUtils();
+        try {
+            util.setMetadata(newMetadata, song.getFilePath().toFile());
+        } catch (Exception e) {
+            view.displayError(e.getMessage());
+            return;
+        }
+
+        // update the view
+        song.reloadMetadata();
+        view.update(song);
+    }
+    
 }
