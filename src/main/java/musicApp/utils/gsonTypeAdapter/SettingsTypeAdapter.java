@@ -1,0 +1,71 @@
+package musicApp.utils.gsonTypeAdapter;
+
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import musicApp.models.Settings;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * TypeAdapter for the Settings class.
+ * This class is used to serialize and deserialize the Settings class to and from JSON.
+ */
+public class SettingsTypeAdapter extends TypeAdapter<Settings> {
+    @Override
+    public void write(JsonWriter out, Settings settings) throws IOException {
+        out.beginObject();
+
+        out.name("balance");
+        out.value(settings.getBalance());
+
+        out.name("musicFolder");
+        out.value(settings.getMusicDirectory().toString());
+
+        out.name("equalizerBands");
+        out.beginArray();
+        for (Double band : settings.getEqualizerBands()) {
+            out.value(band);
+        }
+        out.endArray();
+
+        out.endObject();
+    }
+
+    @Override
+    public Settings read(JsonReader in) throws IOException {
+        double balance = 0.0;
+        Path musicFolder = null;
+        List<Double> equalizerBands = new ArrayList<>();
+
+        in.beginObject();
+        while (in.hasNext()) {
+            String fieldName = in.nextName();
+            switch (fieldName) {
+                case "balance":
+                    balance = in.nextDouble();
+                    break;
+                case "musicFolder":
+                    musicFolder = Paths.get(in.nextString());
+                    break;
+                case "equalizerBands":
+                    in.beginArray();
+                    while (in.hasNext()) {
+                        equalizerBands.add(in.nextDouble());
+                    }
+                    in.endArray();
+                    break;
+                default:
+                    in.skipValue();
+                    break;
+            }
+        }
+        in.endObject();
+
+        return new Settings(balance, musicFolder, equalizerBands);
+    }
+}

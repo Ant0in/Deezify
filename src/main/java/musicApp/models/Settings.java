@@ -1,5 +1,6 @@
 package musicApp.models;
 
+import com.google.gson.annotations.Expose;
 import musicApp.utils.DataProvider;
 
 import java.nio.file.Files;
@@ -12,8 +13,11 @@ import java.util.List;
  * Settings class to store the balance and music folder.
  */
 public class Settings {
+    @Expose
     private double balance;
+    @Expose
     private Path musicFolder;
+    @Expose
     private List<Double> equalizerBands;
 
     public static final int EQ_BAND_COUNT = 10;

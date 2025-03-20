@@ -9,6 +9,7 @@ import musicApp.models.Playlist;
 import musicApp.models.Settings;
 import musicApp.utils.gsonTypeAdapter.PathTypeAdapter;
 import musicApp.utils.gsonTypeAdapter.PlaylistTypeAdapter;
+import musicApp.utils.gsonTypeAdapter.SettingsTypeAdapter;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class DataProvider {
             this.settingFolder = Path.of(System.getProperty("user.home"), ".config", configFolder);
         }
         createFolderIfNotExists(settingFolder);
-        this.settingsFile = settingFolder.resolve("settings.conf");
+        this.settingsFile = settingFolder.resolve("settings.json");
         this.playlistsFile = settingFolder.resolve("playlists.json");
     }
 
@@ -109,13 +110,20 @@ public class DataProvider {
      * @param settings The settings to write.
      */
     public void writeSettings(Settings settings) {
-        try {
-            java.io.FileWriter writer = new java.io.FileWriter(this.settingsFile.toString());
-            writer.write(settings.toString());
-            writer.close();
-        } catch (Exception e) {
-            System.out.println("An error occurred while writing the settings file");
+        try (java.io.FileWriter writer = new java.io.FileWriter(settingsFile.toString())) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Path.class, new PathTypeAdapter())
+                    .registerTypeAdapter(Settings.class, new SettingsTypeAdapter())
+                    .serializeNulls()
+                    .create();
+            gson.toJson(settings, writer);
+        } catch (IOException e) {
+            System.err.println("An error occurred while writing the settings file");
         }
+    }
+
+    private ArrayList<Double> getDefaultEqualizer() {
+        return new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
     }
 
     /**
@@ -123,29 +131,28 @@ public class DataProvider {
      * If the settings file does not exist, it will be created with the default settings.
      *
      * @return The settings read from the settings file.
-     * @throws IOException If an error occurs while reading the settings file.
      */
-    public Settings readSettings() throws IOException {
-        String settingsBytes = readFileBytes(settingsFile);
-        if (settingsBytes == null) {
-            Settings defaultSettings = new Settings(0.0, getDefaultMusicFolder());
+    public Settings readSettings() {
+        List<Double> defaultEqualizer = getDefaultEqualizer();
+        if (!Files.exists(settingsFile)) {
+            Settings defaultSettings = new Settings(0, getDefaultMusicFolder(), defaultEqualizer);
             writeSettings(defaultSettings);
             return defaultSettings;
         }
-        return new Settings(settingsBytes);
+        return getSettings(settingsFile);
     }
 
-    /**
-     * Reads the bytes from a file.
-     *
-     * @param path The path to read the bytes from.
-     * @return The bytes read from the file.
-     */
-    public String readFileBytes(Path path) {
-        try {
-            return new String(Files.readAllBytes(path));
-        } catch (IOException e) {
-            return null;
+    protected Settings getSettings(Path path) {
+        try (FileReader reader = new FileReader(path.toFile())) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Path.class, new PathTypeAdapter())
+                    .registerTypeAdapter(Settings.class, new SettingsTypeAdapter())
+                    .serializeNulls()
+                    .create();
+            return gson.fromJson(reader, Settings.class);
+        } catch (JsonIOException | JsonSyntaxException | IOException e) {
+            System.err.println("An error occurred while reading the settings file");
+            return new Settings(0, getDefaultMusicFolder(), getDefaultEqualizer());
         }
     }
 
