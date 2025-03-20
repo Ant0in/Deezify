@@ -7,6 +7,9 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,7 +17,8 @@ public class TestSettings {
 
     @Test
     public void testStringParser() throws IOException {
-        Settings defaultSettings = new Settings(0.0, DataProvider.getDefaultMusicFolder());
+        List<Double> equalizerDefaults = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
+        Settings defaultSettings = new Settings(0.0, DataProvider.getDefaultMusicFolder(),equalizerDefaults);
         Path tempFolder = Files.createTempDirectory("testFolder");
 
         String[] valid = new String[]{
@@ -27,12 +31,12 @@ public class TestSettings {
         };
 
         Settings[] validSettings = new Settings[]{
-                new Settings(1.0, DataProvider.getDefaultMusicFolder()),
-                new Settings(0.0, tempFolder),
-                new Settings(-1.0, tempFolder),
-                new Settings(1.0, DataProvider.getDefaultMusicFolder()),
-                new Settings(-1.0, DataProvider.getDefaultMusicFolder()),
-                new Settings(0.0, tempFolder),
+                new Settings(1.0, DataProvider.getDefaultMusicFolder(), equalizerDefaults),
+                new Settings(0.0, tempFolder, equalizerDefaults),
+                new Settings(-1.0, tempFolder, equalizerDefaults),
+                new Settings(1.0, DataProvider.getDefaultMusicFolder(), equalizerDefaults),
+                new Settings(-1.0, DataProvider.getDefaultMusicFolder(), equalizerDefaults),
+                new Settings(0.0, tempFolder, equalizerDefaults),
         };
 
         for (int i = 0; i < valid.length; i++) {
@@ -53,7 +57,7 @@ public class TestSettings {
 
         Settings[] invalidSettings = new Settings[]{
                 defaultSettings,
-                new Settings(1.0, DataProvider.getDefaultMusicFolder()),
+                new Settings(1.0, DataProvider.getDefaultMusicFolder(), equalizerDefaults),
                 defaultSettings,
                 defaultSettings,
                 defaultSettings,

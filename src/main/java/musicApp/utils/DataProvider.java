@@ -5,6 +5,9 @@ import musicApp.models.Settings;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -106,7 +109,8 @@ public class DataProvider {
     public Settings readSettings() throws IOException {
         String settingsBytes = readFileBytes(settingFile);
         if (settingsBytes == null) {
-            Settings defaultSettings = new Settings(0.0, getDefaultMusicFolder());
+            List<Double> equalizerDefaults = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
+            Settings defaultSettings = new Settings(0.0, getDefaultMusicFolder(), equalizerDefaults);
             writeSettings(defaultSettings);
             return defaultSettings;
         }

@@ -37,6 +37,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
         this.mediaPlayerController.setBalance(settings.getBalance());
+        this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
         this.mainLibraryController.loadLibrary(settings.getMusicDirectory());
     }
 
