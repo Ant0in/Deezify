@@ -45,7 +45,8 @@ public class Settings {
      */
     public Settings(String settings) throws IllegalArgumentException {
         this.balance = 0.0;
-        this.musicFolder = DataProvider.getDefaultMusicFolder();
+        DataProvider dataProvider = new DataProvider();
+        this.musicFolder = dataProvider.getDefaultMusicFolder();
         this.equalizerBands = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
 
         if (settings == null || settings.isEmpty()) {
@@ -53,6 +54,15 @@ public class Settings {
             return;
         }
 
+        parseConfigString(settings);
+    }
+
+    /**
+     * Parses the settings string to set the balance and music folder.
+     *
+     * @param settings The settings string.
+     */
+    private void parseConfigString(String settings) {
         String[] lines = settings.split("\n");
         for (String line : lines) {
             line = line.trim();
@@ -111,12 +121,14 @@ public class Settings {
             Path musicFolder = Path.of(unparsedMusicFolder);
             if (!Files.exists(musicFolder) || !Files.isDirectory(musicFolder)) {
                 System.err.println("Music folder does not exist");
-                return DataProvider.getDefaultMusicFolder();
+                DataProvider dataProvider = new DataProvider();
+                return dataProvider.getDefaultMusicFolder();
             }
             return musicFolder;
         } catch (Exception e) {
             System.err.println("Invalid music folder path");
-            return DataProvider.getDefaultMusicFolder();
+            DataProvider dataProvider = new DataProvider();
+            return dataProvider.getDefaultMusicFolder();
         }
     }
 
