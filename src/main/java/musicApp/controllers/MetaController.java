@@ -20,7 +20,8 @@ public class MetaController {
         /**
          * Mainwindow scenes.
          */
-        MAINWINDOW
+        MAINWINDOW,
+        SETTINGS
     }
 
     private final Stage stage;
@@ -46,16 +47,10 @@ public class MetaController {
      * @param scene The scene to switch to.
      */
     public final void switchScene(Scenes scene) {
-        if (Objects.requireNonNull(scene) == Scenes.MAINWINDOW) {
-            this.playerController.show(this.stage);
+        switch (scene){
+            case MAINWINDOW -> this.playerController.show(this.stage);
+            case SETTINGS -> this.settingsController.show();
         }
-    }
-
-    /**
-     * Shows the settings window.
-     */
-    public final void showSettings() {
-        this.settingsController.show();
     }
 
     /**

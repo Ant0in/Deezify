@@ -113,7 +113,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * Open the settings window.
      */
     public void openSettings() {
-        metaController.showSettings();
+        metaController.switchScene(MetaController.Scenes.SETTINGS);
     }
 
     /**
