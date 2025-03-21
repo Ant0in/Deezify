@@ -1,5 +1,6 @@
 package musicApp.models;
 
+import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadFileTypeException;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 public class Song {
 
+    @Expose
     private final Path filePath;
     private String title;
     private String artist;

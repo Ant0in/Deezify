@@ -19,4 +19,6 @@ module musicApp {
     opens musicApp.models to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.views to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.utils to javafx.fxml, javafx.controls, javafx.media;
+    exports musicApp.utils.gsonTypeAdapter;
+    opens musicApp.utils.gsonTypeAdapter to javafx.controls, javafx.fxml, javafx.media;
 }
