@@ -5,6 +5,7 @@ module musicApp {
     requires java.prefs;
 
     requires jaudiotagger;
+    requires com.google.gson;
 
     exports musicApp;
     exports musicApp.controllers;

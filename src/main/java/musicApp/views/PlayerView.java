@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import musicApp.controllers.PlayerController;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
+import javafx.scene.layout.Priority;
 
 /**
  * PlayerView
@@ -157,9 +158,15 @@ public class PlayerView extends View<PlayerView,PlayerController> {
 
     public void toggleLyrics(boolean show) {
         if (show) {
-            labelContainer.setLeft(viewController.getLyricsRoot());
-        }else{
-            labelContainer.setLeft(null);
+            Pane lyricsPane = viewController.getLyricsRoot();
+            HBox.setHgrow(lyricsPane, Priority.ALWAYS);
+            playerContainer.getChildren().set(0, lyricsPane);
+
+        } else {
+            Pane libraryPane = viewController.getPlayListRoot();
+            HBox.setHgrow(libraryPane, Priority.ALWAYS);
+            playerContainer.getChildren().set(0, libraryPane);
         }
     }
+
 }

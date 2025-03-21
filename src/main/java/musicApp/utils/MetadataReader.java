@@ -53,6 +53,7 @@ public class MetadataReader {
         Metadata metadata = new Metadata();
         AudioFile file = readFile(fd);
         Tag tag = readTag(file);
+        String lyricsPath = LyricsMappingManager.getSongLyricsPath(file.getFile().getAbsolutePath().toString());
         if (tag == null) {
             throw new ID3TagException("No ID3v2 tags found", new Throwable());
         }
@@ -61,6 +62,7 @@ public class MetadataReader {
         metadata.setArtist(tag.getFirst(FieldKey.ARTIST));
         metadata.setGenre(tag.getFirst(FieldKey.GENRE));
         metadata.setDuration(Duration.seconds(file.getAudioHeader().getTrackLength()));
+        metadata.setLyrics(lyricsPath);
 
         if (tag.getFirstArtwork() != null) {
             metadata.setCover(tag.getFirstArtwork().getBinaryData());

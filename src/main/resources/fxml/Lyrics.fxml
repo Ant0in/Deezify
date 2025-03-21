@@ -10,16 +10,15 @@
       xmlns:fx="http://javafx.com/fxml/1"
       spacing="10"
       alignment="CENTER"
-      maxWidth="200" maxHeight="Infinity">
-
-    <ScrollPane fx:id="scrollPane" fitToWidth="true" maxHeight="Infinity">
+      HBox.hgrow="ALWAYS"
+      VBox.vgrow="ALWAYS"
+      maxWidth="Infinity" maxHeight="Infinity">
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS">
         <content>
-            <VBox fx:id="lyricsContainer" spacing="5" maxWidth="Infinity">
+            <VBox fx:id="lyricsContainer" spacing="5" VBox.vgrow="ALWAYS">
             </VBox>
         </content>
     </ScrollPane>
-
 </VBox>
-
 
 
