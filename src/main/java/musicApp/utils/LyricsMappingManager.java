@@ -32,11 +32,6 @@ public class LyricsMappingManager {
         String songName = Paths.get(songPath).getFileName().toString();
         Map<String, String> mapping = LyricsMappingManager.loadLyricsMapping();
         String lyricsPath = mapping.get(songName);
-        if (lyricsPath != null) {
-            System.out.println("Mapping found for " + songName + ": " + lyricsPath);
-        } else {
-            System.out.println("No mapping found for " + songName);
-        }
         return lyricsPath;
     }
 
