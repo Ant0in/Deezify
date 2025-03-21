@@ -1,28 +1,24 @@
 package musicApp.controllers;
 
-import javafx.scene.media.EqualizerBand;
 import javafx.stage.Stage;
-import musicApp.models.Settings;
+import musicApp.models.Equalizer;
 import musicApp.views.EqualizerView;
-
-import java.util.List;
-import java.util.Set;
 
 public class EqualizerController extends ViewController<EqualizerView, EqualizerController>{
     private final SettingsController settingsController;
     private final Stage stage;
-    private final List<Double> equalizerBands;
+    private Equalizer equalizer;
 
     public static final double USER_MAX_GAIN_DB = 20.0;
     public static final double USER_MIN_GAIN_DB = -20.0;
 
     private final int[] bandFrequencies = {32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000};
 
-    public EqualizerController(SettingsController settingsController, List<Double> equalizerBands) {
+    public EqualizerController(SettingsController settingsController, Equalizer equalizer) {
         super(new EqualizerView());
         this.settingsController = settingsController;
         this.stage = new Stage();
-        this.equalizerBands = equalizerBands;
+        this.equalizer = equalizer;
         initView("/fxml/Equalizer.fxml");
     }
 
@@ -37,12 +33,12 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
 
     private double mapUserGainToJavaFX(double userGain) {
         return ((userGain - USER_MIN_GAIN_DB) / (USER_MAX_GAIN_DB - USER_MIN_GAIN_DB)) *
-                (Settings.MAX_GAIN_DB - Settings.MIN_GAIN_DB) + Settings.MIN_GAIN_DB;
+                (this.equalizer.getMaxGainDB() - this.equalizer.getMinGainDB()) + this.equalizer.getMinGainDB();
     }
 
     public void updateEqualizerBand(int bandIndex, double value){
         double javaFxValue =  mapUserGainToJavaFX(value);
-        equalizerBands.set(bandIndex, javaFxValue);
+        this.equalizer.setCurrentBand(bandIndex, javaFxValue);
         settingsController.updateEqualizerBand(bandIndex, javaFxValue);
     }
 
@@ -51,12 +47,12 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
     }
 
     private double mapJavaFXToUserGain(double javaFxValue) {
-        return ((javaFxValue - Settings.MIN_GAIN_DB) / (Settings.MAX_GAIN_DB - Settings.MIN_GAIN_DB)) *
+        return ((javaFxValue - this.equalizer.getMinGainDB()) / (this.equalizer.getMaxGainDB() - this.equalizer.getMinGainDB())) *
                 (USER_MAX_GAIN_DB - USER_MIN_GAIN_DB) + USER_MIN_GAIN_DB;
     }
 
     public double getEqualizerBandGain(int bandIndex) {
-        double javaFxValue = equalizerBands.get(bandIndex);
+        double javaFxValue = this.equalizer.getCurrentBand(bandIndex);
         return mapJavaFXToUserGain(javaFxValue);
     }
 }

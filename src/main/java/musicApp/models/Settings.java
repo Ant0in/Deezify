@@ -5,8 +5,6 @@ import musicApp.utils.DataProvider;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,13 +15,7 @@ public class Settings {
     private double balance;
     @Expose
     private Path musicFolder;
-    @Expose
-    private List<Double> equalizerBands;
-
-    public static final int EQ_BAND_COUNT = 10;
-    public static final double MAX_GAIN_DB = 12;
-    public static final double MIN_GAIN_DB = -24;
-
+    private Equalizer equalizer = new Equalizer();
 
     /**
      * Constructor
@@ -51,7 +43,6 @@ public class Settings {
         this.balance = 0.0;
         DataProvider dataProvider = new DataProvider();
         this.musicFolder = dataProvider.getDefaultMusicFolder();
-        this.equalizerBands = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
 
         if (settings == null || settings.isEmpty()) {
             System.err.println("Settings string is null or empty");
@@ -91,7 +82,7 @@ public class Settings {
                     this.musicFolder = this.parseMusicFolder(value);
                     break;
                 case "equalizerBands":
-                    this.equalizerBands = this.parseEqualizerBands(value);
+                    this.equalizer.parseEqualizerBands(value);
                     break;
             }
         }
@@ -136,24 +127,6 @@ public class Settings {
         }
     }
 
-    private List<Double> parseEqualizerBands(String value) {
-        String[] values = value.split(",");
-        if (values.length != EQ_BAND_COUNT) {
-            System.err.println("Invalid equalizerBands length. Using default values.");
-            return new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
-        }
-
-        List<Double> bands = new ArrayList<>();
-        for (String v : values) {
-            try {
-                bands.add(Double.parseDouble(v.trim()));
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid equalizer band value: " + v + ". Using 0.0.");
-                bands.add(0.0);
-            }
-        }
-        return bands;
-    }
 
     /**
      * Get the balance of the settings.
@@ -191,44 +164,23 @@ public class Settings {
         this.musicFolder = musicFolder;
     }
 
+    public Equalizer getEqualizer () {
+        return this.equalizer;
+    }
 
     public List<Double> getEqualizerBands() {
-        return equalizerBands;
+        return this.equalizer.getSavedEqualizerBands();
     }
 
-    private void checkEqualizerBands(List<Double> equalizerBands) {
-        if (equalizerBands == null || equalizerBands.size() != EQ_BAND_COUNT) {
-            throw new IllegalArgumentException("Equalizer bands must have exactly " + EQ_BAND_COUNT + " values.");
-        }
-        for (int i = 0; i < equalizerBands.size(); i++) {
-            checkEqualizerBand(i, equalizerBands.get(i));
-        }
-    }
 
     public void setEqualizerBand(int bandIndex, double gain) {
-        if (bandIndex < 0 || bandIndex >= EQ_BAND_COUNT) {
-            throw new IllegalArgumentException("Invalid band index: " + bandIndex);
-        }
-        checkEqualizerBand(bandIndex, gain);
-        equalizerBands.set(bandIndex, gain);
+        this.equalizer.setEqualizerBand(bandIndex, gain);
     }
 
-    private void checkEqualizerBand(int bandIndex, double gain) {
-        if (gain < MIN_GAIN_DB || gain > MAX_GAIN_DB) {
-            throw new IllegalArgumentException("Equalizer band value for band " + bandIndex + " (" + gain + ") is out of range. Must be between " + MIN_GAIN_DB + " and " + MAX_GAIN_DB + ".");
-        }
-    }
 
     public void setEqualizerBands(List<Double> equalizerBands) {
-        try {
-            checkEqualizerBands(equalizerBands);
-            this.equalizerBands = new ArrayList<>(equalizerBands);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-            this.equalizerBands = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
-        }
+        this.equalizer.setSavedEqualizerBands(equalizerBands);
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -246,14 +198,8 @@ public class Settings {
 
     @Override
     public String toString() {
-        String bandsString = String.join(",",
-                equalizerBands.stream()
-                        .map(String::valueOf)
-                        .toArray(String[]::new)
-        );
-
         return "balance=" + balance + "\n" +
                 "musicFolder=" + musicFolder.toString() + "\n" +
-                "equalizerBands=" + bandsString;
+                "equalizerBands=" + equalizer.toString();
     }
 }

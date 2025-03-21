@@ -34,7 +34,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         super(new SettingsView());
         this.settings = settings;
         this.metaController = metaController;
-        this.equalizerController = new EqualizerController(this, settings.getEqualizerBands());
+        this.equalizerController = new EqualizerController(this, settings.getEqualizer());
         initView("/fxml/Settings.fxml");
         this.settingsStage = new Stage();
         this.settingsStage.initModality(Modality.APPLICATION_MODAL);
