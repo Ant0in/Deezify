@@ -76,18 +76,3 @@
     -fx-background-radius: 5px;
 }
 
-/*!* Title Box Styling *!*/
-/*.lyrics-title {*/
-/*    -fx-background-color: black; !* Background noir *!*/
-/*    -fx-text-fill: white; !* Texte blanc *!*/
-/*    -fx-font-size: 18px; !* Taille du texte *!*/
-/*    -fx-font-weight: bold; !* Texte en gras *!*/
-/*    -fx-font-family: "Segoe UI", sans-serif;*/
-/*    -fx-padding: 10px 20px; !* Espace autour du texte *!*/
-/*    -fx-border-color: #4a90e2; !* Bordure bleue *!*/
-/*    -fx-border-width: 2px;*/
-/*    -fx-border-radius: 5px; !* Coins arrondis *!*/
-/*    -fx-background-radius: 5px; !* Applique le rayon au fond aussi *!*/
-/*    -fx-alignment: center; !* Centrer le texte *!*/
-/*}*/
-
