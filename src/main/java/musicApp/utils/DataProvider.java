@@ -5,6 +5,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import musicApp.models.Equalizer;
 import musicApp.models.Playlist;
 import musicApp.models.Settings;
 import musicApp.utils.gsonTypeAdapter.PathTypeAdapter;
@@ -122,10 +123,6 @@ public class DataProvider {
         }
     }
 
-    private ArrayList<Double> getDefaultEqualizer() {
-        return new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
-    }
-
     /**
      * Reads the settings from the settings file.
      * If the settings file does not exist, it will be created with the default settings.
@@ -133,9 +130,8 @@ public class DataProvider {
      * @return The settings read from the settings file.
      */
     public Settings readSettings() {
-        List<Double> defaultEqualizer = getDefaultEqualizer();
         if (!Files.exists(settingsFile)) {
-            Settings defaultSettings = new Settings(0, getDefaultMusicFolder(), defaultEqualizer);
+            Settings defaultSettings = new Settings(0, getDefaultMusicFolder(), new Equalizer());
             writeSettings(defaultSettings);
             return defaultSettings;
         }
@@ -152,7 +148,7 @@ public class DataProvider {
             return gson.fromJson(reader, Settings.class);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
             System.err.println("An error occurred while reading the settings file");
-            return new Settings(0, getDefaultMusicFolder(), getDefaultEqualizer());
+            return new Settings(0, getDefaultMusicFolder(), new Equalizer());
         }
     }
 

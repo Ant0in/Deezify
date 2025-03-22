@@ -1,19 +1,15 @@
 package musicApp.controllers;
 
-import javafx.fxml.FXML;
 import musicApp.enums.Language;
 import musicApp.utils.LanguageManager;
-import musicApp.views.EqualizerView;
 import musicApp.views.SettingsView;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import musicApp.models.Settings;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * The type Settings controller.
@@ -37,10 +33,15 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         this.equalizerController = new EqualizerController(this, settings.getEqualizer());
         initView("/fxml/Settings.fxml");
         this.settingsStage = new Stage();
+        initSettingsStage();
+    }
+
+    private void initSettingsStage(){
         this.settingsStage.initModality(Modality.APPLICATION_MODAL);
         this.settingsStage.setResizable(false);
         this.settingsStage.setTitle("Settings");
         this.settingsStage.setScene(this.view.getScene());
+        this.settingsStage.setOnCloseRequest(e -> {handleCancel();});
     }
 
     /**
@@ -86,6 +87,13 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         settings.setBalance(balance);
     }
 
+    /**
+     * Updates the values of the equalizer with the values of sliders and changes the settings
+     */
+    private void updateEqualizer() {
+        equalizerController.update();
+    }
+
 
     /**
      * Get the balance of the application.
@@ -101,11 +109,6 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         equalizerController.show();
     }
 
-    public void updateEqualizerBand(int bandIndex, double value){
-        settings.setEqualizerBand(bandIndex, value);
-        metaController.updateEqualizerBand(bandIndex, value);
-    }
-
     /**
      * Handle when the save button is pressed
      */
@@ -114,6 +117,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         refreshLanguage();
         setBalance(balance);
         setMusicDirectoryPath(musicDirectory);
+        updateEqualizer();
         metaController.notifySettingsChanged(settings);
         updateView();
         close();
@@ -128,6 +132,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      * Handle when the cancel button is pressed
      */
     public void handleCancel() {
+        equalizerController.handleCancel();
         updateView();
         close();
     }

@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="slidersContainer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"  stylesheets="@../css/style_equalizer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-    </children>
-</HBox>
+<VBox alignment="CENTER" spacing="10" stylesheets="@../css/style_equalizer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+    <HBox fx:id="slidersContainer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+        <children>
+        </children>
+    </HBox>
+
+    <HBox alignment="CENTER" spacing="10">
+        <children>
+            <Button fx:id="okButton" text="Ok" />
+            <Button fx:id="cancelButton" text="Cancel" />
+        </children>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
+    </HBox>
+</children>
+</VBox>

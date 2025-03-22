@@ -23,10 +23,10 @@ public class Settings {
      * @param balance     The balance of the application.
      * @param musicFolder The path to the music folder.
      */
-    public Settings(double balance, Path musicFolder, List<Double> equalizerBands) {
+    public Settings(double balance, Path musicFolder, Equalizer equalizer) {
         this.balance = balance;
         this.musicFolder = musicFolder;
-        setEqualizerBands(equalizerBands);
+        this.equalizer = equalizer;
     }
 
     /**
@@ -49,7 +49,8 @@ public class Settings {
             return;
         }
 
-        parseConfigString(settings);
+        // to delete ? (not used in current approach)
+//        parseConfigString(settings);
     }
 
     /**
@@ -81,9 +82,7 @@ public class Settings {
                 case "musicFolder":
                     this.musicFolder = this.parseMusicFolder(value);
                     break;
-                case "equalizerBands":
-                    this.equalizer.parseEqualizerBands(value);
-                    break;
+                // add equalizer ???
             }
         }
     }
@@ -169,18 +168,9 @@ public class Settings {
     }
 
     public List<Double> getEqualizerBands() {
-        return this.equalizer.getSavedEqualizerBands();
+        return this.equalizer.getEqualizerBands();
     }
 
-
-    public void setEqualizerBand(int bandIndex, double gain) {
-        this.equalizer.setEqualizerBand(bandIndex, gain);
-    }
-
-
-    public void setEqualizerBands(List<Double> equalizerBands) {
-        this.equalizer.setSavedEqualizerBands(equalizerBands);
-    }
 
     @Override
     public boolean equals(Object obj) {

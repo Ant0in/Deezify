@@ -4,15 +4,16 @@ import javafx.stage.Stage;
 import musicApp.models.Equalizer;
 import musicApp.views.EqualizerView;
 
+import java.util.List;
+
 public class EqualizerController extends ViewController<EqualizerView, EqualizerController>{
     private final SettingsController settingsController;
     private final Stage stage;
-    private Equalizer equalizer;
+    private final Equalizer equalizer;
 
     public static final double USER_MAX_GAIN_DB = 20.0;
     public static final double USER_MIN_GAIN_DB = -20.0;
 
-    private final int[] bandFrequencies = {32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000};
 
     public EqualizerController(SettingsController settingsController, Equalizer equalizer) {
         super(new EqualizerView());
@@ -38,12 +39,11 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
 
     public void updateEqualizerBand(int bandIndex, double value){
         double javaFxValue =  mapUserGainToJavaFX(value);
-        this.equalizer.setCurrentBand(bandIndex, javaFxValue);
-        settingsController.updateEqualizerBand(bandIndex, javaFxValue);
+        this.equalizer.setEqualizerBand(bandIndex, javaFxValue);
     }
 
     public int getBandFrequency(int bandIndex){
-        return bandFrequencies[bandIndex];
+        return this.equalizer.getBandFrequency(bandIndex);
     }
 
     private double mapJavaFXToUserGain(double javaFxValue) {
@@ -52,7 +52,20 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
     }
 
     public double getEqualizerBandGain(int bandIndex) {
-        double javaFxValue = this.equalizer.getCurrentBand(bandIndex);
+        double javaFxValue = this.equalizer.getEqualizerBand(bandIndex);
         return mapJavaFXToUserGain(javaFxValue);
     }
+
+    public void update() {
+        List<Double> equalizerBands = this.view.getSlidersValues();
+        for(int bandIndex = 0; bandIndex < equalizerBands.size(); bandIndex++){
+            updateEqualizerBand(bandIndex, equalizerBands.get(bandIndex));
+        }
+        this.view.updateSlidersValues();
+    }
+
+    public void handleCancel() {
+        this.view.updateSlidersValues();
+    }
+
 }

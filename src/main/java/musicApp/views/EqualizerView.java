@@ -2,20 +2,29 @@ package musicApp.views;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import musicApp.controllers.EqualizerController;
+import musicApp.utils.LanguageManager;
+
+import java.util.List;
 
 public class EqualizerView extends View<EqualizerView, EqualizerController>{
 
+
+    @FXML
+    private Button okButton, cancelButton;
     @FXML
     private HBox slidersContainer;
 
     @Override
     public void init() {
+        initButtons();
+        initTranslations();
         initSliders();
     }
 
@@ -56,9 +65,6 @@ public class EqualizerView extends View<EqualizerView, EqualizerController>{
         slider.setMinorTickCount(5);
         slider.setShowTickMarks(true);
         slider.setShowTickLabels(true);
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            viewController.updateEqualizerBand(sliderIndex, newValue.doubleValue());
-        });
         return slider;
     }
 
@@ -85,6 +91,46 @@ public class EqualizerView extends View<EqualizerView, EqualizerController>{
             freq = "KHz";
         }
         return value + " " + freq;
+    }
+
+    private void initTranslations() {
+        LanguageManager languageManager = LanguageManager.getInstance();
+        okButton.setText(languageManager.get("settings.ok"));
+        cancelButton.setText(languageManager.get("settings.cancel"));
+    }
+
+    private void initButtons() {
+        okButton.setOnMouseClicked(_ -> viewController.close());
+        cancelButton.setOnMouseClicked(_ -> viewController.handleCancel());
+    }
+
+    public List<Double> getSlidersValues() {
+        return slidersContainer.getChildren().stream()
+                .filter(node -> node instanceof VBox)
+                .map(vBox -> (VBox) vBox)
+                .map(vBox -> vBox.getChildren().stream()
+                        .filter(child -> child instanceof Slider)
+                        .map(child -> ((Slider) child).getValue())
+                        .findFirst()
+                        .orElse(0.0))
+                .toList();
+    }
+
+    public void updateSlidersValues() {
+        int sliderIndex = 0;
+
+        for (javafx.scene.Node node : slidersContainer.getChildren()) {
+            if (node instanceof VBox vBox) {
+                for (javafx.scene.Node child : vBox.getChildren()) {
+                    if (child instanceof Slider slider) {
+                        double initGainValue = viewController.getEqualizerBandGain(sliderIndex);
+                        slider.setValue(initGainValue);
+                        sliderIndex++;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 }

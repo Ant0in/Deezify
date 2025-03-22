@@ -5,7 +5,6 @@ import musicApp.models.Settings;
 import musicApp.utils.DataProvider;
 
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * The Meta controller.
@@ -74,9 +73,4 @@ public class MetaController {
             System.err.println(e.getMessage());
         }
     }
-
-    public void updateEqualizerBand(int bandIndex, double value){
-        playerController.updateEqualizerBand(bandIndex, value);
-    }
-
 }

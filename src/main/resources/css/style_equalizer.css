@@ -1,3 +1,5 @@
+@import "common/buttons.css";
+
 /* VBox Container */
 .slider-container {
     -fx-spacing: 10px;
@@ -58,3 +60,10 @@
 .root {
     -fx-background-color: linear-gradient(to bottom, #062726, #102b3f);
 }
+
+
+#okButton {
+    -fx-background-color: #007BFF;
+    -fx-text-fill: white;
+}
+

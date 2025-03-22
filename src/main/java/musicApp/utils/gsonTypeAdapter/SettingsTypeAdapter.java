@@ -3,6 +3,7 @@ package musicApp.utils.gsonTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import musicApp.models.Equalizer;
 import musicApp.models.Settings;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
     public Settings read(JsonReader in) throws IOException {
         double balance = 0.0;
         Path musicFolder = null;
-        List<Double> equalizerBands = new ArrayList<>();
+        Equalizer equalizer = new Equalizer();
 
         in.beginObject();
         while (in.hasNext()) {
@@ -54,8 +55,9 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
                     break;
                 case "equalizerBands":
                     in.beginArray();
+                    int bandIndex = 0;
                     while (in.hasNext()) {
-                        equalizerBands.add(in.nextDouble());
+                        equalizer.setEqualizerBand(bandIndex++, in.nextDouble());
                     }
                     in.endArray();
                     break;
@@ -66,6 +68,6 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         }
         in.endObject();
 
-        return new Settings(balance, musicFolder, equalizerBands);
+        return new Settings(balance, musicFolder, equalizer);
     }
 }

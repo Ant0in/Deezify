@@ -140,6 +140,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public void onSettingsChanged(Settings newSettings) {
         this.mediaPlayerController.setBalance(newSettings.getBalance());
         this.mainLibraryController.loadLibrary(newSettings.getMusicDirectory());
+        this.mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
     }
 
     /**
@@ -244,10 +245,6 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      */
     public BooleanProperty isPlayingProperty() {
         return mediaPlayerController.isPlayingProperty();
-    }
-
-    public void updateEqualizerBand(int bandIndex, double value){
-        mediaPlayerController.updateEqualizerBand(bandIndex, value);
     }
 
 }
