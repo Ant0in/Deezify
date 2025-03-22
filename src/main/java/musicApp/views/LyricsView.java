@@ -66,7 +66,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         if (lyrics == null || lyrics.isEmpty()) {
 
             Label noLyricsLabel = new Label("No lyrics available for this song.\nWould you like to add them?");
-            noLyricsLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: gray;");
+            noLyricsLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
 
             Button addLyricsButton = new Button("Add Lyrics");
             ImageView pencilIcon = new ImageView(new Image(getClass().getResource("/images/edit.png").toExternalForm()));

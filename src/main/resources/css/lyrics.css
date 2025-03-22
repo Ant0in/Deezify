@@ -1,0 +1,93 @@
+/* ScrollPane Styling */
+#scrollPane {
+    -fx-background-color: transparent;
+    -fx-border-color: #4a90e2;
+    -fx-border-radius: 10px;
+    -fx-padding: 5px;
+}
+
+/* VBox containing the lyrics */
+#lyricsContainer {
+    -fx-alignment: center;
+    -fx-padding: 20px;
+    -fx-background-color: rgba(0, 0, 0, 0.4); /* Slight transparency */
+    -fx-border-radius: 10px;
+}
+
+/* Lyrics text */
+.lyrics-text {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-line-spacing: 5px;
+    -fx-alignment: center;
+}
+
+/* Hover effect on lyrics */
+.lyrics-text:hover {
+    -fx-text-fill: #ffcc00;
+}
+
+/* Selection effect on lyrics */
+.selected-lyrics {
+    -fx-text-fill: #ff5733;
+    -fx-font-weight: bold;
+}
+
+/* ScrollBar Styling */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #2f508e;
+    -fx-background-radius: 10px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #4a90e2;
+}
+
+/* Fade-in animation for lyrics */
+@keyframes fadeIn {
+    from { -fx-opacity: 0; }
+    to { -fx-opacity: 1; }
+}
+
+.lyrics-text {
+    -fx-opacity: 0;
+    animation: fadeIn 1s ease-in forwards;
+}
+
+/* Lyrics title styling */
+.lyrics-title {
+    -fx-text-fill: #2f508e;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-alignment: center;
+    /*-fx-padding: 10px 0;*/
+
+
+    -fx-padding: 10px 65px;
+    -fx-border-color: #4a90e2;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/*!* Title Box Styling *!*/
+/*.lyrics-title {*/
+/*    -fx-background-color: black; !* Background noir *!*/
+/*    -fx-text-fill: white; !* Texte blanc *!*/
+/*    -fx-font-size: 18px; !* Taille du texte *!*/
+/*    -fx-font-weight: bold; !* Texte en gras *!*/
+/*    -fx-font-family: "Segoe UI", sans-serif;*/
+/*    -fx-padding: 10px 20px; !* Espace autour du texte *!*/
+/*    -fx-border-color: #4a90e2; !* Bordure bleue *!*/
+/*    -fx-border-width: 2px;*/
+/*    -fx-border-radius: 5px; !* Coins arrondis *!*/
+/*    -fx-background-radius: 5px; !* Applique le rayon au fond aussi *!*/
+/*    -fx-alignment: center; !* Centrer le texte *!*/
+/*}*/
+
