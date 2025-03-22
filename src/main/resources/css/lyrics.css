@@ -7,16 +7,24 @@
 }
 
 /* VBox containing the lyrics */
-#lyricsContainer {
+#lyricsContainer ,
+
+.lyrics-container {
     -fx-alignment: center;
     -fx-padding: 20px;
-    -fx-background-color: rgba(0, 0, 0, 0.4); /* Slight transparency */
+    -fx-background-color: rgba(0, 0, 0, 0.4);
     -fx-border-radius: 10px;
+}
+
+/* Style for the "no lyrics" label */
+.no-lyrics-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
 }
 
 /* Lyrics text */
 .lyrics-text {
-    -fx-text-fill: white;
+    -fx-text-fill:  black;
     -fx-font-size: 16px;
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-line-spacing: 5px;
@@ -54,11 +62,6 @@
     to { -fx-opacity: 1; }
 }
 
-.lyrics-text {
-    -fx-opacity: 0;
-    animation: fadeIn 1s ease-in forwards;
-}
-
 /* Lyrics title styling */
 .lyrics-title {
     -fx-text-fill: #2f508e;
@@ -66,9 +69,6 @@
     -fx-font-weight: bold;
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-alignment: center;
-    /*-fx-padding: 10px 0;*/
-
-
     -fx-padding: 10px 65px;
     -fx-border-color: #4a90e2;
     -fx-border-width: 1px;
