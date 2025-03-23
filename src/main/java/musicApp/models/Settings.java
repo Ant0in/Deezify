@@ -46,7 +46,6 @@ public class Settings {
 
         if (settings == null || settings.isEmpty()) {
             System.err.println("Settings string is null or empty");
-            return;
         }
 
         // to delete ? (not used in current approach)
@@ -163,7 +162,7 @@ public class Settings {
         this.musicFolder = musicFolder;
     }
 
-    public Equalizer getEqualizer () {
+    public Equalizer getEqualizer() {
         return this.equalizer;
     }
 
@@ -177,10 +176,9 @@ public class Settings {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof Settings)) {
+        if (!(obj instanceof Settings settings)) {
             return false;
         }
-        Settings settings = (Settings) obj;
         return Double.compare(settings.getBalance(), this.getBalance()) == 0 &&
                 settings.getMusicDirectory().equals(this.getMusicDirectory()) &&
                 settings.getEqualizerBands().equals(this.getEqualizerBands());

@@ -2,8 +2,8 @@ package musicApp.views;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import musicApp.controllers.ViewController;
 import javafx.scene.layout.Pane;
+import musicApp.controllers.ViewController;
 
 import java.io.IOException;
 import java.net.URL;

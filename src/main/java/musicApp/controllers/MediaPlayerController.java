@@ -207,13 +207,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
         audioPlayer.setVolume(volume);
     }
 
-    private void updateEqualizerBand(int bandIndex, double value){
-        audioPlayer.updateEqualizerBand(bandIndex, value);
-    }
-
-    public void setEqualizerBands(List<Double> equalizerBands){
-        for(int i = 0; i<equalizerBands.size(); i++){
-            updateEqualizerBand(i, equalizerBands.get(i));
-        }
+    public void setEqualizerBands(List<Double> equalizerBandsGain){
+        audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }
 }

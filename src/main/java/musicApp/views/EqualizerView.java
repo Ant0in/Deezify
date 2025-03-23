@@ -13,7 +13,7 @@ import musicApp.utils.LanguageManager;
 
 import java.util.List;
 
-public class EqualizerView extends View<EqualizerView, EqualizerController>{
+public class EqualizerView extends View<EqualizerView, EqualizerController> {
 
 
     @FXML
@@ -32,11 +32,13 @@ public class EqualizerView extends View<EqualizerView, EqualizerController>{
         stage.setScene(scene);
         stage.setTitle("Equalizer");
         stage.show();
-        stage.setOnCloseRequest(event -> {viewController.close();});
+        stage.setOnCloseRequest(event -> {
+            viewController.close();
+        });
     }
 
 
-    private void initSliders(){
+    private void initSliders() {
         int numberOfSliders = 10;
         for (int i = 0; i < numberOfSliders; i++) {
             VBox sliderVBox = sliderVBox(i);

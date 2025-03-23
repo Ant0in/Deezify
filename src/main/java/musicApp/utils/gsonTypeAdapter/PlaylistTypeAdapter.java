@@ -2,15 +2,14 @@ package musicApp.utils.gsonTypeAdapter;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import musicApp.models.Playlist;
 import musicApp.models.Song;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaylistTypeAdapter extends TypeAdapter<Playlist> {
     @Override

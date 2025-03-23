@@ -1,9 +1,5 @@
 package musicApp.views;
 
-import musicApp.controllers.SettingsController;
-import musicApp.enums.Language;
-import musicApp.models.Settings;
-import musicApp.utils.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,6 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import musicApp.controllers.SettingsController;
+import musicApp.enums.Language;
+import musicApp.models.Settings;
+import musicApp.utils.LanguageManager;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,7 +74,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     /**
      * Update the language combobox to display the current language.
      */
-    private void updateLanguageComboBox(){
+    private void updateLanguageComboBox() {
         Language currentLang = LanguageManager.getInstance().getCurrentLanguage();
         languageComboBox.getSelectionModel().select(currentLang.getDisplayName());
     }
@@ -130,8 +131,8 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     private void initButtons() {
         saveButton.setOnMouseClicked(_ -> handleSave());
         cancelButton.setOnMouseClicked(_ -> viewController.handleCancel());
-        browseButton.setOnMouseClicked(_->handleBrowseDirectory());
-        equalizerButton.setOnMouseClicked(_->viewController.openEqualizer());
+        browseButton.setOnMouseClicked(_ -> handleBrowseDirectory());
+        equalizerButton.setOnMouseClicked(_ -> viewController.openEqualizer());
     }
 
     /**
@@ -150,6 +151,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
 
     /**
      * Get the title of the view.
+     *
      * @return The title of the view.
      */
     public String getTitle() {
@@ -158,6 +160,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
 
     /**
      * Get the scene of the view.
+     *
      * @return The scene of the view.
      */
     public Scene getScene() {
@@ -170,7 +173,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         return Language.fromDisplayName(selectedDisplayName);
     }
 
-    private void handleSave(){
+    private void handleSave() {
         Language selectedLanguage = getSelectedLanguage();
         double balance = balanceSlider.getValue();
         Path musicDirectory = Paths.get(directoryLabel.getText());

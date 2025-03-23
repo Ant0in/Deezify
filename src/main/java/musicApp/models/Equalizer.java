@@ -6,9 +6,9 @@ import java.util.*;
 
 public class Equalizer {
     @Expose
-    // Map frequency:gain
-    private final Map<Integer, Double> bandMap = new HashMap<>();
-    private final ArrayList<Integer> BAND_FREQUENCIES = new ArrayList<>(Arrays.asList(32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000));
+    private List<Double> bandsGain = new ArrayList<>();
+    // default javafx frequencies
+    private final ArrayList<Integer> BANDS_FREQUENCY = new ArrayList<>(Arrays.asList(32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000));
 
 
     public final double MAX_GAIN_DB = 12;
@@ -16,22 +16,20 @@ public class Equalizer {
 
     public Equalizer() {
         List<Double> defaultBandsGain = Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-        setBandMap(defaultBandsGain);
+        setBandsGain(defaultBandsGain);
     }
 
     public Equalizer(List<Double> bandsGain) {
         checkBandsGain(bandsGain);
-        setBandMap(bandsGain);
+        setBandsGain(bandsGain);
     }
 
-    private int getBandsSize(){
-        return BAND_FREQUENCIES.size();
+    private int getBandsSize() {
+        return BANDS_FREQUENCY.size();
     }
 
-    private void setBandMap(List<Double> bandsGain) {
-        for (int i = 0; i < getBandsSize(); i++) {
-            bandMap.put(BAND_FREQUENCIES.get(i), bandsGain.get(i));
-        }
+    private void setBandsGain(List<Double> bandsGain) {
+        this.bandsGain = bandsGain;
     }
 
 
@@ -57,25 +55,16 @@ public class Equalizer {
         }
     }
 
-    private int getBandMapKey(int bandIndex) {
-        return BAND_FREQUENCIES.get(bandIndex);
-    }
-
     public double getBandGain(int bandIndex) {
-        return bandMap.get(getBandMapKey(bandIndex));
+        return bandsGain.get(bandIndex);
     }
 
     public void setBandGain(int bandIndex, double gain) {
         checkBand(bandIndex, gain);
-        int frequency = getBandMapKey(bandIndex);
-        bandMap.put(frequency, gain);
+        bandsGain.set(bandIndex, gain);
     }
 
     public List<Double> getBandsGain() {
-        List<Double> bandsGain = new ArrayList<>();
-        for (int i = 0; i < getBandsSize(); i++) {
-            bandsGain.add(getBandGain(i));
-        }
         return bandsGain;
     }
 
@@ -87,9 +76,8 @@ public class Equalizer {
         return MIN_GAIN_DB;
     }
 
-    public int getBandFrequency(int bandIndex){
-        checkBandIndex(bandIndex);
-        return getBandMapKey(bandIndex);
+    public int getBandFrequency(int bandIndex) {
+        return BANDS_FREQUENCY.get(bandIndex);
     }
 
     @Override

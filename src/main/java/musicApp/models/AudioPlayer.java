@@ -10,7 +10,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * AudioPlayer
@@ -26,7 +25,7 @@ public class AudioPlayer {
     private Song loadedSong = null;
     private double balance = 0.0;
     private double speed = 1.0;
-    List<Double> equalizerSettings = new ArrayList<>(Collections.nCopies(10, 0.0));
+    List<Double> equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
 
     /**
      * Load a song into the player.
@@ -46,10 +45,10 @@ public class AudioPlayer {
         mediaPlayer.setRate(speed);
         mediaPlayer.setOnReady(() -> {
             isLoaded.set(true);
-            applyEqualizerSettings();
+            applyEqualizerBandsGain();
         });
 
-        // Mettre à jour la propriété de progression pendant la lecture
+        // Update the progression property while playing
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
             if (mediaPlayer.getTotalDuration().greaterThan(Duration.ZERO)) {
                 progress.set(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
@@ -57,38 +56,25 @@ public class AudioPlayer {
         });
     }
 
-    private void applyEqualizerSettings() {
-        for (int bandIndex = 0; bandIndex < equalizerSettings.size(); bandIndex++) {
-            double gain = equalizerSettings.get(bandIndex);
-            applyEqualizerBand(bandIndex, gain);
-        }
-    }
-
-
-
-    public void updateEqualizerBand(int band, double gain) {
-        if (band >= 0 && band < equalizerSettings.size()) {
-            equalizerSettings.set(band, gain);
-            applyEqualizerBand(band, gain);
-        } else {
-            throw new IllegalArgumentException("Invalid band index: " + band);
-        }
-    }
-
-    private void applyEqualizerBand(int bandIndex, double gain) {
-        if (mediaPlayer == null) {
-            return;
-        }
+    private void applyEqualizerBandsGain() {
         AudioEqualizer audioEqualizer = mediaPlayer.getAudioEqualizer();
         if (audioEqualizer == null) {
-            System.out.println("No audio equalizer available");
+            System.err.println("No audio equalizer available");
             return;
         }
-
-        EqualizerBand bandToSet = audioEqualizer.getBands().get(bandIndex);
-        bandToSet.setGain(gain);
+        for (int bandIndex = 0; bandIndex < equalizerBandsGain.size(); bandIndex++) {
+            EqualizerBand bandToSet = audioEqualizer.getBands().get(bandIndex);
+            double gain = equalizerBandsGain.get(bandIndex);
+            bandToSet.setGain(gain);
+        }
     }
 
+    public void updateEqualizerBandsGain(List<Double> equalizerBandsGain) {
+        this.equalizerBandsGain = equalizerBandsGain;
+        if (mediaPlayer != null) {
+            applyEqualizerBandsGain();
+        }
+    }
 
     /**
      * Unpause the loaded song.

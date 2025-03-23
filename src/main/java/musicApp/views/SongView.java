@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import musicApp.controllers.SongController;
 import musicApp.models.Song;
 
-public class SongView  extends  View<SongView,SongController>{
+public class SongView extends View<SongView, SongController> {
 
     @FXML
     private Button playButton;
@@ -17,7 +17,7 @@ public class SongView  extends  View<SongView,SongController>{
     private ImageView coverImage;
 
 
-    public SongView(){
+    public SongView() {
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SongView  extends  View<SongView,SongController>{
         playButton.setGraphic(icon);
     }
 
-    public void update(Song song){
+    public void update(Song song) {
         coverImage.setImage(song.getCoverImage());
         titleLabel.setText(song.getTitle());
         titleLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");

@@ -1,9 +1,9 @@
 package musicApp.utils;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import musicApp.models.Equalizer;
 import musicApp.models.Playlist;
@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -181,7 +179,8 @@ public class DataProvider {
                     .registerTypeAdapter(Playlist.class, new PlaylistTypeAdapter())
                     .serializeNulls()
                     .create();
-            Type playlistListType = new TypeToken<List<Playlist>>(){}.getType();
+            Type playlistListType = new TypeToken<List<Playlist>>() {
+            }.getType();
             List<Playlist> playlists = gson.fromJson(reader, playlistListType);
             playlists.forEach(this::checkValidPlaylist);
             return playlists;
