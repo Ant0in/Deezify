@@ -1,8 +1,9 @@
 package musicApp.utils;
 
-import musicApp.models.Playlist;
+import musicApp.models.Library;
 import org.junit.Test;
 
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -10,9 +11,9 @@ import static org.junit.Assert.*;
 
 public class TestDataProvider extends DataProvider {
     @Test
-    public void testGetPlaylist() {
+    public void testGetPlaylist() throws URISyntaxException {
 //        readPlaylists();
-        List<Playlist> playlists = getPlaylists(Paths.get("src", "test", "resources", "playlists.json"));
+        List<Library> playlists = getPlaylists(Paths.get("src", "test", "resources", "playlists.json"));
         assertEquals(3, playlists.size());
         assertEquals("Playlist 1", playlists.getFirst().getName());
         assertNull(playlists.getFirst().getImage());

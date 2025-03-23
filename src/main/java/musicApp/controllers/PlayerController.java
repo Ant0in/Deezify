@@ -5,7 +5,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import musicApp.models.Playlist;
+import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
 import musicApp.views.PlayerView;
@@ -263,8 +263,15 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         return mainLibraryController.getSongByPath(path);
     }
 
-    public List<Playlist> getPlaylists() {
+    public List<Library> getPlaylists() {
         return metaController.getPlaylists();
     }
 
+    public void updateShownPlaylist(Library library) {
+        mainLibraryController.loadPlaylist(library);
+    }
+
+    public Library getLibrary() {
+        return mainLibraryController.getLibrary();
+    }
 }

@@ -1,15 +1,16 @@
 package musicApp.controllers;
 
 import musicApp.models.Library;
-import musicApp.models.Playlist;
+import musicApp.utils.DataProvider;
 import musicApp.views.playlistNavigator.PlaylistNavigatorView;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView, PlaylistNavigatorController>{
 
-    private List<Playlist> playlists = new ArrayList<>();
+    private List<Library> playlists = new ArrayList<>();
     private Library selectedLibrary;
     private PlayerController playerController;
 
@@ -27,7 +28,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
 
     public void loadPlaylists() {
         playlists = playerController.getPlaylists();
-        view.update((List<Library>)(List<?>)playlists);
+        playlists.addFirst(playerController.getLibrary());
+        view.update(playlists);
     }
 
     public Library getSelectedLibrary() {
@@ -36,9 +38,18 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
 
     public void setSelectedLibrary(Library library) {
         this.selectedLibrary = library;
+        playerController.updateShownPlaylist(library);
     }
 
     public void handleSelectLibrary(Library library) {
         setSelectedLibrary(library);
+    }
+
+    public void createPlaylist(String name, Path imagePath) {
+        Library playlist = new Library(new ArrayList<>(), name, imagePath);
+        playlists.add(playlist);
+        DataProvider dataProvider = new DataProvider();
+        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        loadPlaylists();
     }
 }

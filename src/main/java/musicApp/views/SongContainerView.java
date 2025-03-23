@@ -26,6 +26,7 @@ public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C 
      * Update list view.
      */
     public void updateListView(){
+        listView.getItems().clear();
         listView.getItems().setAll(viewController.toList());
     }
 

@@ -19,6 +19,7 @@ public class PlaylistCellView extends View<PlaylistCellView, PlaylistCellControl
     }
 
     private void initComponents() {
+        if (viewController.getLibrary() == null) return;
         playlistNameLabel.setText(viewController.getLibrary().getName());
         playlistSizeLabel.setText(viewController.getLibrary().size() + " songs");
     }

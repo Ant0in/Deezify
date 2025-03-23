@@ -3,27 +3,32 @@ package musicApp.utils.gsonTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import musicApp.models.Playlist;
+import musicApp.models.Library;
 import musicApp.models.Song;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaylistTypeAdapter extends TypeAdapter<Playlist> {
+public class LibraryTypeAdapter extends TypeAdapter<Library> {
     @Override
-    public void write(JsonWriter out, Playlist playlist) throws IOException {
+    public void write(JsonWriter out, Library playlist) throws IOException {
         out.beginObject();
 
         out.name("name");
         out.value(playlist.getName());
 
         out.name("image");
-        if (playlist.getImage() == null) {
-            out.nullValue();
-        } else {
-            out.value(playlist.getImage().toString());
+        try {
+            if (playlist.getImage() == null) {
+                out.value("");
+            } else {
+                out.value(playlist.getImage().toString());
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
 
         out.name("songList");
@@ -37,7 +42,7 @@ public class PlaylistTypeAdapter extends TypeAdapter<Playlist> {
     }
 
     @Override
-    public Playlist read(JsonReader in) throws IOException {
+    public Library read(JsonReader in) throws IOException {
         String name = null;
         Path image = null;
         List<Song> songList = null;
@@ -69,6 +74,6 @@ public class PlaylistTypeAdapter extends TypeAdapter<Playlist> {
         }
         in.endObject();
 
-        return new Playlist(name, image, songList);
+        return new Library(songList, name, image);
     }
 }

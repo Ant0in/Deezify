@@ -5,10 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import musicApp.models.Playlist;
+import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.utils.gsonTypeAdapter.PathTypeAdapter;
-import musicApp.utils.gsonTypeAdapter.PlaylistTypeAdapter;
+import musicApp.utils.gsonTypeAdapter.LibraryTypeAdapter;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -156,7 +156,7 @@ public class DataProvider {
      * @return The playlists read from the playlists file.
      * @throws IllegalArgumentException If an error occurs while reading the playlists file.
      */
-    public List<Playlist> readPlaylists() throws IllegalArgumentException {
+    public List<Library> readPlaylists() throws IllegalArgumentException {
         if (!Files.exists(playlistsFile)) {
             writePlaylists(List.of());
         }
@@ -171,16 +171,16 @@ public class DataProvider {
      * @return The playlists read from the given path.
      * @throws IllegalArgumentException If an error occurs while reading the playlists from the given path.
      */
-    protected List<Playlist> getPlaylists(Path path) throws IllegalArgumentException {
+    protected List<Library> getPlaylists(Path path) throws IllegalArgumentException {
         try (FileReader reader = new FileReader(path.toFile())) {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Path.class, new PathTypeAdapter())
-                    .registerTypeAdapter(Playlist.class, new PlaylistTypeAdapter())
+                    .registerTypeAdapter(Library.class, new LibraryTypeAdapter())
                     .serializeNulls()
                     .create();
-            Type playlistListType = new TypeToken<List<Playlist>>() {
+            Type playlistListType = new TypeToken<List<Library>>() {
             }.getType();
-            List<Playlist> playlists = gson.fromJson(reader, playlistListType);
+            List<Library> playlists = gson.fromJson(reader, playlistListType);
             playlists.forEach(this::checkValidPlaylist);
             return playlists;
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
@@ -193,11 +193,11 @@ public class DataProvider {
      *
      * @param playlists The playlists to write.
      */
-    public void writePlaylists(List<Playlist> playlists) {
+    public void writePlaylists(List<Library> playlists) {
         try (java.io.FileWriter writer = new java.io.FileWriter(playlistsFile.toString())) {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Path.class, new PathTypeAdapter())
-                    .registerTypeAdapter(Playlist.class, new PlaylistTypeAdapter())
+                    .registerTypeAdapter(Library.class, new LibraryTypeAdapter())
                     .serializeNulls()
                     .create();
             gson.toJson(playlists, writer);
@@ -212,7 +212,7 @@ public class DataProvider {
      * @param playlist The playlist to check.
      * @throws IllegalArgumentException If the playlist is invalid.
      */
-    private void checkValidPlaylist(Playlist playlist) throws IllegalArgumentException {
+    private void checkValidPlaylist(Library playlist) throws IllegalArgumentException {
         if (playlist.getName() == null || playlist.getName().isEmpty()) {
             throw new IllegalArgumentException("Playlist name cannot be empty");
         }

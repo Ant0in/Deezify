@@ -1,7 +1,7 @@
 package musicApp.controllers;
 
 import javafx.stage.Stage;
-import musicApp.models.Playlist;
+import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.utils.DataProvider;
 
@@ -126,7 +126,7 @@ public class MetaController {
         }
     }
 
-    public List<Playlist> getPlaylists() {
+    public List<Library> getPlaylists() {
         return this.dataProvider.readPlaylists();
     }
 

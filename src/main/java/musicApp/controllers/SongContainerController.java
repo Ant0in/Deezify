@@ -5,6 +5,7 @@ import musicApp.models.Song;
 import musicApp.views.SongContainerView;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
     /**
      * The Library.
      */
-    protected M library = (M) new Library();
+    protected M library = (M) new Library(new ArrayList<>(), "Library", null);
 
     /**
      * Instantiates a new SongContainer controller.
@@ -127,6 +128,10 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
 
     public Song getSongByPath(Path path) {
         return library.getSongByPath(path);
+    }
+
+    public Library getLibrary() {
+        return library;
     }
 }
 

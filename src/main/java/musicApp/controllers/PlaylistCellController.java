@@ -9,7 +9,7 @@ public class PlaylistCellController extends ViewController<PlaylistCellView, Pla
     private final PlaylistNavigatorController navigatorController;
     private Library library;
 
-    public PlaylistCellController( PlaylistNavigatorController navigatorController) {
+    public PlaylistCellController(PlaylistNavigatorController navigatorController) {
         super(new PlaylistCellView());
         this.navigatorController = navigatorController;
         initView("/fxml/PlaylistCell.fxml");

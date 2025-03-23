@@ -2,7 +2,6 @@ package musicApp.views.playlistNavigator;
 
 import javafx.scene.control.ListCell;
 import musicApp.controllers.PlaylistCellController;
-import musicApp.controllers.PlaylistController;
 import musicApp.models.Library;
 
 public class PlaylistCell extends ListCell<Library> {

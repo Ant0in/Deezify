@@ -16,6 +16,10 @@ import java.util.Objects;
 public class Library {
     @Expose
     List<Song> songList = new ArrayList<>();
+    @Expose
+    private String name;
+    @Expose
+    private Path image;
 
 
     /**
@@ -23,8 +27,10 @@ public class Library {
      *
      * @param songList The list of songs.
      */
-    public Library(List<Song> songList) {
+    public Library(List<Song> songList, String name, Path image) {
         this.songList = songList;
+        this.name = name;
+        this.image = image;
     }
 
     /**
@@ -150,12 +156,21 @@ public class Library {
     }
 
     public String getName() {
-        return "Library";
+        return this.name;
     }
 
     public Path getImage() throws URISyntaxException {
-        return Path.of(this.getClass().getResource("/images/playlist.png").toURI());
+        return this.image;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImage(Path image) {
+        this.image = image;
+    }
+
 
     public Image getCoverImage() {
         try {

@@ -52,6 +52,11 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
         view.updateListView();
     }
 
+    public void loadPlaylist(Library playlist) {
+        this.library = playlist;
+        view.updateListView();
+    }
+
     /**
      * Skip to the next song in the library.
      */
