@@ -9,8 +9,6 @@ import musicApp.models.Settings;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * TypeAdapter for the Settings class.
@@ -57,7 +55,7 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
                     in.beginArray();
                     int bandIndex = 0;
                     while (in.hasNext()) {
-                        equalizer.setEqualizerBand(bandIndex++, in.nextDouble());
+                        equalizer.setBandGain(bandIndex++, in.nextDouble());
                     }
                     in.endArray();
                     break;

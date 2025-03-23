@@ -168,7 +168,7 @@ public class Settings {
     }
 
     public List<Double> getEqualizerBands() {
-        return this.equalizer.getEqualizerBands();
+        return this.equalizer.getBandsGain();
     }
 
 

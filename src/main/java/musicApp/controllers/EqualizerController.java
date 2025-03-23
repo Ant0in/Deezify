@@ -39,7 +39,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
 
     public void updateEqualizerBand(int bandIndex, double value){
         double javaFxValue =  mapUserGainToJavaFX(value);
-        this.equalizer.setEqualizerBand(bandIndex, javaFxValue);
+        this.equalizer.setBandGain(bandIndex, javaFxValue);
     }
 
     public int getBandFrequency(int bandIndex){
@@ -52,7 +52,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
     }
 
     public double getEqualizerBandGain(int bandIndex) {
-        double javaFxValue = this.equalizer.getEqualizerBand(bandIndex);
+        double javaFxValue = this.equalizer.getBandGain(bandIndex);
         return mapJavaFXToUserGain(javaFxValue);
     }
 

@@ -2,30 +2,40 @@ package musicApp.models;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Equalizer {
     @Expose
-    private static final List<Double> DEFAULT_BANDS = Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-    private List<Double> equalizerBands = new ArrayList<>(DEFAULT_BANDS);
+    // Map frequency:gain
+    private final Map<Integer, Double> bandMap = new HashMap<>();
+    private final ArrayList<Integer> BAND_FREQUENCIES = new ArrayList<>(Arrays.asList(32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000));
 
 
-    private final ArrayList<Integer> bandFrequencies = new ArrayList<>(Arrays.asList(32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000));
-
-    public final int EQ_BAND_COUNT = bandFrequencies.size();
     public final double MAX_GAIN_DB = 12;
     public final double MIN_GAIN_DB = -24;
 
-    public Equalizer() { }
-
-    public Equalizer(List<Double> equalizerBands) {
-        checkEqualizerBands(equalizerBands);
-        this.equalizerBands = equalizerBands;
+    public Equalizer() {
+        List<Double> defaultBandsGain = Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        setBandMap(defaultBandsGain);
     }
 
-    private void checkEqualizerBand(int bandIndex, double gain) {
+    public Equalizer(List<Double> bandsGain) {
+        checkBandsGain(bandsGain);
+        setBandMap(bandsGain);
+    }
+
+    private int getBandsSize(){
+        return BAND_FREQUENCIES.size();
+    }
+
+    private void setBandMap(List<Double> bandsGain) {
+        for (int i = 0; i < getBandsSize(); i++) {
+            bandMap.put(BAND_FREQUENCIES.get(i), bandsGain.get(i));
+        }
+    }
+
+
+    private void checkBand(int bandIndex, double gain) {
         checkBandIndex(bandIndex);
         if (gain < MIN_GAIN_DB || gain > MAX_GAIN_DB) {
             throw new IllegalArgumentException("Equalizer band value for band " + bandIndex + " (" + gain + ") is out of range. Must be between " + MIN_GAIN_DB + " and " + MAX_GAIN_DB + ".");
@@ -33,31 +43,40 @@ public class Equalizer {
     }
 
     private void checkBandIndex(int bandIndex) {
-        if (bandIndex < 0 || bandIndex >= EQ_BAND_COUNT) {
+        if (bandIndex < 0 || bandIndex >= getBandsSize()) {
             throw new IllegalArgumentException("Invalid band index: " + bandIndex);
         }
     }
 
-    private void checkEqualizerBands(List<Double> equalizerBands) {
-        if (equalizerBands == null || equalizerBands.size() != EQ_BAND_COUNT) {
-            throw new IllegalArgumentException("Equalizer bands must have exactly " + EQ_BAND_COUNT + " values.");
+    private void checkBandsGain(List<Double> bandsGain) {
+        if (bandsGain == null || bandsGain.size() != getBandsSize()) {
+            throw new IllegalArgumentException("Equalizer bands must have exactly " + getBandsSize() + " values.");
         }
-        for (int i = 0; i < equalizerBands.size(); i++) {
-            checkEqualizerBand(i, equalizerBands.get(i));
+        for (int i = 0; i < bandsGain.size(); i++) {
+            checkBand(i, bandsGain.get(i));
         }
     }
 
-    public double getEqualizerBand(int bandIndex) {
-        return equalizerBands.get(bandIndex);
+    private int getBandMapKey(int bandIndex) {
+        return BAND_FREQUENCIES.get(bandIndex);
     }
 
-    public void setEqualizerBand(int bandIndex, double gain) {
-        checkEqualizerBand(bandIndex, gain);
-        equalizerBands.set(bandIndex, gain);
+    public double getBandGain(int bandIndex) {
+        return bandMap.get(getBandMapKey(bandIndex));
     }
 
-    public List<Double> getEqualizerBands() {
-        return equalizerBands;
+    public void setBandGain(int bandIndex, double gain) {
+        checkBand(bandIndex, gain);
+        int frequency = getBandMapKey(bandIndex);
+        bandMap.put(frequency, gain);
+    }
+
+    public List<Double> getBandsGain() {
+        List<Double> bandsGain = new ArrayList<>();
+        for (int i = 0; i < getBandsSize(); i++) {
+            bandsGain.add(getBandGain(i));
+        }
+        return bandsGain;
     }
 
     public double getMaxGainDB() {
@@ -70,13 +89,13 @@ public class Equalizer {
 
     public int getBandFrequency(int bandIndex){
         checkBandIndex(bandIndex);
-        return bandFrequencies.get(bandIndex);
+        return getBandMapKey(bandIndex);
     }
 
     @Override
     public String toString() {
         return String.join(",",
-                equalizerBands.stream()
+                getBandsGain().stream()
                         .map(String::valueOf)
                         .toArray(String[]::new)
         );
