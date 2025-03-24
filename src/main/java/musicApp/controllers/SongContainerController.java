@@ -24,7 +24,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
     /**
      * The Library.
      */
-    protected M library = (M) new Library(new ArrayList<>(), "Library", null);
+    protected M library = (M) new Library(new ArrayList<>(), "??library??", null);
 
     /**
      * Instantiates a new SongContainer controller.

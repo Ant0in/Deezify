@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -182,7 +183,7 @@ public class DataProvider {
             }.getType();
             List<Library> playlists = gson.fromJson(reader, playlistListType);
             playlists.forEach(this::checkValidPlaylist);
-            return playlists;
+            return checkPlaylists(playlists);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -219,5 +220,20 @@ public class DataProvider {
         if (playlist.toList() == null) {
             throw new IllegalArgumentException("Playlist song list cannot be null");
         }
+    }
+
+    private List<Library> checkPlaylists(List<Library> playlists) {
+        if (playlists == null || playlists.isEmpty()) {
+            Library favorites = new Library(new ArrayList<>(), "??favorites??", null);
+            List<Library> validPlaylists = List.of(favorites);
+            writePlaylists(validPlaylists);
+            return validPlaylists;
+        }
+        if (!playlists.getFirst().getName().equals("??favorites??")) {
+            Library favorites = new Library(new ArrayList<>(), "??favorites??", null);
+            playlists.add(0, favorites);
+        }
+        writePlaylists(playlists);
+        return playlists;
     }
 }

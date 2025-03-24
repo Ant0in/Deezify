@@ -12,5 +12,6 @@
     <Label fx:id="titleLabel" style="-fx-text-fill: rgb(255, 255, 255);" />
     <Label fx:id="artistLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;" />
     <Region HBox.hgrow="ALWAYS" />
+    <Button fx:id="likeButton" text="❤"></Button>
     <Label fx:id="durationLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;" />
 </HBox>

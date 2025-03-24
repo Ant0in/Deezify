@@ -10,7 +10,7 @@ import musicApp.models.Song;
 public class SongCellView extends  View<SongCellView, SongCellController>{
 
     @FXML
-    private Button playButton;
+    private Button playButton, likeButton;
     @FXML
     private Label songName, songArtist, titleLabel, artistLabel, durationLabel;
     @FXML
@@ -32,6 +32,9 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
         playIcon.setFitWidth(20);
         playIcon.setFitHeight(20);
         playButton.setGraphic(playIcon);
+        likeButton.setOnAction(event -> {
+            viewController.toggleFavorites();
+        });
 
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
             updatePlayButtonIcon();
@@ -62,6 +65,14 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
         playButton.setGraphic(icon);
     }
 
+    private void updateLikeButton() {
+        if (!viewController.isFavorite()) {
+            likeButton.setText("❤");
+        } else {
+            likeButton.setText("X");
+        }
+    }
+
     public void update(Song song){
         coverImage.setImage(song.getCoverImage());
         titleLabel.setText(song.getTitle());
@@ -70,6 +81,7 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
         durationLabel.setText(String.format("%d:%02d", (int) song.getDuration().toMinutes(), (int) song.getDuration().toSeconds() % 60));
         durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
         updatePlayButtonIcon();
+        updateLikeButton();
     }
 
     private void setButtonActions() {

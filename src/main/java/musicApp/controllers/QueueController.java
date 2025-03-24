@@ -104,4 +104,27 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
     public boolean queueIsEmpty(){
         return library.isEmpty();
     }
+
+    /**
+     * Append playlist to queue.
+     * TODO: Maybe refactor the library add to accept the same songs if queued
+     *
+     * @param playlist the playlist
+     */
+    public void appendPlaylistToQueue(Library playlist){
+        for (Song song : playlist.toList()) {
+            library.toList().add(song);
+        }
+        this.view.updateListView();
+    }
+
+    /**
+     * Replace queue.
+     *
+     * @param playlist the playlist
+     */
+    public void replaceQueue(Library playlist){
+        library.clear();
+        appendPlaylistToQueue(playlist);
+    }
 }

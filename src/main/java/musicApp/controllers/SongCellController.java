@@ -101,4 +101,13 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
     public BooleanProperty isPlayingProperty(){
         return mainLibraryController.isPlayingProperty();
     }
+
+    public void toggleFavorites() {
+        mainLibraryController.toggleFavorites(song);
+        view.update(song);
+    }
+
+    public boolean isFavorite() {
+        return mainLibraryController.isFavorite(song);
+    }
 }

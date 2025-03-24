@@ -2,10 +2,8 @@ package musicApp.views.playlistNavigator;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import musicApp.controllers.PlaylistCellController;
@@ -24,6 +22,8 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     @FXML
     private Button createPlaylist;
 
+    private ContextMenu contextMenu = new ContextMenu();
+
     public PlaylistNavigatorView() {}
 
     @Override
@@ -32,6 +32,7 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
         enableClickToSelect();
         setButtonActions();
         initTranslation();
+        setupContextMenu();
     }
 
     private void initListView() {
@@ -90,10 +91,35 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
      * Enable double click to play.
      */
     public void enableClickToSelect() {
-        listView.setOnMouseClicked(_ -> {
-            if (listView.getSelectionModel().getSelectedItem() == null) return;
-            viewController.setSelectedLibrary(listView.getSelectionModel().getSelectedItem());
+        listView.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                if (listView.getSelectionModel().getSelectedItem() == null) return;
+                viewController.setSelectedLibrary(listView.getSelectionModel().getSelectedItem());
+            } else if (e.getButton() == MouseButton.SECONDARY) {
+                contextMenu.show(listView, e.getScreenX(), e.getScreenY());
+            }
+
         });
+    }
+
+    private void setupContextMenu() {
+        MenuItem addToQueueItem = new MenuItem("Append to Queue");
+        MenuItem replaceQueueItem = new MenuItem("Replace Queue");
+        MenuItem deleteItem = new MenuItem("Delete");
+
+        addToQueueItem.setOnAction(e -> {
+            viewController.appendToQueue(listView.getSelectionModel().getSelectedItem());
+        });
+
+        replaceQueueItem.setOnAction(e -> {
+            viewController.replaceQueue(listView.getSelectionModel().getSelectedItem());
+        });
+
+        deleteItem.setOnAction(e -> {
+            viewController.deletePlaylist(listView.getSelectionModel().getSelectedItem());
+        });
+
+        contextMenu.getItems().addAll(addToQueueItem, replaceQueueItem, deleteItem);
     }
 
 }

@@ -2,6 +2,7 @@ package musicApp.controllers;
 
 import musicApp.models.Library;
 import musicApp.models.Song;
+import musicApp.utils.LanguageManager;
 import musicApp.views.playlistNavigator.PlaylistCellView;
 
 public class PlaylistCellController extends ViewController<PlaylistCellView, PlaylistCellController> {
@@ -33,5 +34,20 @@ public class PlaylistCellController extends ViewController<PlaylistCellView, Pla
 
     public boolean isSelected() {
         return navigatorController.getSelectedLibrary().equals(library);
+    }
+
+    public boolean isDeletable() {
+        return navigatorController.isDeletable(library);
+    }
+
+    public String getLibraryName() {
+        if (library.getName().equals("??favorites??")) {
+            return LanguageManager.getInstance().get("favorites");
+        }
+        else if (library.getName().equals("??library??")) {
+            return LanguageManager.getInstance().get("library");
+        } else {
+            return library.getName();
+        }
     }
 }

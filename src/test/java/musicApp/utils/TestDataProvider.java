@@ -14,8 +14,8 @@ public class TestDataProvider extends DataProvider {
     public void testGetPlaylist() throws URISyntaxException {
 //        readPlaylists();
         List<Library> playlists = getPlaylists(Paths.get("src", "test", "resources", "playlists.json"));
-        assertEquals(3, playlists.size());
-        assertEquals("Playlist 1", playlists.getFirst().getName());
+        assertEquals(4, playlists.size());
+        assertEquals("??favorites??", playlists.getFirst().getName());
         assertNull(playlists.getFirst().getImage());
         assertEquals(0, playlists.getFirst().size());
     }

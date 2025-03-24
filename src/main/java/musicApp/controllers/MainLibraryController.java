@@ -194,4 +194,12 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
     public BooleanProperty isPlayingProperty() {
         return playerController.isPlayingProperty();
     }
+
+    public void toggleFavorites(Song song) {
+        playerController.toggleFavorites(song);
+    }
+
+    public boolean isFavorite(Song song) {
+        return playerController.isFavorite(song);
+    }
 }

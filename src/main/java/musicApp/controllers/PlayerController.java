@@ -128,6 +128,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public void refreshUI() {
         view.refreshUI();
         this.queueController.refreshUI();
+        this.playlistNavigatorController.refreshUI();
     }
 
     /**
@@ -263,15 +264,49 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         return mainLibraryController.getSongByPath(path);
     }
 
+    /**
+     * Get all the playlists of the user
+     *
+     * @return The list of playlists
+     */
     public List<Library> getPlaylists() {
         return metaController.getPlaylists();
     }
 
+    /**
+     * Update the playlist shown in the mainLibrary
+     */
     public void updateShownPlaylist(Library library) {
         mainLibraryController.loadPlaylist(library);
     }
 
+    /**
+     * Get the main library
+     *
+     * @return The main library
+     */
     public Library getLibrary() {
         return mainLibraryController.getLibrary();
+    }
+
+    /**
+     * Append a playlist to the queue
+     *
+     * @param playlist The playlist to append
+     */
+    public void appendPlaylistToQueue(Library playlist){
+        queueController.appendPlaylistToQueue(playlist);
+    }
+
+    public void replaceQueue(Library playlist){
+        queueController.replaceQueue(playlist);
+    }
+
+    public void toggleFavorites(Song song) {
+        playlistNavigatorController.toggleFavorites(song);
+    }
+
+    public boolean isFavorite(Song song) {
+        return playlistNavigatorController.isFavorite(song);
     }
 }
