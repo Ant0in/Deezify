@@ -94,20 +94,14 @@ public class MetadataUtils {
     public void setMetadata(Metadata metadata, File fd) throws BadFileTypeException, FieldDataInvalidException, CannotWriteException {
         AudioFile audioFile = readFile(fd);
 
-        Tag tag = switch (getFileExtension(fd)) {
-
-            case MP3 -> createMP3Tag(audioFile, metadata);
-            case WAV -> createWAVTag(audioFile, metadata);
-            default -> throw new BadFileTypeException("Invalid File Extension for file : " + fd.getName(), new Throwable());
-        };
+        Tag tag = createTag(audioFile, metadata);
 
         audioFile.setTag(tag);
         audioFile.commit();
 
-
     }
 
-    private Tag createMP3Tag(AudioFile audioFile, Metadata metadata) throws CannotWriteException, FieldDataInvalidException {
+    private Tag createTag(AudioFile audioFile, Metadata metadata) throws CannotWriteException, FieldDataInvalidException {
         
         Tag tag = audioFile.getTag();
 
@@ -119,18 +113,7 @@ public class MetadataUtils {
 
         return tag;
     }
-    private Tag createWAVTag(AudioFile audioFile, Metadata metadata) throws CannotWriteException, FieldDataInvalidException {
 
-        Tag tag = audioFile.getTag();
-
-        // !!  FieldDataInvalidException can technically be thrown but could not be triggered artificially by us.
-        tag.setField(FieldKey.ARTIST, metadata.getArtist());
-        tag.setField(FieldKey.TITLE, metadata.getTitle());
-        tag.setField(FieldKey.GENRE, metadata.getGenre());
-        tag.setField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
-
-        return tag;
-    }
 
     /**
      * This method reads the tag of an AudioFile and returns it
