@@ -11,10 +11,6 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
     private final Stage stage;
     private final Equalizer equalizer;
 
-    public static final double USER_MAX_GAIN_DB = 20.0;
-    public static final double USER_MIN_GAIN_DB = -20.0;
-
-
     public EqualizerController(SettingsController settingsController, Equalizer equalizer) {
         super(new EqualizerView());
         this.settingsController = settingsController;
@@ -32,28 +28,24 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
         this.settingsController.show();
     }
 
-    private double mapUserGainToJavaFX(double userGain) {
-        return ((userGain - USER_MIN_GAIN_DB) / (USER_MAX_GAIN_DB - USER_MIN_GAIN_DB)) *
-                (this.equalizer.getMaxGainDB() - this.equalizer.getMinGainDB()) + this.equalizer.getMinGainDB();
-    }
-
     public void updateEqualizerBand(int bandIndex, double value){
-        double javaFxValue =  mapUserGainToJavaFX(value);
-        this.equalizer.setBandGain(bandIndex, javaFxValue);
+        this.equalizer.setBandGain(bandIndex, value);
     }
 
     public int getBandFrequency(int bandIndex){
         return this.equalizer.getBandFrequency(bandIndex);
     }
 
-    private double mapJavaFXToUserGain(double javaFxValue) {
-        return ((javaFxValue - this.equalizer.getMinGainDB()) / (this.equalizer.getMaxGainDB() - this.equalizer.getMinGainDB())) *
-                (USER_MAX_GAIN_DB - USER_MIN_GAIN_DB) + USER_MIN_GAIN_DB;
+    public double getEqualizerBandGain(int bandIndex) {
+        return this.equalizer.getBandGain(bandIndex);
     }
 
-    public double getEqualizerBandGain(int bandIndex) {
-        double javaFxValue = this.equalizer.getBandGain(bandIndex);
-        return mapJavaFXToUserGain(javaFxValue);
+    public double getMaxGainDB() {
+        return this.equalizer.getMaxGainDB();
+    }
+
+    public double getMinGainDB() {
+        return this.equalizer.getMinGainDB();
     }
 
     public void update() {

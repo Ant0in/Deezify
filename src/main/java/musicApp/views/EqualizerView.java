@@ -60,7 +60,7 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
 
     private Slider Slider(int sliderIndex) {
         double initGainValue = viewController.getEqualizerBandGain(sliderIndex);
-        Slider slider = new Slider(EqualizerController.USER_MIN_GAIN_DB, EqualizerController.USER_MAX_GAIN_DB, initGainValue);
+        Slider slider = new Slider(viewController.getMinGainDB(), viewController.getMaxGainDB(), initGainValue);
         slider.setOrientation(javafx.geometry.Orientation.VERTICAL);
         slider.setBlockIncrement(1);
         slider.setMajorTickUnit(10);
