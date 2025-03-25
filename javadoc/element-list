@@ -1,7 +1,7 @@
-module:MusicApp
-MusicApp
-MusicApp.controllers
-MusicApp.exceptions
-MusicApp.models
-MusicApp.utils
-MusicApp.views
+module:ulb.musicApp
+musicApp
+musicApp.controllers
+musicApp.exceptions
+musicApp.models
+musicApp.utils
+musicApp.views
