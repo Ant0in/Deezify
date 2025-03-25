@@ -117,7 +117,7 @@ public class DataProvider {
                     .create();
             gson.toJson(settings, writer);
         } catch (IOException e) {
-            System.err.println("An error occurred while writing the settings file");
+            System.err.println("An error occurred while writing the settings file: " + e.getMessage());
         }
     }
 
@@ -145,7 +145,7 @@ public class DataProvider {
                     .create();
             return gson.fromJson(reader, Settings.class);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
-            System.err.println("An error occurred while reading the settings file");
+            System.err.println("An error occurred while reading the settings file: " + e.getMessage());
             return new Settings(0, getDefaultMusicFolder(), new Equalizer());
         }
     }
