@@ -10,6 +10,8 @@ import MusicApp.exceptions.ID3TagException;
 import MusicApp.utils.MetadataUtils;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
+import org.jaudiotagger.tag.images.Artwork;
+import org.jaudiotagger.tag.images.ArtworkFactory;
 
 public class Song {
 
@@ -47,7 +49,7 @@ public class Song {
         this.title = metadata.getTitle();
         this.artist = metadata.getArtist();
         this.genre = metadata.getGenre();
-        this.cover = metadata.getCover();
+        this.cover = metadata.getCover() != null ? metadata.getCover().getBinaryData() : null ;
         this.userTags = metadata.getUserTags();
         this.duration = metadata.getDuration();
     }
@@ -145,8 +147,8 @@ public class Song {
      *
      * @param cover the cover in base64.
      */
-    public void setCover(byte[] cover) {
-        this.cover = cover;
+    public void setCover( Artwork cover) {
+        this.cover = cover.getBinaryData();
     }
 
     /**
@@ -196,7 +198,7 @@ public class Song {
         metadata.setTitle(title);
         metadata.setArtist(artist);
         metadata.setGenre(genre);
-        metadata.setCover(cover);
+        metadata.setCoverFromBytes(cover);
         metadata.setUserTags(userTags);
         metadata.setDuration(duration);
         return metadata;

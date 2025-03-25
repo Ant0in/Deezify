@@ -77,9 +77,9 @@ public class MetadataUtils {
             metadata.setUserTags(new ArrayList<String>());
         }
 
-        if (tag.getFirstArtwork() != null) {
-            metadata.setCover(tag.getFirstArtwork().getBinaryData());
-        }
+
+        metadata.setCover(tag.getFirstArtwork());
+
 
         return metadata;
     }
@@ -110,7 +110,8 @@ public class MetadataUtils {
         tag.setField(FieldKey.TITLE, metadata.getTitle());
         tag.setField(FieldKey.GENRE, metadata.getGenre());
         tag.setField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
-
+        if (metadata.getCover() != null ) { tag.setField(metadata.getCover());}
+        System.out.println(" Is metadata cover null ? : " + metadata.getCover() != null);
         return tag;
     }
 

@@ -114,23 +114,25 @@ public class SongController extends ViewController<SongView, SongController>{
      * @param artist the artist
      * @param genre the genre
      */
-    public void handleEditMetadata(String title, String artist, String genre, ArrayList<String> userTags){
+    public void handleEditMetadata(String title, String artist, String genre, ArrayList<String> userTags, String coverPath){
 
         if (song == null) {
             view.displayError("No song to edit");
             return;
         }
-
-        Metadata newMetadata = song.getMetadata();
-        newMetadata.setTitle(title);
-        newMetadata.setArtist(artist);
-        newMetadata.setGenre(genre);
-        newMetadata.setUserTags(userTags);
-
-        MetadataUtils util = new MetadataUtils();
         try {
+            Metadata newMetadata = song.getMetadata();
+            newMetadata.setTitle(title);
+            newMetadata.setArtist(artist);
+            newMetadata.setGenre(genre);
+            newMetadata.setUserTags(userTags);
+            newMetadata.loadCoverFromPath(coverPath);
+        System.out.println(newMetadata.getTitle() + " " + newMetadata.getArtist() + " " + newMetadata.getGenre() + " " + coverPath);
+        MetadataUtils util = new MetadataUtils();
+
             util.setMetadata(newMetadata, song.getFilePath().toFile());
         } catch (Exception e) {
+            e.printStackTrace();
             view.displayError(e.getMessage());
             return;
         }

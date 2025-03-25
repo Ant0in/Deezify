@@ -12,7 +12,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class SongView  extends  View<SongView, SongController>{
 
@@ -51,6 +54,7 @@ public class SongView  extends  View<SongView, SongController>{
         editButton.setImage(editIcon.getImage());
         editButton.setPickOnBounds(true);
 
+
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
             updatePlayButtonIcon();
         });
@@ -86,6 +90,8 @@ public class SongView  extends  View<SongView, SongController>{
         TextField titleField = new TextField();
         TextField artistField = new TextField();
         TextField genreField = new TextField();
+        final File[] selectedFile = new File[1];
+        Button chooseCoverButton = new Button("Choose Cover Image");
 
         titleField.setText(titleLabel.getText());
         artistField.setText(artistLabel.getText());
@@ -95,12 +101,29 @@ public class SongView  extends  View<SongView, SongController>{
         Button saveButton = new Button(LanguageManager.getInstance().get("settings.save"));
         Button cancelButton = new Button(LanguageManager.getInstance().get("settings.cancel"));
 
+        chooseCoverButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Choose Cover Image");
+
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg")
+            );
+
+            File file = fileChooser.showOpenDialog(stage);
+            if ( file != null ) {
+                selectedFile[0] = file;
+            }
+
+        });
+
         saveButton.setOnAction(e -> {
             this.viewController.handleEditMetadata(
                 titleField.getText(),
                 artistField.getText(),
                 genreField.getText(),
-                null
+                null,
+                    selectedFile[0] != null ? selectedFile[0].getAbsolutePath() : null
+
             );
             stage.close();
         });
@@ -113,7 +136,10 @@ public class SongView  extends  View<SongView, SongController>{
             new Label(LanguageManager.getInstance().get("song.title")), titleField,
             new Label(LanguageManager.getInstance().get("song.artist")), artistField,
             new Label(LanguageManager.getInstance().get("song.genre")), genreField,
-        saveButton, cancelButton);
+            chooseCoverButton,
+            saveButton,
+            cancelButton
+        );
         Scene popupScene = new Scene(popupLayout, 300, 250);
 
         stage.setScene(popupScene);
