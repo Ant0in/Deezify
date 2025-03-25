@@ -13,6 +13,7 @@ import org.jaudiotagger.audio.wav.WavOptions;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.id3.ID3v22Tag;
 import org.jaudiotagger.tag.wav.WavTag;
 
 import java.io.File;
@@ -101,17 +102,22 @@ public class MetadataUtils {
 
     }
 
-    private Tag createTag(AudioFile audioFile, Metadata metadata) throws CannotWriteException, FieldDataInvalidException {
+    private Tag createTag(AudioFile audioFile, Metadata metadata) throws FieldDataInvalidException {
         
         Tag tag = audioFile.getTag();
-
+        // Checks if the tag contains a standard field, if not initializes a default tag
+        if ( !tag.hasField(FieldKey.TITLE) ) {
+            tag = audioFile.getTagAndConvertOrCreateDefault();
+        }
         // !!  FieldDataInvalidException can technically be thrown but could not be triggered artificially by us.
         tag.setField(FieldKey.ARTIST, metadata.getArtist());
         tag.setField(FieldKey.TITLE, metadata.getTitle());
         tag.setField(FieldKey.GENRE, metadata.getGenre());
         tag.setField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
-        if (metadata.getCover() != null ) { tag.setField(metadata.getCover());}
-        System.out.println(" Is metadata cover null ? : " + metadata.getCover() != null);
+        if (metadata.getCover() != null ) {
+            tag.deleteArtworkField();
+            tag.setField(metadata.getCover());
+        }
         return tag;
     }
 
