@@ -127,7 +127,6 @@ public class SongController extends ViewController<SongView, SongController>{
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(userTags);
             newMetadata.loadCoverFromPath(coverPath);
-        System.out.println(newMetadata.getTitle() + " " + newMetadata.getArtist() + " " + newMetadata.getGenre() + " " + coverPath);
         MetadataUtils util = new MetadataUtils();
 
             util.setMetadata(newMetadata, song.getFilePath().toFile());
