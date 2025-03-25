@@ -1,11 +1,4 @@
 module ulb.musicApp {
-    // Export your packages to make them accessible to other modules
-    exports musicApp.controllers;
-    exports musicApp.exceptions;
-    exports musicApp.models;
-    exports musicApp.views;
-    exports musicApp.utils;
-
     // If you have any services you want to expose via ServiceLoader
     // provides some.service.Interface with musicApp.implementation.Class;
 
@@ -15,12 +8,23 @@ module ulb.musicApp {
     requires javafx.fxml;
     requires javafx.media;
     requires java.prefs;
-    requires jaudiotagger;
 
+    requires jaudiotagger;
+    requires com.google.gson;
+
+    exports musicApp;
+    exports musicApp.controllers;
+    exports musicApp.exceptions;
+    exports musicApp.models;
+    exports musicApp.views;
+    exports musicApp.utils;
+    exports musicApp.enums;
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.controllers to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.models to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.views to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.utils to javafx.fxml, javafx.controls, javafx.media, jaudiotagger;
+    exports musicApp.utils.gsonTypeAdapter;
+    opens musicApp.utils.gsonTypeAdapter to javafx.controls, javafx.fxml, javafx.media;
 }

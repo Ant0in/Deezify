@@ -8,6 +8,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 
+import java.util.List;
+
 /**
  * The  MediaPlayer controller.
  */
@@ -203,5 +205,9 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      */
     public void setVolume(double volume) {
         audioPlayer.setVolume(volume);
+    }
+
+    public void setEqualizerBands(List<Double> equalizerBandsGain){
+        audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }
 }

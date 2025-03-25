@@ -1,10 +1,10 @@
 package musicApp.views;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import musicApp.controllers.MainLibraryController;
 import musicApp.controllers.SongController;
 import musicApp.utils.LanguageManager;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 
 /**
  * The MainLibrary view.
@@ -47,7 +47,8 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
     /**
      * Initialize the translations of the texts in the view.
      */
-    public void initTranslation() {
+    @Override
+    protected void initTranslation() {
         songInput.setPromptText(LanguageManager.getInstance().get("search"));
     }
 
@@ -65,7 +66,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
      */
     private void setupListSelectionListeners() {
         listView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
-            if (newVal != null){
+            if (newVal != null) {
                 viewController.clearQueueSelection();
             }
         });

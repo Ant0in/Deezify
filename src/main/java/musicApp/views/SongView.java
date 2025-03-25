@@ -46,7 +46,6 @@ public class SongView  extends  View<SongView, SongController>{
 
 
     private void initComponents() {
-        
         ImageView playIcon = new ImageView(getClass().getResource("/images/play2.png").toExternalForm());
         ImageView editIcon = new ImageView(getClass().getResource("/images/edit.png").toExternalForm());
 
@@ -64,7 +63,7 @@ public class SongView  extends  View<SongView, SongController>{
     }
 
     private void setupContextMenu() {
-        
+
         // create the context menu (opened on right click)
 
         contextMenu = new ContextMenu();
@@ -81,7 +80,7 @@ public class SongView  extends  View<SongView, SongController>{
     }
 
     private void openEditPopup() {
-        
+
         // Edit popup code here
         Stage stage = new Stage();
         stage.setTitle(LanguageManager.getInstance().get("editmetadata.title"));
@@ -96,7 +95,7 @@ public class SongView  extends  View<SongView, SongController>{
         titleField.setText(titleLabel.getText());
         artistField.setText(artistLabel.getText());
         genreField.setText(genreLabel.getText());
-        
+
         // few buttons
         Button saveButton = new Button(LanguageManager.getInstance().get("settings.save"));
         Button cancelButton = new Button(LanguageManager.getInstance().get("settings.cancel"));

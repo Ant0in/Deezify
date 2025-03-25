@@ -1,10 +1,10 @@
 package musicApp.views;
 
-import musicApp.controllers.PlayListController;
-import musicApp.models.Song;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import musicApp.controllers.PlayListController;
+import musicApp.models.Song;
 
 /**
  * The  PlayList view.
@@ -23,7 +23,7 @@ public abstract class PlayListView<V extends PlayListView<V, C>, C extends PlayL
     /**
      * Update list view.
      */
-    public void updateListView(){
+    public void updateListView() {
         listView.getItems().setAll(viewController.toList());
     }
 
@@ -61,5 +61,15 @@ public abstract class PlayListView<V extends PlayListView<V, C>, C extends PlayL
      */
     public BooleanBinding isSelected() {
         return listView.getSelectionModel().selectedItemProperty().isNotNull();
+    }
+
+    /**
+     * Refresh ui.
+     */
+    public void refreshUI() {
+        initTranslation();
+    }
+
+    protected void initTranslation() {
     }
 }

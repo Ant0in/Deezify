@@ -1,5 +1,11 @@
 package musicApp.models;
 
+import com.google.gson.annotations.Expose;
+import javafx.scene.image.Image;
+import javafx.util.Duration;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.exceptions.ID3TagException;
+
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -14,6 +20,7 @@ import org.jaudiotagger.tag.images.Artwork;
 
 public class Song {
 
+    @Expose
     private final Path filePath;
     private String title;
     private String artist;
@@ -58,7 +65,7 @@ public class Song {
         // ?? might wanna throw here idk
 
         MetadataUtils metadataReader = new MetadataUtils();
-        
+
         try {
             Metadata metadata = metadataReader.getMetadata(filePath.toFile());
             this.setMetadata(metadata);
@@ -66,7 +73,7 @@ public class Song {
             Metadata defaultMetadata = new Metadata();
             this.setMetadata(defaultMetadata);
         }
-        
+
     }
 
     /**

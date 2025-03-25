@@ -1,17 +1,21 @@
 package musicApp.models;
 
+import com.google.gson.annotations.Expose;
 import musicApp.utils.DataProvider;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Settings class to store the balance and music folder.
  */
 public class Settings {
+    @Expose
     private double balance;
+    @Expose
     private Path musicFolder;
-
+    private Equalizer equalizer = new Equalizer();
 
     /**
      * Constructor
@@ -19,9 +23,10 @@ public class Settings {
      * @param balance     The balance of the application.
      * @param musicFolder The path to the music folder.
      */
-    public Settings(double balance, Path musicFolder) {
+    public Settings(double balance, Path musicFolder, Equalizer equalizer) {
         this.balance = balance;
         this.musicFolder = musicFolder;
+        this.equalizer = equalizer;
     }
 
     /**
@@ -36,74 +41,11 @@ public class Settings {
      */
     public Settings(String settings) throws IllegalArgumentException {
         this.balance = 0.0;
-        this.musicFolder = DataProvider.getDefaultMusicFolder();
+        DataProvider dataProvider = new DataProvider();
+        this.musicFolder = dataProvider.getDefaultMusicFolder();
 
         if (settings == null || settings.isEmpty()) {
             System.err.println("Settings string is null or empty");
-            return;
-        }
-
-        String[] lines = settings.split("\n");
-        for (String line : lines) {
-            line = line.trim();
-            if (line.isEmpty()) {
-                continue;
-            }
-
-            int equalsPos = line.indexOf('=');
-            if (equalsPos <= 0 || equalsPos == line.length() - 1) {
-                // Invalid line
-                continue;
-            }
-
-            String key = line.substring(0, equalsPos);
-            String value = line.substring(equalsPos + 1);
-
-            switch (key) {
-                case "balance":
-                    this.balance = this.parseBalance(value);
-                    break;
-                case "musicFolder":
-                    this.musicFolder = this.parseMusicFolder(value);
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Parse the balance from a string.
-     *
-     * @param unparsedBalance The balance as a string.
-     * @return The balance as a double.
-     */
-    private double parseBalance(String unparsedBalance) {
-        final double MAX_BALANCE = 1.0;
-        final double MIN_BALANCE = -1.0;
-        final double DEFAULT_BALANCE = 0.0;
-        try {
-            double balance = Double.parseDouble(unparsedBalance);
-            if (balance < MIN_BALANCE || balance > MAX_BALANCE) {
-                System.err.println("Balance must be between " + MIN_BALANCE + " and " + MAX_BALANCE);
-                return DEFAULT_BALANCE;
-            }
-            return balance;
-        } catch (NumberFormatException e) {
-            System.err.println("Balance must be a number");
-            return DEFAULT_BALANCE;
-        }
-    }
-
-    private Path parseMusicFolder(String unparsedMusicFolder) {
-        try {
-            Path musicFolder = Path.of(unparsedMusicFolder);
-            if (!Files.exists(musicFolder) || !Files.isDirectory(musicFolder)) {
-                System.err.println("Music folder does not exist");
-                return DataProvider.getDefaultMusicFolder();
-            }
-            return musicFolder;
-        } catch (Exception e) {
-            System.err.println("Invalid music folder path");
-            return DataProvider.getDefaultMusicFolder();
         }
     }
 
@@ -143,21 +85,32 @@ public class Settings {
         this.musicFolder = musicFolder;
     }
 
+    public Equalizer getEqualizer() {
+        return this.equalizer;
+    }
+
+    public List<Double> getEqualizerBands() {
+        return this.equalizer.getBandsGain();
+    }
+
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof Settings)) {
+        if (!(obj instanceof Settings settings)) {
             return false;
         }
-        Settings settings = (Settings) obj;
-        return settings.getBalance() == this.getBalance() && settings.getMusicDirectory().equals(this.getMusicDirectory());
+        return Double.compare(settings.getBalance(), this.getBalance()) == 0 &&
+                settings.getMusicDirectory().equals(this.getMusicDirectory()) &&
+                settings.getEqualizerBands().equals(this.getEqualizerBands());
     }
 
     @Override
     public String toString() {
-        return "balance=" + balance + "\nmusicFolder=" + musicFolder.toString();
+        return "balance=" + balance + "\n" +
+                "musicFolder=" + musicFolder.toString() + "\n" +
+                "equalizerBands=" + equalizer.toString();
     }
 }

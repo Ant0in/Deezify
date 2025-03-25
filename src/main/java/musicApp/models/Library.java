@@ -1,9 +1,7 @@
 package musicApp.models;
 
-import musicApp.utils.MusicLoader;
+import com.google.gson.annotations.Expose;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +9,7 @@ import java.util.List;
  * Library class to store songs.
  */
 public class Library {
+    @Expose
     List<Song> songList = new ArrayList<>();
 
     /**
@@ -26,31 +25,6 @@ public class Library {
      * Constructor to create an empty library.
      */
     public Library() {
-    }
-
-    /**
-     * Constructor to create a library initialized with folder content.
-     */
-    public Library(Path folderPath) {
-        this.load(folderPath);
-    }
-
-    /**
-     * Loads the library with some sample songs from a settings folder
-     */
-    public void load(Path folderPath) {
-        List<Path> songs;
-        try {
-            MusicLoader loader = new MusicLoader();
-            songs = loader.getAllSongPaths(folderPath);
-        } catch (IOException e) {
-            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
-            return;
-        }
-        this.clear();
-        for (Path songPath : songs) {
-            this.add(new Song(songPath));
-        }
     }
 
     /**
