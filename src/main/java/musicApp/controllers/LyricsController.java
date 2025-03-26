@@ -94,4 +94,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         });
     }
 
+    public void refreshUI() {
+        this.view.refreshUI();
+    }
 }

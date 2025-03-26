@@ -12,7 +12,7 @@
       alignment="CENTER"
       maxWidth="Infinity" maxHeight="Infinity"
       stylesheets="@../css/lyrics.css">
-    <Label fx:id="lyricsTitle" text="Lyrics" styleClass="lyrics-title"  />
+    <Label fx:id="lyricsTitle"  styleClass="lyrics-title"  />
     <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true">
         <VBox fx:id="lyricsContainer" spacing="5" VBox.vgrow="ALWAYS" styleClass="lyrics-container">
         </VBox>

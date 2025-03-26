@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import musicApp.controllers.LyricsController;
-
+import musicApp.utils.LanguageManager;
 import java.util.List;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -27,11 +27,22 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     @FXML
     private VBox lyricsContainer;
 
+    @FXML
+    private Label lyricsTitle;
+
+    private String dialogTitleText;
+    private String dialogHeaderText;
+    private String saveButtonText;
+    private String noLyricsText;
+    private String addLyricsText;
+    private String cancelButtonText;
+
     /**
      * Initializes the view. Sets up listeners and UI components.
      */
     @Override
     public void init() {
+        initTranslation();
         initButtons();
     }
 
@@ -41,8 +52,24 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     public void initButtons() {
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
+            initTranslation();
             updateLyrics();
         });
+    }
+
+    /**
+     * Initializes translations for UI elements using the LanguageManager.
+     * This method loads translated text for labels, buttons, and dialogs.
+     */
+    private void initTranslation() {
+        LanguageManager lang = LanguageManager.getInstance();
+        lyricsTitle.setText(lang.get("lyrics.title"));
+        dialogTitleText = lang.get("dialog.editLyrics.title");
+        dialogHeaderText = lang.get("dialog.editLyrics.header");
+        saveButtonText = lang.get("button.save");
+        noLyricsText = lang.get("lyrics.noLyrics");
+        addLyricsText = lang.get("button.addLyrics");
+        cancelButtonText = lang.get("button.cancel");
     }
 
     /**
@@ -53,11 +80,12 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     public Optional<String> showEditLyricsDialog(String initialText) {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Edit Lyrics");
-        dialog.setHeaderText("Edit the lyrics for this song:");
+        dialog.setTitle(dialogTitleText);
+        dialog.setHeaderText(dialogHeaderText);
 
-        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+        ButtonType saveButtonType = new ButtonType(saveButtonText, ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(cancelButtonText, ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
         TextArea textArea = new TextArea(initialText);
         textArea.setWrapText(true);
@@ -97,11 +125,10 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * The placeholder includes a message and a button to add lyrics.
      */
     private void displayEmptyLyricsPlaceholder() {
-        Label noLyricsLabel = new Label("No lyrics available for this song.\nWould you like to add them?");
+        Label noLyricsLabel = new Label(noLyricsText);
         noLyricsLabel.getStyleClass().add("no-lyrics-label");
 
-
-        Button addLyricsButton = createEditButton("Add Lyrics");
+        Button addLyricsButton = createEditButton(addLyricsText);
         addLyricsButton.setOnAction(e -> viewController.editLyrics());
 
         VBox placeholder = new VBox(10, noLyricsLabel, addLyricsButton);
@@ -146,5 +173,12 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         pencilIcon.setFitHeight(16);
         button.setGraphic(pencilIcon);
         return button;
+    }
+
+    /**
+     * Refreshes the UI by reloading the translations.
+     */
+    public void refreshUI() {
+        initTranslation();
     }
 }

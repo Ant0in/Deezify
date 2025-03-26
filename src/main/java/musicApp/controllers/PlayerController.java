@@ -124,6 +124,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public void refreshUI() {
         view.refreshUI();
         this.queueController.refreshUI();
+        this.lyricsController.refreshUI();
     }
 
     /**
