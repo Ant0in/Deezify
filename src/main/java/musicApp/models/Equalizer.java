@@ -2,17 +2,17 @@ package musicApp.models;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Equalizer {
-    @Expose
-    private List<Double> bandsGain = new ArrayList<>();
-    // default javafx frequencies
-    private final ArrayList<Integer> BANDS_FREQUENCY = new ArrayList<>(Arrays.asList(32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000));
-
-
     public final double MAX_GAIN_DB = 12;
     public final double MIN_GAIN_DB = -24;
+    // default javafx frequencies
+    private final ArrayList<Integer> BANDS_FREQUENCY = new ArrayList<>(Arrays.asList(32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000));
+    @Expose
+    private List<Double> bandsGain = new ArrayList<>();
 
     public Equalizer() {
         List<Double> defaultBandsGain = Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -27,11 +27,6 @@ public class Equalizer {
     private int getBandsSize() {
         return BANDS_FREQUENCY.size();
     }
-
-    private void setBandsGain(List<Double> bandsGain) {
-        this.bandsGain = bandsGain;
-    }
-
 
     private void checkBand(int bandIndex, double gain) {
         checkBandIndex(bandIndex);
@@ -66,6 +61,10 @@ public class Equalizer {
 
     public List<Double> getBandsGain() {
         return bandsGain;
+    }
+
+    private void setBandsGain(List<Double> bandsGain) {
+        this.bandsGain = bandsGain;
     }
 
     public double getMaxGainDB() {

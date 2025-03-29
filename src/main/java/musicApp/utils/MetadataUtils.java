@@ -26,6 +26,33 @@ enum FileType {
 public class MetadataUtils {
 
     /**
+     * Parses the user tags String into separate tag strings contained in an ArrayList
+     *
+     * @param userTagsString : The String to parse ( format : "tag1;tag2;tag3;")
+     * @return : ArrayList containing individual tag strings
+     */
+    static private ArrayList<String> parseUserTags(String userTagsString) {
+        // Replaces the string in case it is null
+        userTagsString = userTagsString == null ? "" : userTagsString;
+
+        String[] tagsArray = userTagsString.split(";", -1);
+
+        // Convert the String array to an ArrayList
+        return new ArrayList<>(Arrays.asList(tagsArray));
+    }
+
+    /**
+     * Formats a user tag ArrayList into a String
+     *
+     * @param userTags : The ArrayList to format
+     * @return : Formatted String
+     */
+    static private String formatUserTags(ArrayList<String> userTags) {
+
+        return String.join(";", userTags);
+    }
+
+    /**
      * This method returns an enum based on the extension of a file
      *
      * @param fd : File Object
@@ -65,11 +92,11 @@ public class MetadataUtils {
         metadata.setGenre(tag.getFirst(FieldKey.GENRE));
         metadata.setDuration(Duration.seconds(file.getAudioHeader().getTrackLength()));
         /* The following call to tag.getFirst can throw an unexpected error, we catch it and
-        * handle it by setting an empty user tag list
-        */
+         * handle it by setting an empty user tag list
+         */
         try {
             metadata.setUserTags(parseUserTags(tag.getFirst(FieldKey.CUSTOM1)));
-        } catch(UnsupportedOperationException e)  {
+        } catch (UnsupportedOperationException e) {
             metadata.setUserTags(new ArrayList<String>());
         }
 
@@ -84,8 +111,7 @@ public class MetadataUtils {
      * This method writes the passed metadata to the file at the given path
      *
      * @param metadata : Metadata object to write to the given song file
-     * @param fd : File object corresponding to the song to modify (wav or mp3)
-     *
+     * @param fd       : File object corresponding to the song to modify (wav or mp3)
      */
     public void setMetadata(Metadata metadata, File fd) throws BadFileTypeException, FieldDataInvalidException, CannotWriteException {
         AudioFile audioFile = readFile(fd);
@@ -98,10 +124,10 @@ public class MetadataUtils {
     }
 
     private Tag createTag(AudioFile audioFile, Metadata metadata) throws FieldDataInvalidException {
-        
+
         Tag tag = audioFile.getTag();
         // Checks if the tag contains a standard field, if not initializes a default tag
-        if ( !tag.hasField(FieldKey.TITLE) ) {
+        if (!tag.hasField(FieldKey.TITLE)) {
             tag = audioFile.getTagAndConvertOrCreateDefault();
         }
         // !!  FieldDataInvalidException can technically be thrown but could not be triggered artificially by us.
@@ -109,13 +135,12 @@ public class MetadataUtils {
         tag.setField(FieldKey.TITLE, metadata.getTitle());
         tag.setField(FieldKey.GENRE, metadata.getGenre());
         tag.setField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));
-        if (metadata.getCover() != null ) {
+        if (metadata.getCover() != null) {
             tag.deleteArtworkField();
             tag.setField(metadata.getCover());
         }
         return tag;
     }
-
 
     /**
      * This method reads the tag of an AudioFile and returns it
@@ -185,31 +210,6 @@ public class MetadataUtils {
             case WAV -> readWAVFile(fd);
             default -> throw new BadFileTypeException("Unsupported file type", new Throwable());
         };
-    }
-
-    /**
-     * Parses the user tags String into separate tag strings contained in an ArrayList
-     * @param userTagsString : The String to parse ( format : "tag1;tag2;tag3;")
-     * @return : ArrayList containing individual tag strings
-     */
-    static private ArrayList<String> parseUserTags(String userTagsString) {
-        // Replaces the string in case it is null
-        userTagsString = userTagsString == null ? "" : userTagsString;
-
-        String[] tagsArray = userTagsString.split(";", -1);
-
-        // Convert the String array to an ArrayList
-        return new ArrayList<>(Arrays.asList(tagsArray));
-    }
-
-    /**
-     * Formats a user tag ArrayList into a String
-     * @param userTags : The ArrayList to format
-     * @return : Formatted String
-     */
-    static private String formatUserTags(ArrayList<String> userTags) {
-
-        return String.join(";", userTags);
     }
 
 }

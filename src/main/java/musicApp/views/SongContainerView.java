@@ -3,7 +3,8 @@ package musicApp.views;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import musicApp.controllers.PlayListController;
+import musicApp.controllers.SongContainerController;
+import musicApp.models.Library;
 import musicApp.models.Song;
 
 /**
@@ -12,7 +13,7 @@ import musicApp.models.Song;
  * @param <V> the type parameter
  * @param <C> the type parameter
  */
-public abstract class PlayListView<V extends PlayListView<V, C>, C extends PlayListController<V, C>>
+public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C extends SongContainerController<V, C, M>, M extends Library>
         extends View<V, C> {
     /**
      * The List view.
@@ -20,10 +21,12 @@ public abstract class PlayListView<V extends PlayListView<V, C>, C extends PlayL
     @FXML
     protected ListView<Song> listView;
 
+
     /**
      * Update list view.
      */
     public void updateListView() {
+        listView.getItems().clear();
         listView.getItems().setAll(viewController.toList());
     }
 

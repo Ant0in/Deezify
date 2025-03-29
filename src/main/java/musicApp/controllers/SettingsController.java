@@ -1,15 +1,14 @@
 package musicApp.controllers;
 
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.utils.LanguageManager;
 import musicApp.views.SettingsView;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * The type Settings controller.
@@ -36,12 +35,14 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         initSettingsStage();
     }
 
-    private void initSettingsStage(){
+    private void initSettingsStage() {
         this.settingsStage.initModality(Modality.APPLICATION_MODAL);
         this.settingsStage.setResizable(false);
         this.settingsStage.setTitle("Settings");
         this.settingsStage.setScene(this.view.getScene());
-        this.settingsStage.setOnCloseRequest(e -> {handleCancel();});
+        this.settingsStage.setOnCloseRequest(_ -> {
+            handleCancel();
+        });
     }
 
     /**
@@ -79,21 +80,11 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     }
 
     /**
-     * Update the balance of the application.
-     *
-     * @param balance The new balance.
-     */
-    private void setBalance(double balance) {
-        settings.setBalance(balance);
-    }
-
-    /**
      * Updates the values of the equalizer with the values of sliders and changes the settings
      */
     private void updateEqualizer() {
         equalizerController.update();
     }
-
 
     /**
      * Get the balance of the application.
@@ -102,6 +93,15 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      */
     public double getBalance() {
         return settings.getBalance();
+    }
+
+    /**
+     * Update the balance of the application.
+     *
+     * @param balance The new balance.
+     */
+    private void setBalance(double balance) {
+        settings.setBalance(balance);
     }
 
     public void openEqualizer() {
@@ -123,7 +123,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         close();
     }
 
-    private void updateView(){
+    private void updateView() {
         view.updateView(settings);
         refreshLanguage();
     }

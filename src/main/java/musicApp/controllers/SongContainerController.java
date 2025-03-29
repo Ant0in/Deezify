@@ -2,17 +2,19 @@ package musicApp.controllers;
 
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.views.PlayListView;
+import musicApp.views.SongContainerView;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The  Playlist controller.
+ * Abstract container class for all classes that will contain Songs.
  *
  * @param <V> the View class
  * @param <C> the Controller class
  */
-public abstract class PlayListController<V extends PlayListView<V, C>, C extends PlayListController<V, C>>
+public abstract class SongContainerController<V extends SongContainerView<V, C, M>, C extends SongContainerController<V, C, M>, M extends Library>
         extends ViewController<V, C> {
 
     /**
@@ -22,18 +24,17 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
     /**
      * The Library.
      */
-    protected final Library library;
+    protected M library = (M) new Library(new ArrayList<>(), "??library??", null);
 
     /**
-     * Instantiates a new Play list controller.
+     * Instantiates a new SongContainer controller.
      *
      * @param view             the view
      * @param playerController the player controller
      */
-    public PlayListController(V view, PlayerController playerController) {
+    public SongContainerController(V view, PlayerController playerController) {
         super(view);
         this.playerController = playerController;
-        this.library = new Library();
     }
 
     /**
@@ -104,16 +105,16 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
      *
      * @return the list
      */
-    public List<Song> toList(){
+    public List<Song> toList() {
         return library.toList();
     }
 
     /**
      * Handle play song.
      */
-    public void handlePlaySong(){
+    public void handlePlaySong() {
         int songIndex = view.getSelectedSongIndex();
-        if (songIndex != -1){
+        if (songIndex != -1) {
             playSong(songIndex);
         }
     }
@@ -125,10 +126,18 @@ public abstract class PlayListController<V extends PlayListView<V, C>, C extends
         this.view.clearSelection();
     }
 
+    public Song getSongByPath(Path path) {
+        return library.getSongByPath(path);
+    }
+
+    public Library getLibrary() {
+        return library;
+    }
+
     /**
      * Refresh ui.
      */
-    public void refreshUI(){
+    public void refreshUI() {
         this.view.refreshUI();
     }
 }

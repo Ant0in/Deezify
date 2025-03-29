@@ -5,18 +5,13 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadFileTypeException;
 import musicApp.exceptions.ID3TagException;
+import musicApp.utils.MetadataUtils;
+import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
-import musicApp.utils.MetadataUtils;
-import javafx.scene.image.Image;
-import javafx.util.Duration;
-import org.jaudiotagger.tag.images.Artwork;
 
 public class Song {
 
@@ -44,20 +39,6 @@ public class Song {
             Metadata defaultMetadata = new Metadata();
             this.setMetadata(defaultMetadata);
         }
-    }
-
-    /**
-     * Loads Metadata from MetadataReader.
-     *
-     * @param metadata The metadata of the song.
-     */
-    private void setMetadata(Metadata metadata) {
-        this.title = metadata.getTitle();
-        this.artist = metadata.getArtist();
-        this.genre = metadata.getGenre();
-        this.cover = metadata.getCover() != null ? metadata.getCover().getBinaryData() : null ;
-        this.userTags = metadata.getUserTags();
-        this.duration = metadata.getDuration();
     }
 
     public void reloadMetadata() {
@@ -153,7 +134,7 @@ public class Song {
      *
      * @param cover the cover in base64.
      */
-    public void setCover( Artwork cover) {
+    public void setCover(Artwork cover) {
         this.cover = cover.getBinaryData();
     }
 
@@ -208,6 +189,20 @@ public class Song {
         metadata.setUserTags(userTags);
         metadata.setDuration(duration);
         return metadata;
+    }
+
+    /**
+     * Loads Metadata from MetadataReader.
+     *
+     * @param metadata The metadata of the song.
+     */
+    private void setMetadata(Metadata metadata) {
+        this.title = metadata.getTitle();
+        this.artist = metadata.getArtist();
+        this.genre = metadata.getGenre();
+        this.cover = metadata.getCover() != null ? metadata.getCover().getBinaryData() : null;
+        this.userTags = metadata.getUserTags();
+        this.duration = metadata.getDuration();
     }
 
     /**

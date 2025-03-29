@@ -127,7 +127,7 @@
 
 .volume .track {
     -fx-background-color: -fx-shadow-highlight-color,
-    linear-gradient(to bottom, derive(black, -10%), black),
+    linear-gradient(to bottom, #1a1a1a, black),
     -track-color;
 }
 

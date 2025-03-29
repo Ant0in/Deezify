@@ -145,7 +145,7 @@ public class TestMetadataReader {
 
         Path defaultSongPath = Paths.get("src", "test", "resources", "defaultWritableTestMP3.mp3");
         Path songPath = Paths.get("src", "test", "resources", "writableTestMP3.mp3");
-        Files.copy(defaultSongPath,songPath, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(defaultSongPath, songPath, StandardCopyOption.REPLACE_EXISTING);
 
         Metadata metadata = new Metadata();
         metadata.setTitle("Edited Title");
@@ -174,7 +174,7 @@ public class TestMetadataReader {
 
         Path defaultSongPath = Paths.get("src", "test", "resources", "defaultWritableTestWAV.wav");
         Path songPath = Paths.get("src", "test", "resources", "writableTestWAV.wav");
-        Files.copy(defaultSongPath,songPath, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(defaultSongPath, songPath, StandardCopyOption.REPLACE_EXISTING);
 
         Metadata metadata = new Metadata();
         metadata.setTitle("Edited Title");
@@ -197,6 +197,7 @@ public class TestMetadataReader {
 
     /**
      * Tests if UserTags are correctly formatted, written on file, read and parsed on wav file
+     *
      * @throws IOException
      * @throws CannotWriteException
      * @throws FieldDataInvalidException
@@ -208,7 +209,7 @@ public class TestMetadataReader {
 
         Path defaultSongPath = Paths.get("src", "test", "resources", "defaultWritableTestWAV.wav");
         Path songPath = Paths.get("src", "test", "resources", "writableTestWAV.wav");
-        Files.copy(defaultSongPath,songPath, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(defaultSongPath, songPath, StandardCopyOption.REPLACE_EXISTING);
 
         Metadata metadata = new Metadata();
 
@@ -229,6 +230,7 @@ public class TestMetadataReader {
 
     /**
      * Tests if UserTags are correctly formatted, written on file, read and parsed on mp3 file
+     *
      * @throws IOException
      * @throws CannotWriteException
      * @throws FieldDataInvalidException
@@ -240,7 +242,7 @@ public class TestMetadataReader {
 
         Path defaultSongPath = Paths.get("src", "test", "resources", "defaultWritableTestMP3.mp3");
         Path songPath = Paths.get("src", "test", "resources", "writableTestMP3.mp3");
-        Files.copy(defaultSongPath,songPath, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(defaultSongPath, songPath, StandardCopyOption.REPLACE_EXISTING);
 
         Metadata metadata = new Metadata();
 
@@ -258,7 +260,6 @@ public class TestMetadataReader {
         Files.delete(songPath);
 
     }
-
 
 
 }

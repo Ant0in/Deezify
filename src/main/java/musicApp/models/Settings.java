@@ -3,7 +3,6 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import musicApp.utils.DataProvider;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 

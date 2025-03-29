@@ -6,10 +6,9 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import musicApp.models.Equalizer;
-import musicApp.models.Playlist;
+import musicApp.models.Library;
 import musicApp.models.Settings;
-import musicApp.utils.gsonTypeAdapter.PathTypeAdapter;
-import musicApp.utils.gsonTypeAdapter.PlaylistTypeAdapter;
+import musicApp.utils.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.utils.gsonTypeAdapter.SettingsTypeAdapter;
 
 import java.io.FileReader;
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -68,39 +68,41 @@ public class DataProvider {
     }
 
     /**
+     * Returns the folder path based on the operating system.
+     *
+     * @param folderName The name of the folder.
+     * @return The folder path.
+     */
+    private Path getFolderByOS(String folderName) {
+        Path folderPath;
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("win")) {
+            folderPath = Path.of(System.getenv("USERPROFILE"), folderName);
+        } else if (os.contains("mac")) {
+            folderPath = Path.of(System.getProperty("user.home"), folderName);
+        } else {
+            folderPath = Path.of(System.getProperty("user.home"), folderName);
+        }
+        return folderPath;
+    }
+
+    /**
      * Returns the default music directory based on the operating system.
      * If the default music directory does not exist, it will be created.
      *
      * @return The default music directory.
      */
     public Path getDefaultMusicFolder() {
-        String os = System.getProperty("os.name").toLowerCase();
-        Path defaultMusicFolder;
-        Path fallbackMusicFolder;
-        String musicFolderName = "Music";
-        String fallbackMusicFolderName = "musicApp";
+        Path musicFolder = getFolderByOS("Music");
+        Path backupMusicFolder = getFolderByOS("MusicApp");
 
-        if (os.contains("win")) {
-            defaultMusicFolder = Path.of(System.getenv("USERPROFILE"), musicFolderName);
-            fallbackMusicFolder = Path.of(System.getenv("USERPROFILE"), fallbackMusicFolderName);
-        } else if (os.contains("mac")) {
-            defaultMusicFolder = Path.of(System.getProperty("user.home"), musicFolderName);
-            fallbackMusicFolder = Path.of(System.getProperty("user.home"), fallbackMusicFolderName);
-        } else {
-            try {
-                Process process = new ProcessBuilder("xdg-user-dir", "MUSIC").start();
-                defaultMusicFolder = Path.of(new String(process.getInputStream().readAllBytes()).trim());
-            } catch (IOException e) {
-                defaultMusicFolder = Path.of(System.getProperty("user.home"), musicFolderName);
-            }
-            fallbackMusicFolder = Path.of(System.getProperty("user.home"), fallbackMusicFolderName);
-        }
-        if (Files.exists(defaultMusicFolder)) {
-            return defaultMusicFolder;
+        if (Files.exists(musicFolder)) {
+            return musicFolder;
         }
 
-        createFolderIfNotExists(fallbackMusicFolder);
-        return fallbackMusicFolder;
+        createFolderIfNotExists(backupMusicFolder);
+        return backupMusicFolder;
     }
 
     /**
@@ -111,7 +113,6 @@ public class DataProvider {
     public void writeSettings(Settings settings) {
         try (java.io.FileWriter writer = new java.io.FileWriter(settingsFile.toString())) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Path.class, new PathTypeAdapter())
                     .registerTypeAdapter(Settings.class, new SettingsTypeAdapter())
                     .serializeNulls()
                     .create();
@@ -139,7 +140,6 @@ public class DataProvider {
     protected Settings getSettings(Path path) {
         try (FileReader reader = new FileReader(path.toFile())) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Path.class, new PathTypeAdapter())
                     .registerTypeAdapter(Settings.class, new SettingsTypeAdapter())
                     .serializeNulls()
                     .create();
@@ -157,7 +157,7 @@ public class DataProvider {
      * @return The playlists read from the playlists file.
      * @throws IllegalArgumentException If an error occurs while reading the playlists file.
      */
-    public List<Playlist> readPlaylists() throws IllegalArgumentException {
+    public List<Library> readPlaylists() throws IllegalArgumentException {
         if (!Files.exists(playlistsFile)) {
             writePlaylists(List.of());
         }
@@ -172,18 +172,17 @@ public class DataProvider {
      * @return The playlists read from the given path.
      * @throws IllegalArgumentException If an error occurs while reading the playlists from the given path.
      */
-    protected List<Playlist> getPlaylists(Path path) throws IllegalArgumentException {
+    protected List<Library> getPlaylists(Path path) throws IllegalArgumentException {
         try (FileReader reader = new FileReader(path.toFile())) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Path.class, new PathTypeAdapter())
-                    .registerTypeAdapter(Playlist.class, new PlaylistTypeAdapter())
+                    .registerTypeAdapter(Library.class, new LibraryTypeAdapter())
                     .serializeNulls()
                     .create();
-            Type playlistListType = new TypeToken<List<Playlist>>() {
+            Type playlistListType = new TypeToken<List<Library>>() {
             }.getType();
-            List<Playlist> playlists = gson.fromJson(reader, playlistListType);
+            List<Library> playlists = gson.fromJson(reader, playlistListType);
             playlists.forEach(this::checkValidPlaylist);
-            return playlists;
+            return checkPlaylists(playlists);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -194,11 +193,10 @@ public class DataProvider {
      *
      * @param playlists The playlists to write.
      */
-    public void writePlaylists(List<Playlist> playlists) {
+    public void writePlaylists(List<Library> playlists) {
         try (java.io.FileWriter writer = new java.io.FileWriter(playlistsFile.toString())) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Path.class, new PathTypeAdapter())
-                    .registerTypeAdapter(Playlist.class, new PlaylistTypeAdapter())
+                    .registerTypeAdapter(Library.class, new LibraryTypeAdapter())
                     .serializeNulls()
                     .create();
             gson.toJson(playlists, writer);
@@ -213,12 +211,27 @@ public class DataProvider {
      * @param playlist The playlist to check.
      * @throws IllegalArgumentException If the playlist is invalid.
      */
-    private void checkValidPlaylist(Playlist playlist) throws IllegalArgumentException {
+    private void checkValidPlaylist(Library playlist) throws IllegalArgumentException {
         if (playlist.getName() == null || playlist.getName().isEmpty()) {
             throw new IllegalArgumentException("Playlist name cannot be empty");
         }
         if (playlist.toList() == null) {
             throw new IllegalArgumentException("Playlist song list cannot be null");
         }
+    }
+
+    private List<Library> checkPlaylists(List<Library> playlists) {
+        if (playlists == null || playlists.isEmpty()) {
+            Library favorites = new Library(new ArrayList<>(), "??favorites??", null);
+            List<Library> validPlaylists = List.of(favorites);
+            writePlaylists(validPlaylists);
+            return validPlaylists;
+        }
+        if (!playlists.getFirst().getName().equals("??favorites??")) {
+            Library favorites = new Library(new ArrayList<>(), "??favorites??", null);
+            playlists.add(0, favorites);
+        }
+        writePlaylists(playlists);
+        return playlists;
     }
 }

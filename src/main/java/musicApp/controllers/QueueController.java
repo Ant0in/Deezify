@@ -1,13 +1,14 @@
 package musicApp.controllers;
 
+import javafx.beans.binding.BooleanBinding;
+import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.views.QueueView;
-import javafx.beans.binding.BooleanBinding;
 
 /**
  * The type Queue controller.
  */
-public class QueueController extends PlayListController<QueueView, QueueController> {
+public class QueueController extends SongContainerController<QueueView, QueueController, Library> {
 
     /**
      * Instantiates a new Queue controller.
@@ -46,13 +47,13 @@ public class QueueController extends PlayListController<QueueView, QueueControll
     /**
      * Clear play list view selection.
      */
-    public void clearPlayListViewSelection(){
+    public void clearPlayListViewSelection() {
         playerController.clearPlayListViewSelection();
     }
 
 
     @Override
-    protected void playSong(Song song){
+    protected void playSong(Song song) {
         library.remove(song);
         super.playSong(song);
         this.view.updateListView();
@@ -61,7 +62,7 @@ public class QueueController extends PlayListController<QueueView, QueueControll
     /**
      * Handle add song.
      */
-    public void handleAddSong(){
+    public void handleAddSong() {
         Song song = playerController.getSelectedPlayListSong();
         try {
             library.add(song);
@@ -74,7 +75,7 @@ public class QueueController extends PlayListController<QueueView, QueueControll
     /**
      * Handle delete song.
      */
-    public void handleDeleteSong(){
+    public void handleDeleteSong() {
         Song song = library.get(this.view.getSelectedSongIndex());
         library.remove(song);
         this.view.updateListView();
@@ -83,7 +84,7 @@ public class QueueController extends PlayListController<QueueView, QueueControll
     /**
      * Handle clear queue.
      */
-    public void handleClearQueue(){
+    public void handleClearQueue() {
         library.clear();
         this.view.updateListView();
     }
@@ -93,7 +94,30 @@ public class QueueController extends PlayListController<QueueView, QueueControll
      *
      * @return the boolean
      */
-    public boolean queueIsEmpty(){
+    public boolean queueIsEmpty() {
         return library.isEmpty();
+    }
+
+    /**
+     * Append playlist to queue.
+     * TODO: Maybe refactor the library add to accept the same songs if queued
+     *
+     * @param playlist the playlist
+     */
+    public void appendPlaylistToQueue(Library playlist) {
+        for (Song song : playlist.toList()) {
+            library.toList().add(song);
+        }
+        this.view.updateListView();
+    }
+
+    /**
+     * Replace queue.
+     *
+     * @param playlist the playlist
+     */
+    public void replaceQueue(Library playlist) {
+        library.clear();
+        appendPlaylistToQueue(playlist);
     }
 }

@@ -4,14 +4,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import musicApp.controllers.MainLibraryController;
-import musicApp.controllers.SongController;
+import musicApp.controllers.SongCellController;
+import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
 
 /**
  * The MainLibrary view.
  */
 @SuppressWarnings("unused")
-public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryController> {
+public class MainLibraryView extends SongContainerView<MainLibraryView, MainLibraryController, Library> {
 
     @FXML
     private TextField songInput;
@@ -69,7 +70,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
      * Initialize the playlist view.
      */
     private void initPlayListView() {
-        listView.setCellFactory(_ -> new SongCell(new SongController(viewController)));
+        listView.setCellFactory(_ -> new SongCell(new SongCellController(viewController)));
         updateListView();
     }
 
@@ -82,6 +83,11 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
                 viewController.clearQueueSelection();
             }
         });
+    }
+
+    @Override
+    public void refreshUI() {
+        updateListView();
     }
 
 }
