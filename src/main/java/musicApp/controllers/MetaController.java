@@ -30,6 +30,7 @@ public class MetaController {
     private final DataProvider dataProvider = new DataProvider();
     private final PlayerController playerController;
     private final SettingsController settingsController;
+    private final List<Library> playlists;
 
     /**
      * Instantiates a new Meta controller.
@@ -39,6 +40,7 @@ public class MetaController {
      */
     public MetaController(Stage stage) throws IOException {
         this.stage = stage;
+        this.playlists = dataProvider.readPlaylists();
         this.playerController = new PlayerController(this,dataProvider.readSettings());
         this.settingsController = new SettingsController(this, dataProvider.readSettings());
     }
@@ -78,6 +80,6 @@ public class MetaController {
     }
 
     public List<Library> getPlaylists() {
-        return this.dataProvider.readPlaylists();
+        return playlists;
     }
 }

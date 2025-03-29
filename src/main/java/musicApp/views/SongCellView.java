@@ -1,5 +1,6 @@
 package musicApp.views;
 
+import javafx.scene.control.*;
 import musicApp.models.Song;
 import musicApp.utils.LanguageManager;
 import musicApp.controllers.SongCellController;
@@ -9,14 +10,10 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ContextMenu;
 
 import java.io.File;
+import java.util.Objects;
 
 public class SongCellView extends  View<SongCellView, SongCellController>{
 
@@ -31,6 +28,7 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
 
     private ContextMenu contextMenu;
     private MenuItem menuItem;
+    private MenuItem addToPlaylist;
 
 
 
@@ -46,8 +44,8 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
 
 
     private void initComponents() {
-        ImageView playIcon = new ImageView(getClass().getResource("/images/play2.png").toExternalForm());
-        ImageView editIcon = new ImageView(getClass().getResource("/images/edit.png").toExternalForm());
+        ImageView playIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play2.png")).toExternalForm());
+        ImageView editIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/edit.png")).toExternalForm());
 
         playButton.setGraphic(playIcon);
         likeButton.setOnAction(event -> {
@@ -57,10 +55,10 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
         editButton.setPickOnBounds(true);
 
 
-        viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
+        viewController.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
             updatePlayButtonIcon();
         });
-        viewController.isPlayingProperty().addListener((obs, oldValue, newValue) -> {
+        viewController.isPlayingProperty().addListener((_, _, _) -> {
             updatePlayButtonIcon();
         });
     }
@@ -68,85 +66,77 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
     private void setupContextMenu() {
 
         // create the context menu (opened on right click)
-
         contextMenu = new ContextMenu();
-        menuItem = new MenuItem(LanguageManager.getInstance().get("button.editmetadata"));
-        menuItem.setOnAction(e -> {
-            openEditPopup();
+
+        // Edit metadata menu item
+        MenuItem editMetadataItem = new MenuItem(LanguageManager.getInstance().get("button.edit_metadata"));
+        editMetadataItem.setOnAction(e -> {
+            viewController.openMetadataEditor();
         });
 
-        contextMenu.getItems().add(menuItem);
+        // Create a submenu for playlists
+        Menu addToPlaylistMenu = new Menu(LanguageManager.getInstance().get("button.add_to_playlist"));
+
+        MenuItem removeFromPlaylistMenu;
+
+        if (viewController.isShowingMainLibrary()){
+            removeFromPlaylistMenu = new Menu(LanguageManager.getInstance().get("button.remove_from_playlist"));
+        } else {
+            removeFromPlaylistMenu = new MenuItem(LanguageManager.getInstance().get("button.remove_from_playlist"));
+        }
+
+        // Update playlists menu items whenever the context menu is shown
+        contextMenu.setOnShowing(e -> {
+            // Clear previous items
+            addToPlaylistMenu.getItems().clear();
+            if(removeFromPlaylistMenu instanceof Menu) {
+                ((Menu) removeFromPlaylistMenu).getItems().clear();
+            }
+
+            // Get all playlists from controller
+            viewController.getPlaylists().stream().skip(2).forEach(playlist -> {
+                // Skip favorites playlist which typically has a special name
+                MenuItem playlistItem = new MenuItem(playlist.getName());
+                playlistItem.setOnAction(event -> {
+                    viewController.addSongToPlaylist(playlist);
+                });
+                addToPlaylistMenu.getItems().add(playlistItem);
+
+                if (viewController.isShowingMainLibrary() && viewController.containsSong(playlist)) {
+                    MenuItem removeItem = new MenuItem(playlist.getName());
+                    removeItem.setOnAction(event -> {
+                        viewController.removeSongFromPlaylist(playlist);
+                    });
+                    if (removeFromPlaylistMenu instanceof Menu) {
+                        ((Menu) removeFromPlaylistMenu).getItems().add(removeItem);
+                    }
+                }
+            });
+
+            if (!viewController.isShowingMainLibrary()){
+                removeFromPlaylistMenu.setOnAction(event -> {
+                    viewController.removeSongFromPlaylist();
+                });
+            }
+
+            // Add "Create new playlist" option at the bottom
+            if (!addToPlaylistMenu.getItems().isEmpty()) {
+                addToPlaylistMenu.getItems().add(new javafx.scene.control.SeparatorMenuItem());
+            }
+            MenuItem newPlaylistItem = new MenuItem(LanguageManager.getInstance().get("create_playlist.create"));
+            newPlaylistItem.setOnAction(event -> {
+                viewController.createNewPlaylistWithSong();
+            });
+            addToPlaylistMenu.getItems().add(newPlaylistItem);
+        });
+
+        // Add items to context menu
+        contextMenu.getItems().addAll(editMetadataItem, addToPlaylistMenu, removeFromPlaylistMenu);
+
+        // Show context menu on click
         editButton.setOnMouseClicked(e -> {
             contextMenu.show(editButton, e.getScreenX(), e.getScreenY());
         });
-
-    }
-
-    private void openEditPopup() {
-
-        // Edit popup code here
-        Stage stage = new Stage();
-        stage.setTitle(LanguageManager.getInstance().get("editmetadata.title"));
-
-        // create the edit fields
-        TextField titleField = new TextField();
-        TextField artistField = new TextField();
-        TextField genreField = new TextField();
-        final File[] selectedFile = new File[1];
-        Button chooseCoverButton = new Button("Choose Cover Image");
-
-        titleField.setText(titleLabel.getText());
-        artistField.setText(artistLabel.getText());
-        genreField.setText(genreLabel.getText());
-
-        // few buttons
-        Button saveButton = new Button(LanguageManager.getInstance().get("settings.save"));
-        Button cancelButton = new Button(LanguageManager.getInstance().get("settings.cancel"));
-
-        chooseCoverButton.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Choose Cover Image");
-
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg")
-            );
-
-            File file = fileChooser.showOpenDialog(stage);
-            if ( file != null ) {
-                selectedFile[0] = file;
-            }
-
-        });
-
-        saveButton.setOnAction(e -> {
-            this.viewController.handleEditMetadata(
-                titleField.getText(),
-                artistField.getText(),
-                genreField.getText(),
-                null,
-                    selectedFile[0] != null ? selectedFile[0].getAbsolutePath() : null
-
-            );
-            stage.close();
-        });
-
-        cancelButton.setOnAction(e -> {
-            stage.close();
-        });
-
-        VBox popupLayout = new VBox(10,
-            new Label(LanguageManager.getInstance().get("song.title")), titleField,
-            new Label(LanguageManager.getInstance().get("song.artist")), artistField,
-            new Label(LanguageManager.getInstance().get("song.genre")), genreField,
-            chooseCoverButton,
-            saveButton,
-            cancelButton
-        );
-        Scene popupScene = new Scene(popupLayout, 300, 250);
-
-        stage.setScene(popupScene);
-        stage.show();
-
     }
 
     private void updatePlayButtonIcon() {
@@ -155,14 +145,14 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
         if (viewController.isLoaded()) {
             getRoot().getStyleClass().add("song-playing");
             if (viewController.isPlaying()) {
-                icon = new ImageView(getClass().getResource("/images/pause.png").toExternalForm());
+                icon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/pause.png")).toExternalForm());
                 playButton.setOnAction(_ -> viewController.handlePause());
             } else {
-                icon = new ImageView(getClass().getResource("/images/play2.png").toExternalForm());
+                icon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play2.png")).toExternalForm());
                 playButton.setOnAction(_ -> viewController.handleUnpause());
             }
         } else {
-            icon = new ImageView(getClass().getResource("/images/play2.png").toExternalForm());
+            icon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play2.png")).toExternalForm());
             playButton.setOnAction(_ -> viewController.handlePlay());
         }
         icon.setFitWidth(20);

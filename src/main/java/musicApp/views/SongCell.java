@@ -18,10 +18,9 @@ public class SongCell extends ListCell<Song> {
         super.updateItem(song, empty);
         if (empty || song == null) {
             setGraphic(null);
+            setText(null);
         } else {
-            if (!song.equals(songCellController.getSong())) {
-                setGraphic(songCellController.getRoot());
-            }
+            setGraphic(songCellController.getRoot());
             songCellController.update(song);
         }
     }

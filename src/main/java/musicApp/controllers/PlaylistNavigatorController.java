@@ -101,6 +101,32 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     }
 
     /**
+     * Add a song to a playlist.
+     *
+     * @param song     to add
+     * @param playlist to add the song to
+     */
+    public void addSongToPlaylist(Song song, Library playlist) {
+        playlist.add(song);
+        DataProvider dataProvider = new DataProvider();
+        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        refreshUI();
+    }
+
+    /**
+     * Remove a song from a playlist.
+     *
+     * @param song     to remove
+     * @param playlist to remove the song from
+     */
+    public void removeSongFromPlaylist(Song song, Library playlist) {
+        playlist.remove(song);
+        DataProvider dataProvider = new DataProvider();
+        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        refreshUI();
+    }
+
+    /**
      * Check if a song is in the favorites.
      *
      * @param song to check

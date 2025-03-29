@@ -81,7 +81,6 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
         }
     }
 
-
     /**
      * Search the library for songs that match the query.
      *
@@ -202,4 +201,52 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
     public boolean isFavorite(Song song) {
         return playerController.isFavorite(song);
     }
+
+    /**
+     * Get all the playlists
+     *
+     * @return the favorites list
+     */
+    public List<Library> getPlaylists() {
+        return playerController.getPlaylists();
+    }
+
+    /**
+     * Add a song to a playlist
+     *
+     * @param song     the song
+     * @param playlist the playlist
+     */
+    public void addSongToPlaylist(Song song, Library playlist) {
+        playerController.addSongToPlaylist(song, playlist);
+    }
+
+    /**
+     * Remove a song from a playlist
+     *
+     * @param song     the song
+     * @param playlist the playlist
+     */
+    public void removeSongFromPlaylist(Song song, Library playlist) {
+        playerController.removeSongFromPlaylist(song, playlist);
+        refreshUI();
+    }
+
+    /**
+     * Remove a song from the main library
+     *
+     * @param song the song
+     */
+    public void removeSongFromPlaylist(Song song) {
+        playerController.removeSongFromPlaylist(song, this.library);
+        refreshUI();
+    }
+
+    /**
+     * Checks if the main library is currently being shown
+     */
+    public boolean isShowingMainLibrary() {
+        return playerController.getPlaylists().get(0).equals(library);
+    }
+
 }

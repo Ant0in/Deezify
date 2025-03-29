@@ -73,4 +73,9 @@ public class MainLibraryView extends SongContainerView<MainLibraryView, MainLibr
         });
     }
 
+    @Override
+    public void refreshUI() {
+        updateListView();
+    }
+
 }

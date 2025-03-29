@@ -17,10 +17,9 @@ public class PlaylistCell extends ListCell<Library> {
         super.updateItem(library, empty);
         if (empty || library == null) {
             setGraphic(null);
+            setText(null);
         } else {
-            if (!library.equals(playlistCellController.getLibrary())) {
-                setGraphic(playlistCellController.getRoot());
-            }
+            setGraphic(playlistCellController.getRoot());
             playlistCellController.update(library);
         }
     }

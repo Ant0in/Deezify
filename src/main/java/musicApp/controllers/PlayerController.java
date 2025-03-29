@@ -308,6 +308,32 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         playlistNavigatorController.toggleFavorites(song);
     }
 
+    /**
+     * Add a song to a playlist
+     *
+     * @param song The song to add
+     * @param playlist The playlist to add the song to
+     */
+    public void addSongToPlaylist(Song song, Library playlist) {
+        playlistNavigatorController.addSongToPlaylist(song, playlist);
+    }
+
+    /**
+     * Remove a song from a playlist
+     *
+     * @param song The song to remove
+     * @param playlist The playlist to remove the song from
+     */
+    public void removeSongFromPlaylist(Song song, Library playlist) {
+        playlistNavigatorController.removeSongFromPlaylist(song, playlist);
+    }
+
+    /**
+     * Return if a song is a favorite
+     *
+     * @param song The song to check
+     * @return True if the song is a favorite, false otherwise
+     */
     public boolean isFavorite(Song song) {
         return playlistNavigatorController.isFavorite(song);
     }

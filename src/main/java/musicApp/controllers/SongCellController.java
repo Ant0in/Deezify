@@ -3,7 +3,9 @@ package musicApp.controllers;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
+import musicApp.models.Library;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.utils.MetadataUtils;
@@ -115,14 +117,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
         return mainLibraryController.isFavorite(song);
     }
 
-    /**
-     * Handle when the user wants to edit the metadata of the song.
-     * Leave the field to `null` if you don't want to change it.
-     *
-     * @param title the title
-     * @param artist the artist
-     * @param genre the genre
-     */
+
     public void handleEditMetadata(String title, String artist, String genre, ArrayList<String> userTags, String coverPath){
 
         if (song == null) {
@@ -149,5 +144,82 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
         song.reloadMetadata();
         view.update(song);
     }
+    /**
+     * Get all available playlists.
+     *
+     * @return List of all playlists
+     */
+    public List<Library> getPlaylists() {
+        return mainLibraryController.getPlaylists();
+    }
 
+    /**
+     * Add the current song to a playlist.
+     *
+     * @param playlist The playlist to add the song to
+     */
+    public void addSongToPlaylist(Library playlist) {
+        if (song == null) {
+            view.displayError("No song to add");
+            return;
+        }
+        mainLibraryController.addSongToPlaylist(song, playlist);
+    }
+
+    /**
+     * remove the song from specified playlist.
+     *
+     * @param playlist The playlist to remove the song from
+     */
+    public void removeSongFromPlaylist(Library playlist) {
+        if (song == null) {
+            view.displayError("No song to remove");
+            return;
+        }
+        mainLibraryController.removeSongFromPlaylist(song, playlist);
+    }
+
+    /**
+     * remove the song from current playlist.
+     */
+    public void removeSongFromPlaylist() {
+        if (song == null) {
+            view.displayError("No song to remove");
+            return;
+        }
+        mainLibraryController.removeSongFromPlaylist(song);
+    }
+
+    public boolean isShowingMainLibrary() {
+        return mainLibraryController.isShowingMainLibrary();
+    }
+
+    /**
+     * Create a new playlist and add the current song to it.
+     */
+    public void createNewPlaylistWithSong() {
+        if (song == null) {
+            view.displayError("No song to add");
+            return;
+        }
+//        mainLibraryController.createNewPlaylistWithSong(song);
+    }
+
+    /**
+     * Check if the song is in the playlist.
+     *
+     * @param playlist The playlist to check
+     * @return True if the song is in the playlist, false otherwise.
+     */
+    public boolean containsSong(Library playlist) {
+        return playlist.toList().contains(song);
+    }
+
+    public void openMetadataEditor() {
+        EditMetadataController editMetadataController = new EditMetadataController( this);
+    }
+
+    public void refreshSong() {
+        view.update(song);
+    }
 }
