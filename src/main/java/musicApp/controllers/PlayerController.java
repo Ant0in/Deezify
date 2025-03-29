@@ -28,8 +28,8 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     private ToolBarController toolBarController;
     private MainLibraryController mainLibraryController;
     private QueueController queueController;
-//    private PlaylistController playlistController;
     private PlaylistNavigatorController playlistNavigatorController;
+
     /**
      * Constructor
      *
@@ -300,10 +300,22 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         queueController.appendPlaylistToQueue(playlist);
     }
 
+    /**
+     * Replace the queue with all the songs of a playlist
+     *
+     * @param playlist The playlist to replace the queue with
+     */
     public void replaceQueue(Library playlist){
         queueController.replaceQueue(playlist);
     }
 
+    /**
+     * Toggle the favorite status of a song
+     * If the song is already a favorite, it will be removed from the favorites
+     * If the song is not a favorite, it will be added to the favorites
+     *
+     * @param song The song to toggle the favorite status of
+     */
     public void toggleFavorites(Song song) {
         playlistNavigatorController.toggleFavorites(song);
     }

@@ -40,7 +40,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         this.settingsStage.setResizable(false);
         this.settingsStage.setTitle("Settings");
         this.settingsStage.setScene(this.view.getScene());
-        this.settingsStage.setOnCloseRequest(e -> {handleCancel();});
+        this.settingsStage.setOnCloseRequest(_ -> {handleCancel();});
     }
 
     /**

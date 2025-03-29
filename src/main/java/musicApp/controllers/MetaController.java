@@ -6,7 +6,6 @@ import musicApp.models.Settings;
 import musicApp.utils.DataProvider;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -79,6 +78,11 @@ public class MetaController {
         }
     }
 
+    /**
+     * Get the playlists.
+     *
+     * @return the playlists
+     */
     public List<Library> getPlaylists() {
         return playlists;
     }

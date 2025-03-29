@@ -207,6 +207,11 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
         audioPlayer.setVolume(volume);
     }
 
+    /**
+     * Set the equalizer bands.
+     *
+     * @param equalizerBandsGain The gain of the equalizer bands.
+     */
     public void setEqualizerBands(List<Double> equalizerBandsGain){
         audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }

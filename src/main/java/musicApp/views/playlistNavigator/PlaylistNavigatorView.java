@@ -107,15 +107,15 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
         MenuItem replaceQueueItem = new MenuItem("Replace Queue");
         MenuItem deleteItem = new MenuItem("Delete");
 
-        addToQueueItem.setOnAction(e -> {
+        addToQueueItem.setOnAction(_ -> {
             viewController.appendToQueue(listView.getSelectionModel().getSelectedItem());
         });
 
-        replaceQueueItem.setOnAction(e -> {
+        replaceQueueItem.setOnAction(_ -> {
             viewController.replaceQueue(listView.getSelectionModel().getSelectedItem());
         });
 
-        deleteItem.setOnAction(e -> {
+        deleteItem.setOnAction(_ -> {
             viewController.deletePlaylist(listView.getSelectionModel().getSelectedItem());
         });
 

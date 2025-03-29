@@ -1,6 +1,5 @@
 package musicApp.controllers;
 
-
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -194,10 +193,23 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
         return playerController.isPlayingProperty();
     }
 
+    /**
+     * Toggle the favorites status of a song.
+     * If the song is already a favorite, it will be removed from the favorites.
+     * If the song is not a favorite, it will be added to the favorites.
+     *
+     * @param song the song
+     */
     public void toggleFavorites(Song song) {
         playerController.toggleFavorites(song);
     }
 
+    /**
+     * Checks if a song is a favorite.
+     *
+     * @param song the song
+     * @return the boolean
+     */
     public boolean isFavorite(Song song) {
         return playerController.isFavorite(song);
     }

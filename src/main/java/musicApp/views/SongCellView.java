@@ -181,6 +181,9 @@ public class SongCellView extends  View<SongCellView, SongCellController>{
         updateLikeButton();
     }
 
+    /**
+     * Set the actions for the buttons.
+     */
     private void setButtonActions() {
         playButton.setOnAction(_ -> this.viewController.handlePlay());
     }

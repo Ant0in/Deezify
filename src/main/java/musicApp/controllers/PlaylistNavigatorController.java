@@ -13,7 +13,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
 
     private List<Library> playlists = new ArrayList<>();
     private Library selectedLibrary;
-    private PlayerController playerController;
+    private final PlayerController playerController;
 
     /**
      * Instantiates a new View controller.
@@ -27,16 +27,29 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         loadPlaylists();
     }
 
+    /**
+     * Load the playlists.
+     */
     public void loadPlaylists() {
         playlists = playerController.getPlaylists();
         playlists.addFirst(playerController.getLibrary());
         view.update(playlists);
     }
 
+    /**
+     * Get the selected library.
+     *
+     * @return the selected library
+     */
     public Library getSelectedLibrary() {
         return selectedLibrary;
     }
 
+    /**
+     * Set the selected library.
+     *
+     * @param library the library
+     */
     public void setSelectedLibrary(Library library) {
         this.selectedLibrary = library;
         playerController.updateShownPlaylist(library);
@@ -46,6 +59,12 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         setSelectedLibrary(library);
     }
 
+    /**
+     * Create a new playlist.
+     *
+     * @param name     the name of the playlist
+     * @param imagePath the path to the image of the playlist
+     */
     public void createPlaylist(String name, Path imagePath) {
         Library playlist = new Library(new ArrayList<>(), name, imagePath);
         playlists.add(playlist);
@@ -54,10 +73,22 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         loadPlaylists();
     }
 
+    /**
+     * Check if a playlist is deletable.
+     * For now, the favorites and the library are not deletable.
+     *
+     * @param library the playlist
+     * @return true if the playlist is deletable
+     */
     public boolean isDeletable(Library library) {
         return !(playlists.getFirst().equals(library) || playlists.get(1).equals(library));
     }
 
+    /**
+     * Delete a playlist.
+     *
+     * @param library the playlist
+     */
     public void deletePlaylist(Library library) {
         if (isDeletable(library)) {
             playlists.remove(library);
@@ -67,14 +98,27 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         }
     }
 
+    /**
+     * Append all the songs of a playlist to the queue.
+     *
+     * @param library the playlist
+     */
     public void appendToQueue(Library library) {
         playerController.appendPlaylistToQueue(library);
     }
 
+    /**
+     * Replace the queue with the songs of a playlist.
+     *
+     * @param library the playlist
+     */
     public void replaceQueue(Library library) {
         playerController.replaceQueue(library);
     }
 
+    /**
+     * Refresh the UI.
+     */
     public void refreshUI() {
         view.update(playlists);
     }
