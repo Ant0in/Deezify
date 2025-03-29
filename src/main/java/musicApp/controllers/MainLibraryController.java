@@ -261,4 +261,21 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
         return playerController.getPlaylists().get(0).equals(library);
     }
 
+
+    /**
+     * Handle add song.
+     */
+    public void handleAddSong() {
+        playerController.handleAddSongToMainLibrary();
+    }
+
+    /**
+     * Add song to library.
+     * @param songPath
+     */
+    public void addSong(Path songPath) {
+        Song song = new Song(songPath);
+        library.add(song);
+        view.updateListView();
+    }
 }

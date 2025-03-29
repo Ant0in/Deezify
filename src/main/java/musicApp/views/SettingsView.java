@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import musicApp.controllers.SettingsController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
+import musicApp.utils.FileDialogHelper;
 import musicApp.utils.LanguageManager;
 
 import java.io.File;
@@ -67,8 +68,11 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         initDirectoryLabel();
     }
 
+    /**
+     * Initialize the directory label to display the current music directory.
+     */
     private void initDirectoryLabel() {
-        directoryLabel.setText(viewController.getMusicDirectory());
+        directoryLabel.setText(viewController.getMusicDirectory().toString());
     }
 
     /**
@@ -139,11 +143,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Handle when the browse button is pressed
      */
     private void handleBrowseDirectory() {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select Music Folder");
-        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-
-        File selectedDirectory = directoryChooser.showDialog(null);
+        File selectedDirectory = FileDialogHelper.chooseDirectory(null, "Select Music Folder");
         if (selectedDirectory != null) {
             this.directoryLabel.setText(selectedDirectory.getAbsolutePath());
         }

@@ -137,7 +137,11 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         close();
     }
 
-    public String getMusicDirectory() {
-        return settings.getMusicDirectory().toString();
+    /**
+     * Get the path of the music directory
+     * @return The path of the music directory
+     */
+    public Path getMusicDirectory() {
+        return settings.getMusicDirectory();
     }
 }
