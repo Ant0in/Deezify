@@ -76,7 +76,6 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         // update song mapping
         String newRelativePath = lyricsFileName;
         LyricsMappingManager.updateLyricsMapping(songName, newRelativePath);
-        currentSong.setLyrics(newRelativePath);  // metadata update
         view.updateLyrics();
     }
 

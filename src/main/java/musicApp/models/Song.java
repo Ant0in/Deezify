@@ -20,7 +20,6 @@ public class Song {
     private String genre;
     private byte[] cover;
     private Duration duration;
-    private String lyrics;
 
     /**
      * Constructor from MetadataReader.
@@ -50,7 +49,6 @@ public class Song {
         this.genre = metadata.getGenre();
         this.cover = metadata.getCover();
         this.duration = metadata.getDuration();
-        this.lyrics = metadata.getLyrics();
     }
 
     /**
@@ -132,24 +130,6 @@ public class Song {
      */
     public void setCover(byte[] cover) {
         this.cover = cover;
-    }
-
-    /**
-     * Get the lyrics of the song.
-     *
-     * @return The lyrics of the song.
-     */
-    public String getLyrics() {
-        return lyrics;
-    }
-    
-    /**
-     * Set the lyrics of the song.
-     *
-     * @return The lyrics of the song.
-     */
-    public void setLyrics(String lyrics) {
-        this.lyrics = lyrics;
     }
 
 

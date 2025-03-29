@@ -14,7 +14,6 @@ public class Metadata {
     private String genre;
     private Duration duration;
     private byte[] cover;
-    private String lyrics;
 
     /**
      * Constructor to create a new Metadata object with default values.
@@ -26,7 +25,6 @@ public class Metadata {
         this.genre = languageManager.get("metadata.genre");
         this.duration = Duration.ZERO;
         this.cover = null;
-        this.lyrics = "";
     }
 
     /**
@@ -134,24 +132,4 @@ public class Metadata {
         }
     }
 
-    /**
-     * Retrieves the lyrics of the song.
-     * If the lyrics are not available, returns an empty string.
-     *
-     * @return The lyrics of the song.
-     */
-    public String getLyrics() {
-        return this.lyrics; 
-    }
-
-    /**
-     * Sets the lyrics of the song.
-     *
-     * @param lyrics The lyrics of the song.
-     */ 
-    public void setLyrics(String lyrics) {
-        if (lyrics != null && !lyrics.isEmpty()) {
-            this.lyrics = lyrics;
-        }
-    }
 }
