@@ -188,4 +188,21 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
     public BooleanProperty isPlayingProperty() {
         return playerController.isPlayingProperty();
     }
+
+    /**
+     * Handle add song.
+     */
+    public void handleAddSong() {
+        playerController.handleAddSongToMainLibrary();
+    }
+
+    /**
+     * Add song to library.
+     * @param songPath
+     */
+    public void addSong(Path songPath) {
+        Song song = new Song(songPath);
+        library.add(song);
+        view.updateListView();   
+    }
 }

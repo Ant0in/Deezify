@@ -5,6 +5,7 @@ import musicApp.models.Settings;
 import musicApp.utils.DataProvider;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * The Meta controller.
@@ -72,5 +73,13 @@ public class MetaController {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    /**
+     * Get the music directory from the settings controller.
+     * @return
+     */
+    public Path getMusicDirectory() {
+        return this.settingsController.getMusicDirectory();
     }
 }

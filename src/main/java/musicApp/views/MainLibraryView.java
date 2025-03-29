@@ -2,6 +2,7 @@ package musicApp.views;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 import musicApp.controllers.MainLibraryController;
 import musicApp.controllers.SongController;
 import musicApp.utils.LanguageManager;
@@ -15,6 +16,9 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
     @FXML
     private TextField songInput;
 
+    @FXML
+    private Button addSongButton;
+
     /**
      * Instantiates a new Main library view.
      */
@@ -24,6 +28,7 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
     @Override
     public void init() {
         initSongInput();
+        initButtons();
         initPlayListView();
         updateListView();
         initTranslation();
@@ -42,6 +47,13 @@ public class MainLibraryView extends PlayListView<MainLibraryView, MainLibraryCo
                 updateListView();
             }
         });
+    }
+
+    /**
+     * Initialize the buttons in the view.
+     */
+    private void initButtons() {
+        addSongButton.setOnAction(event -> viewController.handleAddSong());
     }
 
     /**

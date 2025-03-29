@@ -1,10 +1,14 @@
 package musicApp.controllers;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.models.*;
+import musicApp.utils.FileDialogHelper;
+import musicApp.utils.FileManager;
 import musicApp.views.PlayerView;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.layout.Pane;
@@ -246,5 +250,25 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public BooleanProperty isPlayingProperty() {
         return mediaPlayerController.isPlayingProperty();
     }
+
+    /**
+     * Handle add song to main library.
+     * This method opens a file dialog to select an audio file and adds it to the main library.
+     */
+    public void handleAddSongToMainLibrary() {
+        File selectedFile = FileDialogHelper.chooseAudioFile(null, "Select Music File");
+        if (selectedFile != null) {
+            Path mainLibraryPath = metaController.getMusicDirectory();
+            try {
+                FileManager fileManager = new FileManager();
+                Path copiedFilePath = fileManager.copyFileToDirectory(selectedFile, mainLibraryPath);
+                System.out.println("File copied with succes : " + copiedFilePath);
+                mainLibraryController.addSong(copiedFilePath);
+            } catch (IOException e) {
+                System.err.println("Error while copying : " + e.getMessage());
+            }
+        }
+    }
+
 
 }
