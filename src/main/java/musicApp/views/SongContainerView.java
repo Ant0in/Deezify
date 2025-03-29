@@ -25,7 +25,7 @@ public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C 
     /**
      * Update list view.
      */
-    public void updateListView(){
+    public void updateListView() {
         listView.getItems().clear();
         listView.getItems().setAll(viewController.toList());
     }
@@ -64,5 +64,15 @@ public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C 
      */
     public BooleanBinding isSelected() {
         return listView.getSelectionModel().selectedItemProperty().isNotNull();
+    }
+
+    /**
+     * Refresh ui.
+     */
+    public void refreshUI() {
+        initTranslation();
+    }
+
+    protected void initTranslation() {
     }
 }

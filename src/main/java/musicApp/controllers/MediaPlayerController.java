@@ -8,6 +8,8 @@ import musicApp.models.AudioPlayer;
 import musicApp.models.Song;
 import musicApp.views.MediaPlayerView;
 
+import java.util.List;
+
 /**
  * The  MediaPlayer controller.
  */
@@ -203,5 +205,9 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      */
     public void setVolume(double volume) {
         audioPlayer.setVolume(volume);
+    }
+
+    public void setEqualizerBands(List<Double> equalizerBandsGain){
+        audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }
 }

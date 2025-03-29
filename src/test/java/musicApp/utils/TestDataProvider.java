@@ -1,6 +1,7 @@
 package musicApp.utils;
 
 import musicApp.models.Library;
+import musicApp.models.Settings;
 import org.junit.Test;
 
 import java.net.URISyntaxException;
@@ -28,5 +29,13 @@ public class TestDataProvider extends DataProvider {
     @Test
     public void testBadPlaylistsSongs() {
         assertThrows(IllegalArgumentException.class, () -> getPlaylists(Paths.get("src", "test", "resources", "badPlaylistsSongs.json")));
+    }
+
+    @Test
+    public void testGetSettings() {
+        Settings settings = getSettings(Paths.get("src", "test", "resources", "settings.json"));
+        assertEquals(0.0, settings.getBalance(), 0.0);
+        assertEquals(10, settings.getEqualizerBands().size());
+        assertNotNull(settings.getMusicDirectory());
     }
 }

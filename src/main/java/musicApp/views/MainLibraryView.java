@@ -48,7 +48,8 @@ public class MainLibraryView extends SongContainerView<MainLibraryView, MainLibr
     /**
      * Initialize the translations of the texts in the view.
      */
-    public void initTranslation() {
+    @Override
+    protected void initTranslation() {
         songInput.setPromptText(LanguageManager.getInstance().get("search"));
     }
 
@@ -66,7 +67,7 @@ public class MainLibraryView extends SongContainerView<MainLibraryView, MainLibr
      */
     private void setupListSelectionListeners() {
         listView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
-            if (newVal != null){
+            if (newVal != null) {
                 viewController.clearQueueSelection();
             }
         });

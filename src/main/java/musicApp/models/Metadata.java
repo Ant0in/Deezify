@@ -2,6 +2,12 @@ package musicApp.models;
 
 import javafx.util.Duration;
 import musicApp.utils.LanguageManager;
+import org.jaudiotagger.tag.images.Artwork;
+import org.jaudiotagger.tag.images.ArtworkFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Represents metadata associated with a song.
@@ -13,7 +19,8 @@ public class Metadata {
     private String artist;
     private String genre;
     private Duration duration;
-    private byte[] cover;
+    private Artwork cover;
+    private ArrayList<String> userTags;
 
     /**
      * Constructor to create a new Metadata object with default values.
@@ -24,7 +31,7 @@ public class Metadata {
         this.artist = languageManager.get("metadata.artist");
         this.genre = languageManager.get("metadata.genre");
         this.duration = Duration.ZERO;
-        this.cover = null;
+        this.userTags = new ArrayList<>();
     }
 
     /**
@@ -112,23 +119,43 @@ public class Metadata {
     }
 
     /**
-     * Retrieves the cover image in Base64 encoding, if present.
-     * If the cover is not available, returns an empty Optional.
+     * Retrieves the cover image.
      *
-     * @return An Optional containing the cover image in Base64 format or empty if not available.
+     * @return The cover image in byte array format or empty if not available.
      */
-    public byte[] getCover() {
+    public Artwork getCover() {
         return this.cover;
     }
 
     /**
-     * Sets the cover image in Base64 encoding.
+     * Sets the cover image
      *
-     * @param cover The cover image in Base64 format.
+     * @param cover The cover image.
      */
-    public void setCover(byte[] cover) {
-        if (cover != null && cover.length > 0) {
-            this.cover = cover;
+    public void setCover(Artwork cover) {
+        this.cover = cover;
+    }
+
+    public void setCoverFromBytes(byte[] bytes) {
+        Artwork artwork = ArtworkFactory.getNew();
+        artwork.setBinaryData(bytes);
+        this.cover = artwork;
+    }
+
+    public void loadCoverFromPath(String path) throws IOException {
+        if (path != null && !path.isEmpty()) {
+            Artwork artwork = ArtworkFactory.createArtworkFromFile(new File(path));
+            setCover(artwork);
+        }
+    }
+
+    public ArrayList<String> getUserTags() {
+        return this.userTags;
+    }
+
+    public void setUserTags(ArrayList<String> userTags) {
+        if (userTags != null) {
+            this.userTags = userTags;
         }
     }
 }

@@ -90,13 +90,6 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
     }
 
     /**
-     * Refresh ui.
-     */
-    public void refreshUI(){
-        this.view.refreshUI();
-    }
-
-    /**
      * Queue is empty boolean.
      *
      * @return the boolean

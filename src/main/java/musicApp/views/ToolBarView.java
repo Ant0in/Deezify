@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * The ToolBar view.
  */
-public class ToolBarView extends View<ToolBarView,ToolBarController> {
+public class ToolBarView extends View<ToolBarView, ToolBarController> {
     @FXML
     private Button exitButton, btnSettings;
     @FXML
@@ -22,14 +22,14 @@ public class ToolBarView extends View<ToolBarView,ToolBarController> {
     /**
      * Instantiates a new Tool bar view.
      */
-    public ToolBarView(){
+    public ToolBarView() {
 
     }
 
     /**
      * Initialize the view.
      */
-    public void init(){
+    public void init() {
         bindButtonsImages();
         setButtonActions();
     }
@@ -59,6 +59,7 @@ public class ToolBarView extends View<ToolBarView,ToolBarController> {
 
     /**
      * Handle the settings button.
+     *
      * @param event The action event.
      */
     private void handleSettings(ActionEvent event) {

@@ -8,7 +8,7 @@
   <groupId>ulb</groupId>
   <artifactId>musicApp</artifactId>
   <version>0.1</version>
-  <name>MusicApp</name>
+  <name>musicApp</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

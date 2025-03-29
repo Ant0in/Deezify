@@ -3,7 +3,6 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 
-import java.io.ByteArrayInputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;

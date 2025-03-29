@@ -1,7 +1,11 @@
 package musicApp.utils;
 
+import musicApp.enums.Language;
+
+import java.util.EnumSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.prefs.Preferences;
 
 /**
@@ -12,8 +16,8 @@ import java.util.prefs.Preferences;
 public class LanguageManager {
     private static LanguageManager instance;
     private final Preferences prefs = Preferences.userNodeForPackage(LanguageManager.class);
-    private final String DEFAULT_LANGUAGE = "en"; // default language if pc language is not supported
-    private final String[] SUPPORTED_LANGUAGES = {"fr", "en", "nl"}; // supported languages
+    private final Language DEFAULT_LANGUAGE = Language.ENGLISH; // default language if pc language is not supported
+    private static final Set<Language> SUPPORTED_LANGUAGES = EnumSet.of(Language.ENGLISH, Language.FRENCH, Language.DUTCH);
     private final String[] BUNDLE_NAMES = {
             "lang.messages",
             "lang.general",
@@ -23,20 +27,17 @@ public class LanguageManager {
             "lang.default_values",
             "lang.create_playlist"
     }; // bundle names
-
     private final ResourceBundle[] bundles = new ResourceBundle[BUNDLE_NAMES.length];
     private Locale currentLocale;
 
 
     public LanguageManager() {
-        String savedLanguage = prefs.get("language", Locale.getDefault().getLanguage());
-        if (!isLanguageSupported(savedLanguage)) {
-            savedLanguage = DEFAULT_LANGUAGE;
-        }
+        String savedLanguageString = prefs.get("language", Locale.getDefault().getLanguage());
+        Language savedLanguage = Language.fromCode(savedLanguageString);
         setLanguage(savedLanguage);
     }
 
-    public LanguageManager(String language) {
+    public LanguageManager(Language language) {
         setLanguage(language);
     }
 
@@ -55,19 +56,19 @@ public class LanguageManager {
     /**
      * Set the language of the application.
      *
-     * @param languageCode The language code (e.g., "en", "fr", "nl").
+     * @param language The language
      */
-    public void setLanguage(String languageCode) {
-        if (!isLanguageSupported(languageCode)) {
-            languageCode = DEFAULT_LANGUAGE; // set default language if not supported
+    public void setLanguage(Language language) {
+        if (!isLanguageSupported(language)) {
+            language = DEFAULT_LANGUAGE; // set default language if not supported
         }
-        currentLocale = Locale.forLanguageTag(languageCode);
+        currentLocale = Locale.forLanguageTag(language.getCode());
 
         for (int i = 0; i < BUNDLE_NAMES.length; i++) {
             bundles[i] = ResourceBundle.getBundle(BUNDLE_NAMES[i], currentLocale);
         }
 
-        prefs.put("language", languageCode); // save the language in the preferences
+        prefs.put("language", language.getCode()); // save the language in the preferences
     }
 
     /**
@@ -84,27 +85,22 @@ public class LanguageManager {
     }
 
     /**
-     * Get the current locale.
+     * Get the current language.
      *
-     * @return The current locale.
+     * @return The current language.
      */
-    public Locale getCurrentLocale() {
-        return currentLocale;
+    public Language getCurrentLanguage() {
+        return Language.fromCode(currentLocale.getLanguage());
     }
 
     /**
      * Check if the language is supported.
      *
-     * @param languageCode The language code.
+     * @param language The language.
      * @return True if the language is supported, False otherwise.
      */
-    private boolean isLanguageSupported(String languageCode) {
-        for (String lang : SUPPORTED_LANGUAGES) {
-            if (lang.equals(languageCode)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean isLanguageSupported(Language language) {
+        return SUPPORTED_LANGUAGES.contains(language);
     }
 }
 

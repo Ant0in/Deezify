@@ -133,5 +133,12 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
     public Library getLibrary() {
         return library;
     }
+
+    /**
+     * Refresh ui.
+     */
+    public void refreshUI(){
+        this.view.refreshUI();
+    }
 }
 

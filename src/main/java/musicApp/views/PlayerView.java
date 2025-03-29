@@ -15,7 +15,7 @@ import musicApp.utils.LanguageManager;
  * PlayerView
  * Class that represents the view of the music player.
  */
-public class PlayerView extends View<PlayerView,PlayerController> {
+public class PlayerView extends View<PlayerView, PlayerController> {
     @FXML
     private Pane controls;
     @FXML
@@ -30,17 +30,17 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     /**
      * Instantiates a new Player view.
      */
-    public PlayerView()  {
+    public PlayerView() {
     }
 
 
     @Override
-    public void init(){
+    public void init() {
         initPanes();
         initBindings();
     }
 
-    private void initPanes(){
+    private void initPanes() {
         initControlPanel();
         initToolBar();
         initMainLibrary();
@@ -48,19 +48,19 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         initPlaylistNavigator();
     }
 
-    private void initControlPanel(){
+    private void initControlPanel() {
         controls = viewController.getControlPanelRoot();
         labelContainer.setBottom(controls);
     }
 
-    private void initToolBar(){
+    private void initToolBar() {
         Pane toolBarPane = viewController.getToolBarRoot();
         labelContainer.setTop(toolBarPane);
     }
 
 
-    private void initMainLibrary(){
-        playerContainer.getChildren().set(0,viewController.getMainLibraryRoot());
+    private void initMainLibrary() {
+        playerContainer.getChildren().set(0, viewController.getMainLibraryRoot());
     }
 
     private void initPlaylistNavigator(){
@@ -68,8 +68,8 @@ public class PlayerView extends View<PlayerView,PlayerController> {
         labelContainer.setLeft(playListsPane);
     }
 
-    private void initQueue(){
-        playerContainer.getChildren().set(1,viewController.getQueueRoot());
+    private void initQueue() {
+        playerContainer.getChildren().set(1, viewController.getQueueRoot());
     }
 
 
@@ -84,7 +84,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
     /**
      * Bind the visibility of the playing song anchor (the controls at the bottom).
      */
-    private void bindPlayingSongAnchor(){
+    private void bindPlayingSongAnchor() {
         controls.setVisible(true);
     }
 
@@ -94,7 +94,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
      *
      * @param stage the stage
      */
-    public void enableDoubleClickToGrow(Stage stage){
+    public void enableDoubleClickToGrow(Stage stage) {
         labelContainer.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 stage.setFullScreen(true);
@@ -104,6 +104,7 @@ public class PlayerView extends View<PlayerView,PlayerController> {
 
     /**
      * Setup the window close handler.
+     *
      * @param stage The stage to setup the handler for.
      */
     private void setupWindowCloseHandler(Stage stage) {
