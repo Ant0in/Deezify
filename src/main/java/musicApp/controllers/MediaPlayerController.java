@@ -22,7 +22,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @param playerController the player controller
      */
-    public MediaPlayerController(PlayerController playerController){
+    public MediaPlayerController(PlayerController playerController) {
         super(new MediaPlayerView());
         this.playerController = playerController;
         audioPlayer = new AudioPlayer();
@@ -62,7 +62,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @return The total duration of the song.
      */
-    public Duration getTotalDuration(){
+    public Duration getTotalDuration() {
         return audioPlayer.getTotalDuration();
     }
 
@@ -71,7 +71,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @param duration The duration to seek to.
      */
-    public void seek(double duration){
+    public void seek(double duration) {
         audioPlayer.seek(duration);
     }
 
@@ -130,14 +130,14 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
     /**
      * Close the audio player.
      */
-    public void close(){
+    public void close() {
         audioPlayer.close();
     }
 
     /**
      * Methode that handles the pause song button.
      */
-    public void handlePauseSong(){
+    public void handlePauseSong() {
         if (isPlaying().get()) {
             pause();
         } else {
@@ -212,7 +212,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @param equalizerBandsGain The gain of the equalizer bands.
      */
-    public void setEqualizerBands(List<Double> equalizerBandsGain){
+    public void setEqualizerBands(List<Double> equalizerBandsGain) {
         audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }
 }

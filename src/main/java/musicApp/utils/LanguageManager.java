@@ -14,10 +14,10 @@ import java.util.prefs.Preferences;
  * The class is a singleton and uses the Preferences API to store the selected language.
  */
 public class LanguageManager {
+    private static final Set<Language> SUPPORTED_LANGUAGES = EnumSet.of(Language.ENGLISH, Language.FRENCH, Language.DUTCH);
     private static LanguageManager instance;
     private final Preferences prefs = Preferences.userNodeForPackage(LanguageManager.class);
     private final Language DEFAULT_LANGUAGE = Language.ENGLISH; // default language if pc language is not supported
-    private static final Set<Language> SUPPORTED_LANGUAGES = EnumSet.of(Language.ENGLISH, Language.FRENCH, Language.DUTCH);
     private final String[] BUNDLE_NAMES = {
             "lang.messages",
             "lang.general",

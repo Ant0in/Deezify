@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 
-<VBox fx:id="labelContainer" prefHeight="500" prefWidth="920" styleClass="body" stylesheets="@../css/style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="labelContainer" prefHeight="500" prefWidth="920" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <Label fx:id="titleLabel"/> <TextField fx:id="titleField" promptText="Title" />
     <Label fx:id="artistLabel"/> <TextField fx:id="artistField" promptText="Artist" />
     <Label fx:id="genreLabel"/> <TextField fx:id="genreField" promptText="Genre" />

@@ -46,10 +46,10 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
 
         saveButton.setOnAction(_ -> {
             viewController.handleSaveMetadata(
-                titleField.getText(),
-                artistField.getText(),
-                genreField.getText(),
-                null
+                    titleField.getText(),
+                    artistField.getText(),
+                    genreField.getText(),
+                    null
             );
         });
 
@@ -59,4 +59,9 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     }
 
 
+    public void populateFields(String title, String artist, String genre) {
+        titleField.setText(title);
+        artistField.setText(artist);
+        genreField.setText(genre);
+    }
 }

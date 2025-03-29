@@ -47,13 +47,13 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
     /**
      * Clear play list view selection.
      */
-    public void clearPlayListViewSelection(){
+    public void clearPlayListViewSelection() {
         playerController.clearPlayListViewSelection();
     }
 
 
     @Override
-    protected void playSong(Song song){
+    protected void playSong(Song song) {
         library.remove(song);
         super.playSong(song);
         this.view.updateListView();
@@ -62,7 +62,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
     /**
      * Handle add song.
      */
-    public void handleAddSong(){
+    public void handleAddSong() {
         Song song = playerController.getSelectedPlayListSong();
         try {
             library.add(song);
@@ -75,7 +75,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
     /**
      * Handle delete song.
      */
-    public void handleDeleteSong(){
+    public void handleDeleteSong() {
         Song song = library.get(this.view.getSelectedSongIndex());
         library.remove(song);
         this.view.updateListView();
@@ -84,7 +84,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
     /**
      * Handle clear queue.
      */
-    public void handleClearQueue(){
+    public void handleClearQueue() {
         library.clear();
         this.view.updateListView();
     }
@@ -94,7 +94,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
      *
      * @return the boolean
      */
-    public boolean queueIsEmpty(){
+    public boolean queueIsEmpty() {
         return library.isEmpty();
     }
 
@@ -104,7 +104,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
      *
      * @param playlist the playlist
      */
-    public void appendPlaylistToQueue(Library playlist){
+    public void appendPlaylistToQueue(Library playlist) {
         for (Song song : playlist.toList()) {
             library.toList().add(song);
         }
@@ -116,7 +116,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
      *
      * @param playlist the playlist
      */
-    public void replaceQueue(Library playlist){
+    public void replaceQueue(Library playlist) {
         library.clear();
         appendPlaylistToQueue(playlist);
     }

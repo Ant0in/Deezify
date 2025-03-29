@@ -1,19 +1,18 @@
-
 package musicApp.controllers;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import musicApp.models.Library;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.utils.MetadataUtils;
 import musicApp.views.SongCellView;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.StringProperty;
 
-public class SongCellController extends ViewController<SongCellView, SongCellController>{
+import java.util.ArrayList;
+import java.util.List;
+
+public class SongCellController extends ViewController<SongCellView, SongCellController> {
 
     private final MainLibraryController mainLibraryController;
     private Song song;
@@ -29,7 +28,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      *
      * @param newSong the new song
      */
-    public void update(Song newSong){
+    public void update(Song newSong) {
         if (!newSong.equals(getSong())) {
             this.song = newSong;
             this.view.update(song);
@@ -41,7 +40,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      *
      * @return the song
      */
-    public Song getSong(){
+    public Song getSong() {
         return song;
     }
 
@@ -50,7 +49,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      *
      * @return True if the song is loaded, false otherwise.
      */
-    public boolean isLoaded(){
+    public boolean isLoaded() {
         Song playingSong = mainLibraryController.getCurrentlyLoadedSong();
         return playingSong != null && playingSong.equals(song);
     }
@@ -67,7 +66,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
     /**
      * Handle when the user wants to play the song.
      */
-    public void handlePlay(){
+    public void handlePlay() {
         if (song == null) {
             view.displayError("No song to play");
             return;
@@ -78,7 +77,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
     /**
      * Handle when the user wants to pause the song.
      */
-    public void handlePause(){
+    public void handlePause() {
         mainLibraryController.pause();
     }
 
@@ -94,7 +93,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      *
      * @return The currently loaded song string property.
      */
-    public StringProperty getCurrentlyLoadedSongStringProperty(){
+    public StringProperty getCurrentlyLoadedSongStringProperty() {
         return mainLibraryController.getCurrentlyLoadedSongStringProperty();
     }
 
@@ -104,7 +103,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      *
      * @return The is playing property.
      */
-    public BooleanProperty isPlayingProperty(){
+    public BooleanProperty isPlayingProperty() {
         return mainLibraryController.isPlayingProperty();
     }
 
@@ -118,7 +117,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
     }
 
 
-    public void handleEditMetadata(String title, String artist, String genre, ArrayList<String> userTags, String coverPath){
+    public void handleEditMetadata(String title, String artist, String genre, ArrayList<String> userTags, String coverPath) {
 
         if (song == null) {
             view.displayError("No song to edit");
@@ -131,7 +130,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(userTags);
             newMetadata.loadCoverFromPath(coverPath);
-        MetadataUtils util = new MetadataUtils();
+            MetadataUtils util = new MetadataUtils();
 
             util.setMetadata(newMetadata, song.getFilePath().toFile());
         } catch (Exception e) {
@@ -144,6 +143,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
         song.reloadMetadata();
         view.update(song);
     }
+
     /**
      * Get all available playlists.
      *
@@ -195,17 +195,6 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
     }
 
     /**
-     * Create a new playlist and add the current song to it.
-     */
-    public void createNewPlaylistWithSong() {
-        if (song == null) {
-            view.displayError("No song to add");
-            return;
-        }
-//        mainLibraryController.createNewPlaylistWithSong(song);
-    }
-
-    /**
      * Check if the song is in the playlist.
      *
      * @param playlist The playlist to check
@@ -215,8 +204,11 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
         return playlist.toList().contains(song);
     }
 
+    /**
+     * Open the metadata editor.
+     */
     public void openMetadataEditor() {
-        EditMetadataController editMetadataController = new EditMetadataController( this);
+        new EditMetadataController(this);
     }
 
     public void refreshSong() {

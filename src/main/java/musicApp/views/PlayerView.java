@@ -63,7 +63,7 @@ public class PlayerView extends View<PlayerView, PlayerController> {
         playerContainer.getChildren().set(0, viewController.getMainLibraryRoot());
     }
 
-    private void initPlaylistNavigator(){
+    private void initPlaylistNavigator() {
         Pane playListsPane = viewController.getPlaylistNavigatorRoot();
         labelContainer.setLeft(playListsPane);
     }

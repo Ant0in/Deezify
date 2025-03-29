@@ -21,11 +21,11 @@ public class AudioPlayer {
     private final BooleanProperty isPlaying = new SimpleBooleanProperty(false);
     private final BooleanProperty isLoaded = new SimpleBooleanProperty(false);
     private final DoubleProperty volume = new SimpleDoubleProperty(1.0);
+    List<Double> equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
     private MediaPlayer mediaPlayer;
     private Song loadedSong = null;
     private double balance = 0.0;
     private double speed = 1.0;
-    List<Double> equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
 
     /**
      * Load a song into the player.

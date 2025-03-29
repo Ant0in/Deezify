@@ -6,7 +6,7 @@ import musicApp.views.EqualizerView;
 
 import java.util.List;
 
-public class EqualizerController extends ViewController<EqualizerView, EqualizerController>{
+public class EqualizerController extends ViewController<EqualizerView, EqualizerController> {
     private final SettingsController settingsController;
     private final Stage stage;
     private final Equalizer equalizer;
@@ -22,14 +22,14 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
     /**
      * Show the equalizer.
      */
-    public void show(){
+    public void show() {
         this.view.show(stage);
     }
 
     /**
      * Close the equalizer.
      */
-    public void close(){
+    public void close() {
         stage.close();
         this.settingsController.show();
     }
@@ -38,9 +38,9 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      * Update a band in the equalizer.
      *
      * @param bandIndex The index of the band to update.
-     * @param value The new value of the band.
+     * @param value     The new value of the band.
      */
-    public void updateEqualizerBand(int bandIndex, double value){
+    public void updateEqualizerBand(int bandIndex, double value) {
         this.equalizer.setBandGain(bandIndex, value);
     }
 
@@ -49,7 +49,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      *
      * @param bandIndex The index of the band.
      */
-    public int getBandFrequency(int bandIndex){
+    public int getBandFrequency(int bandIndex) {
         return this.equalizer.getBandFrequency(bandIndex);
     }
 
@@ -81,7 +81,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      */
     public void update() {
         List<Double> equalizerBands = this.view.getSlidersValues();
-        for(int bandIndex = 0; bandIndex < equalizerBands.size(); bandIndex++){
+        for (int bandIndex = 0; bandIndex < equalizerBands.size(); bandIndex++) {
             updateEqualizerBand(bandIndex, equalizerBands.get(bandIndex));
         }
         this.view.updateSlidersValues();

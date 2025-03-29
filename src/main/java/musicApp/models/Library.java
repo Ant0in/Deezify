@@ -3,7 +3,6 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,23 +157,45 @@ public class Library {
         return this.name;
     }
 
-    public Path getImage() throws URISyntaxException {
-        return this.image;
-    }
-
+    /**
+     * Set the name of the library.
+     *
+     * @param name the new name
+     */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Path getImage() {
+        return this.image;
     }
 
     public void setImage(Path image) {
         this.image = image;
     }
 
+    /**
+     * Set the image path of the library.
+     *
+     * @param imagePath the new image path
+     */
+    public void setImagePath(Path imagePath) {
+        this.image = imagePath;
+    }
 
+    /**
+     * Get the cover image for this library.
+     *
+     * @return The cover image or a default image if none is set
+     */
     public Image getCoverImage() {
         try {
-            return new Image(getImage().toUri().toURL().toExternalForm());
+            if (image != null) {
+                return new Image(image.toUri().toURL().toExternalForm());
+            }
+            return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
         } catch (Exception e) {
+            System.err.println("Error loading cover image: " + e.getMessage());
             return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
         }
     }

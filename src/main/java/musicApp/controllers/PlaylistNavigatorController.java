@@ -9,11 +9,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView, PlaylistNavigatorController>{
+public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView, PlaylistNavigatorController> {
 
+    private final PlayerController playerController;
     private List<Library> playlists = new ArrayList<>();
     private Library selectedLibrary;
-    private final PlayerController playerController;
 
     /**
      * Instantiates a new View controller.
@@ -27,9 +27,6 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         loadPlaylists();
     }
 
-    /**
-     * Load the playlists.
-     */
     public void loadPlaylists() {
         playlists = playerController.getPlaylists();
         playlists.addFirst(playerController.getLibrary());
@@ -62,7 +59,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     /**
      * Create a new playlist.
      *
-     * @param name     the name of the playlist
+     * @param name      the name of the playlist
      * @param imagePath the path to the image of the playlist
      */
     public void createPlaylist(String name, Path imagePath) {
@@ -70,7 +67,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         playlists.add(playlist);
         DataProvider dataProvider = new DataProvider();
         dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
-        loadPlaylists();
+        refreshUI();
     }
 
     /**
@@ -94,7 +91,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
             playlists.remove(library);
             DataProvider dataProvider = new DataProvider();
             dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
-            loadPlaylists();
+            refreshUI();
         }
     }
 
@@ -179,5 +176,20 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     public boolean isFavorite(Song song) {
         Library favorites = playlists.get(1);
         return favorites.toList().contains(song);
+    }
+
+    /**
+     * Update an existing playlist.
+     *
+     * @param playlist  the playlist to update
+     * @param name      the new name
+     * @param imagePath the new image path
+     */
+    public void updatePlaylist(Library playlist, String name, Path imagePath) {
+        playlist.setName(name);
+        playlist.setImage(imagePath);
+        DataProvider dataProvider = new DataProvider();
+        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        refreshUI();
     }
 }

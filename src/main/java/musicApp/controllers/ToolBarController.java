@@ -5,7 +5,7 @@ import musicApp.views.ToolBarView;
 /**
  * The type Tool bar controller.
  */
-public class ToolBarController extends ViewController<ToolBarView,ToolBarController> {
+public class ToolBarController extends ViewController<ToolBarView, ToolBarController> {
     private final PlayerController playerController;
 
     /**
@@ -13,7 +13,7 @@ public class ToolBarController extends ViewController<ToolBarView,ToolBarControl
      *
      * @param playerController the player controller
      */
-    public ToolBarController(PlayerController playerController){
+    public ToolBarController(PlayerController playerController) {
         super(new ToolBarView());
         this.playerController = playerController;
         initView("/fxml/ToolBar.fxml");
@@ -22,7 +22,7 @@ public class ToolBarController extends ViewController<ToolBarView,ToolBarControl
     /**
      * Open settings.
      */
-    public void openSettings(){
+    public void openSettings() {
         playerController.openSettings();
     }
 }

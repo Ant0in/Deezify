@@ -1,12 +1,13 @@
 package musicApp.views.playlistNavigator;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import musicApp.controllers.PlaylistCellController;
+import musicApp.controllers.PlaylistEditController;
 import musicApp.controllers.PlaylistNavigatorController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
@@ -22,9 +23,10 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     @FXML
     private Button createPlaylist;
 
-    private ContextMenu contextMenu = new ContextMenu();
+    private final ContextMenu contextMenu = new ContextMenu();
 
-    public PlaylistNavigatorView() {}
+    public PlaylistNavigatorView() {
+    }
 
     @Override
     public void init() {
@@ -40,7 +42,7 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     }
 
     private void setButtonActions() {
-        createPlaylist.setOnAction(_ -> openEditPopup());
+        createPlaylist.setOnAction(_ -> openCreatePlaylistDialog());
     }
 
     private void initTranslation() {
@@ -48,39 +50,20 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     }
 
     /**
-     * TODO: To be refactored to a separate class.
+     * Open dialog for creating a new playlist.
      */
-    private void openEditPopup() {
-        Stage stage = new Stage();
-        stage.setTitle(LanguageManager.getInstance().get("create_playlist.title"));
-
-        TextField nameField = new TextField();
-
-        nameField.setText(LanguageManager.getInstance().get("create_playlist.name"));
-
-        // few buttons
-        Button createButton = new Button(LanguageManager.getInstance().get("create_playlist.create"));
-        Button cancelButton = new Button(LanguageManager.getInstance().get("create_playlist.cancel"));
-
-        createButton.setOnAction(e -> {
-            viewController.createPlaylist(nameField.getText(), null);
-            stage.close();
-        });
-
-        cancelButton.setOnAction(e -> {
-            stage.close();
-        });
-
-        VBox popupLayout = new VBox(10,
-                new Label(LanguageManager.getInstance().get("create_playlist.name")), nameField,
-                createButton, cancelButton);
-        Scene popupScene = new Scene(popupLayout, 300, 250);
-
-        stage.setScene(popupScene);
-        stage.show();
-
+    private void openCreatePlaylistDialog() {
+        new PlaylistEditController(viewController);
     }
 
+    /**
+     * Open dialog for editing an existing playlist.
+     *
+     * @param playlist The playlist to edit
+     */
+    private void openEditPlaylistDialog(Library playlist) {
+        new PlaylistEditController(viewController, playlist);
+    }
 
     public void update(List<Library> libraries) {
         listView.getItems().clear();
@@ -88,7 +71,7 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     }
 
     /**
-     * Enable double click to play.
+     * Enable click to select playlists.
      */
     public void enableClickToSelect() {
         listView.setOnMouseClicked(e -> {
@@ -98,28 +81,54 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
             } else if (e.getButton() == MouseButton.SECONDARY) {
                 contextMenu.show(listView, e.getScreenX(), e.getScreenY());
             }
-
         });
     }
 
     private void setupContextMenu() {
-        MenuItem addToQueueItem = new MenuItem("Append to Queue");
-        MenuItem replaceQueueItem = new MenuItem("Replace Queue");
-        MenuItem deleteItem = new MenuItem("Delete");
+        MenuItem addToQueueItem = new MenuItem(LanguageManager.getInstance().get("context_menu.append_to_queue"));
+        MenuItem replaceQueueItem = new MenuItem(LanguageManager.getInstance().get("context_menu.replace_queue"));
+        MenuItem editItem = new MenuItem(LanguageManager.getInstance().get("context_menu.edit"));
+        MenuItem deleteItem = new MenuItem(LanguageManager.getInstance().get("context_menu.delete"));
 
         addToQueueItem.setOnAction(_ -> {
-            viewController.appendToQueue(listView.getSelectionModel().getSelectedItem());
+            Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
+            if (selectedPlaylist != null) {
+                viewController.appendToQueue(selectedPlaylist);
+            }
         });
 
         replaceQueueItem.setOnAction(_ -> {
-            viewController.replaceQueue(listView.getSelectionModel().getSelectedItem());
+            Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
+            if (selectedPlaylist != null) {
+                viewController.replaceQueue(selectedPlaylist);
+            }
+        });
+
+        editItem.setOnAction(_ -> {
+            Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
+            if (selectedPlaylist != null && viewController.isDeletable(selectedPlaylist)) {
+                openEditPlaylistDialog(selectedPlaylist);
+            }
         });
 
         deleteItem.setOnAction(_ -> {
-            viewController.deletePlaylist(listView.getSelectionModel().getSelectedItem());
+            Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
+            if (selectedPlaylist != null && viewController.isDeletable(selectedPlaylist)) {
+                viewController.deletePlaylist(selectedPlaylist);
+            }
         });
 
-        contextMenu.getItems().addAll(addToQueueItem, replaceQueueItem, deleteItem);
+        contextMenu.getItems().addAll(addToQueueItem, replaceQueueItem, editItem, deleteItem);
     }
 
+    /**
+     * Sets the currently selected playlist in the list view
+     *
+     * @param playlist The playlist to select
+     */
+    public void setSelectedPlaylist(Library playlist) {
+        if (playlist != null) {
+            listView.getSelectionModel().select(playlist);
+        }
+    }
 }

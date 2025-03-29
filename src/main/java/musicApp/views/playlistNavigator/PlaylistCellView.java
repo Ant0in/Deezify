@@ -5,7 +5,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import musicApp.controllers.PlaylistCellController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
 import musicApp.views.View;
 
 public class PlaylistCellView extends View<PlaylistCellView, PlaylistCellController> {

@@ -1,6 +1,5 @@
 package musicApp.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import musicApp.models.Metadata;
@@ -23,6 +22,15 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
         this.songCellController = cellController;
         this.song = songCellController.getSong();
         initView("/fxml/EditMetadata.fxml");
+
+        if (song != null) {
+            view.populateFields(
+                    song.getTitle(),
+                    song.getArtist(),
+                    song.getGenre()
+            );
+        }
+
         editStage.setTitle(LanguageManager.getInstance().get("edit_metadata.title"));
         editStage.setScene(view.getScene());
         editStage.show();
@@ -40,7 +48,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
         );
 
         File file = fileChooser.showOpenDialog(editStage);
-        if ( file != null ) {
+        if (file != null && file.exists()) {
             selectedFile[0] = file;
         }
     }
@@ -49,9 +57,9 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      * Handle when the user wants to edit the metadata of the song.
      * Leave the field to `null` if you don't want to change it.
      *
-     * @param title the title
+     * @param title  the title
      * @param artist the artist
-     * @param genre the genre
+     * @param genre  the genre
      */
     public void handleSaveMetadata(String title, String artist, String genre, ArrayList<String> userTags) {
         if (song == null) {
@@ -64,7 +72,9 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             newMetadata.setArtist(artist);
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(userTags);
-            newMetadata.loadCoverFromPath(selectedFile[0].getAbsolutePath());
+            if (selectedFile[0] != null) {
+                newMetadata.loadCoverFromPath(selectedFile[0].getAbsolutePath());
+            }
             MetadataUtils util = new MetadataUtils();
 
             util.setMetadata(newMetadata, song.getFilePath().toFile());
@@ -75,6 +85,8 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
         }
 
         song.reloadMetadata();
+        songCellController.refreshSong();
+        editStage.close();
     }
 
     /**

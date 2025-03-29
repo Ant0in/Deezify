@@ -26,7 +26,7 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
      * @param controller the controller
      */
     public MainLibraryController(PlayerController controller) {
-        super(new MainLibraryView(),controller);
+        super(new MainLibraryView(), controller);
         initView("/fxml/MainLibrary.fxml");
     }
 
@@ -59,7 +59,7 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
     /**
      * Skip to the next song in the library.
      */
-    public void skip(){
+    public void skip() {
         if (shuffle) {
             Random random = new Random();
             this.playSong(random.nextInt(library.size()));
@@ -76,7 +76,7 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
      */
     public void prec() {
         if (currentIndex > 0) {
-            this.playSong(currentIndex-1);
+            this.playSong(currentIndex - 1);
         }
     }
 
@@ -115,7 +115,7 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
         view.updateListView();
     }
 
-    private int getSongIndex(Song song){
+    private int getSongIndex(Song song) {
         return library.toList().indexOf(song);
     }
 
@@ -124,9 +124,9 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
      *
      * @param song the song
      */
-    public void goToSong(Song song){
+    public void goToSong(Song song) {
         int index = getSongIndex(song);
-        if (index != -1){
+        if (index != -1) {
             playSong(index);
         }
     }
@@ -146,7 +146,7 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
     /**
      * Clear queue selection.
      */
-    public void clearQueueSelection(){
+    public void clearQueueSelection() {
         playerController.clearQueueSelection();
     }
 
@@ -180,7 +180,7 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
      *
      * @return the currently loaded song string property
      */
-    public StringProperty getCurrentlyLoadedSongStringProperty(){
+    public StringProperty getCurrentlyLoadedSongStringProperty() {
         return playerController.getCurrentlyLoadedSongStringProperty();
     }
 

@@ -19,24 +19,6 @@ public enum Language {
     }
 
     /**
-     * Gets the code of the language (ISO 639-1).
-     *
-     * @return the code
-     */
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     * Gets the display name of the language (in the language itself).
-     *
-     * @return the display name
-     */
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    /**
      * Gets the language from the code.
      *
      * @param code the code
@@ -64,5 +46,23 @@ public enum Language {
             }
         }
         return ENGLISH;
+    }
+
+    /**
+     * Gets the code of the language (ISO 639-1).
+     *
+     * @return the code
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * Gets the display name of the language (in the language itself).
+     *
+     * @return the display name
+     */
+    public String getDisplayName() {
+        return displayName;
     }
 }

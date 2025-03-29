@@ -7,7 +7,6 @@ import musicApp.models.Library;
 import musicApp.models.Song;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +20,10 @@ public class LibraryTypeAdapter extends TypeAdapter<Library> {
         out.value(playlist.getName());
 
         out.name("image");
-        try {
-            if (playlist.getImage() == null) {
-                out.value("");
-            } else {
-                out.value(playlist.getImage().toString());
-            }
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+        if (playlist.getImage() == null) {
+            out.value("");
+        } else {
+            out.value(playlist.getImage().toString());
         }
 
         out.name("songList");

@@ -63,8 +63,7 @@ public class PlaylistCellController extends ViewController<PlaylistCellView, Pla
     public String getLibraryName() {
         if (library.getName().equals("??favorites??")) {
             return LanguageManager.getInstance().get("favorites");
-        }
-        else if (library.getName().equals("??library??")) {
+        } else if (library.getName().equals("??library??")) {
             return LanguageManager.getInstance().get("library");
         } else {
             return library.getName();

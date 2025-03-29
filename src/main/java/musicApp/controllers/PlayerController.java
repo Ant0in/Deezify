@@ -21,7 +21,7 @@ import java.util.List;
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
  */
-public class PlayerController extends ViewController<PlayerView,PlayerController> {
+public class PlayerController extends ViewController<PlayerView, PlayerController> {
 
     private final MetaController metaController;
     private MediaPlayerController mediaPlayerController;
@@ -185,12 +185,15 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public Pane getPlaylistNavigatorRoot() {
         return this.playlistNavigatorController.getRoot();
     }
+
     /**
      * Gets queue root.
      *
      * @return the queue root
      */
-    public Pane getQueueRoot() { return this.queueController.getRoot();}
+    public Pane getQueueRoot() {
+        return this.queueController.getRoot();
+    }
 
 
     /**
@@ -296,7 +299,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      *
      * @param playlist The playlist to append
      */
-    public void appendPlaylistToQueue(Library playlist){
+    public void appendPlaylistToQueue(Library playlist) {
         queueController.appendPlaylistToQueue(playlist);
     }
 
@@ -305,7 +308,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      *
      * @param playlist The playlist to replace the queue with
      */
-    public void replaceQueue(Library playlist){
+    public void replaceQueue(Library playlist) {
         queueController.replaceQueue(playlist);
     }
 
@@ -323,7 +326,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     /**
      * Add a song to a playlist
      *
-     * @param song The song to add
+     * @param song     The song to add
      * @param playlist The playlist to add the song to
      */
     public void addSongToPlaylist(Song song, Library playlist) {
@@ -333,7 +336,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     /**
      * Remove a song from a playlist
      *
-     * @param song The song to remove
+     * @param song     The song to remove
      * @param playlist The playlist to remove the song from
      */
     public void removeSongFromPlaylist(Song song, Library playlist) {
