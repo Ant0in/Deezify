@@ -55,7 +55,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         String lyricsFileName = compositeKey + ".txt";
 
         // write the lyrics to a file
-        Path lyricsFilePath = Paths.get(LyricsMappingManager.LYRICS_DIR, lyricsFileName);
+        Path lyricsFilePath = LyricsMappingManager.getLyricsDir().resolve(lyricsFileName);
         try {
             if (!Files.exists(lyricsFilePath.getParent())) {
                 Files.createDirectories(lyricsFilePath.getParent());

@@ -19,23 +19,24 @@ import musicApp.models.Song;
 
 
 public class LyricsMappingManager {
-
-    public static final String LYRICS_DIR = "data/lyrics";
-    private static final Path MAPPING_FILE = Paths.get(LYRICS_DIR, "lyric.json");
-
     private static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
 
+
+    private static Path getMappingFile() {
+        return getLyricsDir().resolve("lyrics.json");
+    }
     /**
      * Reads the entire lyric.json file into a LyricsLibrary object.
      * If the file doesn't exist, returns an empty library.
      */
     private static LyricsLibrary readLibrary() {
-        if (!Files.exists(MAPPING_FILE)) {
+        Path mappingFile = getMappingFile();
+        if (!Files.exists(mappingFile)) {
             return new LyricsLibrary();
         }
-        try (BufferedReader reader = Files.newBufferedReader(MAPPING_FILE)) {
+        try (BufferedReader reader = Files.newBufferedReader(mappingFile)) {
             return GSON.fromJson(reader, LyricsLibrary.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,25 +48,30 @@ public class LyricsMappingManager {
      * Writes the given LyricsLibrary object to lyric.json.
      */
     private static void writeLibrary(LyricsLibrary library) {
+        Path mappingFile = getMappingFile();
         try {
             // Make sure directory exists
-            if (!Files.exists(MAPPING_FILE.getParent())) {
-                Files.createDirectories(MAPPING_FILE.getParent());
+            if (!Files.exists(mappingFile.getParent())) {
+                Files.createDirectories(mappingFile.getParent());
             }
-            Files.writeString(MAPPING_FILE, GSON.toJson(library));
+            Files.writeString(mappingFile, GSON.toJson(library));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Path getLyricsDir() {
+        return ConfigPathUtil.getConfigDir();
     }
 
     /**
      * Given a song name, returns the associated pathLyrics if found,
      * or null if not found.
      */
-    public static String getSongLyricsPath(String songName) {
+    public static String getSongLyricsPath(String songKey) {
         LyricsLibrary library = readLibrary();
         for (SongLyricsEntry entry : library.getSongs()) {
-            if (entry.getPathSong().equals(songName)) {
+            if (entry.getPathSong().equals(songKey)) {
                 return entry.getPathLyrics();
             }
         }
@@ -74,7 +80,7 @@ public class LyricsMappingManager {
     }
 
     /**
-     * Updates or creates a mapping between songName and newRelativePath (path to lyrics).
+     * Updates or creates a mapping between songKey and newRelativePath (path to lyrics).
      * If it doesn't exist, it creates a new entry.
      */
 
@@ -102,15 +108,13 @@ public class LyricsMappingManager {
      * Given a song path, returns the lyrics as a list of strings.
      * If the lyrics file doesn't exist, returns a list with an error message.
      */
-    public static List<String> getSongLyrics(String songPath) {
+    public static List<String> getSongLyrics(String songKey) {
         // get the last part of the song path (ex: "Hello.mp3")
-        String songName = Paths.get(songPath).getFileName().toString();
-
-        String pathLyrics = getSongLyricsPath(songName);
+        String pathLyrics = getSongLyricsPath(songKey);
         if (pathLyrics == null) {
             return null;
         }
-        Path filePath = Paths.get(LYRICS_DIR, pathLyrics);
+        Path filePath = getLyricsDir().resolve(pathLyrics);
         if (!Files.exists(filePath)) {
             return java.util.List.of("Lyrics file not found: " + filePath.toAbsolutePath());
         }

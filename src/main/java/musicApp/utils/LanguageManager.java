@@ -14,7 +14,7 @@ public class LanguageManager {
     private final Preferences prefs = Preferences.userNodeForPackage(LanguageManager.class);
     private final String DEFAULT_LANGUAGE = "en"; // default language if pc language is not supported
     private final String[] SUPPORTED_LANGUAGES = {"fr", "en", "nl"}; // supported languages
-    private final String[] BUNDLE_NAMES = {"lang.messages", "lang.general", "lang.errors", "lang.buttons", "lang.settings", "lang.default_values"};
+    private final String[] BUNDLE_NAMES = {"lang.messages", "lang.general", "lang.buttons", "lang.settings", "lang.default_values"};
     private final ResourceBundle[] bundles = new ResourceBundle[BUNDLE_NAMES.length];
     private Locale currentLocale;
 
