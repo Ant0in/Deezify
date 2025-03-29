@@ -36,7 +36,8 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         if (song == null) {
             return List.of("No song loaded."); 
         }
-        return LyricsMappingManager.getSongLyrics(song.getFilePath().toString());
+        String compositeKey = LyricsMappingManager.getSongKey(song);
+        return LyricsMappingManager.getSongLyrics(compositeKey);
     }
 
     /**
@@ -49,21 +50,12 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             System.err.println("No song loaded.");
             return;
         }
-        // save lyrics to .txt file and name it after the song
-        String songName = Paths.get(currentSong.getFilePath().toString()).getFileName().toString();
-        String lyricsFileName;
+        // composite key ; ex :"Hello-Adele-185"
+        String compositeKey = LyricsMappingManager.getSongKey(currentSong);
+        String lyricsFileName = compositeKey + ".txt";
 
-        if (songName.endsWith(".mp3")) {
-            lyricsFileName = songName.replace(".mp3", ".txt");
-        } else if (songName.endsWith(".wav")) {
-            lyricsFileName = songName.replace(".wav", ".txt");
-        } else {
-            System.out.println("Format not supported"); // TODO : exception ?
-            return;
-        }
-
+        // write the lyrics to a file
         Path lyricsFilePath = Paths.get(LyricsMappingManager.LYRICS_DIR, lyricsFileName);
-        
         try {
             if (!Files.exists(lyricsFilePath.getParent())) {
                 Files.createDirectories(lyricsFilePath.getParent());
@@ -74,8 +66,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             return;
         }
         // update song mapping
-        String newRelativePath = lyricsFileName;
-        LyricsMappingManager.updateLyricsMapping(songName, newRelativePath);
+        LyricsMappingManager.updateLyricsMapping(compositeKey, lyricsFileName);
         view.updateLyrics();
     }
 

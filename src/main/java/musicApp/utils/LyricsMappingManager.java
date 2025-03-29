@@ -1,8 +1,8 @@
 package musicApp.utils;
 
-import java.util.Map;
-import java.util.List;
+
 import java.io.IOException;
+import java.io.BufferedReader;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.nio.file.Files;
@@ -13,129 +13,127 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
-import java.io.BufferedReader;
+import java.util.List;
+
+import musicApp.models.Song;
 
 
 public class LyricsMappingManager {
 
     public static final String LYRICS_DIR = "data/lyrics";
-    private String pathLyrics; 
+    private static final Path MAPPING_FILE = Paths.get(LYRICS_DIR, "lyric.json");
 
-    public LyricsMappingManager(String songPath) {
-        this.pathLyrics = findLyricsPath(songPath);
-    }
-
-    /**
-     * Find the path to the lyrics file from the song path.
-     */
-    private String findLyricsPath(String songPath) {
-        String songName = Paths.get(songPath).getFileName().toString();
-        Map<String, String> mapping = LyricsMappingManager.loadLyricsMapping();
-        String lyricsPath = mapping.get(songName);
-        return lyricsPath;
-    }
+    private static final Gson GSON = new GsonBuilder()
+            .setPrettyPrinting()
+            .create();
 
     /**
-     * Load the lyrics from the lyrics file.
-     * @return The lyrics of the song.
+     * Reads the entire lyric.json file into a LyricsLibrary object.
+     * If the file doesn't exist, returns an empty library.
      */
-    public List<String> getLyrics() {
-        if (pathLyrics == null) {
-            return List.of();
+    private static LyricsLibrary readLibrary() {
+        if (!Files.exists(MAPPING_FILE)) {
+            return new LyricsLibrary();
         }
-        try {
-            Path filePath = Paths.get(LyricsMappingManager.LYRICS_DIR, pathLyrics);
-            if (!Files.exists(filePath)) {
-                return List.of("Lyrics file not found: " + filePath.toAbsolutePath());
-            }
-            return Files.readAllLines(filePath);
+        try (BufferedReader reader = Files.newBufferedReader(MAPPING_FILE)) {
+            return GSON.fromJson(reader, LyricsLibrary.class);
         } catch (IOException e) {
-            System.err.println("getLyrics: IOException - " + e.getMessage());
-            return List.of();
+            e.printStackTrace();
+            return new LyricsLibrary();
         }
     }
 
-    public static List<String> getSongLyrics(String songPath) {
-        LyricsMappingManager lyricsmappingmanager = new LyricsMappingManager(songPath);
-        return lyricsmappingmanager.getLyrics();
+    /**
+     * Writes the given LyricsLibrary object to lyric.json.
+     */
+    private static void writeLibrary(LyricsLibrary library) {
+        try {
+            // Make sure directory exists
+            if (!Files.exists(MAPPING_FILE.getParent())) {
+                Files.createDirectories(MAPPING_FILE.getParent());
+            }
+            Files.writeString(MAPPING_FILE, GSON.toJson(library));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Given a song name, returns the associated pathLyrics if found,
+     * or null if not found.
+     */
+    public static String getSongLyricsPath(String songName) {
+        LyricsLibrary library = readLibrary();
+        for (SongLyricsEntry entry : library.getSongs()) {
+            if (entry.getPathSong().equals(songName)) {
+                return entry.getPathLyrics();
+            }
+        }
+        return null; 
+
+    }
+
+    /**
+     * Updates or creates a mapping between songName and newRelativePath (path to lyrics).
+     * If it doesn't exist, it creates a new entry.
+     */
+
+    public static void updateLyricsMapping(String songKey, String newRelativePath) {
+        LyricsLibrary library = readLibrary();
+        boolean found = false;
+
+        for (SongLyricsEntry entry : library.getSongs()) {
+            if (entry.getPathSong().equals(songKey)) {
+                entry.setPathLyrics(newRelativePath);
+                found = true;
+                break;
+            }
+        }
+            if (!found) {
+                // Ex: "songs/Hello.mp3"
+                SongLyricsEntry newEntry = new SongLyricsEntry(songKey, newRelativePath);
+                library.getSongs().add(newEntry);
+            }
+
+            writeLibrary(library);
     }
     
-    public static String getSongLyricsPath(String songPath) {
-        LyricsMappingManager lyricsmappingmanager = new LyricsMappingManager(songPath);
-        return lyricsmappingmanager.findLyricsPath(songPath);
-    }
-
     /**
-     * Load the lyrics mapping from the lyrics file, by reading the JSON file and parsing it. 
-     *
-     * @return The mapping of song names to lyrics paths.
+     * Given a song path, returns the lyrics as a list of strings.
+     * If the lyrics file doesn't exist, returns a list with an error message.
      */
-    public static Map<String, String> loadLyricsMapping() {
-        Map<String, String> mapping = new HashMap<>();
-        Path mappingFile = Paths.get(LYRICS_DIR, "lyric.json");
-        if (!Files.exists(mappingFile)) {
-            System.err.println("Mapping file not found at: " + mappingFile.toAbsolutePath());
-            return mapping;
+    public static List<String> getSongLyrics(String songPath) {
+        // get the last part of the song path (ex: "Hello.mp3")
+        String songName = Paths.get(songPath).getFileName().toString();
+
+        String pathLyrics = getSongLyricsPath(songName);
+        if (pathLyrics == null) {
+            return null;
         }
-        try (BufferedReader reader = Files.newBufferedReader(mappingFile)) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, List<Map<String, String>>>>(){}.getType(); 
-            Map<String, List<Map<String, String>>> jsonMap = gson.fromJson(reader, type);
-            List<Map<String, String>> songsList = jsonMap.get("songs"); 
-            if (songsList != null) {
-                for (Map<String, String> entry : songsList) {
-                    String pathSong = entry.get("pathSong");
-                    String pathLyrics = entry.get("pathLyrics");
-                    String songName = Paths.get(pathSong).getFileName().toString();
-                    mapping.put(songName, pathLyrics);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        Path filePath = Paths.get(LYRICS_DIR, pathLyrics);
+        if (!Files.exists(filePath)) {
+            return java.util.List.of("Lyrics file not found: " + filePath.toAbsolutePath());
         }
-        return mapping;
-    }
-
-    /**
-     * Update the lyrics mapping with the new lyrics path for the song.
-     * If the song is not found in the mapping, a new entry is created.
-     */
-
-    public static void updateLyricsMapping(String songName, String newRelativePath) {
-        Path mappingFile = Paths.get(LYRICS_DIR, "lyric.json");
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Map<String, Object> jsonMap = new HashMap<>();
-
         try {
-            if (Files.exists(mappingFile)) {
-                jsonMap = gson.fromJson(Files.newBufferedReader(mappingFile), new TypeToken<Map<String, Object>>(){}.getType());
-            } else {
-                jsonMap.put("songs", new ArrayList<Map<String, String>>());
-            }
-            List<Map<String, String>> songsList = (List<Map<String, String>>) jsonMap.get("songs");
-            //System.out.println("before update, mapping: " + gson.toJson(jsonMap));
-            //System.out.println("updating mapping for song: " + songName + " with new lyrics path: " + newRelativePath);
-
-            boolean found = false;
-            for (Map<String, String> entry : songsList) {
-                String existingSongName = Paths.get(entry.get("pathSong")).getFileName().toString();
-                if (existingSongName.equals(songName)) {
-                    entry.put("pathLyrics", newRelativePath);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                Map<String, String> newEntry = new HashMap<>();
-                newEntry.put("pathSong", "songs/" + songName);
-                newEntry.put("pathLyrics", newRelativePath);
-                songsList.add(newEntry);
-            }
-            //System.out.println("After update, mapping: " + gson.toJson(jsonMap));
-            Files.writeString(mappingFile, gson.toJson(jsonMap));
+            return Files.readAllLines(filePath);
         } catch (IOException e) {
             e.printStackTrace();
+            return java.util.List.of("Error reading lyrics file: " + e.getMessage());
         }
+    }
+    
+    /**
+     * Generates a unique key for the song based on its title, artist, and duration.
+     * Used to map the song to its lyrics.
+     */
+    public static String getSongKey(Song song) {
+        // get the title, artist, and duration of the song
+        String title = song.getTitle(); 
+        String artist = song.getArtist();
+        int durationSec = (int) song.getDuration().toSeconds();
+
+        // concatenate the metadata into a unique key
+        return title + "-" + artist + "-" + durationSec;
     }
 }
 
