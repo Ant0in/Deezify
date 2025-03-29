@@ -22,7 +22,10 @@ public class ToolBarController extends ViewController<ToolBarView,ToolBarControl
     /**
      * Open settings.
      */
-    public void openSettings(){
-        playerController.openSettings();
-    }
+    public void openSettings(){ playerController.openSettings(); }
+
+    /**
+     * Exit app properly.
+     */
+    public void exitApp() { System.exit(0); }
 }

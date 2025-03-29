@@ -70,6 +70,6 @@ public class ToolBarView extends View<ToolBarView,ToolBarController> {
      */
     private void handleExitApp(ActionEvent actionEvent) {
         Platform.exit();
+        viewController.exitApp();
     }
-
 }

@@ -12,12 +12,15 @@ import java.util.Objects;
 
 public class Song {
 
+    public Boolean isSong = true;
+
     private Path filePath;
     private String title;
     private String artist;
     private String genre;
     private byte[] cover;
     private Duration duration;
+
 
     /**
      * Constructor from MetadataReader.
@@ -34,6 +37,14 @@ public class Song {
             Metadata defaultMetadata = new Metadata();
             this.loadMetadata(defaultMetadata);
         }
+    }
+
+    /**
+     * Returns if the song is a radio or not.
+     * @return boolean isSong.
+     */
+    public Boolean isSong() {
+        return isSong;
     }
 
 

@@ -41,10 +41,11 @@ public class AudioPlayer {
             isLoaded.set(true);
         });
 
-        // Mettre à jour la propriété de progression pendant la lecture
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
             if (mediaPlayer.getTotalDuration().greaterThan(Duration.ZERO)) {
                 progress.set(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
+            } else {
+                progress.set(0.0);
             }
         });
     }
@@ -84,9 +85,7 @@ public class AudioPlayer {
      *
      * @return The current time of the song.
      */
-    public Duration getCurrentTime() {
-        return (mediaPlayer != null) ? mediaPlayer.getCurrentTime() : Duration.ZERO;
-    }
+    public Duration getCurrentTime() { return (mediaPlayer != null) ? mediaPlayer.getCurrentTime() : Duration.ZERO; }
 
     /**
      * Get the total duration of the song.

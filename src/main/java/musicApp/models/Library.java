@@ -1,7 +1,6 @@
 package musicApp.models;
 
 import musicApp.utils.MusicLoader;
-import musicApp.utils.RadioLoader;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -38,34 +37,18 @@ public class Library {
     }
 
     /**
-     * Loads the library with some sample songs from a settings folder
+     * Loads the library with some sample songs/radios from a settings folder
      */
     public void load(Path folderPath) {
-        List<Path> songs;
+        List<Song> songs;
+        this.clear();
         try {
             MusicLoader loader = new MusicLoader();
-            songs = loader.getAllSongPaths(folderPath);
+            songs = loader.getAllSongs(folderPath);
+            mediaList.addAll(songs);
         } catch (IOException e) {
             System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
             return;
-        }
-        this.clear();
-        for (Path songPath : songs) {
-            this.add(new Song(songPath));
-        }
-
-        Path radiosPath = Paths.get("src/main/resources/radios");
-        RadioLoader radioLoader = new RadioLoader();
-
-        try {
-            List<Path> m3uFiles = radioLoader.loadM3UFiles(radiosPath);
-            System.out.println(m3uFiles.toString());
-
-            for (Path m3ufilePath :m3uFiles){
-                this.add(new Radio(m3ufilePath));
-            }
-        } catch (IOException e) {
-            System.err.println("Error while loading radios : " + e.getMessage());
         }
     }
 

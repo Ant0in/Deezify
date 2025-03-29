@@ -1,6 +1,7 @@
 package musicApp.views;
 
 import musicApp.controllers.MediaPlayerController;
+import musicApp.models.Radio;
 import musicApp.models.Song;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -111,8 +112,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     private String getFormattedSongProgress() {
         Duration currentTime = viewController.getCurrentTime();
         Duration totalDuration = viewController.getTotalDuration();
-
-        if (totalDuration == null || totalDuration.isUnknown()) {
+        if (totalDuration == null || totalDuration.isUnknown() || totalDuration == Duration.ZERO) {
             return formatDuration(currentTime) + " / --:--";
         }
 
@@ -291,6 +291,14 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         viewController.currentSongProperty().addListener((_, _, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
             updateControlsState(controls, !songIsPlaying);
+
+            if (!viewController.getLoadedSong().isSong()) {
+                speedBox.setValue("1x");
+                speedBox.setDisable(true);
+                viewController.changeSpeed(1.0);
+            } else {
+                speedBox.setDisable(false);
+            }
         });
     }
 
