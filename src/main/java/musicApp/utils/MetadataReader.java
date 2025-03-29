@@ -11,6 +11,8 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 enum FileType {
     MP3,
@@ -59,6 +61,17 @@ public class MetadataReader {
             metadata.setArtist("N/A");
             metadata.setGenre("Radio");
             metadata.setDuration(Duration.ZERO);
+            try {
+            InputStream is = getClass().getResourceAsStream("/images/radio.png");
+            if (is != null) {
+                metadata.setCover(is.readAllBytes());
+            } else {
+                System.err.println("L'image /images/radio.png est introuvable.");
+            }
+        } catch (IOException e) {
+    e.printStackTrace();
+}
+
             return metadata;
         }
         AudioFile file = readFile(fd);

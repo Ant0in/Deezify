@@ -32,7 +32,7 @@ public class MusicLoader {
 
     private boolean isValidFormat(Path filePath) {
         String fileName = filePath.getFileName().toString();
-        return fileName.endsWith(".mp3") || fileName.endsWith(".wav");
+        return fileName.endsWith(".mp3") || fileName.endsWith(".wav")|| fileName.endsWith(".m3u");
     }
 
     private List<Path> getAllFiles(Path folderPath) throws IOException {

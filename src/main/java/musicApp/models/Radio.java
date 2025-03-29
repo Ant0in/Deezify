@@ -1,7 +1,9 @@
 package musicApp.models;
 
+import javafx.scene.image.Image;
 import musicApp.utils.RadioLoader;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class Radio extends Song {
 
@@ -21,4 +23,8 @@ public class Radio extends Song {
     public String getFilePathString() {
         return webUrl;
     } 
+
+    public Image getCoverImage() {
+        return new Image(Objects.requireNonNull(getClass().getResource("/images/radio.png")).toExternalForm());
+    }
 }
