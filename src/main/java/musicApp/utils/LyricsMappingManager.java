@@ -112,11 +112,11 @@ public class LyricsMappingManager {
         // get the last part of the song path (ex: "Hello.mp3")
         String pathLyrics = getSongLyricsPath(songKey);
         if (pathLyrics == null) {
-            return null;
+            return List.of();
         }
         Path filePath = getLyricsDir().resolve(pathLyrics);
         if (!Files.exists(filePath)) {
-            return java.util.List.of("Lyrics file not found: " + filePath.toAbsolutePath());
+            return List.of();
         }
         try {
             return Files.readAllLines(filePath);
