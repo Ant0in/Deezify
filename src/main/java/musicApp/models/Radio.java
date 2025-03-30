@@ -29,11 +29,19 @@ public class Radio extends Song {
     public void setWebUrl(String webUrl) {
         this.webUrl = webUrl;
     }
-
+    
+    /**
+     * Returns the radio web url.
+     * @return the web url as a string.
+     */
     public String getFilePathString() {
         return webUrl;
     } 
 
+    /**
+     * Returns the radio cover image.
+     * @return the cover image as an Image object.
+     */
     public Image getCoverImage() {
         return new Image(Objects.requireNonNull(getClass().getResource("/images/radio.png")).toExternalForm());
     }

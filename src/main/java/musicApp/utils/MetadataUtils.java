@@ -88,22 +88,7 @@ public class MetadataUtils {
     public Metadata getMetadata(File fd) throws ID3TagException, BadFileTypeException {
         Metadata metadata = new Metadata();
         if (getFileExtension(fd) == FileType.M3U) {
-            metadata.setTitle(fd.getName().substring(0, fd.getName().length() - ".m3u".length()));
-            metadata.setArtist("N/A");
-            metadata.setGenre("Radio");
-            metadata.setDuration(Duration.ZERO);
-            try {
-            InputStream is = getClass().getResourceAsStream("/images/radio.png");
-            if (is != null) {
-                metadata.setCoverFromBytes(is.readAllBytes());
-            } else {
-                System.err.println("L'image /images/radio.png est introuvable.");
-            }
-        } catch (IOException e) {
-    e.printStackTrace();
-}
-
-            return metadata;
+            return getRadioMetadata(fd);
         }
         AudioFile file = readFile(fd);
         Tag tag = readTag(file);
@@ -130,6 +115,31 @@ public class MetadataUtils {
 
         return metadata;
     }
+
+    /**
+     * This method assigns default metadata to a radio file
+     * @param fd
+     * @return
+     */
+    private Metadata getRadioMetadata(File fd) {
+        Metadata metadata = new Metadata();
+        metadata.setTitle(fd.getName().replace(".m3u", ""));
+        metadata.setArtist("N/A");
+        metadata.setGenre("Radio");
+        metadata.setDuration(Duration.ZERO);
+    
+        try (InputStream is = getClass().getResourceAsStream("/images/radio.png")) {
+            if (is != null) {
+                metadata.setCoverFromBytes(is.readAllBytes());
+            } else {
+                System.err.println("The image /images/radio.png is unfoundable.");
+            }
+        } catch (IOException e) {
+            System.err.println("Error while reading the image from radio cover : " + e.getMessage());
+        }
+    
+        return metadata;
+    }    
 
     /**
      * This method writes the passed metadata to the file at the given path
