@@ -90,6 +90,10 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
         setTags(new HashSet<>(userTags)); // Convert ArrayList to Set and populate tags
     }
 
+    public void setCoverImage(javafx.scene.image.Image image) {
+        coverImage.setImage(image);
+    }
+
     public Set<String> getTags() {
         return currentTags;
     }
