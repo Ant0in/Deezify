@@ -1,9 +1,15 @@
 package musicApp.models;
 
 import javafx.beans.property.*;
+import javafx.scene.media.AudioEqualizer;
+import javafx.scene.media.EqualizerBand;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * AudioPlayer
@@ -15,6 +21,7 @@ public class AudioPlayer {
     private final BooleanProperty isPlaying = new SimpleBooleanProperty(false);
     private final BooleanProperty isLoaded = new SimpleBooleanProperty(false);
     private final DoubleProperty volume = new SimpleDoubleProperty(1.0);
+    List<Double> equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
     private MediaPlayer mediaPlayer;
     private Song loadedSong = null;
     private double balance = 0.0;
@@ -39,8 +46,10 @@ public class AudioPlayer {
         mediaPlayer.setRate(speed);
         mediaPlayer.setOnReady(() -> {
             isLoaded.set(true);
+            applyEqualizerBandsGain();
         });
 
+        // Update the progression property while playing
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
             if (mediaPlayer.getTotalDuration().greaterThan(Duration.ZERO)) {
                 progress.set(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
@@ -48,6 +57,26 @@ public class AudioPlayer {
                 progress.set(0.0);
             }
         });
+    }
+
+    private void applyEqualizerBandsGain() {
+        AudioEqualizer audioEqualizer = mediaPlayer.getAudioEqualizer();
+        if (audioEqualizer == null) {
+            System.err.println("No audio equalizer available");
+            return;
+        }
+        for (int bandIndex = 0; bandIndex < equalizerBandsGain.size(); bandIndex++) {
+            EqualizerBand bandToSet = audioEqualizer.getBands().get(bandIndex);
+            double gain = equalizerBandsGain.get(bandIndex);
+            bandToSet.setGain(gain);
+        }
+    }
+
+    public void updateEqualizerBandsGain(List<Double> equalizerBandsGain) {
+        this.equalizerBandsGain = equalizerBandsGain;
+        if (mediaPlayer != null) {
+            applyEqualizerBandsGain();
+        }
     }
 
     /**

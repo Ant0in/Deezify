@@ -1,25 +1,30 @@
 package musicApp.models;
 
+import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadFileTypeException;
 import musicApp.exceptions.ID3TagException;
-import musicApp.utils.MetadataReader;
+import musicApp.utils.MetadataUtils;
+import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Song {
 
-    public Boolean isSong = true;
-
-    private Path filePath;
+    
+    @Expose
+    private final Path filePath;
     private String title;
     private String artist;
     private String genre;
     private byte[] cover;
+    private ArrayList<String> userTags;
     private Duration duration;
+    public Boolean isSong = true;
 
 
     /**
@@ -29,13 +34,13 @@ public class Song {
      */
     public Song(Path filePath) {
         this.filePath = filePath;
-        MetadataReader metadataReader = new MetadataReader();
+        MetadataUtils metadataReader = new MetadataUtils();
         try {
             Metadata metadata = metadataReader.getMetadata(filePath.toFile());
-            this.loadMetadata(metadata);
+            this.setMetadata(metadata);
         } catch (ID3TagException | BadFileTypeException e) {
             Metadata defaultMetadata = new Metadata();
-            this.loadMetadata(defaultMetadata);
+            this.setMetadata(defaultMetadata);
         }
     }
 
@@ -53,12 +58,20 @@ public class Song {
      *
      * @param metadata The metadata of the song.
      */
-    private void loadMetadata(Metadata metadata) {
-        this.title = metadata.getTitle();
-        this.artist = metadata.getArtist();
-        this.genre = metadata.getGenre();
-        this.cover = metadata.getCover();
-        this.duration = metadata.getDuration();
+    public void reloadMetadata() {
+
+        // ?? might wanna throw here idk
+
+        MetadataUtils metadataReader = new MetadataUtils();
+
+        try {
+            Metadata metadata = metadataReader.getMetadata(filePath.toFile());
+            this.setMetadata(metadata);
+        } catch (ID3TagException | BadFileTypeException e) {
+            Metadata defaultMetadata = new Metadata();
+            this.setMetadata(defaultMetadata);
+        }
+
     }
 
     /**
@@ -142,8 +155,8 @@ public class Song {
      *
      * @param cover the cover in base64.
      */
-    public void setCover(byte[] cover) {
-        this.cover = cover;
+    public void setCover(Artwork cover) {
+        this.cover = cover.getBinaryData();
     }
 
     /**
@@ -162,6 +175,14 @@ public class Song {
         }
     }
 
+    public ArrayList<String> getUserTags() {
+        return userTags;
+    }
+
+    public void setUserTags(ArrayList<String> userTags) {
+        this.userTags = userTags;
+    }
+
     /**
      * Get the duration of the song.
      *
@@ -178,6 +199,31 @@ public class Song {
      */
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public Metadata getMetadata() {
+        Metadata metadata = new Metadata();
+        metadata.setTitle(title);
+        metadata.setArtist(artist);
+        metadata.setGenre(genre);
+        metadata.setCoverFromBytes(cover);
+        metadata.setUserTags(userTags);
+        metadata.setDuration(duration);
+        return metadata;
+    }
+
+    /**
+     * Loads Metadata from MetadataReader.
+     *
+     * @param metadata The metadata of the song.
+     */
+    private void setMetadata(Metadata metadata) {
+        this.title = metadata.getTitle();
+        this.artist = metadata.getArtist();
+        this.genre = metadata.getGenre();
+        this.cover = metadata.getCover() != null ? metadata.getCover().getBinaryData() : null;
+        this.userTags = metadata.getUserTags();
+        this.duration = metadata.getDuration();
     }
 
     /**

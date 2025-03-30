@@ -1,16 +1,16 @@
 package musicApp.views;
 
 import javafx.scene.control.ListCell;
-import musicApp.controllers.SongController;
+import musicApp.controllers.SongCellController;
 import musicApp.models.Song;
 
 
 public class SongCell extends ListCell<Song> {
 
-    private final SongController songController;
+    private final SongCellController songCellController;
 
-    public SongCell(SongController songController) {
-        this.songController = songController;
+    public SongCell(SongCellController songCellController) {
+        this.songCellController = songCellController;
     }
 
     @Override
@@ -18,11 +18,10 @@ public class SongCell extends ListCell<Song> {
         super.updateItem(song, empty);
         if (empty || song == null) {
             setGraphic(null);
+            setText(null);
         } else {
-            if (!song.equals(songController.getSong())) {
-                setGraphic(songController.getRoot());
-            }
-            songController.update(song);
+            setGraphic(songCellController.getRoot());
+            songCellController.update(song);
         }
     }
 }

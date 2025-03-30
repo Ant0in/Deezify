@@ -1,0 +1,69 @@
+@import "common/buttons.css";
+
+/* VBox Container */
+.slider-container {
+    -fx-spacing: 10px;
+    -fx-padding: 20px;
+    -fx-background-color: #201e1e;
+    -fx-border-color: #007BFF;
+    -fx-border-radius: 8px;
+}
+
+/* Equalizer Sliders */
+.slider {
+    -fx-background-color: transparent;
+    -fx-pref-height: 150px;
+}
+
+/* Slider Track */
+.slider .track {
+    -fx-background-color: linear-gradient(to bottom, #444, #222);
+    -fx-background-radius: 5px;
+    -fx-pref-width: 6px;
+}
+
+/* Slider Thumb */
+.slider .thumb {
+    -fx-background-color: #007BFF;
+    -fx-background-radius: 50%;
+    -fx-pref-height: 12px;
+    -fx-pref-width: 12px;
+}
+
+.slider .thumb:hover {
+    -fx-background-color: #2f508e;
+}
+
+/* Tick Marks */
+.slider .tick-mark {
+    -fx-stroke: white;
+}
+
+.slider .tick-label {
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+}
+
+/* Label Styling */
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Hover Effect */
+.slider-container:hover {
+    -fx-background-color: #2f508e;
+    -fx-border-color: #007BFF;
+}
+
+.root {
+    -fx-background-color: linear-gradient(to bottom, #062726, #102b3f);
+}
+
+
+#okButton {
+    -fx-background-color: #007BFF;
+    -fx-text-fill: white;
+}
+

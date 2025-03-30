@@ -1,26 +1,35 @@
 package musicApp.models;
 
-import musicApp.utils.MusicLoader;
+import com.google.gson.annotations.Expose;
+import javafx.scene.image.Image;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Library class to store songs.
  */
 public class Library {
-    List<Song> mediaList = new ArrayList<>();
+    @Expose
+    List<Song> songList = new ArrayList<>();
+    @Expose
+    private String name;
+    @Expose
+    private Path image;
+
 
     /**
      * Constructor
      *
-     * @param mediaList The list of media.
+     * @param songList The list of media.
      */
-    public Library(List<Song> mediaList) {
-        this.mediaList = mediaList;
+    public Library(List<Song> songList, String name, Path image) {
+        this.songList = songList;
+        this.name = name;
+        this.image = image;
     }
 
     /**
@@ -30,39 +39,16 @@ public class Library {
     }
 
     /**
-     * Constructor to create a library initialized with folder content.
-     */
-    public Library(Path folderPath) {
-        this.load(folderPath);
-    }
-
-    /**
-     * Loads the library with some sample songs/radios from a settings folder
-     */
-    public void load(Path folderPath) {
-        List<Song> songs;
-        this.clear();
-        try {
-            MusicLoader loader = new MusicLoader();
-            songs = loader.getAllSongs(folderPath);
-            mediaList.addAll(songs);
-        } catch (IOException e) {
-            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
-            return;
-        }
-    }
-
-    /**
-     * Add a media to the library.
+     * Add a song to the library.
      *
      * @param song The song to add.
      */
     public void add(Song song) {
-        if (this.mediaList.contains(song)) {
+        if (this.songList.contains(song)) {
             System.err.println("Media already in library");
             return;
         }
-        mediaList.add(song);
+        songList.add(song);
     }
 
     /**
@@ -72,11 +58,11 @@ public class Library {
      * @param song  The media to add.
      */
     public void add(int index, Song song) {
-        if (this.mediaList.contains(song)) {
+        if (this.songList.contains(song)) {
             System.err.println("Media already in library");
             return;
         }
-        mediaList.add(index, song);
+        songList.add(index, song);
     }
 
     /**
@@ -96,10 +82,10 @@ public class Library {
      * @param song The song to remove.
      */
     public void remove(Song song) {
-        if (!mediaList.contains(song)) {
+        if (!songList.contains(song)) {
             throw new IllegalArgumentException("Media not in library");
         }
-        mediaList.remove(song);
+        songList.remove(song);
     }
 
     /**
@@ -107,7 +93,7 @@ public class Library {
      *
      * @return The size of the library.
      */
-    public int size() { return mediaList.size(); }
+    public int size() { return songList.size(); }
 
     /**
      * Check if the library is empty.
@@ -115,7 +101,7 @@ public class Library {
      * @return True if the library is empty, false otherwise.
      */
     public Boolean isEmpty() {
-        return mediaList.isEmpty();
+        return songList.isEmpty();
     }
 
     /**
@@ -125,7 +111,7 @@ public class Library {
      * @return The song at the index.
      */
     public Song get(int index) {
-        return mediaList.get(index);
+        return songList.get(index);
     }
 
     /**
@@ -134,14 +120,14 @@ public class Library {
      * @return The list of songs.
      */
     public List<Song> toList() {
-        return this.mediaList;
+        return this.songList;
     }
 
     /**
      * Clear the library.
      */
     public void clear() {
-        mediaList.clear();
+        songList.clear();
     }
 
     /**
@@ -151,9 +137,66 @@ public class Library {
      * @return The list of songs that contain the text.
      */
     public List<Song> search(String text) {
-        return mediaList
+        return songList
                 .stream()
                 .filter(s -> s.containsText(text))
                 .toList();
     }
+
+    public Song getSongByPath(Path path) {
+        for (Song song : songList) {
+            if (song.getFilePath().equals(path)) {
+                return song;
+            }
+        }
+        return null;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Set the name of the library.
+     *
+     * @param name the new name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Path getImage() {
+        return this.image;
+    }
+
+    public void setImage(Path image) {
+        this.image = image;
+    }
+
+    /**
+     * Set the image path of the library.
+     *
+     * @param imagePath the new image path
+     */
+    public void setImagePath(Path imagePath) {
+        this.image = imagePath;
+    }
+
+    /**
+     * Get the cover image for this library.
+     *
+     * @return The cover image or a default image if none is set
+     */
+    public Image getCoverImage() {
+        try {
+            if (image != null) {
+                return new Image(image.toUri().toURL().toExternalForm());
+            }
+            return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
+        } catch (Exception e) {
+            System.err.println("Error loading cover image: " + e.getMessage());
+            return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
+        }
+    }
+
 }

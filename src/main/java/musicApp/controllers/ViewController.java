@@ -1,7 +1,7 @@
 package musicApp.controllers;
 
-import musicApp.views.View;
 import javafx.scene.layout.Pane;
+import musicApp.views.View;
 
 
 /**

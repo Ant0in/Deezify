@@ -1,20 +1,21 @@
 package musicApp.views;
 
-import musicApp.controllers.QueueController;
-import musicApp.models.Song;
-import musicApp.utils.LanguageManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.input.*;
+import musicApp.controllers.QueueController;
+import musicApp.models.Library;
+import musicApp.models.Song;
+import musicApp.utils.LanguageManager;
 
 /**
  * The Queue view.
  */
 @SuppressWarnings("unused")
-public class QueueView extends PlayListView<QueueView, QueueController> {
+public class QueueView extends SongContainerView<QueueView, QueueController, Library> {
 
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
@@ -52,7 +53,7 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
     /**
      * Bind the buttons.
      */
-    private void bindButtons(){
+    private void bindButtons() {
         deleteSongButton.visibleProperty().bind(isSelected());
         addSongButton.visibleProperty().bind(viewController.isPlaylistItemSelected());
     }
@@ -105,8 +106,9 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
 
     /**
      * Handle the drag detected event.
+     *
      * @param event The mouse event.
-     * @param cell The list cell.
+     * @param cell  The list cell.
      */
     private void onDragDetected(MouseEvent event, ListCell<Song> cell) {
         if (!cell.isEmpty()) {
@@ -120,8 +122,9 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
 
     /**
      * Handle the drag over event.
+     *
      * @param event The drag event.
-     * @param cell The list cell.
+     * @param cell  The list cell.
      */
     private void onDragOver(DragEvent event, ListCell<Song> cell) {
         if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
@@ -132,8 +135,9 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
 
     /**
      * Handle the drag dropped event.
+     *
      * @param event The drag event.
-     * @param cell The list cell.
+     * @param cell  The list cell.
      */
     private void onDragDropped(DragEvent event, ListCell<Song> cell) {
         Dragboard db = event.getDragboard();
@@ -171,17 +175,11 @@ public class QueueView extends PlayListView<QueueView, QueueController> {
     /**
      * Initialize the translations of the texts in the view.
      */
-    private void initTranslation() {
+    @Override
+    protected void initTranslation() {
         addSongButton.setText(LanguageManager.getInstance().get("button.add"));
         deleteSongButton.setText(LanguageManager.getInstance().get("button.delete"));
         clearQueueButton.setText(LanguageManager.getInstance().get("button.clear"));
     }
 
-
-    /**
-     * Refresh ui.
-     */
-    public void refreshUI(){
-        initTranslation();
-    }
 }

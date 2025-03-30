@@ -1,14 +1,13 @@
 package musicApp.views;
 
-import musicApp.controllers.MediaPlayerController;
-import musicApp.models.Radio;
-import musicApp.models.Song;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import musicApp.controllers.MediaPlayerController;
+import musicApp.models.Song;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +25,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     @FXML
     private ImageView imageCover;
     @FXML
-    private Label volumeLabel, songProgressTimeLabel,currentSongLabel, currentArtistLabel;
+    private Label volumeLabel, songProgressTimeLabel, currentSongLabel, currentArtistLabel;
     @FXML
     private ProgressBar songProgressBar;
     @FXML
@@ -37,11 +36,11 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     /**
      * Instantiates a new Media player view.
      */
-    public MediaPlayerView(){
+    public MediaPlayerView() {
     }
 
     @Override
-    public void init(){
+    public void init() {
         initBindings();
         initSpeed();
         setButtonActions();
@@ -54,7 +53,8 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         previousSongButton.setOnAction(_ -> viewController.handlePreviousSong());
         shuffleToggle.setOnAction(_ -> viewController.toggleShuffle());
     }
-    private void initBindings(){
+
+    private void initBindings() {
         bindButtons();
         bindSongProgress();
         bindVolumeControls();
@@ -67,7 +67,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     /**
      * Bind buttons.
      */
-    public void bindButtons(){
+    public void bindButtons() {
         ImageView playIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/play_white.png")).toExternalForm()));
         playIcon.setFitWidth(20);
         playIcon.setFitHeight(20);
@@ -91,7 +91,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     /**
      * Bind the song progress bar and label.
      */
-    private void bindSongProgress(){
+    private void bindSongProgress() {
         songProgressBar.progressProperty().bind(viewController.progressProperty());
         songProgressTimeLabel.textProperty().bind(
                 Bindings.createStringBinding(
@@ -107,6 +107,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
 
     /**
      * Get the formatted song progress.
+     *
      * @return The formatted song progress.
      */
     private String getFormattedSongProgress() {
@@ -121,6 +122,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
 
     /**
      * Format a duration to a string.
+     *
      * @param duration The duration to format.
      * @return The formatted duration.
      */
@@ -135,7 +137,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
      */
     private void initSpeed() {
         speedBox.getItems().clear();
-        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x","1.25x", "1.5x", "1.75x", "2x");
+        speedBox.getItems().addAll("0.25x", "0.5x", "0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x");
         speedBox.setValue("1x");
         speedBox.setOnAction(_ -> {
             String speed = speedBox.getValue();
@@ -146,6 +148,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
 
     /**
      * Get the current speed value.
+     *
      * @param speedLabel The speed label.
      * @return The speed value.
      */
@@ -191,7 +194,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     /**
      * Bind the current song controls (name and artist).
      */
-    private void bindCurrentSongControls(){
+    private void bindCurrentSongControls() {
         currentSongLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         () -> {
@@ -240,6 +243,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
 
     /**
      * Load the default cover image.
+     *
      * @return The default cover image.
      */
     private Image loadDefaultCoverImage() {
@@ -286,7 +290,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
 
 
     private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider);
+        List<Control> controls = Arrays.asList(pauseSongButton, nextSongButton, previousSongButton, shuffleToggle, speedBox, volumeSlider);
         updateControlsState(controls, true);
         viewController.currentSongProperty().addListener((_, _, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));

@@ -1,14 +1,24 @@
 package musicApp.controllers;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import musicApp.models.*;
+import musicApp.utils.FileDialogHelper;
+import musicApp.utils.FileManager;
 import musicApp.views.PlayerView;
-import javafx.beans.binding.BooleanBinding;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import musicApp.models.Library;
+import musicApp.models.Settings;
+import musicApp.models.Song;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Controller class for the music player.
@@ -17,13 +27,14 @@ import javafx.stage.Stage;
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
  */
-public class PlayerController extends ViewController<PlayerView,PlayerController> {
+public class PlayerController extends ViewController<PlayerView, PlayerController> {
 
     private final MetaController metaController;
     private MediaPlayerController mediaPlayerController;
     private ToolBarController toolBarController;
     private MainLibraryController mainLibraryController;
     private QueueController queueController;
+    private PlaylistNavigatorController playlistNavigatorController;
 
     /**
      * Constructor
@@ -31,13 +42,13 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * @param metaController the meta controller
      * @throws IOException the io exception
      */
-    public PlayerController(MetaController metaController) throws IOException {
+    public PlayerController(MetaController metaController, Settings settings) throws IOException {
         super(new PlayerView());
         this.metaController = metaController;
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
-        Settings settings = metaController.getSettings();
         this.mediaPlayerController.setBalance(settings.getBalance());
+        this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
         this.mainLibraryController.loadLibrary(settings.getMusicDirectory());
     }
 
@@ -46,6 +57,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
         this.queueController = new QueueController(this);
         this.mediaPlayerController = new MediaPlayerController(this);
         this.toolBarController = new ToolBarController(this);
+        this.playlistNavigatorController = new PlaylistNavigatorController(this);
 
     }
 
@@ -113,7 +125,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      * Open the settings window.
      */
     public void openSettings() {
-        metaController.showSettings();
+        metaController.switchScene(MetaController.Scenes.SETTINGS);
     }
 
     /**
@@ -122,6 +134,8 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public void refreshUI() {
         view.refreshUI();
         this.queueController.refreshUI();
+        this.playlistNavigatorController.refreshUI();
+        this.mainLibraryController.refreshUI();
     }
 
     /**
@@ -139,6 +153,7 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public void onSettingsChanged(Settings newSettings) {
         this.mediaPlayerController.setBalance(newSettings.getBalance());
         this.mainLibraryController.loadLibrary(newSettings.getMusicDirectory());
+        this.mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
     }
 
     /**
@@ -164,8 +179,17 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      *
      * @return the play list root
      */
-    public Pane getPlayListRoot() {
+    public Pane getMainLibraryRoot() {
         return this.mainLibraryController.getRoot();
+    }
+
+    /**
+     * Gets play lists root.
+     *
+     * @return the play lists root
+     */
+    public Pane getPlaylistNavigatorRoot() {
+        return this.playlistNavigatorController.getRoot();
     }
 
     /**
@@ -173,7 +197,9 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
      *
      * @return the queue root
      */
-    public Pane getQueueRoot() { return this.queueController.getRoot();}
+    public Pane getQueueRoot() {
+        return this.queueController.getRoot();
+    }
 
 
     /**
@@ -244,5 +270,113 @@ public class PlayerController extends ViewController<PlayerView,PlayerController
     public BooleanProperty isPlayingProperty() {
         return mediaPlayerController.isPlayingProperty();
     }
+
+    public Song getSongByPathInMainLibrary(Path path) {
+        return mainLibraryController.getSongByPath(path);
+    }
+
+    /**
+     * Get all the playlists of the user
+     *
+     * @return The list of playlists
+     */
+    public List<Library> getPlaylists() {
+        return metaController.getPlaylists();
+    }
+
+    /**
+     * Update the playlist shown in the mainLibrary
+     */
+    public void updateShownPlaylist(Library library) {
+        mainLibraryController.loadPlaylist(library);
+    }
+
+    /**
+     * Get the main library
+     *
+     * @return The main library
+     */
+    public Library getLibrary() {
+        return mainLibraryController.getLibrary();
+    }
+
+    /**
+     * Append a playlist to the queue
+     *
+     * @param playlist The playlist to append
+     */
+    public void appendPlaylistToQueue(Library playlist) {
+        queueController.appendPlaylistToQueue(playlist);
+    }
+
+    /**
+     * Replace the queue with all the songs of a playlist
+     *
+     * @param playlist The playlist to replace the queue with
+     */
+    public void replaceQueue(Library playlist) {
+        queueController.replaceQueue(playlist);
+    }
+
+    /**
+     * Toggle the favorite status of a song
+     * If the song is already a favorite, it will be removed from the favorites
+     * If the song is not a favorite, it will be added to the favorites
+     *
+     * @param song The song to toggle the favorite status of
+     */
+    public void toggleFavorites(Song song) {
+        playlistNavigatorController.toggleFavorites(song);
+    }
+
+    /**
+     * Add a song to a playlist
+     *
+     * @param song     The song to add
+     * @param playlist The playlist to add the song to
+     */
+    public void addSongToPlaylist(Song song, Library playlist) {
+        playlistNavigatorController.addSongToPlaylist(song, playlist);
+    }
+
+    /**
+     * Remove a song from a playlist
+     *
+     * @param song     The song to remove
+     * @param playlist The playlist to remove the song from
+     */
+    public void removeSongFromPlaylist(Song song, Library playlist) {
+        playlistNavigatorController.removeSongFromPlaylist(song, playlist);
+    }
+
+    /**
+     * Return if a song is a favorite
+     *
+     * @param song The song to check
+     * @return True if the song is a favorite, false otherwise
+     */
+    public boolean isFavorite(Song song) {
+        return playlistNavigatorController.isFavorite(song);
+    }
+
+    /**
+     * Handle add song to main library.
+     * This method opens a file dialog to select an audio file and adds it to the main library.
+     */
+    public void handleAddSongToMainLibrary() {
+        File selectedFile = FileDialogHelper.chooseAudioFile(null, "Select Music File");
+        if (selectedFile != null) {
+            Path mainLibraryPath = metaController.getMusicDirectory();
+            try {
+                FileManager fileManager = new FileManager();
+                Path copiedFilePath = fileManager.copyFileToDirectory(selectedFile, mainLibraryPath);
+                System.out.println("File copied with succes : " + copiedFilePath);
+                mainLibraryController.addSong(copiedFilePath);
+            } catch (IOException e) {
+                System.err.println("Error while copying : " + e.getMessage());
+            }
+        }
+    }
+
 
 }

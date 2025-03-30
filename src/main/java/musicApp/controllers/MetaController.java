@@ -1,34 +1,24 @@
 package musicApp.controllers;
 
 import javafx.stage.Stage;
+import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.utils.DataProvider;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * The Meta controller.
  */
 public class MetaController {
 
-    /**
-     * Enum for the different scenes in the application.
-     * NOTE: settings is not a scene but a pop-up window.
-     */
-    public enum Scenes {
-        /**
-         * Mainwindow scenes.
-         */
-        MAINWINDOW
-    }
-
     private final Stage stage;
     private final DataProvider dataProvider = new DataProvider();
     private final PlayerController playerController;
     private final SettingsController settingsController;
-
+    private final List<Library> playlists;
     /**
      * Instantiates a new Meta controller.
      *
@@ -37,8 +27,9 @@ public class MetaController {
      */
     public MetaController(Stage stage) throws IOException {
         this.stage = stage;
-        this.playerController = new PlayerController(this);
-        this.settingsController = new SettingsController(this);
+        this.playlists = dataProvider.readPlaylists();
+        this.playerController = new PlayerController(this, dataProvider.readSettings());
+        this.settingsController = new SettingsController(this, dataProvider.readSettings());
     }
 
     /**
@@ -47,16 +38,10 @@ public class MetaController {
      * @param scene The scene to switch to.
      */
     public final void switchScene(Scenes scene) {
-        if (Objects.requireNonNull(scene) == Scenes.MAINWINDOW) {
-            this.playerController.show(this.stage);
+        switch (scene) {
+            case MAINWINDOW -> this.playerController.show(this.stage);
+            case SETTINGS -> this.settingsController.show();
         }
-    }
-
-    /**
-     * Shows the settings window.
-     */
-    public final void showSettings() {
-        this.settingsController.show();
     }
 
     /**
@@ -67,25 +52,11 @@ public class MetaController {
     }
 
     /**
-     * Get the current settings of the application.
-     *
-     * @return The current settings.
-     */
-    public Settings getSettings() {
-        try {
-            return dataProvider.readSettings();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            return null;
-        }
-    }
-
-    /**
      * Notify the controllers that the settings have changed.
      *
      * @param newSettings The new settings.
      */
-    private void notifySettingsChanged(Settings newSettings) {
+    public void notifySettingsChanged(Settings newSettings) {
         try {
             dataProvider.writeSettings(newSettings);
             playerController.onSettingsChanged(newSettings);
@@ -95,33 +66,31 @@ public class MetaController {
     }
 
     /**
-     * Update the balance of the application.
+     * Get the playlists.
      *
-     * @param balance The new balance.
+     * @return the playlists
      */
-    public void updateBalance(double balance) {
-        try {
-            Settings settings = dataProvider.readSettings();
-            settings.setBalance(balance);
-            notifySettingsChanged(settings);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+    public List<Library> getPlaylists() {
+        return playlists;
     }
 
     /**
-     * Set the music directory path and notify the change to the controllers.
-     *
-     * @param path The path to the music directory.
+     * Enum for the different scenes in the application.
+     * NOTE: settings is not a scene but a pop-up window.
      */
-    public void setMusicDirectoryPath(Path path) {
-        try {
-            Settings settings = dataProvider.readSettings();
-            settings.setMusicFolder(path);
-            notifySettingsChanged(settings);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+    public enum Scenes {
+        /**
+         * Mainwindow scenes.
+         */
+        MAINWINDOW,
+        SETTINGS
     }
 
+    /**
+     * Get the music directory from the settings controller.
+     * @return
+     */
+    public Path getMusicDirectory() {
+        return this.settingsController.getMusicDirectory();
+    }
 }

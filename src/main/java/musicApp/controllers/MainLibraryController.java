@@ -1,12 +1,14 @@
 package musicApp.controllers;
 
-
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import musicApp.models.Library;
 import musicApp.models.Song;
+import musicApp.utils.MusicLoader;
 import musicApp.views.MainLibraryView;
-import javafx.beans.binding.BooleanBinding;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Random;
@@ -14,7 +16,7 @@ import java.util.Random;
 /**
  * The controller for the Main Library view.
  */
-public class MainLibraryController extends PlayListController<MainLibraryView, MainLibraryController> {
+public class MainLibraryController extends SongContainerController<MainLibraryView, MainLibraryController, Library> {
     private int currentIndex;
     private Boolean shuffle = false;
 
@@ -24,7 +26,7 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      * @param controller the controller
      */
     public MainLibraryController(PlayerController controller) {
-        super(new MainLibraryView(),controller);
+        super(new MainLibraryView(), controller);
         initView("/fxml/MainLibrary.fxml");
     }
 
@@ -34,14 +36,29 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      * @param folderPath the folder path
      */
     public void loadLibrary(Path folderPath) {
-        library.load(folderPath);
+        List<Song> songs;
+        try {
+            MusicLoader loader = new MusicLoader();
+            songs = loader.getAllSongs(folderPath);
+        } catch (IOException e) {
+            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
+            return;
+        }
+        this.library.clear();       
+        this.library.addSongs(songs);;
+
+        view.updateListView();
+    }
+
+    public void loadPlaylist(Library playlist) {
+        this.library = playlist;
         view.updateListView();
     }
 
     /**
      * Skip to the next song in the library.
      */
-    public void skip(){
+    public void skip() {
         if (shuffle) {
             Random random = new Random();
             this.playSong(random.nextInt(library.size()));
@@ -58,10 +75,9 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      */
     public void prec() {
         if (currentIndex > 0) {
-            this.playSong(currentIndex-1);
+            this.playSong(currentIndex - 1);
         }
     }
-
 
     /**
      * Search the library for songs that match the query.
@@ -98,7 +114,7 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
         view.updateListView();
     }
 
-    private int getSongIndex(Song song){
+    private int getSongIndex(Song song) {
         return library.toList().indexOf(song);
     }
 
@@ -107,9 +123,9 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      *
      * @param song the song
      */
-    public void goToSong(Song song){
+    public void goToSong(Song song) {
         int index = getSongIndex(song);
-        if (index != -1){
+        if (index != -1) {
             playSong(index);
         }
     }
@@ -129,7 +145,7 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
     /**
      * Clear queue selection.
      */
-    public void clearQueueSelection(){
+    public void clearQueueSelection() {
         playerController.clearQueueSelection();
     }
 
@@ -163,7 +179,7 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      *
      * @return the currently loaded song string property
      */
-    public StringProperty getCurrentlyLoadedSongStringProperty(){
+    public StringProperty getCurrentlyLoadedSongStringProperty() {
         return playerController.getCurrentlyLoadedSongStringProperty();
     }
 
@@ -174,5 +190,91 @@ public class MainLibraryController extends PlayListController<MainLibraryView, M
      */
     public BooleanProperty isPlayingProperty() {
         return playerController.isPlayingProperty();
+    }
+
+    /**
+     * Toggle the favorites status of a song.
+     * If the song is already a favorite, it will be removed from the favorites.
+     * If the song is not a favorite, it will be added to the favorites.
+     *
+     * @param song the song
+     */
+    public void toggleFavorites(Song song) {
+        playerController.toggleFavorites(song);
+    }
+
+    /**
+     * Checks if a song is a favorite.
+     *
+     * @param song the song
+     * @return the boolean
+     */
+    public boolean isFavorite(Song song) {
+        return playerController.isFavorite(song);
+    }
+
+    /**
+     * Get all the playlists
+     *
+     * @return the favorites list
+     */
+    public List<Library> getPlaylists() {
+        return playerController.getPlaylists();
+    }
+
+    /**
+     * Add a song to a playlist
+     *
+     * @param song     the song
+     * @param playlist the playlist
+     */
+    public void addSongToPlaylist(Song song, Library playlist) {
+        playerController.addSongToPlaylist(song, playlist);
+    }
+
+    /**
+     * Remove a song from a playlist
+     *
+     * @param song     the song
+     * @param playlist the playlist
+     */
+    public void removeSongFromPlaylist(Song song, Library playlist) {
+        playerController.removeSongFromPlaylist(song, playlist);
+        refreshUI();
+    }
+
+    /**
+     * Remove a song from the main library
+     *
+     * @param song the song
+     */
+    public void removeSongFromPlaylist(Song song) {
+        playerController.removeSongFromPlaylist(song, this.library);
+        refreshUI();
+    }
+
+    /**
+     * Checks if the main library is currently being shown
+     */
+    public boolean isShowingMainLibrary() {
+        return playerController.getPlaylists().get(0).equals(library);
+    }
+
+
+    /**
+     * Handle add song.
+     */
+    public void handleAddSong() {
+        playerController.handleAddSongToMainLibrary();
+    }
+
+    /**
+     * Add song to library.
+     * @param songPath
+     */
+    public void addSong(Path songPath) {
+        Song song = new Song(songPath);
+        library.add(song);
+        view.updateListView();
     }
 }

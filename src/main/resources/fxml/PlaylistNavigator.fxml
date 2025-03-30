@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="5" prefWidth="200" xmlns:fx="http://javafx.com/fxml/1">
+    <ListView fx:id="listView" prefWidth="160" styleClass="queue" VBox.vgrow="ALWAYS" />
+    <Button fx:id="createPlaylist" maxWidth="Infinity" text="Create Playlist" />
+</VBox>
