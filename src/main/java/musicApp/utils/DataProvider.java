@@ -223,7 +223,8 @@ public class DataProvider {
     private List<Library> checkPlaylists(List<Library> playlists) {
         if (playlists == null || playlists.isEmpty()) {
             Library favorites = new Library(new ArrayList<>(), "??favorites??", null);
-            List<Library> validPlaylists = List.of(favorites);
+            List<Library> validPlaylists = new ArrayList<>();
+            validPlaylists.add(favorites);
             writePlaylists(validPlaylists);
             return validPlaylists;
         }
