@@ -17,11 +17,11 @@ public class ConfigPathUtil {
             if (configDir == null) {
                 configDir = System.getProperty("user.home") + "\\AppData\\Roaming";
             }
-            return Paths.get(configDir, "musicApp", "lyrics");
+            return Paths.get(configDir, "musicapp", "lyrics");
         } else {
             // for MacOS, Linux and other OS
             configDir = System.getProperty("user.home") + "/.config";
-            return Paths.get(configDir, "musicApp", "lyrics");
+            return Paths.get(configDir, "musicapp", "lyrics");
         }
     }
 }

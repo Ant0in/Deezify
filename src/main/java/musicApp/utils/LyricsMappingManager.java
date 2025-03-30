@@ -68,10 +68,10 @@ public class LyricsMappingManager {
      * Given a song name, returns the associated pathLyrics if found,
      * or null if not found.
      */
-    public String getSongLyricsPath(String songKey) {
+    public String getSongLyricsPath(String pathSong) {
         LyricsLibrary library = readLibrary();
         for (SongLyricsEntry entry : library.getSongs()) {
-            if (entry.getPathSong().equals(songKey)) {
+            if (entry.getPathSong().equals(pathSong)) {
                 return entry.getPathLyrics();
             }
         }
@@ -83,9 +83,9 @@ public class LyricsMappingManager {
      * Given a song path, returns the lyrics as a list of strings.
      * If the lyrics file doesn't exist, returns a list with an error message.
      */
-    public List<String> getSongLyrics(String songKey) {
+    public List<String> getSongLyrics(String pathSong) {
         // get the last part of the song path (ex: "Hello.mp3")
-        String pathLyrics = getSongLyricsPath(songKey);
+        String pathLyrics = getSongLyricsPath(pathSong);
         if (pathLyrics == null) {
             return List.of();
         }
@@ -102,16 +102,16 @@ public class LyricsMappingManager {
     }
 
     /**
-     * Updates or creates a mapping between songKey and newRelativePath (path to lyrics).
+     * Updates or creates a mapping between pathSong and newRelativePath (path to lyrics).
      * If it doesn't exist, it creates a new entry.
      */
 
-    public void updateLyricsMapping(String songKey, String newRelativePath) {
+    public void updateLyricsMapping(String pathSong, String newRelativePath) {
         LyricsLibrary library = readLibrary();
         boolean found = false;
 
         for (SongLyricsEntry entry : library.getSongs()) {
-            if (entry.getPathSong().equals(songKey)) {
+            if (entry.getPathSong().equals(pathSong)) {
                 entry.setPathLyrics(newRelativePath);
                 found = true;
                 break;
@@ -119,7 +119,7 @@ public class LyricsMappingManager {
         }
             if (!found) {
                 // Ex: "songs/Hello.mp3"
-                SongLyricsEntry newEntry = new SongLyricsEntry(songKey, newRelativePath);
+                SongLyricsEntry newEntry = new SongLyricsEntry(pathSong, newRelativePath);
                 library.getSongs().add(newEntry);
             }
             writeLibrary(library);
@@ -130,11 +130,8 @@ public class LyricsMappingManager {
      * Generates a unique key for the song based on its title, artist, and duration.
      * Used to map the song to its lyrics.
      */
-    public String getSongKey(Song song) {
-        String title = song.getTitle(); 
-        String artist = song.getArtist();
-        int durationSec = (int) song.getDuration().toSeconds();
-        return title + "-" + artist + "-" + durationSec;
+    public String getPathSong(Song song) {
+        return song.getFilePath().toAbsolutePath().toString();
     }
 }
 

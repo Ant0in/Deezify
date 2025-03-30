@@ -39,8 +39,8 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         if (song == null) {
             return List.of("No song loaded."); 
         }
-        String compositeKey = lyricsManager.getSongKey(song);
-        return lyricsManager.getSongLyrics(compositeKey);
+        String pathSong = lyricsManager.getPathSong(song);
+        return lyricsManager.getSongLyrics(pathSong);
     }
 
     /**
@@ -53,12 +53,22 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             System.err.println("No song loaded.");
             return;
         }
-        // composite key ; ex :"Hello-Adele-185"
-        String compositeKey = lyricsManager.getSongKey(currentSong);
-        String lyricsFileName = compositeKey + ".txt";
 
-        // write the lyrics to a file
+        String songName = currentSong.getFilePath().getFileName().toString();
+        String lyricsFileName;
+
+        if (songName.endsWith(".mp3")) {
+            lyricsFileName = songName.replace(".mp3", ".txt");
+        } else if (songName.endsWith(".wav")) {
+            lyricsFileName = songName.replace(".wav", ".txt");
+        }
+        else{
+            System.err.println("Unsupported file format.");
+            return;
+        }
         Path lyricsFilePath = lyricsManager.getLyricsDir().resolve(lyricsFileName);
+        
+        //write the new lyrics to the file
         try {
             if (!Files.exists(lyricsFilePath.getParent())) {
                 Files.createDirectories(lyricsFilePath.getParent());
@@ -68,8 +78,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             e.printStackTrace();
             return;
         }
-        // update song mapping
-        lyricsManager.updateLyricsMapping(compositeKey, lyricsFileName);
+        lyricsManager.updateLyricsMapping(currentSong.getFilePath().toString(), lyricsFileName); 
         view.updateLyrics();
     }
 
@@ -94,4 +103,9 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     public LyricsMappingManager getLyricsManager() {
         return lyricsManager;
     }
+
+    public String generateLyricsFileName(Song song) {
+        return song.getFilePath().getFileName().toString() + ".txt";
+}
+
 }
