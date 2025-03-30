@@ -10,6 +10,7 @@ import musicApp.views.EditMetadataView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class EditMetadataController extends ViewController<EditMetadataView, EditMetadataController> {
     private final File[] selectedFile = new File[1];
@@ -27,10 +28,11 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             view.populateFields(
                     song.getTitle(),
                     song.getArtist(),
-                    song.getGenre()
+                    song.getGenre(),
+                    song.getUserTags()
             );
         }
-
+        song.getCoverImage()
         editStage.setTitle(LanguageManager.getInstance().get("edit_metadata.title"));
         editStage.setScene(view.getScene());
         editStage.show();
@@ -61,7 +63,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      * @param artist the artist
      * @param genre  the genre
      */
-    public void handleSaveMetadata(String title, String artist, String genre, ArrayList<String> userTags) {
+    public void handleSaveMetadata(String title, String artist, String genre, Set<String> userTags) {
         if (song == null) {
             view.displayError("No song to edit");
             return;
@@ -71,7 +73,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             newMetadata.setTitle(title);
             newMetadata.setArtist(artist);
             newMetadata.setGenre(genre);
-            newMetadata.setUserTags(userTags);
+            newMetadata.setUserTags(new ArrayList<>(userTags));
             if (selectedFile[0] != null) {
                 newMetadata.loadCoverFromPath(selectedFile[0].getAbsolutePath());
             }
