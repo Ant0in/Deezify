@@ -22,7 +22,7 @@ module ulb.musicApp {
     requires com.google.gson;
 
 
-    opens musicApp to javafx.fxml, javafx.controls, javafx.media;
+    opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;
     opens musicApp.controllers to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.models to javafx.fxml, javafx.controls, javafx.media, com.google.gson;
     opens musicApp.views to javafx.fxml, javafx.controls, javafx.media;
