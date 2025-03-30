@@ -14,12 +14,18 @@ public class TestLyricsMappingManager {
 
     private final String songKey = "TestSong-TestArtist-120";
     private final String lyricsContent = "Line 1\nLine 2\nLine 3";
-    private final Path lyricsDir = LyricsMappingManager.getLyricsDir();
-    private final Path lyricsFile = lyricsDir.resolve(songKey + ".txt");
-    private final Path jsonFile = lyricsDir.resolve("lyrics.json");
+    private LyricsMappingManager manager;
+    private Path lyricsFile;
+    private Path jsonFile;
+    private Path lyricsDir;
 
     @Before
     public void setUp() throws IOException {
+        manager = new LyricsMappingManager();
+        lyricsDir = manager.getLyricsDir();
+        lyricsFile = lyricsDir.resolve(songKey + ".txt");
+        jsonFile = lyricsDir.resolve("lyrics.json");
+
         Files.createDirectories(lyricsDir);
         Files.deleteIfExists(lyricsFile);
         Files.deleteIfExists(jsonFile);
@@ -33,17 +39,17 @@ public class TestLyricsMappingManager {
 
     @Test
     public void testGetLyricsWhenMissing() {
-        List<String> lyrics = LyricsMappingManager.getSongLyrics("FakeSong-Unknown-0");
+        List<String> lyrics = manager.getSongLyrics("FakeSong-Unknown-0");
         assertNotNull(lyrics);  
         assertTrue(lyrics.isEmpty());
     }
 
     @Test
     public void testSaveAndReadLyrics() throws IOException {
-        LyricsMappingManager.updateLyricsMapping(songKey, songKey + ".txt");
+        manager.updateLyricsMapping(songKey, songKey + ".txt");
         Files.writeString(lyricsFile, lyricsContent);
 
-        List<String> readLyrics = LyricsMappingManager.getSongLyrics(songKey);
+        List<String> readLyrics = manager.getSongLyrics(songKey);
 
         assertNotNull(readLyrics);
         assertEquals(3, readLyrics.size());
@@ -60,7 +66,7 @@ public class TestLyricsMappingManager {
     @Test
     public void testNoJsonFileHandledGracefully() {
         assertFalse(Files.exists(jsonFile));
-        String result = LyricsMappingManager.getSongLyricsPath(songKey);
+        String result = manager.getSongLyricsPath(songKey);
         assertNull(result);
     }
 }

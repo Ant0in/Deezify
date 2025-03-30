@@ -14,11 +14,14 @@ import musicApp.utils.LyricsMappingManager;
 import musicApp.views.LyricsView;
 
 public class LyricsController extends ViewController<LyricsView, LyricsController>{
+
     private final PlayerController playerController;
+    private final LyricsMappingManager lyricsManager;
 
     public LyricsController(PlayerController playerController) {
         super(new LyricsView());
         this.playerController = playerController;
+        this.lyricsManager = new LyricsMappingManager();
         initView("/fxml/Lyrics.fxml");  
     }
 
@@ -36,8 +39,8 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         if (song == null) {
             return List.of("No song loaded."); 
         }
-        String compositeKey = LyricsMappingManager.getSongKey(song);
-        return LyricsMappingManager.getSongLyrics(compositeKey);
+        String compositeKey = lyricsManager.getSongKey(song);
+        return lyricsManager.getSongLyrics(compositeKey);
     }
 
     /**
@@ -51,11 +54,11 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             return;
         }
         // composite key ; ex :"Hello-Adele-185"
-        String compositeKey = LyricsMappingManager.getSongKey(currentSong);
+        String compositeKey = lyricsManager.getSongKey(currentSong);
         String lyricsFileName = compositeKey + ".txt";
 
         // write the lyrics to a file
-        Path lyricsFilePath = LyricsMappingManager.getLyricsDir().resolve(lyricsFileName);
+        Path lyricsFilePath = lyricsManager.getLyricsDir().resolve(lyricsFileName);
         try {
             if (!Files.exists(lyricsFilePath.getParent())) {
                 Files.createDirectories(lyricsFilePath.getParent());
@@ -66,7 +69,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             return;
         }
         // update song mapping
-        LyricsMappingManager.updateLyricsMapping(compositeKey, lyricsFileName);
+        lyricsManager.updateLyricsMapping(compositeKey, lyricsFileName);
         view.updateLyrics();
     }
 
@@ -86,5 +89,9 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
 
     public void refreshUI() {
         this.view.refreshUI();
+    }
+    
+    public LyricsMappingManager getLyricsManager() {
+        return lyricsManager;
     }
 }
