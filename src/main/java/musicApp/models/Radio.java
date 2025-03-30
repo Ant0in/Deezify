@@ -18,7 +18,6 @@ public class Radio extends Song {
      */
     public Radio(Path filePath) {
         super(filePath);
-        this.isSong = false;
         this.webUrl = this.parseM3U(filePath);
     }
 
@@ -65,6 +64,11 @@ public class Radio extends Song {
             System.err.println("Impossible to read " + m3uFile + " : " + e.getMessage());
         }
         return url;
+    }
+    
+    @Override
+    public Boolean isSong() {
+        return false;
     }
 
 }

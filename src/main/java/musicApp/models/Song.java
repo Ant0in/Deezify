@@ -16,8 +16,7 @@ public class Song {
     
     @Expose
     private final Path filePath;
-    private Metadata metadata;
-    private Boolean isSong = true; 
+    private Metadata metadata; 
 
     /**
      * Constructor from MetadataReader.
@@ -39,7 +38,7 @@ public class Song {
      * @return boolean isSong.
      */
     public Boolean isSong() {
-        return isSong;
+        return true;
     }
 
     /**
