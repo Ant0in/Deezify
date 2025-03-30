@@ -28,7 +28,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     }
 
     public void loadPlaylists() {
-        playlists = playerController.getPlaylists();
+        playlists = new ArrayList<>(playerController.getPlaylists());
         playlists.addFirst(playerController.getLibrary());
         view.update(playlists);
     }
