@@ -50,6 +50,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
         chooseCoverButton.setText(LanguageManager.getInstance().get("button.choose_file"));
         saveButton.setText(LanguageManager.getInstance().get("settings.save"));
         cancelButton.setText(LanguageManager.getInstance().get("settings.cancel"));
+        tagInputField.setPromptText(LanguageManager.getInstance().get("prompt.addTag"));
     }
 
     private void initButtons() {

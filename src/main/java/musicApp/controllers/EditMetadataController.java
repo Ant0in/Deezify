@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class EditMetadataController extends ViewController<EditMetadataView, EditMetadataController> {
-    private final File[] selectedFile = new File[1];
+    private File selectedFile;
     private final Song song;
     private final Stage editStage = new Stage();
     private final SongCellController songCellController;
@@ -77,7 +77,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             Image image = new Image(file.toURI().toString());
             if (!image.isError()) {
                 view.setCoverImage(image);
-                selectedFile[0] = file;
+                selectedFile = file;
             } else {
                 System.err.println("Failed to load image: " + file.getName());
             }
@@ -107,8 +107,8 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             newMetadata.setArtist(artist);
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(new ArrayList<>(userTags));
-            if (selectedFile[0] != null) {
-                newMetadata.loadCoverFromPath(selectedFile[0].getAbsolutePath());
+            if (selectedFile != null) {
+                newMetadata.loadCoverFromPath(selectedFile.getAbsolutePath());
             }
             MetadataUtils util = new MetadataUtils();
 
