@@ -170,6 +170,7 @@ public class PlayerView extends View<PlayerView, PlayerController> {
             Pane lyricsPane = viewController.getLyricsRoot();
             HBox.setHgrow(lyricsPane, Priority.ALWAYS);
             playerContainer.getChildren().set(0, lyricsPane);
+            playerContainer.applyCss();
 
         } else {
             Pane libraryPane = viewController.getMainLibraryRoot();
