@@ -20,12 +20,11 @@ build:
   script:
     - mvn package -DskipTests
     - mkdir -p artifacts
-    - cp target/MusicApp_groupe2-*.jar artifacts/
+    - cp target/musicApp-*.jar artifacts/
     - mv artifacts/*.jar artifacts/musicapp-${CI_COMMIT_TAG}.jar
   artifacts:
     paths:
       - artifacts/
-    expire_in: 1 week
 
 release:
   stage: release
