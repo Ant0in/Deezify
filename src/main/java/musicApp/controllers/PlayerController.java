@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import musicApp.controllers.playlists.PlaylistNavigatorController;
+import musicApp.controllers.songs.LyricsController;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.FileManager;
 import musicApp.views.PlayerView;
@@ -16,8 +18,6 @@ import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -32,7 +32,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     private final MetaController metaController;
     private MediaPlayerController mediaPlayerController;
     private ToolBarController toolBarController;
-    private MainLibraryController mainLibraryController;
+    private LibraryController LibraryController;
     private QueueController queueController;
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
@@ -48,15 +48,15 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         this.metaController = metaController;
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
-    
-        this.mainLibraryController.loadPlaylist(mainLibrary);
+
+        this.LibraryController.loadPlaylist(mainLibrary);
         this.mediaPlayerController.setBalance(settings.getBalance());
         this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
     }
-    
+
 
     private void initSubControllers() {
-        this.mainLibraryController = new MainLibraryController(this);
+        this.LibraryController = new LibraryController(this);
         this.queueController = new QueueController(this);
         this.mediaPlayerController = new MediaPlayerController(this);
         this.toolBarController = new ToolBarController(this);
@@ -104,7 +104,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      */
     public void skip() {
         if (this.queueController.queueIsEmpty()) {
-            this.mainLibraryController.skip();
+            this.LibraryController.skip();
         } else {
             this.queueController.playSong(0);
         }
@@ -114,7 +114,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * Handle the previous song
      */
     public void handlePreviousSong() {
-        this.mainLibraryController.prec();
+        this.LibraryController.prec();
     }
 
 
@@ -140,14 +140,14 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         this.queueController.refreshUI();
         this.lyricsController.refreshUI();
         this.playlistNavigatorController.refreshUI();
-        this.mainLibraryController.refreshUI();
+        this.LibraryController.refreshUI();
     }
 
     /**
      * Toggle the shuffle mode.
      */
     public void toggleShuffle() {
-        this.mainLibraryController.toggleShuffle();
+        this.LibraryController.toggleShuffle();
     }
 
     /**
@@ -157,9 +157,9 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      */
     public void onSettingsChanged(Settings newSettings) {
         this.mediaPlayerController.setBalance(newSettings.getBalance());
-        Library updatedMainLibrary = metaController.loadMainLibraryFromPath(newSettings.getMusicDirectory());
-        this.mainLibraryController.loadPlaylist(updatedMainLibrary);
         this.mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
+        if (newSettings.isMusicFolderChanged())
+            this.LibraryController.loadPlaylist(metaController.getMainLibrary());
     }
 
     /**
@@ -186,7 +186,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the play list root
      */
     public Pane getMainLibraryRoot() {
-        return this.mainLibraryController.getRoot();
+        return this.LibraryController.getRoot();
     }
 
     /**
@@ -214,14 +214,14 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the boolean binding
      */
     public BooleanBinding isPlaylistItemSelected() {
-        return mainLibraryController.isSelected();
+        return LibraryController.isSelected();
     }
 
     /**
      * Clear play list view selection.
      */
     public void clearPlayListViewSelection() {
-        mainLibraryController.clearSelection();
+        LibraryController.clearSelection();
     }
 
     /**
@@ -230,7 +230,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the selected play list song
      */
     public Song getSelectedPlayListSong() {
-        return mainLibraryController.getSelectedSong();
+        return LibraryController.getSelectedSong();
     }
 
     /**
@@ -286,7 +286,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     }
 
     public Song getSongByPathInMainLibrary(Path path) {
-        return mainLibraryController.getSongByPath(path);
+        return LibraryController.getSongByPath(path);
     }
 
     /**
@@ -302,7 +302,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * Update the playlist shown in the mainLibrary
      */
     public void updateShownPlaylist(Library library) {
-        mainLibraryController.loadPlaylist(library);
+        LibraryController.loadPlaylist(library);
     }
 
     /**
@@ -311,7 +311,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return The main library
      */
     public Library getLibrary() {
-        return mainLibraryController.getLibrary();
+        return LibraryController.getLibrary();
     }
 
     /**
@@ -385,7 +385,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
                 FileManager fileManager = new FileManager();
                 Path copiedFilePath = fileManager.copyFileToDirectory(selectedFile, mainLibraryPath);
                 System.out.println("File copied with succes : " + copiedFilePath);
-                mainLibraryController.addSong(copiedFilePath);
+                LibraryController.addSong(copiedFilePath);
             } catch (IOException e) {
                 System.err.println("Error while copying : " + e.getMessage());
             }

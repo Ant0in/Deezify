@@ -1,20 +1,17 @@
-package musicApp.controllers;
+package musicApp.controllers.songs;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javafx.beans.property.StringProperty;
+import musicApp.controllers.PlayerController;
+import musicApp.controllers.ViewController;
 import musicApp.models.Song;
 import musicApp.utils.LyricsManager;
 import musicApp.utils.DataProvider;
-import musicApp.views.LyricsView;
+import musicApp.views.songs.LyricsView;
 
-public class LyricsController extends ViewController<LyricsView, LyricsController>{
+public class LyricsController extends ViewController<LyricsView, LyricsController> {
 
     private final PlayerController playerController;
     private final LyricsManager lyricsManager;

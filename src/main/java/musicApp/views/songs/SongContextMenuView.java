@@ -1,12 +1,13 @@
-package musicApp.views;
+package musicApp.views.songs;
 
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import musicApp.controllers.SongContextMenuController;
+import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.utils.LanguageManager;
+import musicApp.views.View;
 
 /**
  * View for the context menu that appears when right-clicking a song in the library.

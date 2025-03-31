@@ -1,13 +1,14 @@
-package musicApp.controllers;
+package musicApp.controllers.songs;
 
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import musicApp.controllers.ViewController;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.utils.LanguageManager;
 import musicApp.utils.MetadataUtils;
-import musicApp.views.EditMetadataView;
+import musicApp.views.songs.EditMetadataView;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,11 +1,13 @@
-package musicApp.controllers;
+package musicApp.controllers.settings;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import musicApp.controllers.MetaController;
+import musicApp.controllers.ViewController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.utils.LanguageManager;
-import musicApp.views.SettingsView;
+import musicApp.views.settings.SettingsView;
 
 import java.io.IOException;
 import java.nio.file.Path;

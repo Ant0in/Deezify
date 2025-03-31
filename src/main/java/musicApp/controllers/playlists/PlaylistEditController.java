@@ -1,7 +1,8 @@
-package musicApp.controllers;
+package musicApp.controllers.playlists;
 
+import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.views.PlaylistEditView;
+import musicApp.views.playlists.PlaylistEditView;
 
 import java.nio.file.Path;
 

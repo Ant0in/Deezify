@@ -1,4 +1,4 @@
-package musicApp.views;
+package musicApp.views.settings;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -6,13 +6,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import musicApp.controllers.SettingsController;
+import musicApp.controllers.settings.SettingsController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.LanguageManager;
+import musicApp.views.View;
 
 import java.io.File;
 import java.nio.file.Path;

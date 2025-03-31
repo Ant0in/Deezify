@@ -1,8 +1,9 @@
-package musicApp.controllers;
+package musicApp.controllers.playlists;
 
+import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
-import musicApp.views.playlistNavigator.PlaylistCellView;
+import musicApp.views.playlists.PlaylistCellView;
 
 public class PlaylistCellController extends ViewController<PlaylistCellView, PlaylistCellController> {
 

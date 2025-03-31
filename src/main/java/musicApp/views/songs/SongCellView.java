@@ -1,12 +1,13 @@
-package musicApp.views;
+package musicApp.views.songs;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import musicApp.controllers.SongCellController;
-import musicApp.controllers.SongContextMenuController;
+import musicApp.controllers.songs.SongCellController;
+import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.models.Song;
+import musicApp.views.View;
 
 import java.util.Objects;
 

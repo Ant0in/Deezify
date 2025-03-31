@@ -53,7 +53,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
 
 
     @Override
-    protected void playSong(Song song) {
+    public void playSong(Song song) {
         library.remove(song);
         super.playSong(song);
         this.view.updateListView();

@@ -1,4 +1,4 @@
-package musicApp.views;
+package musicApp.views.songs;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -7,9 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import musicApp.controllers.EditMetadataController;
+import musicApp.controllers.songs.EditMetadataController;
 import musicApp.utils.LanguageManager;
-import javafx.scene.control.ButtonBase;
+import musicApp.views.View;
 
 import java.util.ArrayList;
 import java.util.HashSet;

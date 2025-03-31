@@ -1,9 +1,9 @@
-package musicApp.views;
+package musicApp.views.songs;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import musicApp.controllers.LyricsController;
+import musicApp.controllers.songs.LyricsController;
 import musicApp.utils.LanguageManager;
 import java.util.List;
 import javafx.scene.control.Button;
@@ -15,6 +15,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ButtonBar;
 import javafx.geometry.Pos;
+import musicApp.views.View;
+
 import java.util.Optional;
 
 /**

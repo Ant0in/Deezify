@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 import javafx.stage.Stage;
+import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
@@ -78,6 +79,14 @@ public class MetaController {
      */
     public List<Library> getPlaylists() {
         return playlists;
+    }
+
+    /**
+     * Get the main library.
+     * @return the main library
+     */
+    public Library getMainLibrary() {
+        return this.playlists.getFirst();
     }
 
     /**

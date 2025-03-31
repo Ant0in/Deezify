@@ -4,16 +4,17 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
-import musicApp.controllers.MainLibraryController;
-import musicApp.controllers.SongCellController;
+import musicApp.controllers.LibraryController;
+import musicApp.controllers.songs.SongCellController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
+import musicApp.views.songs.SongCell;
 
 /**
  * The MainLibrary view.
  */
 @SuppressWarnings("unused")
-public class MainLibraryView extends SongContainerView<MainLibraryView, MainLibraryController, Library> {
+public class LibraryView extends SongContainerView<LibraryView, LibraryController, Library> {
 
     @FXML
     private TextField songInput;
@@ -24,7 +25,7 @@ public class MainLibraryView extends SongContainerView<MainLibraryView, MainLibr
     /**
      * Instantiates a new Main library view.
      */
-    public MainLibraryView() {
+    public LibraryView() {
     }
 
     @Override

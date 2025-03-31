@@ -1,25 +1,27 @@
-package musicApp.controllers;
+package musicApp.controllers.songs;
 
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import musicApp.controllers.LibraryController;
+import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.utils.MetadataUtils;
-import musicApp.views.SongCellView;
+import musicApp.views.songs.SongCellView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SongCellController extends ViewController<SongCellView, SongCellController> {
 
-    private final MainLibraryController mainLibraryController;
+    private final LibraryController LibraryController;
     private Song song;
 
-    public SongCellController(MainLibraryController mainLibraryController) {
+    public SongCellController(LibraryController LibraryController) {
         super(new SongCellView());
-        this.mainLibraryController = mainLibraryController;
+        this.LibraryController = LibraryController;
         initView("/fxml/SongCell.fxml");
     }
 
@@ -50,7 +52,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      * @return True if the song is loaded, false otherwise.
      */
     public boolean isLoaded() {
-        Song playingSong = mainLibraryController.getCurrentlyLoadedSong();
+        Song playingSong = LibraryController.getCurrentlyLoadedSong();
         return playingSong != null && playingSong.equals(song);
     }
 
@@ -60,7 +62,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      * @return True if the song is playing, false otherwise.
      */
     public boolean isPlaying() {
-        return mainLibraryController.isPlaying();
+        return LibraryController.isPlaying();
     }
 
     /**
@@ -71,21 +73,21 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             view.displayError("No song to play");
             return;
         }
-        mainLibraryController.playSong(song);
+        LibraryController.playSong(song);
     }
 
     /**
      * Handle when the user wants to pause the song.
      */
     public void handlePause() {
-        mainLibraryController.pause();
+        LibraryController.pause();
     }
 
     /**
      * Handle when the user wants to unpause the song.
      */
     public void handleUnpause() {
-        mainLibraryController.unpause();
+        LibraryController.unpause();
     }
 
     /**
@@ -94,7 +96,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      * @return The currently loaded song string property.
      */
     public StringProperty getCurrentlyLoadedSongStringProperty() {
-        return mainLibraryController.getCurrentlyLoadedSongStringProperty();
+        return LibraryController.getCurrentlyLoadedSongStringProperty();
     }
 
     /**
@@ -104,16 +106,16 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      * @return The is playing property.
      */
     public BooleanProperty isPlayingProperty() {
-        return mainLibraryController.isPlayingProperty();
+        return LibraryController.isPlayingProperty();
     }
 
     public void toggleFavorites() {
-        mainLibraryController.toggleFavorites(song);
+        LibraryController.toggleFavorites(song);
         view.update(song);
     }
 
     public boolean isFavorite() {
-        return mainLibraryController.isFavorite(song);
+        return LibraryController.isFavorite(song);
     }
 
 
@@ -150,7 +152,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      * @return List of all playlists
      */
     public List<Library> getPlaylists() {
-        return mainLibraryController.getPlaylists();
+        return LibraryController.getPlaylists();
     }
 
     /**
@@ -163,7 +165,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             view.displayError("No song to add");
             return;
         }
-        mainLibraryController.addSongToPlaylist(song, playlist);
+        LibraryController.addSongToPlaylist(song, playlist);
     }
 
     /**
@@ -176,7 +178,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             view.displayError("No song to remove");
             return;
         }
-        mainLibraryController.removeSongFromPlaylist(song, playlist);
+        LibraryController.removeSongFromPlaylist(song, playlist);
     }
 
     /**
@@ -187,11 +189,11 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             view.displayError("No song to remove");
             return;
         }
-        mainLibraryController.removeSongFromPlaylist(song);
+        LibraryController.removeSongFromPlaylist(song);
     }
 
     public boolean isShowingMainLibrary() {
-        return mainLibraryController.isShowingMainLibrary();
+        return LibraryController.isShowingMainLibrary();
     }
 
     /**

@@ -1,8 +1,9 @@
-package musicApp.controllers;
+package musicApp.controllers.settings;
 
 import javafx.stage.Stage;
+import musicApp.controllers.ViewController;
 import musicApp.models.Equalizer;
-import musicApp.views.EqualizerView;
+import musicApp.views.settings.EqualizerView;
 
 import java.util.List;
 

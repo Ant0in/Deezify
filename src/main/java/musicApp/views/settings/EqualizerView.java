@@ -1,4 +1,4 @@
-package musicApp.views;
+package musicApp.views.settings;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -9,8 +9,9 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import musicApp.controllers.EqualizerController;
+import musicApp.controllers.settings.EqualizerController;
 import musicApp.utils.LanguageManager;
+import musicApp.views.View;
 
 import java.util.List;
 

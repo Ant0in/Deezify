@@ -15,6 +15,7 @@ public class Settings {
     @Expose
     private Path musicFolder;
     private Equalizer equalizer = new Equalizer();
+    private boolean musicFolderChanged = false;
 
     /**
      * Constructor
@@ -82,6 +83,7 @@ public class Settings {
      */
     public void setMusicFolder(Path musicFolder) {
         this.musicFolder = musicFolder;
+        this.musicFolderChanged = true;
     }
 
     public Equalizer getEqualizer() {
@@ -92,6 +94,9 @@ public class Settings {
         return this.equalizer.getBandsGain();
     }
 
+    public boolean isMusicFolderChanged() {
+        return this.musicFolderChanged;
+    }
 
     @Override
     public boolean equals(Object obj) {

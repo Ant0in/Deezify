@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.utils.MusicLoader;
-import musicApp.views.MainLibraryView;
+import musicApp.views.LibraryView;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -16,7 +16,7 @@ import java.util.Random;
 /**
  * The controller for the Main Library view.
  */
-public class MainLibraryController extends SongContainerController<MainLibraryView, MainLibraryController, Library> {
+public class LibraryController extends SongContainerController<LibraryView, LibraryController, Library> {
     private int currentIndex;
     private Boolean shuffle = false;
 
@@ -25,8 +25,8 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
      *
      * @param controller the controller
      */
-    public MainLibraryController(PlayerController controller) {
-        super(new MainLibraryView(), controller);
+    public LibraryController(PlayerController controller) {
+        super(new LibraryView(), controller);
         initView("/fxml/MainLibrary.fxml");
     }
 
@@ -111,13 +111,13 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
     }
 
     @Override
-    protected void playSong(int index) {
+    public void playSong(int index) {
         currentIndex = index;
         super.playSong(index);
     }
 
     @Override
-    protected void playSong(Song song) {
+    public void playSong(Song song) {
         currentIndex = getSongIndex(song);
         super.playSong(song);
     }

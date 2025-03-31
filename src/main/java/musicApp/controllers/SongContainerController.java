@@ -57,7 +57,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
      *
      * @param song the song
      */
-    protected void playSong(Song song) {
+    public void playSong(Song song) {
         if (playerController == null) {
             view.displayError("PlayerController is not initialized!");
             return;
@@ -87,15 +87,15 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
         playSong(song);
     }
 
-    protected void pause() {
+    public void pause() {
         playerController.pause();
     }
 
-    protected void unpause() {
+    public void unpause() {
         playerController.unpause();
     }
 
-    protected boolean isPlaying() {
+    public boolean isPlaying() {
         return playerController.isPlaying();
     }
 

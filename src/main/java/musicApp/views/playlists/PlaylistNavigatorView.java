@@ -1,4 +1,4 @@
-package musicApp.views.playlistNavigator;
+package musicApp.views.playlists;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -7,9 +7,9 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
-import musicApp.controllers.PlaylistCellController;
-import musicApp.controllers.PlaylistEditController;
-import musicApp.controllers.PlaylistNavigatorController;
+import musicApp.controllers.playlists.PlaylistCellController;
+import musicApp.controllers.playlists.PlaylistEditController;
+import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
 import musicApp.views.View;

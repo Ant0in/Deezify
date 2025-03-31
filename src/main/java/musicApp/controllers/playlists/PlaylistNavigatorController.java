@@ -1,9 +1,11 @@
-package musicApp.controllers;
+package musicApp.controllers.playlists;
 
+import musicApp.controllers.PlayerController;
+import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.utils.DataProvider;
-import musicApp.views.playlistNavigator.PlaylistNavigatorView;
+import musicApp.views.playlists.PlaylistNavigatorView;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

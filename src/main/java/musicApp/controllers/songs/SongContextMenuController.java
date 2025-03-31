@@ -1,9 +1,10 @@
-package musicApp.controllers;
+package musicApp.controllers.songs;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.views.SongContextMenuView;
+import musicApp.views.songs.SongContextMenuView;
 
 import java.util.List;
 

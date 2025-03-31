@@ -1,4 +1,4 @@
-package musicApp.views;
+package musicApp.views.playlists;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -7,9 +7,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import musicApp.controllers.PlaylistEditController;
+import musicApp.controllers.playlists.PlaylistEditController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
+import musicApp.views.View;
 
 import java.io.File;
 import java.nio.file.Path;
