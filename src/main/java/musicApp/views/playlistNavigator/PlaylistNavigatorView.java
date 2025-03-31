@@ -89,10 +89,27 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     }
 
     private void setupContextMenu() {
-        MenuItem addToQueueItem = new MenuItem(LanguageManager.getInstance().get("context_menu.append_to_queue"));
-        MenuItem replaceQueueItem = new MenuItem(LanguageManager.getInstance().get("context_menu.replace_queue"));
-        MenuItem editItem = new MenuItem(LanguageManager.getInstance().get("button.edit"));
-        MenuItem deleteItem = new MenuItem(LanguageManager.getInstance().get("button.delete"));
+        LanguageManager lm = LanguageManager.getInstance();
+
+        MenuItem addToQueueItem = new MenuItem();
+        addToQueueItem.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("context_menu.append_to_queue"), lm.languageProperty()
+        ));
+
+        MenuItem replaceQueueItem = new MenuItem();
+        replaceQueueItem.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("context_menu.replace_queue"), lm.languageProperty()
+        ));
+
+        MenuItem editItem = new MenuItem();
+        editItem.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("button.edit"), lm.languageProperty()
+        ));
+
+        MenuItem deleteItem = new MenuItem();
+        deleteItem.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("button.delete"), lm.languageProperty()
+        ));
 
         addToQueueItem.setOnAction(_ -> {
             Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
