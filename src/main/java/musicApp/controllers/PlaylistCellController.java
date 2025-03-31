@@ -23,8 +23,8 @@ public class PlaylistCellController extends ViewController<PlaylistCellView, Pla
     public void update(Library library) {
         if (!library.equals(getLibrary())) {
             this.library = library;
-            this.view.update(library);
         }
+        this.view.update(library);
     }
 
     /**

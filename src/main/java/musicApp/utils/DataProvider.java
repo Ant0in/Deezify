@@ -226,18 +226,15 @@ public class DataProvider {
     }
 
     private List<Library> checkPlaylists(List<Library> playlists) {
-        if (playlists == null || playlists.isEmpty()) {
+        List<Library> validPlaylists = playlists != null ? new ArrayList<>(playlists) : new ArrayList<>();
+
+        if (validPlaylists.isEmpty() || !validPlaylists.getFirst().getName().equals("??favorites??")) {
             Library favorites = new Library(new ArrayList<>(), "??favorites??", null);
-            List<Library> validPlaylists = List.of(favorites);
-            writePlaylists(validPlaylists);
-            return validPlaylists;
+            validPlaylists.addFirst(favorites);
         }
-        if (!playlists.getFirst().getName().equals("??favorites??")) {
-            Library favorites = new Library(new ArrayList<>(), "??favorites??", null);
-            playlists.add(0, favorites);
-        }
-        writePlaylists(playlists);
-        return playlists;
+
+        writePlaylists(validPlaylists);
+        return validPlaylists;
     }
 
     public Path getLyricsDir() {

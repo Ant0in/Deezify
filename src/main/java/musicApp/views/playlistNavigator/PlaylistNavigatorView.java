@@ -1,5 +1,6 @@
 package musicApp.views.playlistNavigator;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -46,7 +47,10 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     }
 
     private void initTranslation() {
-        createPlaylist.setText(LanguageManager.getInstance().get("button.create_playlist"));
+        createPlaylist.textProperty().bind(Bindings.createStringBinding(
+                () -> LanguageManager.getInstance().get("button.create_playlist"),
+                LanguageManager.getInstance().languageProperty()
+        ));
     }
 
     /**

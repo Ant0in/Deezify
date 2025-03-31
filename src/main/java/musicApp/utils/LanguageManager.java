@@ -1,5 +1,7 @@
 package musicApp.utils;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import musicApp.enums.Language;
 
 import java.util.EnumSet;
@@ -27,7 +29,7 @@ public class LanguageManager {
             "lang.create_playlist"
     }; // bundle names
     private final ResourceBundle[] bundles = new ResourceBundle[BUNDLE_NAMES.length];
-    private Locale currentLocale;
+    private final StringProperty languageProperty = new SimpleStringProperty();
 
 
     public LanguageManager() {
@@ -61,13 +63,14 @@ public class LanguageManager {
         if (!isLanguageSupported(language)) {
             language = DEFAULT_LANGUAGE; // set default language if not supported
         }
-        currentLocale = Locale.forLanguageTag(language.getCode());
+        Locale currentLocale = Locale.forLanguageTag(language.getCode());
 
         for (int i = 0; i < BUNDLE_NAMES.length; i++) {
             bundles[i] = ResourceBundle.getBundle(BUNDLE_NAMES[i], currentLocale);
         }
 
         prefs.put("language", language.getCode()); // save the language in the preferences
+        languageProperty.set(language.getCode());
     }
 
     /**
@@ -89,7 +92,7 @@ public class LanguageManager {
      * @return The current language.
      */
     public Language getCurrentLanguage() {
-        return Language.fromCode(currentLocale.getLanguage());
+        return Language.fromCode(languageProperty.get());
     }
 
     /**
@@ -101,6 +104,8 @@ public class LanguageManager {
     private boolean isLanguageSupported(Language language) {
         return SUPPORTED_LANGUAGES.contains(language);
     }
+
+    public StringProperty languageProperty() {return languageProperty;}
 }
 
 
