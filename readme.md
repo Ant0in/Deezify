@@ -65,15 +65,14 @@ mvn exec:java
 
 ### 📌 Phase 2
 - [x] 🌎 **Multilingual Support**: Support English, French, and Dutch
-- [x] 🔍 **Search Functionality**: Find songs based on title, artist, album, or tags
 - [x] 🖼️ **Album Art Retrieval**: Fetch & display album covers automatically
-- [ ] 📜 **Metadata Editing**: Modify artist, track name, and album information
-- [ ] 🏷️ **Tagging System**: Assign custom tags (genres, moods, events) to tracks
-- [ ] 📑 **Playlists Management**: Create, edit, and organize playlists
-- [ ] ⭐ **Favorites System**: Easily mark and access favorite songs
-- [ ] 📻 **Web Radio Integration**: Stream online radio stations
-- [ ] 🎤 **Lyrics Display**: Display lyrics for the currently playing track
-- [ ] 🎧 **Equalizer**
+- [x] 📜 **Metadata Editing**: Modify artist, track name, and album information
+- [x] 🏷️ **Tagging System**: Assign custom tags (genres, moods, events) to tracks
+- [x] 📑 **Playlists Management**: Create, edit, and organize playlists
+- [x] ⭐ **Favorites System**: Easily mark and access favorite songs
+- [x] 📻 **Web Radio Integration**: Stream online radio stations
+- [x] 🎤 **Lyrics Display**: Display lyrics for the currently playing track
+- [x] 🎧 **Equalizer**
 
 ## 🤝 Aknowledgements
 This project uses the following libraries:

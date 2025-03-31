@@ -1,1 +1,1 @@
-moduleSearchIndex = [{"l":"ulb.MusicApp"}];updateSearchResults();
+moduleSearchIndex = [{"l":"ulb.musicApp"}];updateSearchResults();
