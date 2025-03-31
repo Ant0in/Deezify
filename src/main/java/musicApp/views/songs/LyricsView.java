@@ -64,6 +64,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * This method loads translated text for labels, buttons, and dialogs.
      */
     private void initTranslation() {
+        System.out.println("it s geting called");
         LanguageManager lang = LanguageManager.getInstance();
         lyricsTitle.setText(lang.get("lyrics.title"));
         dialogTitleText = lang.get("dialog.editLyrics.title");
@@ -182,5 +183,6 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     public void refreshUI() {
         initTranslation();
+        updateLyrics();
     }
 }
