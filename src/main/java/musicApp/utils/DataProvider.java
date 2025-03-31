@@ -46,7 +46,7 @@ public class DataProvider {
      */
     public DataProvider() {
         String os = System.getProperty("os.name").toLowerCase();
-        String configFolder = "musicapp";
+        String configFolder = "Deezify";
         if (os.contains("win")) {
             this.settingFolder = Path.of(System.getenv("APPDATA"), configFolder);
         } else if (os.contains("mac")) {
