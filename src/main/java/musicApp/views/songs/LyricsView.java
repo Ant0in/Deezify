@@ -1,0 +1,188 @@
+package musicApp.views.songs;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import musicApp.controllers.songs.LyricsController;
+import musicApp.utils.LanguageManager;
+import java.util.List;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ButtonBar;
+import javafx.geometry.Pos;
+import musicApp.views.View;
+
+import java.util.Optional;
+
+/**
+ * The LyricsView class is responsible for displaying and updating
+ * the lyrics of a song. It handles the user interactions and delegates
+ * actions to the LyricsController.
+ */
+public class LyricsView extends View<LyricsView, LyricsController> {
+
+    @FXML
+    private VBox lyricsContainer;
+
+    @FXML
+    private Label lyricsTitle;
+
+    private String dialogTitleText;
+    private String dialogHeaderText;
+    private String saveButtonText;
+    private String noLyricsText;
+    private String addLyricsText;
+    private String cancelButtonText;
+
+    /**
+     * Initializes the view. Sets up listeners and UI components.
+     */
+    @Override
+    public void init() {
+        initTranslation();
+        initButtons();
+    }
+
+    /**
+     * Initializes the buttons by adding a listener to the currently loaded song property.
+     * When the song changes, the lyrics are updated.
+     */
+    public void initButtons() {
+        viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
+            initTranslation();
+            updateLyrics();
+        });
+    }
+
+    /**
+     * Initializes translations for UI elements using the LanguageManager.
+     * This method loads translated text for labels, buttons, and dialogs.
+     */
+    private void initTranslation() {
+        System.out.println("it s geting called");
+        LanguageManager lang = LanguageManager.getInstance();
+        lyricsTitle.setText(lang.get("lyrics.title"));
+        dialogTitleText = lang.get("dialog.editLyrics.title");
+        dialogHeaderText = lang.get("dialog.editLyrics.header");
+        saveButtonText = lang.get("button.save");
+        noLyricsText = lang.get("lyrics.noLyrics");
+        addLyricsText = lang.get("button.addLyrics");
+        cancelButtonText = lang.get("button.cancel");
+    }
+
+    /**
+     * Displays a dialog to edit the lyrics.
+     *
+     * @param initialText the initial text to display in the text area
+     * @return an Optional containing the edited lyrics if saved, otherwise an empty Optional
+     */
+    public Optional<String> showEditLyricsDialog(String initialText) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle(dialogTitleText);
+        dialog.setHeaderText(dialogHeaderText);
+
+        ButtonType saveButtonType = new ButtonType(saveButtonText, ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(cancelButtonText, ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
+
+        TextArea textArea = new TextArea(initialText);
+        textArea.setWrapText(true);
+        textArea.setPrefWidth(400);
+        textArea.setPrefHeight(300);
+        dialog.getDialogPane().setContent(textArea);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButtonType) {
+                return textArea.getText();
+            }
+            return null;
+        });
+
+        return dialog.showAndWait();
+    }
+
+    /**
+     * Updates the lyrics displayed in the view.
+     * Clears the current lyrics container and loads either a placeholder
+     * or the actual lyrics along with an edit header.
+     */
+    public void updateLyrics() {
+        lyricsContainer.getChildren().clear();
+        List<String> lyrics = viewController.getCurrentSongLyrics();
+
+        if (lyrics == null || lyrics.isEmpty()) {
+            displayEmptyLyricsPlaceholder();
+        } else {
+            displayLyricsWithHeader(lyrics);
+        }
+        lyricsContainer.requestLayout();
+    }
+
+    /**
+     * Displays a placeholder when no lyrics are available.
+     * The placeholder includes a message and a button to add lyrics.
+     */
+    private void displayEmptyLyricsPlaceholder() {
+        Label noLyricsLabel = new Label(noLyricsText);
+        noLyricsLabel.getStyleClass().add("no-lyrics-label");
+
+        Button addLyricsButton = createEditButton(addLyricsText);
+        addLyricsButton.setOnAction(e -> viewController.editLyrics());
+
+        VBox placeholder = new VBox(10, noLyricsLabel, addLyricsButton);
+        placeholder.setAlignment(Pos.CENTER);
+        lyricsContainer.getChildren().add(placeholder);
+    }
+
+    /**
+     * Displays the lyrics along with an edit header.
+     *
+     * @param lyrics the list of lyric lines to display
+     */
+    private void displayLyricsWithHeader(List<String> lyrics) {
+        HBox header = new HBox();
+        header.setAlignment(Pos.TOP_RIGHT);
+        Button editButton = createEditButton(null);
+        editButton.setOnAction(e -> viewController.editLyrics());
+        header.getChildren().add(editButton);
+        lyricsContainer.getChildren().add(header);
+
+        for (String line : lyrics) {
+            Label lyricLine = new Label(line);
+            lyricLine.setWrapText(true);
+            lyricLine.getStyleClass().add("lyrics-text");
+            lyricsContainer.getChildren().add(lyricLine);
+        }
+    }
+
+    /**
+     * Creates a button with an edit icon and optional text.
+     *
+     * @param text the text to display on the button; if null, only the icon is shown
+     * @return the configured Button instance
+     */
+    private Button createEditButton(String text) {
+        Button button = new Button();
+        if (text != null) {
+            button.setText(text);
+        }
+        ImageView pencilIcon = new ImageView(new Image(getClass().getResource("/images/edit.png").toExternalForm()));
+        pencilIcon.setFitWidth(16);
+        pencilIcon.setFitHeight(16);
+        button.setGraphic(pencilIcon);
+        return button;
+    }
+
+    /**
+     * Refreshes the UI by reloading the translations.
+     */
+    public void refreshUI() {
+        initTranslation();
+        updateLyrics();
+    }
+}

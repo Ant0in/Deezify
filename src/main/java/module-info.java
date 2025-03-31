@@ -1,21 +1,43 @@
-module MusicApp {
+module ulb.musicApp {
+    // Export your packages to make them accessible to other modules
+    exports musicApp.controllers;
+    exports musicApp.controllers.settings;
+    exports musicApp.controllers.songs;
+    exports musicApp.controllers.playlists;
+    exports musicApp.exceptions;
+    exports musicApp.models;
+    exports musicApp.utils;
+    exports musicApp.utils.gsonTypeAdapter;
+    exports musicApp.views;
+    exports musicApp.views.playlists;
+    exports musicApp.views.songs;
+    exports musicApp.views.settings;
+    exports musicApp.enums;
+
+    // If you have any services you want to expose via ServiceLoader
+    // provides some.service.Interface with musicApp.implementation.Class;
+
+    // Declare dependencies on other modules
+    requires java.base; // This is implicit, but good to declare
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
     requires java.prefs;
-
     requires jaudiotagger;
+    requires com.google.gson;
 
-    exports MusicApp;
-    exports MusicApp.Controllers;
-    exports MusicApp.Exceptions;
-    exports MusicApp.Models;
-    exports MusicApp.Views;
-    exports MusicApp.utils;
 
-    opens MusicApp to javafx.fxml, javafx.controls, javafx.media;
-    opens MusicApp.Controllers to javafx.fxml, javafx.controls, javafx.media;
-    opens MusicApp.Models to javafx.fxml, javafx.controls, javafx.media;
-    opens MusicApp.Views to javafx.fxml, javafx.controls, javafx.media;
-    opens MusicApp.utils to javafx.fxml, javafx.controls, javafx.media;
+    opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;
+    opens musicApp.models to javafx.fxml, javafx.controls, javafx.media, com.google.gson;
+    opens musicApp.views to javafx.fxml, javafx.controls, javafx.media;
+    opens musicApp.utils to javafx.fxml, javafx.controls, javafx.media, jaudiotagger;
+    opens musicApp.utils.gsonTypeAdapter to javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.views.playlists to javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.controllers to javafx.fxml, javafx.controls, javafx.media;
+    opens musicApp.controllers.settings to javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.controllers.songs to javafx.controls, javafx.fxml, javafx.media, musicApp.controllers;
+    opens musicApp.controllers.playlists to javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.views.songs to javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.views.settings to javafx.controls, javafx.fxml, javafx.media;
+
 }
