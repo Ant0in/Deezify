@@ -102,7 +102,7 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
                 () -> lm.get("settings.ok"), lm.languageProperty()
         ));
         cancelButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("settings.cancel"), lm.languageProperty()
+                () -> lm.get("button.cancel"), lm.languageProperty()
         ));
     }
 

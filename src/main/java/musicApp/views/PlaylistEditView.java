@@ -53,14 +53,14 @@ public class PlaylistEditView extends View<PlaylistEditView, PlaylistEditControl
         selectImageButton.setOnAction(_ -> handleChooseImage());
 
         String actionButtonText = isCreation
-                ? LanguageManager.getInstance().get("create_playlist.create")
-                : LanguageManager.getInstance().get("edit_playlist.save");
+                ? LanguageManager.getInstance().get("button.create")
+                : LanguageManager.getInstance().get("button.save");
 
         actionButton = new Button(actionButtonText);
         actionButton.setOnAction(e -> viewController.handleSave(nameField.getText(),
                 (Path) imagePathLabel.getUserData()));
 
-        cancelButton = new Button(LanguageManager.getInstance().get("create_playlist.cancel"));
+        cancelButton = new Button(LanguageManager.getInstance().get("button.cancel"));
         cancelButton.setOnAction(e -> close());
     }
 

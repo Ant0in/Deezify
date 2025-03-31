@@ -91,8 +91,8 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     private void setupContextMenu() {
         MenuItem addToQueueItem = new MenuItem(LanguageManager.getInstance().get("context_menu.append_to_queue"));
         MenuItem replaceQueueItem = new MenuItem(LanguageManager.getInstance().get("context_menu.replace_queue"));
-        MenuItem editItem = new MenuItem(LanguageManager.getInstance().get("context_menu.edit"));
-        MenuItem deleteItem = new MenuItem(LanguageManager.getInstance().get("context_menu.delete"));
+        MenuItem editItem = new MenuItem(LanguageManager.getInstance().get("button.edit"));
+        MenuItem deleteItem = new MenuItem(LanguageManager.getInstance().get("button.delete"));
 
         addToQueueItem.setOnAction(_ -> {
             Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();

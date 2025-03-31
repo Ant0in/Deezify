@@ -35,7 +35,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             view.setCoverImage(song.getCoverImage());
         }
 
-        editStage.setTitle(LanguageManager.getInstance().get("edit_metadata.title"));
+        editStage.setTitle(LanguageManager.getInstance().get("button.edit_metadata"));
         editStage.setScene(view.getScene());
         editStage.show();
     }

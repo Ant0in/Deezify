@@ -48,8 +48,8 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
         artistLabel.setText(LanguageManager.getInstance().get("song.artist"));
         genreLabel.setText(LanguageManager.getInstance().get("song.genre"));
         chooseCoverButton.setText(LanguageManager.getInstance().get("button.choose_file"));
-        saveButton.setText(LanguageManager.getInstance().get("settings.save"));
-        cancelButton.setText(LanguageManager.getInstance().get("settings.cancel"));
+        saveButton.setText(LanguageManager.getInstance().get("button.save"));
+        cancelButton.setText(LanguageManager.getInstance().get("button.cancel"));
         tagInputField.setPromptText(LanguageManager.getInstance().get("prompt.addTag"));
     }
 

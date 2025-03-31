@@ -115,8 +115,8 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         right.setText(languageManager.get("settings.right"));
         balanceTitle.setText(languageManager.get("settings.balance_title"));
         title = languageManager.get("settings.title");
-        saveButton.setText(languageManager.get("settings.save"));
-        cancelButton.setText(languageManager.get("settings.cancel"));
+        saveButton.setText(languageManager.get("button.save"));
+        cancelButton.setText(languageManager.get("button.cancel"));
         browseButton.setText(languageManager.get("settings.select_music_folder"));
         equalizerButton.setText(languageManager.get("settings.manage_audio_equalizer"));
     }

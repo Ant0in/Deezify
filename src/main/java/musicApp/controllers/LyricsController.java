@@ -75,9 +75,6 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     public void refreshUI() {
         this.view.refreshUI();
     }
-    
-    // public String generateLyricsFileName(Song song) {
-    //     return song.getFilePath().getFileName().toString() + ".txt";
-    // }
+   
 
 }
