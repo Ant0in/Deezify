@@ -3,7 +3,9 @@ package musicApp.controllers;
 import javafx.stage.Stage;
 import musicApp.models.Library;
 import musicApp.models.Settings;
+import musicApp.models.Song;
 import musicApp.utils.DataProvider;
+import musicApp.utils.MusicLoader;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -28,9 +30,12 @@ public class MetaController {
     public MetaController(Stage stage) throws IOException {
         this.stage = stage;
         this.playlists = dataProvider.readPlaylists();
-        this.playerController = new PlayerController(this, dataProvider.readSettings());
+        Library mainLibrary = loadMainLibraryFromPath(dataProvider.readSettings().getMusicDirectory());
+        this.playlists.add(0, mainLibrary);
+        this.playerController = new PlayerController(this, dataProvider.readSettings(), mainLibrary);
         this.settingsController = new SettingsController(this, dataProvider.readSettings());
     }
+    
 
     /**
      * Switches the scene to the specified scene.
@@ -59,6 +64,7 @@ public class MetaController {
     public void notifySettingsChanged(Settings newSettings) {
         try {
             dataProvider.writeSettings(newSettings);
+            this.playlists.set(0, loadMainLibraryFromPath(newSettings.getMusicDirectory()));
             playerController.onSettingsChanged(newSettings);
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -93,4 +99,21 @@ public class MetaController {
     public Path getMusicDirectory() {
         return this.settingsController.getMusicDirectory();
     }
+
+    /**
+     * Charge the main library from the settings.
+     *
+     * @return the main library
+     */
+    public Library loadMainLibraryFromPath(Path musicDirectory) {
+        try {
+            MusicLoader loader = new MusicLoader();
+            List<Song> songs = loader.getAllSongs(musicDirectory);
+            return new Library(songs, "??library??", null);
+        } catch (IOException e) {
+            System.err.println("Error while loading the main library: " + e.getMessage());
+            return new Library(); // fallback
+        }
+    }  
+
 }

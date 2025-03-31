@@ -43,15 +43,17 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @param metaController the meta controller
      * @throws IOException the io exception
      */
-    public PlayerController(MetaController metaController, Settings settings) throws IOException {
+    public PlayerController(MetaController metaController, Settings settings, Library mainLibrary) throws IOException {
         super(new PlayerView());
         this.metaController = metaController;
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
+    
+        this.mainLibraryController.loadPlaylist(mainLibrary);
         this.mediaPlayerController.setBalance(settings.getBalance());
         this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
-        this.mainLibraryController.loadLibrary(settings.getMusicDirectory());
     }
+    
 
     private void initSubControllers() {
         this.mainLibraryController = new MainLibraryController(this);
@@ -155,7 +157,8 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      */
     public void onSettingsChanged(Settings newSettings) {
         this.mediaPlayerController.setBalance(newSettings.getBalance());
-        this.mainLibraryController.loadLibrary(newSettings.getMusicDirectory());
+        Library updatedMainLibrary = metaController.loadMainLibraryFromPath(newSettings.getMusicDirectory());
+        this.mainLibraryController.loadPlaylist(updatedMainLibrary);
         this.mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
     }
 

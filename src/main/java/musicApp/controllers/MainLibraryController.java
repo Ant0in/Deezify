@@ -30,26 +30,6 @@ public class MainLibraryController extends SongContainerController<MainLibraryVi
         initView("/fxml/MainLibrary.fxml");
     }
 
-    /**
-     * Loads the library with some sample songs from a settings folder
-     *
-     * @param folderPath the folder path
-     */
-    public void loadLibrary(Path folderPath) {
-        List<Song> songs;
-        try {
-            MusicLoader loader = new MusicLoader();
-            songs = loader.getAllSongs(folderPath);
-        } catch (IOException e) {
-            System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");
-            return;
-        }
-        this.library.clear();       
-        this.library.addSongs(songs);;
-
-        view.updateListView();
-    }
-
     public void loadPlaylist(Library playlist) {
         this.library = playlist;
         view.updateListView();
