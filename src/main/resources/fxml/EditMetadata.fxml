@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="labelContainer"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      prefWidth="400" prefHeight="600"
+      spacing="20" alignment="TOP_CENTER"
+      style="-fx-background-color: linear-gradient(to bottom, #0d1b2a, #000000); -fx-padding: 30;">
+
+    <VBox spacing="10">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="titleLabel" text="Title:" textFill="white"/>
+            <TextField fx:id="titleField" promptText="Title"
+                       style="-fx-background-color: #1e2a38; -fx-text-fill: white;"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="artistLabel" text="Artist:" textFill="white"/>
+            <TextField fx:id="artistField" promptText="Artist"
+                       style="-fx-background-color: #1e2a38; -fx-text-fill: white;"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="genreLabel" text="Genre:" textFill="white"/>
+            <TextField fx:id="genreField" promptText="Genre"
+                       style="-fx-background-color: #1e2a38; -fx-text-fill: white;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Tags Section -->
+    <VBox spacing="5" prefWidth="350">
+        <Label text="Tags:" textFill="white"/>
+        <TextField fx:id="tagInputField" promptText="Press Enter to add tag"
+                   style="-fx-background-color: #1e2a38; -fx-text-fill: white;"/>
+        <FlowPane fx:id="tagFlowPane" hgap="10" vgap="10"
+                  style="-fx-background-color: #121212; -fx-border-color: #274472; -fx-border-radius: 5; -fx-padding: 10;"
+                  prefWrapLength="320" />
+    </VBox>
+
+    <!-- Cover Image + Button -->
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="chooseCoverButton" text="Choose Cover Image"
+                style="-fx-background-color: #274472; -fx-text-fill: white;"/>
+        <ImageView fx:id="coverImage" fitHeight="200" fitWidth="200"
+                   style="-fx-effect: dropshadow(gaussian, #000000, 10, 0.5, 0, 0);"/>
+    </HBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="saveButton" text="Save"
+                style="-fx-background-color: #41729f; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button fx:id="cancelButton" text="Cancel"
+                style="-fx-background-color: #1b1b1b; -fx-text-fill: white;"/>
+    </HBox>
+
+</VBox>

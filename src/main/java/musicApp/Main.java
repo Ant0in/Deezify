@@ -1,8 +1,8 @@
 package musicApp;
 
-import musicApp.controllers.MetaController;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import musicApp.controllers.MetaController;
 
 /**
  * Main class that extends the JavaFX Application class.
@@ -13,13 +13,13 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         MetaController meta = new MetaController(primaryStage);
         meta.switchScene(MetaController.Scenes.MAINWINDOW);
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

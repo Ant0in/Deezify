@@ -35,13 +35,18 @@
                <Label fx:id="directoryLabel" prefHeight="17.0" prefWidth="161.0" text="None" />
             </children>
          </HBox>
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="equalizerButton" mnemonicParsing="false" text="Manage Audio Equalizer" />
+            </children>
+         </HBox>
         </VBox>
     </center>
 
     <bottom>
         <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20;">
-            <Button fx:id="saveButton" onAction="#handleSave" text="Save" />
-            <Button fx:id="cancelButton" onAction="#handleCancel" text="Cancel" />
+            <Button fx:id="saveButton" text="Save" />
+            <Button fx:id="cancelButton" text="Cancel" />
         </HBox>
     </bottom>
 

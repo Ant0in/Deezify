@@ -1,4 +1,4 @@
-module:musicApp
+module:ulb.musicApp
 musicApp
 musicApp.controllers
 musicApp.exceptions

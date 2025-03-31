@@ -1,3 +1,4 @@
+@import "common/buttons.css";
 .root {
     -fx-background-color: linear-gradient(to bottom, #062726, #102b3f);
 }
@@ -105,13 +106,4 @@
 #saveButton {
     -fx-background-color: #007BFF;
     -fx-text-fill: white;
-}
-
-#cancelButton {
-    -fx-background-color: #555;
-    -fx-text-fill: white;
-}
-
-#cancelButton:hover {
-    -fx-background-color: #2f508e;
 }

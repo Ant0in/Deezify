@@ -1,19 +1,19 @@
 package musicApp.views;
 
-import musicApp.controllers.ToolBarController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
+import musicApp.controllers.ToolBarController;
 
 import java.util.Objects;
 
 /**
  * The ToolBar view.
  */
-public class ToolBarView extends View<ToolBarView,ToolBarController> {
+public class ToolBarView extends View<ToolBarView, ToolBarController> {
     @FXML
     private Button exitButton, btnSettings;
     @FXML
@@ -22,14 +22,14 @@ public class ToolBarView extends View<ToolBarView,ToolBarController> {
     /**
      * Instantiates a new Tool bar view.
      */
-    public ToolBarView(){
+    public ToolBarView() {
 
     }
 
     /**
      * Initialize the view.
      */
-    public void init(){
+    public void init() {
         bindButtonsImages();
         setButtonActions();
     }
@@ -59,6 +59,7 @@ public class ToolBarView extends View<ToolBarView,ToolBarController> {
 
     /**
      * Handle the settings button.
+     *
      * @param event The action event.
      */
     private void handleSettings(ActionEvent event) {
@@ -70,6 +71,6 @@ public class ToolBarView extends View<ToolBarView,ToolBarController> {
      */
     private void handleExitApp(ActionEvent actionEvent) {
         Platform.exit();
+        viewController.exitApp();
     }
-
 }

@@ -3,23 +3,20 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
-import musicApp.utils.MetadataReader;
+import musicApp.utils.MetadataUtils;
+import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Song {
 
+    
     @Expose
     private final Path filePath;
-    private String title;
-    private String artist;
-    private String genre;
-    private byte[] cover;
-    private Duration duration;
+    private Metadata metadata; 
 
     /**
      * Constructor from MetadataReader.
@@ -28,36 +25,40 @@ public class Song {
      */
     public Song(Path filePath) {
         this.filePath = filePath;
-        MetadataReader metadataReader = new MetadataReader();
+        MetadataUtils metadataReader = new MetadataUtils();
         try {
-            Metadata metadata = metadataReader.getMetadata(filePath.toFile());
-            this.loadMetadata(metadata);
-        } catch (ID3TagException | BadFileTypeException e) {
-            Metadata defaultMetadata = new Metadata();
-            this.loadMetadata(defaultMetadata);
+            this.metadata = metadataReader.getMetadata(filePath.toFile());
+        } catch (Exception e) {
+            this.metadata = new Metadata(); // Default metadata on error
         }
     }
 
     /**
-     * Loads Metadata from MetadataReader.
-     *
-     * @param metadata The metadata of the song.
+     * Returns if the song is a radio or not.
+     * @return boolean isSong.
      */
-    private void loadMetadata(Metadata metadata) {
-        this.title = metadata.getTitle();
-        this.artist = metadata.getArtist();
-        this.genre = metadata.getGenre();
-        this.cover = metadata.getCover();
-        this.duration = metadata.getDuration();
+    public Boolean isSong() {
+        return true;
     }
 
     /**
-     * Get song file path
-     *
-     * @return The Path to the song file.
+     * Reload metadata for the song.
      */
+    public void reloadMetadata() {
+        MetadataUtils metadataReader = new MetadataUtils();
+        try {
+            this.metadata = metadataReader.getMetadata(filePath.toFile());
+        } catch (Exception e) {
+            this.metadata = new Metadata(); // Default metadata on error
+        }
+    }
+
     public Path getFilePath() {
         return filePath;
+    }
+
+    public String getFilePathString() {
+        return filePath.toUri().toString();
     }
 
     /**
@@ -66,123 +67,73 @@ public class Song {
      * @return The name of the song.
      */
     public String getTitle() {
-        return title;
+        return metadata.getTitle();
     }
 
-    /**
-     * Set the name of the song.
-     *
-     * @param title The name of the song.
-     */
     public void setTitle(String title) {
-        this.title = title;
+        metadata.setTitle(title);
     }
 
-    /**
-     * Get the name of the artist.
-     *
-     * @return The name of the artist.
-     */
     public String getArtist() {
-        return artist;
+        return metadata.getArtist();
     }
 
-    /**
-     * Set the name of the artist.
-     *
-     * @param artist The name of the artist.
-     */
     public void setArtist(String artist) {
-        this.artist = artist;
+        metadata.setArtist(artist);
     }
 
-    /**
-     * Get the genre of the song.
-     *
-     * @return The genre of the song.
-     */
     public String getGenre() {
-        return genre;
+        return metadata.getGenre();
     }
 
-    /**
-     * Set the genre of the song.
-     *
-     * @param genre The genre of the song.
-     */
     public void setGenre(String genre) {
-        this.genre = genre;
+        metadata.setGenre(genre);
     }
 
-    /**
-     * Get the path to the cover image.
-     *
-     * @return The path to the cover image.
-     */
+    public Duration getDuration() {
+        return metadata.getDuration();
+    }
+
+    public void setDuration(Duration duration) {
+        metadata.setDuration(duration);
+    }
+
     public byte[] getCover() {
-        return cover;
+        return metadata.getCover() != null ? metadata.getCover().getBinaryData() : null;
     }
 
-    /**
-     * Set the path to the cover image.
-     *
-     * @param cover the cover in base64.
-     */
-    public void setCover(byte[] cover) {
-        this.cover = cover;
+    public void setCover(Artwork artwork) {
+        metadata.setCover(artwork);
     }
 
+    public ArrayList<String> getUserTags() {
+        return metadata.getUserTags();
+    }
 
-    /**
-     * Get the cover as a JavaFX Image.
-     *
-     * @return The cover image.
-     */
+    public void setUserTags(ArrayList<String> userTags) {
+        metadata.setUserTags(userTags);
+    }
+
     public Image getCoverImage() {
-        if (this.cover == null) {
+        if (getCover() == null) {
             return new Image(Objects.requireNonNull(getClass().getResource("/images/song.png")).toExternalForm());
         }
         try {
-            return new Image(new ByteArrayInputStream(cover));
+            return new Image(new ByteArrayInputStream(getCover()));
         } catch (Exception e) {
             return new Image(Objects.requireNonNull(getClass().getResource("/images/song.png")).toExternalForm());
         }
     }
 
-    /**
-     * Get the duration of the song.
-     *
-     * @return The duration of the song.
-     */
-    public Duration getDuration() {
-        return duration;
+    public Metadata getMetadata() {
+        return metadata;
     }
 
-    /**
-     * Set the duration of the song.
-     *
-     * @param duration The duration of the song.
-     */
-    public void setDuration(Duration duration) {
-        this.duration = duration;
-    }
-
-    /**
-     * Get the string representation of the song.
-     *
-     * @return The string representation of the song.
-     */
     @Override
     public String toString() {
-        return title + " - " + artist;
+        return getTitle() + " - " + getArtist();
     }
 
-    /**
-     * Check if two songs are equal by comparing their file paths.
-     *
-     * @param obj The object to compare.
-     * @return True if the songs are equal, false otherwise.
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Song song) {
@@ -191,18 +142,10 @@ public class Song {
         return false;
     }
 
-    /**
-     * Check if the song contains the given text.
-     *
-     * @param text The text to search for.
-     * @return True if the song contains the text, false otherwise.
-     */
     public Boolean containsText(String text) {
         String lowerText = text.toLowerCase();
-        return this.title.toLowerCase().contains(lowerText)
-                || this.artist.toLowerCase().contains(lowerText)
-                || this.genre.toLowerCase().contains(lowerText);
+        return getTitle().toLowerCase().contains(lowerText)
+                || getArtist().toLowerCase().contains(lowerText)
+                || getGenre().toLowerCase().contains(lowerText);
     }
-
 }
-

@@ -6,6 +6,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import musicApp.models.Radio;
+import java.util.ArrayList;
+import musicApp.models.Song;
 
 public class MusicLoader {
     /**
@@ -19,6 +22,21 @@ public class MusicLoader {
      * @return A list of paths to valid song files (MP3 or WAV) in the specified folder.
      * @throws IOException If the folder does not exist, is not a directory, or if an error occurs while reading files.
      */
+
+    public List<Song> getAllSongs(Path folderPath) throws IOException {
+        List<Song> songList = new ArrayList<>();
+        List<Path> songPaths = new ArrayList<>();
+        songPaths = getAllSongPaths(folderPath);
+        for (Path songPath : songPaths) {
+            if (songPath.toString().endsWith(".m3u")) {
+                songList.add(new Radio(songPath));
+            } else {
+                songList.add(new Song(songPath));
+            }
+        }
+        return songList;
+    }
+
     public List<Path> getAllSongPaths(Path folderPath) throws IOException {
         // Checks that folder exists and that path is a folder path
         if (!Files.exists(folderPath) || !Files.isDirectory(folderPath)) {
@@ -32,7 +50,7 @@ public class MusicLoader {
 
     private boolean isValidFormat(Path filePath) {
         String fileName = filePath.getFileName().toString();
-        return fileName.endsWith(".mp3") || fileName.endsWith(".wav");
+        return fileName.endsWith(".mp3") || fileName.endsWith(".wav")|| fileName.endsWith(".m3u");
     }
 
     private List<Path> getAllFiles(Path folderPath) throws IOException {

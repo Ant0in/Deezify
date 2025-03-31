@@ -1,12 +1,14 @@
 package musicApp.controllers;
 
-import musicApp.models.AudioPlayer;
-import musicApp.models.Song;
-import musicApp.views.MediaPlayerView;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
+import musicApp.models.AudioPlayer;
+import musicApp.models.Song;
+import musicApp.views.MediaPlayerView;
+
+import java.util.List;
 
 /**
  * The  MediaPlayer controller.
@@ -20,7 +22,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @param playerController the player controller
      */
-    public MediaPlayerController(PlayerController playerController){
+    public MediaPlayerController(PlayerController playerController) {
         super(new MediaPlayerView());
         this.playerController = playerController;
         audioPlayer = new AudioPlayer();
@@ -60,7 +62,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @return The total duration of the song.
      */
-    public Duration getTotalDuration(){
+    public Duration getTotalDuration() {
         return audioPlayer.getTotalDuration();
     }
 
@@ -69,7 +71,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      *
      * @param duration The duration to seek to.
      */
-    public void seek(double duration){
+    public void seek(double duration) {
         audioPlayer.seek(duration);
     }
 
@@ -128,14 +130,14 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
     /**
      * Close the audio player.
      */
-    public void close(){
+    public void close() {
         audioPlayer.close();
     }
 
     /**
      * Methode that handles the pause song button.
      */
-    public void handlePauseSong(){
+    public void handlePauseSong() {
         if (isPlaying().get()) {
             pause();
         } else {
@@ -203,6 +205,15 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      */
     public void setVolume(double volume) {
         audioPlayer.setVolume(volume);
+    }
+
+    /**
+     * Set the equalizer bands.
+     *
+     * @param equalizerBandsGain The gain of the equalizer bands.
+     */
+    public void setEqualizerBands(List<Double> equalizerBandsGain) {
+        audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }
 
 
