@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SongContextMenuController extends ViewController<SongContextMenuView, SongContextMenuController> {
 
-    private final SongCellController songCellController;
+    public SongCellController songCellController;
     private final boolean isMainLibrary;
 
     public SongContextMenuController(SongCellController cellController) {
@@ -28,7 +28,9 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
 
 
     public void handleEditMetadata() {
-        songCellController.openMetadataEditor();
+        if (songCellController.getSong().isSong()) {
+            songCellController.openMetadataEditor();
+        }
     }
 
     public void handleRemoveFromPlaylist() {
