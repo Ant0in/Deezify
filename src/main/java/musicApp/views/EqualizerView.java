@@ -1,5 +1,6 @@
 package musicApp.views;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -96,9 +97,13 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
     }
 
     private void initTranslations() {
-        LanguageManager languageManager = LanguageManager.getInstance();
-        okButton.setText(languageManager.get("settings.ok"));
-        cancelButton.setText(languageManager.get("settings.cancel"));
+        LanguageManager lm = LanguageManager.getInstance();
+        okButton.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("settings.ok"), lm.languageProperty()
+        ));
+        cancelButton.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("settings.cancel"), lm.languageProperty()
+        ));
     }
 
     private void initButtons() {

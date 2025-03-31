@@ -175,11 +175,17 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
     /**
      * Initialize the translations of the texts in the view.
      */
-    @Override
     protected void initTranslation() {
-        addSongButton.setText(LanguageManager.getInstance().get("button.add"));
-        deleteSongButton.setText(LanguageManager.getInstance().get("button.delete"));
-        clearQueueButton.setText(LanguageManager.getInstance().get("button.clear"));
+        LanguageManager lm = LanguageManager.getInstance();
+        addSongButton.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("button.add"), lm.languageProperty()
+        ));
+        deleteSongButton.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("button.delete"), lm.languageProperty()
+        ));
+        clearQueueButton.textProperty().bind(Bindings.createStringBinding(
+                () -> lm.get("button.clear"), lm.languageProperty()
+        ));
     }
 
 }

@@ -70,9 +70,6 @@ public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C 
      * Refresh ui.
      */
     public void refreshUI() {
-        initTranslation();
     }
 
-    protected void initTranslation() {
-    }
 }
