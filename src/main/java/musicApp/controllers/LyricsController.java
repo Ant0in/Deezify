@@ -10,18 +10,20 @@ import java.util.Optional;
 
 import javafx.beans.property.StringProperty;
 import musicApp.models.Song;
-import musicApp.utils.LyricsMappingManager;
+import musicApp.utils.LyricsManager;
+import musicApp.utils.DataProvider;
 import musicApp.views.LyricsView;
 
 public class LyricsController extends ViewController<LyricsView, LyricsController>{
 
     private final PlayerController playerController;
-    private final LyricsMappingManager lyricsManager;
+    private final LyricsManager lyricsManager;
 
     public LyricsController(PlayerController playerController) {
         super(new LyricsView());
         this.playerController = playerController;
-        this.lyricsManager = new LyricsMappingManager();
+        DataProvider dataProvider = new DataProvider();
+        this.lyricsManager = new LyricsManager(dataProvider);
         initView("/fxml/Lyrics.fxml");  
     }
 
@@ -39,8 +41,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         if (song == null) {
             return List.of("No song loaded."); 
         }
-        String pathSong = lyricsManager.getPathSong(song);
-        return lyricsManager.getSongLyrics(pathSong);
+        return lyricsManager.getLyrics(song);
     }
 
     /**
@@ -53,34 +54,9 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             System.err.println("No song loaded.");
             return;
         }
-
-        String songName = currentSong.getFilePath().getFileName().toString();
-        String lyricsFileName;
-
-        if (songName.endsWith(".mp3")) {
-            lyricsFileName = songName.replace(".mp3", ".txt");
-        } else if (songName.endsWith(".wav")) {
-            lyricsFileName = songName.replace(".wav", ".txt");
-        }
-        else{
-            System.err.println("Unsupported file format.");
-            return;
-        }
-        Path lyricsFilePath = lyricsManager.getLyricsDir().resolve(lyricsFileName);
-        
-        //write the new lyrics to the file
-        try {
-            if (!Files.exists(lyricsFilePath.getParent())) {
-                Files.createDirectories(lyricsFilePath.getParent());
-            }
-            Files.writeString(lyricsFilePath, newLyrics);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        lyricsManager.updateLyricsMapping(currentSong.getFilePath().toString(), lyricsFileName); 
+        lyricsManager.saveLyrics(currentSong, newLyrics);
         view.updateLyrics();
-    }
+}
 
     public void editLyrics() {
         List<String> currentLyricsList = getCurrentSongLyrics();
@@ -100,12 +76,8 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         this.view.refreshUI();
     }
     
-    public LyricsMappingManager getLyricsManager() {
-        return lyricsManager;
-    }
-
-    public String generateLyricsFileName(Song song) {
-        return song.getFilePath().getFileName().toString() + ".txt";
-}
+    // public String generateLyricsFileName(Song song) {
+    //     return song.getFilePath().getFileName().toString() + ".txt";
+    // }
 
 }
