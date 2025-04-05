@@ -10,11 +10,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- *  Controller managing the MiniPlayerView and processing audio spectrum data received on `spectrumDataUpdate`
+ * Controller managing the MiniPlayerView and processing audio spectrum data received on `spectrumDataUpdate`
  */
 public class MiniPlayerController extends ViewController< MiniPlayerView , MiniPlayerController> implements AudioSpectrumListener {
     private final Stage stage = new Stage();
     private final int bandsNumber = 128;
+
     /**
      * Instantiates a new View controller.
      */
@@ -27,6 +28,9 @@ public class MiniPlayerController extends ViewController< MiniPlayerView , MiniP
         stage.setTitle("MiniPlayer");
     }
 
+    /**
+     * Toggle view.
+     */
     public void toggleView() {
         if (stage.isShowing()) {
             stage.close();
@@ -35,16 +39,35 @@ public class MiniPlayerController extends ViewController< MiniPlayerView , MiniP
         }
     }
 
+    /**
+     * Gets bands number.
+     *
+     * @return the bands number
+     */
     public int getBandsNumber() {
         return bandsNumber;
     }
 
+    /**
+     * Load song.
+     *
+     * @param song the song
+     */
     public void loadSong(Song song) {
         view.updateSongProperties(song.getTitle(), song.getCoverImage());
     }
 
     /*
      * Callback method receiving audio spectrum data from the currently playing song
+     * This method is called by the JavaFX media player
+     *
+     * The spectrum data is received as an array of magnitudes and phases, which are
+     * processed to create a visual representation of the audio spectrum.
+     *
+     * @param timestamp The timestamp of the audio data
+     * @param duration The duration of the audio data
+     * @param magnitudes The array of magnitudes representing the audio spectrum
+     * @param phases The array of phases representing the audio spectrum
      */
     @Override
     public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {

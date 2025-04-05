@@ -14,19 +14,31 @@ import musicApp.controllers.MiniPlayerController;
 import java.util.List;
 
 /**
- *  View component used to render the audio spectrum visualizer in a separate window (popup)
+ * View component used to render the audio spectrum visualizer in a separate window (popup)
  */
 public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
+    /**
+     * The Song title label.
+     */
     @FXML
     Label songTitleLabel;
 
+    /**
+     * The Cover image.
+     */
     @FXML
     ImageView coverImage;
+    /**
+     * The Canvas.
+     */
     @FXML
     Canvas canvas;
     // Flag to track whether the image is clipped or not
     private boolean isClipped = true;
 
+    /**
+     * The Is basic mode.
+     */
     Boolean isBasicMode = false;
 
     @Override
@@ -38,6 +50,11 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
         toggleClip();
     }
 
+    /**
+     * Draw.
+     *
+     * @param values the values
+     */
     public void draw(List<Float> values) {
         if (isBasicMode) {
             drawFrame(values);
@@ -46,19 +63,38 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
         }
     }
 
+    /**
+     * Gets scene.
+     *
+     * @return the scene
+     */
     public Scene getScene() { return scene; }
 
+    /**
+     * Update song properties.
+     *
+     * @param title      the title
+     * @param coverImage the cover image
+     */
     public void updateSongProperties(String title, Image coverImage) {
         songTitleLabel.setText(title);
         setCoverImage(coverImage);
     }
 
-    public void setCoverImage(javafx.scene.image.Image image) {
+    /**
+     * Sets cover image.
+     *
+     * @param image the image
+     */
+    public void setCoverImage(Image image) {
         coverImage.setImage(image);
     }
 
 
-    // Method to switch between clipped and non-clipped states
+    /**
+     * Toggle clip.
+     */
+// Method to switch between clipped and non-clipped states
     public void toggleClip() {
         if (isClipped) {
             // Remove the clip (non-clipped state)
