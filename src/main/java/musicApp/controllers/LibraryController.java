@@ -69,6 +69,10 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         return library.search(query.toLowerCase());
     }
 
+    public List<String> searchStartsWith(String query) {
+        return library.searchStartsWith(query.toLowerCase());
+    }
+
     /**
      * Gets the boolean binding of the selected song.
      *

@@ -143,6 +143,18 @@ public class Library {
                 .toList();
     }
 
+    public List<String> searchStartsWith(String text) {
+        String lowerText = text.toLowerCase();
+    
+        return songList.stream()
+                .map(s -> s.getElementsThatStartWith(lowerText)) // liste des éléments de chaque song
+                .flatMap(List::stream)                           // fusionne toutes les listes
+                .distinct()                                      // évite les doublons
+                .toList();
+    }
+    
+    
+
     public Song getSongByPath(Path path) {
         for (Song song : songList) {
             if (song.getFilePath().equals(path)) {

@@ -9,6 +9,7 @@ import org.jaudiotagger.tag.images.Artwork;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Song {
@@ -148,4 +149,21 @@ public class Song {
                 || getArtist().toLowerCase().contains(lowerText)
                 || getGenre().toLowerCase().contains(lowerText);
     }
+
+    public List<String> getElementsThatStartWith(String text){
+        String lowerText = text.toLowerCase();
+        List<String> result = new ArrayList<>();
+        if (getTitle().toLowerCase().startsWith(lowerText)) {
+            result.add(getTitle());
+        }
+        if (getArtist().toLowerCase().startsWith(lowerText)) {
+            result.add(getArtist());
+        }
+        if (getGenre().toLowerCase().startsWith(lowerText)) {
+            result.add(getGenre());
+        }
+        return result;
+
+    }
+
 }
