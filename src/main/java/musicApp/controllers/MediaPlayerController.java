@@ -16,6 +16,7 @@ import java.util.List;
 public class MediaPlayerController extends ViewController<MediaPlayerView, MediaPlayerController> {
     private final PlayerController playerController;
     private final AudioPlayer audioPlayer;
+    private final MiniPlayerController miniPlayerController;
 
     /**
      * Instantiates a new Media player controller.
@@ -25,7 +26,9 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
     public MediaPlayerController(PlayerController playerController) {
         super(new MediaPlayerView());
         this.playerController = playerController;
-        audioPlayer = new AudioPlayer();
+        miniPlayerController = new MiniPlayerController();
+        audioPlayer = new AudioPlayer(miniPlayerController);
+
         initView("/fxml/MediaPlayer.fxml");
     }
 
@@ -193,6 +196,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
         audioPlayer.loadSong(song);
         audioPlayer.setOnEndOfMedia(this.playerController::skip);
         audioPlayer.unpause();
+        miniPlayerController.loadSong(song);
         System.out.println("Playing: " + song.getTitle());
 
     }
@@ -219,5 +223,9 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
 
     public void toggleLyrics(boolean show) {
         playerController.toggleLyrics(show);
+    }
+
+    public void toggleMiniPlayer() {
+        miniPlayerController.toggleView();
     }
 }
