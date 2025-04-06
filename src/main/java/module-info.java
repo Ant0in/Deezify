@@ -25,6 +25,7 @@ module ulb.musicApp {
     requires java.prefs;
     requires jaudiotagger;
     requires com.google.gson;
+    requires minim;
 
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;

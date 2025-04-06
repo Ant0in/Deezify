@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.button.*?>
+<?import javafx.scene.control.hbox.*?>
+
+
+<HBox fx:id="djButtonContainer">
+    <Button fx:id="playButton" text="Play" style="-fx-background-color: #41729f; -fx-text-fill: white;"/>
+    <Button fx:id="pauseButton" text="Pause" style="-fx-background-color: #41729f; -fx-text-fill: white;"/>
+</HBox>
