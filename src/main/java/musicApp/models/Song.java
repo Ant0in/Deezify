@@ -3,12 +3,15 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
+import musicApp.utils.DataProvider;
+import musicApp.utils.LyricsManager;
 import musicApp.utils.MetadataUtils;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Song {
@@ -142,10 +145,26 @@ public class Song {
         return false;
     }
 
+    public List<String> getLyrics() {
+        LyricsManager lyricsManager = new LyricsManager(new DataProvider());
+        return lyricsManager.getLyrics(this);
+    }
+
+    private boolean searchLyrics(String text) {
+        if (text.isEmpty()) {
+            return false;
+        }
+        List<String> lyrics = getLyrics();
+        return lyrics.stream().anyMatch(line -> line.toLowerCase().contains(text));
+    }
+
     public Boolean containsText(String text) {
         String lowerText = text.toLowerCase();
-        return getTitle().toLowerCase().contains(lowerText)
-                || getArtist().toLowerCase().contains(lowerText)
-                || getGenre().toLowerCase().contains(lowerText);
+        if (lowerText.length() > 1 && lowerText.startsWith("\"") && lowerText.endsWith("\"")) {
+            lowerText = lowerText.substring(1, lowerText.length() - 1);
+            return searchLyrics(lowerText);
+        } else {
+            return metadata.containsText(lowerText);
+        }
     }
 }
