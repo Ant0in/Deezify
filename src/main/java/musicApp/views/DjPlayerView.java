@@ -1,6 +1,7 @@
 package musicApp.views;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import musicApp.controllers.DjPlayerController;
 
@@ -12,6 +13,10 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
 
     public DjPlayerView() {
         // ...
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 
     @Override

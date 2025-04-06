@@ -1,8 +1,12 @@
 package musicApp.controllers.songs;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import musicApp.controllers.DjPlayerController;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
@@ -10,9 +14,6 @@ import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.utils.MetadataUtils;
 import musicApp.views.songs.SongCellView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SongCellController extends ViewController<SongCellView, SongCellController> {
 
@@ -211,6 +212,19 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      */
     public void openMetadataEditor() {
         new EditMetadataController(this);
+    }
+
+    /**
+     * Launch DJ mode.
+     */
+    public void launchDjMode() {
+        
+        if (song == null) {
+            view.displayError("No song to play");
+        }
+
+        new DjPlayerController(song.getFilePath().toFile());
+
     }
 
     public void refreshSong() {

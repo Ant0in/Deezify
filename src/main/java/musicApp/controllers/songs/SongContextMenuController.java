@@ -1,12 +1,12 @@
 package musicApp.controllers.songs;
 
+import java.util.List;
+
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.views.songs.SongContextMenuView;
-
-import java.util.List;
 
 public class SongContextMenuController extends ViewController<SongContextMenuView, SongContextMenuController> {
 
@@ -66,4 +66,9 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
     public void refreshTranslation() {
         view.refreshTranslation();
     }
+
+    public void launchDjMode() {
+        songCellController.launchDjMode();
+    }
+    
 }

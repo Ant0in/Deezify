@@ -50,6 +50,11 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
         } else {
             contextMenu.getItems().add((MenuItem) removeFromPlaylistMenu);
         }
+
+        MenuItem launchDjMode = new MenuItem("DJ Mode");
+        launchDjMode.setOnAction(_ -> viewController.launchDjMode());
+        contextMenu.getItems().add(launchDjMode);
+
     }
 
     private void updateMenuItems() {
