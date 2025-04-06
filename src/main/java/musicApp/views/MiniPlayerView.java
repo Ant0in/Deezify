@@ -145,20 +145,27 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
             // Calculate the height for each bar
             double barHeight = Math.max(values.get(i), 0.005) * radius;  // Adjusted to fit the circle radius
 
-            // Calculate the angle for the current bar
+            // Calculate the angle for the current bar (spacing them evenly around the circle)
             double angle = i * 2 * Math.PI / numBars;
 
-            // Calculate the position of the top of the bar along the circle's perimeter
-            double xStart = centerX + Math.cos(angle) * (radius + barHeight); // Position on X axis
-            double yStart = centerY + Math.sin(angle) * (radius + barHeight); // Position on Y axis
+            // Calculate the position on the circle's circumference
+            double xStart = centerX + Math.cos(angle) * radius; // X position of the bar on the circle's perimeter
+            double yStart = centerY + Math.sin(angle) * radius; // Y position of the bar on the circle's perimeter
+
+            // Calculate the end position of the bar based on its height
+            double xEnd = centerX + Math.cos(angle) * (radius + barHeight); // X end position of the bar (extends outward)
+            double yEnd = centerY + Math.sin(angle) * (radius + barHeight); // Y end position of the bar (extends outward)
 
             // Set the color for each bar (using the color spectrum)
-            gc.setFill(Color.hsb(i * 360.0 / numBars, 1.0, 1.0)); // Color spectrum
+            gc.setStroke(Color.hsb(i * 360.0 / numBars, 1.0, 1.0)); // HSB Color Spectrum
 
-            // Draw the bars as circles at calculated positions
-            gc.fillRect(xStart - 2.5, yStart - 2.5, 5, 5); // Small rectangle (circle equivalent) for the bar
+            // Draw the bar as a line from the center to the calculated position on the perimeter
+            gc.setLineWidth(3); // Optional: Adjust the width of the lines/bars
+            gc.strokeLine(xStart, yStart, xEnd, yEnd); // Draw a line from the center to the outer edge (the bar)
         }
     }
+
+
 
 
 }

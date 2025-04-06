@@ -25,6 +25,7 @@ public class AudioPlayer {
     private double balance;
     private double speed;
     private final AudioSpectrumListener audioSpectrumListener;
+    private final Double audioSpectrumInterval;
 
     public AudioPlayer(AudioSpectrumListener audioSpectrumListener) {
         // Initialize properties in the constructor
@@ -39,6 +40,8 @@ public class AudioPlayer {
         this.balance = 0.0;
         this.speed = 1.0;
         this.audioSpectrumListener = audioSpectrumListener;
+        this.audioSpectrumInterval = 0.05; // Optimal Speed (lower is blinky, higher is laggy)
+
     }
 
     /**
@@ -59,6 +62,7 @@ public class AudioPlayer {
         mediaPlayer.setBalance(balance);
         mediaPlayer.setRate(speed);
         mediaPlayer.setAudioSpectrumListener(audioSpectrumListener);
+        mediaPlayer.setAudioSpectrumInterval(audioSpectrumInterval);
         mediaPlayer.setOnReady(() -> {
             isLoaded.set(true);
             applyEqualizerBandsGain();
