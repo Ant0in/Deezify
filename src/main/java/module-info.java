@@ -26,6 +26,9 @@ module ulb.musicApp {
     requires jaudiotagger;
     requires com.google.gson;
     requires minim;
+    requires TarsosDSP.core;
+    requires TarsosDSP.jvm;
+    requires java.desktop;
 
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;

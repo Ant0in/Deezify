@@ -25,8 +25,7 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
     }
 
     public void setOnAction() {
-        playButton.setOnAction(_ -> viewController.play());
-        pauseButton.setOnAction(_ -> viewController.pause());
+
     }
 
 }
