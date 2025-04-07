@@ -1,19 +1,15 @@
 package musicApp.views.songs;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.utils.LanguageManager;
 import java.util.List;
-import javafx.scene.control.Button;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ButtonBar;
 import javafx.geometry.Pos;
 import musicApp.views.View;
 
@@ -27,10 +23,16 @@ import java.util.Optional;
 public class LyricsView extends View<LyricsView, LyricsController> {
 
     @FXML
-    private VBox lyricsContainer;
+    private VBox lyricsContainer, karaokeLyricsContainer, karaokePlaceholder;
 
     @FXML
-    private Label lyricsTitle;
+    private Label lyricsTitle, karaokeNoLyricsLabel;
+
+    @FXML
+    private Button simpleLyricsButton, karaokeLyricsButton, karaokeAddLyricsButton;
+
+    @FXML
+    private ScrollPane scrollPane, karaokeScrollPane;
 
     private String dialogTitleText;
     private String dialogHeaderText;
@@ -53,9 +55,24 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * When the song changes, the lyrics are updated.
      */
     public void initButtons() {
+        simpleLyricsButton.setOnAction(e -> {
+            scrollPane.setVisible(true);
+            scrollPane.setManaged(true);
+            karaokeScrollPane.setVisible(false);
+            karaokeScrollPane.setManaged(false);
+            updateLyrics();
+        });
+
+        karaokeLyricsButton.setOnAction(e -> {
+            karaokeScrollPane.setVisible(true);
+            karaokeScrollPane.setManaged(true);
+            scrollPane.setVisible(false);
+            scrollPane.setManaged(false);
+        });
+
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
             initTranslation();
-            updateLyrics();
+            simpleLyricsButton.fire();
         });
     }
 
@@ -64,8 +81,11 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * This method loads translated text for labels, buttons, and dialogs.
      */
     private void initTranslation() {
-        System.out.println("it s geting called");
         LanguageManager lang = LanguageManager.getInstance();
+        karaokeLyricsButton.setText(lang.get("button.modeKaraoke"));
+        simpleLyricsButton.setText(lang.get("button.simpleLyrics"));
+        karaokeNoLyricsLabel.setText(lang.get("karaoke.noLyrics"));
+        karaokeAddLyricsButton.setText(lang.get("button.addKaraoke"));
         lyricsTitle.setText(lang.get("lyrics.title"));
         dialogTitleText = lang.get("dialog.editLyrics.title");
         dialogHeaderText = lang.get("dialog.editLyrics.header");

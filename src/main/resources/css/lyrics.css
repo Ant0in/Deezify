@@ -5,6 +5,12 @@
     -fx-border-radius: 10px;
     -fx-padding: 5px;
 }
+#karaokeScrollPane {
+    -fx-background-color: transparent;
+    -fx-border-color: #4a90e2;
+    -fx-border-radius: 10px;
+    -fx-padding: 5px;
+}
 
 /* VBox containing the lyrics */
 #lyricsContainer ,
