@@ -20,8 +20,10 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     public LyricsController(PlayerController playerController) {
         super(new LyricsView());
         this.playerController = playerController;
+        //TODO : refactor : avoid creating dataprovider and lyricsManager here
         DataProvider dataProvider = new DataProvider();
-        this.lyricsManager = new LyricsManager(dataProvider);
+        LyricsDataAccess lyricsDataAccess = new LyricsDataAccess(dataProvider);
+        this.lyricsManager = new LyricsManager(lyricsDataAccess);
         initView("/fxml/Lyrics.fxml");  
     }
 

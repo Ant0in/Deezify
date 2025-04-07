@@ -8,10 +8,10 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class LyricsManager {
-    private final DataProvider dataProvider;
+    private final LyricsDataAccess lyricsDataAccess;
 
-    public LyricsManager(DataProvider dataProvider) {
-        this.dataProvider = dataProvider;
+    public LyricsManager(LyricsDataAccess lyricsDataAccess) {
+        this.lyricsDataAccess = lyricsDataAccess;
     }
 
     /**
@@ -19,11 +19,11 @@ public class LyricsManager {
      * If no lyrics are found, returns an empty list.
      */
     public List<String> getLyrics(Song song) {
-        String pathLyrics = dataProvider.getLyricsPath(song.getFilePath().toString());
+        String pathLyrics = lyricsDataAccess.getLyricsPath(song.getFilePath().toString());
         if (pathLyrics == null) {
             return List.of();
         }
-        Path lyricsFile = dataProvider.getLyricsDir().resolve(pathLyrics);
+        Path lyricsFile = lyricsDataAccess.getLyricsDir().resolve(pathLyrics);
         if (!Files.exists(lyricsFile)) {
             return List.of();
         }
@@ -47,7 +47,7 @@ public class LyricsManager {
             return;
         }
 
-        Path lyricsFilePath = dataProvider.getLyricsDir().resolve(lyricsFileName);
+        Path lyricsFilePath = lyricsDataAccess.getLyricsDir().resolve(lyricsFileName);
         try {
             Files.writeString(lyricsFilePath, lyricsContent);
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public class LyricsManager {
             return;
         }
 
-        dataProvider.updateLyricsMapping(song.getFilePath().toString(), lyricsFileName);
+        lyricsDataAccess.updateLyricsMapping(song.getFilePath().toString(), lyricsFileName);
     }
 
     /**

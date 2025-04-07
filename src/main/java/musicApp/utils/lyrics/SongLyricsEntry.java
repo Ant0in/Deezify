@@ -12,6 +12,9 @@ public class SongLyricsEntry {
     private String pathSong;
     private String pathLyrics;
 
+    private String txt; 
+    private String lrc; 
+
     public SongLyricsEntry() {
     }
 
@@ -34,5 +37,21 @@ public class SongLyricsEntry {
 
     public void setPathLyrics(String pathLyrics) {
         this.pathLyrics = pathLyrics;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public String getLrc() {
+        return lrc;
+    }
+    
+    public void setLrc(String lrc) {
+        this.lrc = lrc;
     }
 }

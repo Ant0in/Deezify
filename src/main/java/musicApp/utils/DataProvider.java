@@ -38,8 +38,6 @@ public class DataProvider {
     private final Path settingFolder;
     private final Path settingsFile;
     private final Path playlistsFile;
-    private final Path lyricsFile;
-    private final Path lyricsDir;
 
     /**
      * Constructor
@@ -57,17 +55,14 @@ public class DataProvider {
         createFolderIfNotExists(settingFolder);
         this.settingsFile = settingFolder.resolve("settings.json");
         this.playlistsFile = settingFolder.resolve("playlists.json");
-        this.lyricsDir = settingFolder.resolve("lyrics");
-        createFolderIfNotExists(lyricsDir);
-        this.lyricsFile = lyricsDir.resolve("lyrics.json");
     }
 
-    private void createFolderIfNotExists(Path folder) {
+    public void createFolderIfNotExists(Path folder) {
         if (!Files.exists(folder)) {
             try {
                 Files.createDirectories(folder);
             } catch (IOException e) {
-                System.out.println("An error occurred while creating the settings folder");
+                System.out.println("An error occurred while creating the folder");
             }
         }
     }
@@ -84,8 +79,6 @@ public class DataProvider {
 
         if (os.contains("win")) {
             folderPath = Path.of(System.getenv("USERPROFILE"), folderName);
-        } else if (os.contains("mac")) {
-            folderPath = Path.of(System.getProperty("user.home"), folderName);
         } else {
             folderPath = Path.of(System.getProperty("user.home"), folderName);
         }
@@ -238,82 +231,7 @@ public class DataProvider {
     }
 
     public Path getLyricsDir() {
-        return lyricsDir;
-    }
-    /**
-     * Returns the path of the lyrics file for a given song.
-     * If the song is not found, returns null.
-     *
-     * @param pathSong The path of the song.
-     * @return The path of the lyrics file or null if not found.
-     */
-    public String getLyricsPath(String pathSong) {
-        LyricsLibrary lib = readLyricsLibrary();
-        return lib.getSongs().stream()
-                .filter(e -> e.getPathSong().equals(pathSong))
-                .map(SongLyricsEntry::getPathLyrics)
-                .findFirst()
-                .orElse(null);
+        return settingFolder.resolve("lyrics");
     }
 
-    /**
-     * Updates the lyrics mapping for a song.
-     * If the song is not found, it will be added to the library.
-     *
-     * @param pathSong   The path of the song.
-     * @param pathLyrics The path of the lyrics.
-     */
-    public void updateLyricsMapping(String pathSong, String pathLyrics) {
-        LyricsLibrary lib = readLyricsLibrary();
-        boolean updated = false;
-
-        for (SongLyricsEntry entry : lib.getSongs()) {
-            if (entry.getPathSong().equals(pathSong)) {
-                entry.setPathLyrics(pathLyrics);
-                updated = true;
-                break;
-            }
-        }
-
-        if (!updated) {
-            lib.getSongs().add(new SongLyricsEntry(pathSong, pathLyrics));
-        }
-
-        writeLyricsLibrary(lib);
-    }
-
-    /**
-     * Reads the lyrics library from the lyrics file.
-     * If the lyrics file does not exist, it will be created with an empty library.
-     *
-     * @return The lyrics library read from the lyrics file.
-     */
-    private LyricsLibrary readLyricsLibrary() {
-       Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        if (!Files.exists(lyricsFile)) return new LyricsLibrary();
-        try (var reader = Files.newBufferedReader(lyricsFile)) {
-            return gson.fromJson(reader, LyricsLibrary.class);
-        } catch (IOException e) {
-            System.err.println("An error occurred while reading the lyrics file: " + e.getMessage());
-            return new LyricsLibrary();
-        }
-    }
-
-    /**
-     * Writes the lyrics library to the lyrics file.
-     *
-     * @param lib The lyrics library to write.
-     */
-    private void writeLyricsLibrary(LyricsLibrary lib) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        try {
-            Files.writeString(lyricsFile, gson.toJson(lib));
-        } catch (IOException e) {
-            System.err.println("An error occurred while writing the lyrics file: " + e.getMessage());
-        }
-    }
 }
