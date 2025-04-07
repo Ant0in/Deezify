@@ -1,4 +1,4 @@
-package musicApp.utils;
+package musicApp.utils.lyrics;
 
 import java.util.ArrayList;
 import java.util.List;

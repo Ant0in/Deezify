@@ -11,6 +11,7 @@ import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.FileManager;
+import musicApp.utils.lyrics.LyricsManager;
 import musicApp.views.PlayerView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;

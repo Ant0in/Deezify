@@ -7,8 +7,9 @@ import javafx.beans.property.StringProperty;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Song;
-import musicApp.utils.LyricsManager;
+import musicApp.utils.lyrics.LyricsManager;
 import musicApp.utils.DataProvider;
+import musicApp.utils.lyrics.LyricsDataAccess;
 import musicApp.views.songs.LyricsView;
 
 public class LyricsController extends ViewController<LyricsView, LyricsController> {

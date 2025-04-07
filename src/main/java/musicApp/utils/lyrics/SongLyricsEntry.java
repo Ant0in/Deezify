@@ -1,4 +1,4 @@
-package musicApp.utils;
+package musicApp.utils.lyrics;
 
 /**
  * Represents one entry in lyric.json
