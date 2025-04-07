@@ -12,11 +12,17 @@
       alignment="CENTER"
       maxWidth="Infinity" maxHeight="Infinity"
       stylesheets="@../css/lyrics.css">
-    <Label fx:id="lyricsTitle"  styleClass="lyrics-title"  />
-    <HBox spacing="10" alignment="CENTER">
-        <Button fx:id="simpleLyricsButton"  />
-        <Button fx:id="karaokeLyricsButton" />
-    </HBox>
+    <BorderPane>
+        <left>
+            <Button fx:id="simpleLyricsButton"/>
+        </left>
+        <center>
+            <Label fx:id="lyricsTitle" styleClass="lyrics-title" />
+        </center>
+        <right>
+            <Button fx:id="karaokeLyricsButton"/>
+        </right>
+    </BorderPane>
     <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true">
         <VBox fx:id="lyricsContainer" spacing="5" VBox.vgrow="ALWAYS" styleClass="lyrics-container">
         </VBox>
