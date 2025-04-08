@@ -4,10 +4,10 @@ import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Library class to store songs.
@@ -143,17 +143,6 @@ public class Library {
                 .toList();
     }
 
-    public List<String> searchStartsWith(String text) {
-        String lowerText = text.toLowerCase();
-    
-        return songList.stream()
-                .map(s -> s.getElementsThatStartWith(lowerText)) // liste des éléments de chaque song
-                .flatMap(List::stream)                           // fusionne toutes les listes
-                .distinct()                                      // évite les doublons
-                .toList();
-    }
-    
-    
 
     public Song getSongByPath(Path path) {
         for (Song song : songList) {
@@ -209,6 +198,29 @@ public class Library {
             System.err.println("Error loading cover image: " + e.getMessage());
             return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
         }
+    }
+
+    public Optional<String> getArtistAutoCompletion(String input) {
+        if (input == null || input.isEmpty() || songList.isEmpty()) {
+            return Optional.empty();
+        }
+
+        String lowerInput = input.toLowerCase();
+        int size = songList.size();
+        int randomIndex = (int) (Math.random() * size);
+
+        for (int offset = 0; offset < size; offset++) {
+            int i = (randomIndex + offset) % size;
+            String artist = songList.get(i).getArtist();
+            if (artist != null) {
+                String lowerArtist = artist.toLowerCase();
+                if (lowerArtist.startsWith(lowerInput) && lowerArtist.length() > lowerInput.length()) {
+                    return Optional.of(artist);
+                }
+            }
+        }
+
+        return Optional.empty();
     }
 
 }

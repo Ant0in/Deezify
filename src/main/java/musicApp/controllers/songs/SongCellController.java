@@ -13,6 +13,7 @@ import musicApp.views.songs.SongCellView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SongCellController extends ViewController<SongCellView, SongCellController> {
 
@@ -215,5 +216,9 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
 
     public void refreshSong() {
         view.update(song);
+    }
+
+    public Optional<String> getArtistAutoCompletion(String input) {
+        return LibraryController.getArtistAutoCompletion(input);
     }
 }

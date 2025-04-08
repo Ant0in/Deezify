@@ -217,3 +217,20 @@
     -fx-background-color: #007BFF;
     -fx-background-radius: 10px;
 }
+
+/* Pre Completion Text Field */
+.pre-completion-text-field {
+    -fx-font-family: "MonoSpaced";
+    -fx-background-color: #1e2a38;
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+
+/* AutoCompletion Text Field */
+.auto-completion-text-field {
+    -fx-font-family: "MonoSpaced";
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-text-fill: lightgray;
+}

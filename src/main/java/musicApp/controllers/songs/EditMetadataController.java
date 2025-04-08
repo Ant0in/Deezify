@@ -12,6 +12,8 @@ import musicApp.views.songs.EditMetadataView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class EditMetadataController extends ViewController<EditMetadataView, EditMetadataController> {
@@ -19,6 +21,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
     private final Song song;
     private final Stage editStage = new Stage();
     private final SongCellController songCellController;
+
 
     public EditMetadataController(SongCellController cellController) {
         super(new EditMetadataView());
@@ -131,6 +134,10 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
     public void handleCancel() {
         songCellController.refreshSong();
         editStage.close();
+    }
+
+    public Optional<String> getArtistAutoCompletion(String input){
+        return songCellController.getArtistAutoCompletion(input);
     }
 
 }

@@ -29,12 +29,6 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
     private TextField songInput;
 
     @FXML
-    private TextField autoCompletion;
-
-    @FXML
-    private StackPane stackPane;
-
-    @FXML
     private Button addSongButton;
 
     /**
@@ -58,71 +52,16 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
      * Initialize the song input for the search
      */
     private void initSongInput() {
-        File fontFile = new File("src/main/resources/fonts/JetBrainsMonoNLNerdFont-Regular.ttf");
-        if (fontFile.exists()) {
-            double fontSize = 14.0;
-            Font font = Font.loadFont(fontFile.toURI().toString(), fontSize);
-            if (font != null) {
-                songInput.setFont(font);
-                autoCompletion.setFont(font);
-            }
-        }
-
-        autoCompletion.setEditable(false);
-        autoCompletion.setMouseTransparent(true);
-        autoCompletion.setFocusTraversable(false);
-
-        songInput.setOnKeyPressed(event -> {
-            // Refresh the list view if the input in the search bar is empty
-            if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
-                if (songInput.getText() == null || songInput.getText().isEmpty()){
-                    autoCompletion.setText("");
-                    updateListView();                
-                }
-            } 
-            else if ((event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.RIGHT)
-                    && autoCompletion.getLength() > 0) {
-                event.consume();
-                songInput.setText(songInput.getText() + autoCompletion.getText().stripLeading());
-                autoCompletion.setText("");
-                songInput.positionCaret(songInput.getText().length());
-                listView.getItems().setAll(viewController.searchLibrary(songInput.getText()));
-            }
-        });
-    
-        songInput.setOnKeyReleased(event -> {    
-            String input = songInput.getText();
-            if (input == null || input.isEmpty()) {
+        songInput.textProperty().addListener((_, _, newVal) -> {
+            if (newVal == null || newVal.isEmpty()) {
                 updateListView();
-                autoCompletion.setText("");
-                return;
-            }        
-            List<Song> results = viewController.searchLibrary(input);
-            listView.getItems().setAll(results);
-            List<String> suggestions = viewController.searchStartsWith(input);
-            if (suggestions.isEmpty()) {
-                autoCompletion.setText("");
-                return;
-            }
-
-            List<Integer> indices = new ArrayList<>();
-            for (int i = 0; i < suggestions.size(); i++) {
-                indices.add(i);
-            }
-            Collections.shuffle(indices);
-
-            for (int index : indices) {
-                if (suggestions.get(index).length() > input.length()) {
-                    String completion = suggestions.get(index).substring(input.length());
-                    songInput.setText(input);
-                    songInput.positionCaret(songInput.getText().length());
-                    autoCompletion.setText(" ".repeat(songInput.getText().length()) + completion);
-                    break;
-                }
+            } else {
+                listView.getItems().setAll(viewController.searchLibrary(newVal));
             }
         });
     }
-    
+
+
 
     /**
      * Initialize the buttons in the view.

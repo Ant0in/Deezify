@@ -6,19 +6,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import musicApp.controllers.songs.EditMetadataController;
 import musicApp.utils.LanguageManager;
 import musicApp.views.View;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class EditMetadataView extends View<EditMetadataView, EditMetadataController> {
 
     @FXML
-    TextField titleField, artistField, genreField;
+    private StackPane artistStackPane;
+
+    @FXML
+    private TextField titleField, artistField, genreField, artistAutoCompletion;
     @FXML
     TextField tagInputField;
     @FXML
@@ -34,6 +37,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
 
     @Override
     public void init() {
+        initArtistAutoCompletion();
         initTranslations();
         initButtons();
         initTagInput();
@@ -41,6 +45,40 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
 
     public Scene getScene() {
         return scene;
+    }
+    
+    private void initArtistAutoCompletion(){
+        artistAutoCompletion.setEditable(false);
+        artistAutoCompletion.setMouseTransparent(true);
+        artistAutoCompletion.setFocusTraversable(false);
+
+        artistField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+                if (artistField.getText() == null || artistField.getText().isEmpty()){
+                    artistAutoCompletion.setText("");
+                }
+            }
+            else if ((event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.RIGHT)
+                    && artistAutoCompletion.getLength() > 0) {
+                event.consume();
+                artistField.setText(artistField.getText() + artistAutoCompletion.getText().stripLeading());
+                artistAutoCompletion.setText("");
+                artistField.positionCaret(artistField.getText().length());
+            }
+        });
+
+        artistField.setOnKeyReleased(event -> {
+            String input = artistField.getText();
+
+            Optional<String> randomArtist = viewController.getArtistAutoCompletion(input);
+            if (randomArtist.isEmpty()) {
+                artistAutoCompletion.setText("");
+                return;
+            }
+            String completion = randomArtist.get().substring(input.length());
+            artistField.positionCaret(artistField.getText().length());
+            artistAutoCompletion.setText(" ".repeat(artistField.getText().length()) + completion);
+        });
     }
 
     private void initTranslations() {

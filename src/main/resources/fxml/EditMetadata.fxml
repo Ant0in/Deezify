@@ -9,25 +9,40 @@
       xmlns:fx="http://javafx.com/fxml/1"
       prefWidth="400" prefHeight="600"
       spacing="20" alignment="TOP_CENTER"
-      style="-fx-background-color: linear-gradient(to bottom, #0d1b2a, #000000); -fx-padding: 30;">
+      style="-fx-background-color: linear-gradient(to bottom, #0d1b2a, #000000); -fx-padding: 30;"
+      stylesheets="@../css/style2.css">
 
-    <VBox spacing="10">
+<VBox spacing="10">
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label fx:id="titleLabel" text="Title:" textFill="white"/>
             <TextField fx:id="titleField" promptText="Title"
-                       style="-fx-background-color: #1e2a38; -fx-text-fill: white;"/>
+                       HBox.hgrow="ALWAYS"
+                       style="-fx-background-color: #1e2a38; -fx-text-fill: white; -fx-font-family: MonoSpaced"/>
         </HBox>
 
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label fx:id="artistLabel" text="Artist:" textFill="white"/>
-            <TextField fx:id="artistField" promptText="Artist"
-                       style="-fx-background-color: #1e2a38; -fx-text-fill: white;"/>
+            <StackPane HBox.hgrow="ALWAYS">
+                <children>
+                    <TextField fx:id="artistField"
+                               styleClass="pre-completion-text-field"
+                               promptText="Artist"
+                               HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="artistAutoCompletion"
+                               styleClass="auto-completion-text-field"
+                               editable="false"
+                               mouseTransparent="true"
+                               focusTraversable="false"
+                               HBox.hgrow="ALWAYS"/>
+                </children>
+            </StackPane>
         </HBox>
 
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label fx:id="genreLabel" text="Genre:" textFill="white"/>
             <TextField fx:id="genreField" promptText="Genre"
-                       style="-fx-background-color: #1e2a38; -fx-text-fill: white;"/>
+                       HBox.hgrow="ALWAYS"
+                       style="-fx-background-color: #1e2a38; -fx-text-fill: white; -fx-font-family: MonoSpaced"/>
         </HBox>
     </VBox>
 

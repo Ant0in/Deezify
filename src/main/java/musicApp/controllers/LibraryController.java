@@ -5,12 +5,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.utils.MusicLoader;
 import musicApp.views.LibraryView;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -67,10 +66,6 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      */
     public List<Song> searchLibrary(String query) {
         return library.search(query.toLowerCase());
-    }
-
-    public List<String> searchStartsWith(String query) {
-        return library.searchStartsWith(query.toLowerCase());
     }
 
     /**
@@ -260,5 +255,9 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         Song song = new Song(songPath);
         library.add(song);
         view.updateListView();
+    }
+
+    public Optional<String> getArtistAutoCompletion(String input) {
+        return library.getArtistAutoCompletion(input);
     }
 }

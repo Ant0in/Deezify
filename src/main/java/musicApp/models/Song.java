@@ -150,20 +150,4 @@ public class Song {
                 || getGenre().toLowerCase().contains(lowerText);
     }
 
-    public List<String> getElementsThatStartWith(String text){
-        String lowerText = text.toLowerCase();
-        List<String> result = new ArrayList<>();
-        if (getTitle().toLowerCase().startsWith(lowerText)) {
-            result.add(getTitle());
-        }
-        if (getArtist().toLowerCase().startsWith(lowerText)) {
-            result.add(getArtist());
-        }
-        if (getGenre().toLowerCase().startsWith(lowerText)) {
-            result.add(getGenre());
-        }
-        return result;
-
-    }
-
 }
