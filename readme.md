@@ -74,8 +74,16 @@ mvn exec:java
 - [x] 🎤 **Lyrics Display**: Display lyrics for the currently playing track
 - [x] 🎧 **Equalizer**
 
+### 📌 Phase 3
+- [x] 🔎 **Research**: Lets the user search for musics in its library based on title, artist, album or tags 
+- [x] 〰️ **Visualizer**: Audio Visualizer, draws a nice looking graph that updates based on the sounds that are playing
+- [ ] 📜 **Metadata autocompletion**: proposes values for artist, album and tags when modifying the metadata
+- [ ] 🎤 **Karaoke**: allows for the user to sing along with the music playing thanks to lyrics updating in real time with the song
+- [ ] 🎛️ **DJ mode**: Allows for audio effects to be applied in real time
+
 ## 🤝 Aknowledgements
 This project uses the following libraries:
 - [JavaFX](https://openjfx.io/)
 - [JAudiotagger](https://bitbucket.org/ijabz/jaudiotagger/src/master/)
+- [GSon](https://github.com/google/gson)
 - [JUnit](https://junit.org/junit5/) for testing
