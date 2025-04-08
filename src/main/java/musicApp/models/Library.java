@@ -46,7 +46,10 @@ public class Library {
      */
     public void add(Song song) throws IllegalArgumentException {
         if (this.songList.contains(song)) {
-            throw new IllegalArgumentException(LanguageManager.getInstance().get("error.mediaAlreadyInLibrary"));
+            throw new IllegalArgumentException(
+                    LanguageManager.getInstance().get("error.mediaAlreadyInLibrary")
+                            + " " + song.toString()
+            );
         }
         songList.add(song);
     }
@@ -59,7 +62,10 @@ public class Library {
      */
     public void add(int index, Song song) throws IllegalArgumentException {
         if (this.songList.contains(song)) {
-            throw new IllegalArgumentException(LanguageManager.getInstance().get("error.mediaAlreadyInLibrary") + song.toString());
+            throw new IllegalArgumentException(
+                    LanguageManager.getInstance().get("error.mediaAlreadyInLibrary")
+                            + " " + song.toString()
+            );
         }
         songList.add(index, song);
     }
