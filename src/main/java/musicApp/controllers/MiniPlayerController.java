@@ -57,7 +57,7 @@ public class MiniPlayerController extends ViewController< MiniPlayerView , MiniP
         view.updateSongProperties(song.getTitle(), song.getCoverImage());
     }
 
-    /*
+    /**
      * Callback method receiving audio spectrum data from the currently playing song
      * This method is called by the JavaFX media player
      *

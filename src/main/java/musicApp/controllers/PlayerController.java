@@ -387,7 +387,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
                 System.out.println("File copied with succes : " + copiedFilePath);
                 LibraryController.addSong(copiedFilePath);
             } catch (IOException e) {
-                System.err.println("Error while copying : " + e.getMessage());
+                alertService.showExceptionAlert(e);
             }
         }
     }
