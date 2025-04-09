@@ -9,6 +9,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.songs.LyricsController;
+import musicApp.controllers.settings.EqualizerController;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.FileManager;
 import musicApp.views.PlayerView;

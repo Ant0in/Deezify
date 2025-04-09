@@ -2,6 +2,7 @@ package musicApp.controllers;
 
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
+import musicApp.controllers.settings.EqualizerController;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;

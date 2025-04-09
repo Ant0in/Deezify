@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 import musicApp.controllers.PlayerController;
+import musicApp.controllers.settings.EqualizerController;
 import musicApp.models.Song;
 
 import java.io.File;
