@@ -1,6 +1,10 @@
 package musicApp.utils;
 
+
 import musicApp.models.Song;
+import musicApp.utils.lyrics.LyricsDataAccess;
+import musicApp.utils.lyrics.LyricsManager;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +19,7 @@ public class TestLyricsManager {
 
     private LyricsManager lyricsManager;
     private DataProvider dataProvider;
+    private LyricsDataAccess lyricsDataAccess;
     private Path lyricsDir;
     private Path lyricsFile;
     private Path jsonFile;
@@ -25,8 +30,10 @@ public class TestLyricsManager {
     @Before
     public void setUp() throws IOException {
         dataProvider = new DataProvider();
-        lyricsManager = new LyricsManager(dataProvider);
-        lyricsDir = dataProvider.getLyricsDir();
+        lyricsDataAccess = new LyricsDataAccess(dataProvider); 
+        lyricsManager = new LyricsManager(lyricsDataAccess);
+        lyricsDir = lyricsDataAccess.getLyricsDir(); 
+
         Files.createDirectories(lyricsDir);
 
         lyricsFile = lyricsDir.resolve("TestSong.txt");
@@ -73,7 +80,7 @@ public class TestLyricsManager {
     @Test
     public void testMappingIsCreated() {
         lyricsManager.saveLyrics(testSong, lyricsContent);
-        String path = dataProvider.getLyricsPath(testSong.getFilePath().toString());
+        String path = lyricsDataAccess.getLyricsPathTxt(testSong.getFilePath().toString());
         assertEquals("TestSong.txt", path);
     }
 }
