@@ -17,9 +17,8 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
-
-
 import java.util.Optional;
+
 
 /**
  * The LyricsView class is responsible for displaying and updating
@@ -84,6 +83,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
             initTranslation();
             simpleLyricsButton.fire();
+            updateKaraokeLyrics();
         });
     }
 
@@ -247,7 +247,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         return Optional.ofNullable(selectedFile).map(File::toPath);
     }
 
-    public boolean showOverwriteTxtConfirmation() {
+    public Optional<Boolean> showOverwriteTxtConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Overwrite .txt?");
         alert.setHeaderText("A .txt lyrics file already exists.");
@@ -259,7 +259,13 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         alert.getButtonTypes().setAll(yes, no, cancel);
 
         var result = alert.showAndWait();
-        return result.isPresent() && result.get() == yes;
+        if (result.isEmpty() || result.get() == cancel) {
+            return Optional.empty();        // Cancel
+        } else if (result.get() == yes) {
+            return Optional.of(true);       // Overwrite
+        } else {
+            return Optional.of(false);      // Don't overwrite
+        }
     }
 
 

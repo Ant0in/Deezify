@@ -133,4 +133,12 @@ public class LyricsManager {
         return Files.exists(file);
     }
 
+    public String getTxtLyricsPath(Song song) {
+        return lyricsDataAccess.getLyricsPathTxt(song.getFilePath().toString());
+    }
+
+    public Path getLyricsFile(String relativePath) {
+        return lyricsDataAccess.getLyricsDir().resolve(relativePath);
+    }
+
 }

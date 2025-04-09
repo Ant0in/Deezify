@@ -6,6 +6,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.nio.file.Path;
 import javafx.beans.property.StringProperty;
+import java.nio.file.Files;
 
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
@@ -97,8 +98,17 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         Optional<Path> selectedLrc = view.showLrcFileChooser();
         if (selectedLrc.isEmpty()) return;
 
-        boolean txtExists = !lyricsManager.getLyrics(song).isEmpty();
-        boolean overwriteTxt = !txtExists && view.showOverwriteTxtConfirmation();
+        String txtPath = lyricsManager.getTxtLyricsPath(song);
+        boolean txtExists = txtPath != null && Files.exists(lyricsManager.getLyricsFile(txtPath));
+
+        boolean overwriteTxt;
+        if (txtExists) {
+            Optional<Boolean> userChoice = view.showOverwriteTxtConfirmation();
+            if (userChoice.isEmpty()) return; // User cancelled
+            overwriteTxt = userChoice.get();
+        } else {
+            overwriteTxt = true; // If no txt exists, extract by default
+        }
 
         lyricsManager.importLrc(song, selectedLrc.get(), overwriteTxt);
         view.updateKaraokeLyrics();
