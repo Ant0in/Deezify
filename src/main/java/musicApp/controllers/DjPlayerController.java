@@ -24,6 +24,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     private final Song song;
     private final Stage stage = new Stage();
     private final PlayerController player;
+    private final EqualizerController equalizerController;
 
 
     public DjPlayerController(Song song, PlayerController player) {
@@ -34,8 +35,11 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
         this.song = song;
         this.player = player;
+        this.equalizerController = player.getEqualizerController();
         player.pause();
         player.playSong(song);
+
+
         //mediaPlayer.setRate(2);
 
 

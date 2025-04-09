@@ -392,5 +392,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         }
     }
 
+    public EqualizerController getEqualizerController() { return metaController.getEqualizerController(); }
+
 
 }

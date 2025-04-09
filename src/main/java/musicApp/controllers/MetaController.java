@@ -125,4 +125,5 @@ public class MetaController {
         }
     }  
 
+    public EqualizerController getEqualizerController() { return settingsController.getEqualizerController(); }
 }
