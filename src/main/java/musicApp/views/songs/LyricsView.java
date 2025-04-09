@@ -236,7 +236,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
             HBox header = new HBox();
             header.setAlignment(Pos.TOP_RIGHT);
             Button editButton = createEditButton(null);
-            editButton.setOnAction(e ->viewController.importKaraokeLyrics());
+            editButton.setOnAction(e ->karaokeController.importKaraokeLyrics());
             header.getChildren().add(editButton);
             karaokeLyricsContainer.getChildren().add(header);
 
