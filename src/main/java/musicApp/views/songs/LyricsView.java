@@ -233,6 +233,13 @@ public class LyricsView extends View<LyricsView, LyricsController> {
             karaokePlaceholder.setManaged(true);
 
         } else {
+            HBox header = new HBox();
+            header.setAlignment(Pos.TOP_RIGHT);
+            Button editButton = createEditButton(null);
+            editButton.setOnAction(e ->viewController.importKaraokeLyrics());
+            header.getChildren().add(editButton);
+            karaokeLyricsContainer.getChildren().add(header);
+
             karaokePlaceholder.setVisible(false);
             karaokePlaceholder.setManaged(false);
 
