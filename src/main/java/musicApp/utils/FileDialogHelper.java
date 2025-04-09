@@ -40,23 +40,4 @@ public class FileDialogHelper {
 
         return fileChooser.showOpenDialog(ownerWindow);
     }
-
-    /**
-     * Opens a file chooser dialog restricted to LRC files (.lrc).
-     *
-     * @param ownerWindow The window over which the dialog should open (can be null).
-     * @param title       The title of the dialog.
-     * @return The selected .lrc file or null if none selected.
-     */
-    public static File chooseLrcFile(Window ownerWindow, String title) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(title);
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("LRC Files", "*.lrc")
-        );
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-
-        return fileChooser.showOpenDialog(ownerWindow);
-    }
-
 }

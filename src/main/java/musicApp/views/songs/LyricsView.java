@@ -39,14 +39,15 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     private Button simpleLyricsButton, karaokeLyricsButton, karaokeAddLyricsButton, karaokeEditButton;
 
     @FXML
+    private ButtonType yesButton, noButton, cancelButton,saveButton;
+
+    @FXML
     private ScrollPane scrollPane, karaokeScrollPane;
 
     private String dialogTitleText;
     private String dialogHeaderText;
-    private String saveButtonText;
     private String noLyricsText;
     private String addLyricsText;
-    private String cancelButtonText;
 
     private KaraokeController karaokeController;
 
@@ -100,6 +101,10 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     private void initTranslation() {
         LanguageManager lang = LanguageManager.getInstance();
+        yesButton = new ButtonType(lang.get("button.yes"), ButtonBar.ButtonData.YES);
+        noButton = new ButtonType(lang.get("button.no"), ButtonBar.ButtonData.NO);
+        cancelButton = new ButtonType(lang.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        saveButton = new ButtonType(lang.get("button.save"), ButtonBar.ButtonData.OK_DONE);
         karaokeEditButton.setText(lang.get("button.edit"));
         karaokeLyricsButton.setText(lang.get("button.modeKaraoke"));
         simpleLyricsButton.setText(lang.get("button.simpleLyrics"));
@@ -108,10 +113,8 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         lyricsTitle.setText(lang.get("lyrics.title"));
         dialogTitleText = lang.get("dialog.editLyrics.title");
         dialogHeaderText = lang.get("dialog.editLyrics.header");
-        saveButtonText = lang.get("button.save");
         noLyricsText = lang.get("lyrics.noLyrics");
         addLyricsText = lang.get("button.addLyrics");
-        cancelButtonText = lang.get("button.cancel");
     }
 
     public void setKaraokeController(KaraokeController karaokeController) {
@@ -128,10 +131,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle(dialogTitleText);
         dialog.setHeaderText(dialogHeaderText);
-
-        ButtonType saveButtonType = new ButtonType(saveButtonText, ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType(cancelButtonText, ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButton, cancelButton);
 
         TextArea textArea = new TextArea(initialText);
         textArea.setWrapText(true);
@@ -140,7 +140,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         dialog.getDialogPane().setContent(textArea);
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButtonType) {
+            if (dialogButton == saveButton) {
                 return textArea.getText();
             }
             return null;
@@ -264,15 +264,12 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         alert.setHeaderText("A .txt lyrics file already exists.");
         alert.setContentText("Do you want to overwrite the existing .txt lyrics with the text from the LRC file?");
 
-        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.NO);
-        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-        alert.getButtonTypes().setAll(yes, no, cancel);
+        alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
 
         var result = alert.showAndWait();
-        if (result.isEmpty() || result.get() == cancel) {
+        if (result.isEmpty() || result.get() == cancelButton) {
             return Optional.empty();
-        } else if (result.get() == yes) {
+        } else if (result.get() == yesButton) {
             return Optional.of(true);
         } else {
             return Optional.of(false);
