@@ -48,6 +48,9 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     private String dialogHeaderText;
     private String noLyricsText;
     private String addLyricsText;
+    private String karaokeTitleText;
+    private String karaokeHeaderText;
+    private String karaokeContentText;
 
     private KaraokeController karaokeController;
 
@@ -115,6 +118,9 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         dialogHeaderText = lang.get("dialog.editLyrics.header");
         noLyricsText = lang.get("lyrics.noLyrics");
         addLyricsText = lang.get("button.addLyrics");
+        karaokeTitleText = lang.get("karaoke.title");
+        karaokeHeaderText = lang.get("karaoke.header");
+        karaokeContentText = lang.get("karaoke.content");
     }
 
     public void setKaraokeController(KaraokeController karaokeController) {
@@ -230,6 +236,14 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         updateKaraokeLyrics();
     }
 
+    /**
+     * Updates the karaoke lyrics displayed in the view.
+     * <p>
+     * This method retrieves the list of karaoke lines from the karaokeController
+     * and then updates the karaokeLyricsContainer with labels for each line.
+     * It retains the karaokePlaceholder and karaokeHeader nodes if they already exist.
+     * If there are no karaoke lines, the placeholder is set visible and managed.
+     */
     public void updateKaraokeLyrics() {
         List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLyrics();
 
@@ -250,6 +264,15 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         }
     }
 
+    /**
+     * Shows a file chooser dialog to select an .lrc file.
+     * <p>
+     * This method opens a FileChooser configured to filter for .lrc files.
+     * It returns an Optional<Path> containing the selected file path, or an empty Optional
+     * if no file was selected.
+     *
+     * @return an Optional containing the selected file path if a file was chosen, otherwise an empty Optional.
+     */
     public Optional<Path> showLrcFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select .lrc File");
@@ -258,11 +281,24 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         return Optional.ofNullable(selectedFile).map(File::toPath);
     }
 
+    /**
+     * Shows a confirmation dialog asking if the existing .txt lyrics should be overwritten with the text from the LRC file.
+     * <p>
+     * This method displays an Alert of type CONFIRMATION using pre-defined button types for "Yes", "No", and "Cancel".
+     * It returns an Optional<Boolean>:
+     * <ul>
+     *   <li>Optional.of(true) if the user confirms ("Yes"),</li>
+     *   <li>Optional.of(false) if the user selects "No",</li>
+     *   <li>An empty Optional if the user cancels or closes the dialog.</li>
+     * </ul>
+     *
+     * @return an Optional<Boolean> indicating the user's choice.
+     */
     public Optional<Boolean> showOverwriteTxtConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Overwrite .txt?");
-        alert.setHeaderText("A .txt lyrics file already exists.");
-        alert.setContentText("Do you want to overwrite the existing .txt lyrics with the text from the LRC file?");
+        alert.setTitle(karaokeTitleText);
+        alert.setHeaderText(karaokeHeaderText);
+        alert.setContentText(karaokeContentText);
 
         alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
 
