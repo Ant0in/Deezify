@@ -221,4 +221,8 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
     public Optional<String> getArtistAutoCompletion(String input) {
         return LibraryController.getArtistAutoCompletion(input);
     }
+
+    public Optional<String> getTagAutoCompletion(String input) {
+        return LibraryController.getTagAutoCompletion(input);
+    }
 }

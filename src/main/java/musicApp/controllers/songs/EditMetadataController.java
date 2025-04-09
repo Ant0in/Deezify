@@ -140,4 +140,8 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
         return songCellController.getArtistAutoCompletion(input);
     }
 
+    public Optional<String> getTagAutoCompletion(String input){
+        return songCellController.getTagAutoCompletion(input);
+    }
+
 }

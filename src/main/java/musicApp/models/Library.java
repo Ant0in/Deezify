@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Library class to store songs.
@@ -201,6 +202,14 @@ public class Library {
     }
 
     public Optional<String> getArtistAutoCompletion(String input) {
+        return getAutoCompletion(input, song -> List.of(song.getArtist()));
+    }
+
+    public Optional<String> getTagAutoCompletion(String input) {
+        return getAutoCompletion(input, Song::getUserTags);
+    }
+
+    private Optional<String> getAutoCompletion(String input, Function<Song, List<String>> extractor) {
         if (input == null || input.isEmpty() || songList.isEmpty()) {
             return Optional.empty();
         }
@@ -211,11 +220,13 @@ public class Library {
 
         for (int offset = 0; offset < size; offset++) {
             int i = (randomIndex + offset) % size;
-            String artist = songList.get(i).getArtist();
-            if (artist != null) {
-                String lowerArtist = artist.toLowerCase();
-                if (lowerArtist.startsWith(lowerInput) && lowerArtist.length() > lowerInput.length()) {
-                    return Optional.of(artist);
+            List<String> fields = extractor.apply(songList.get(i));
+
+            for (String field : fields) {
+                if (field == null) continue;
+                String lowerField = field.toLowerCase();
+                if (lowerField.startsWith(lowerInput) && lowerField.length() > lowerInput.length()) {
+                    return Optional.of(field);
                 }
             }
         }

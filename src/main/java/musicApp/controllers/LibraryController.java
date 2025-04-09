@@ -260,4 +260,8 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     public Optional<String> getArtistAutoCompletion(String input) {
         return library.getArtistAutoCompletion(input);
     }
+
+    public Optional<String> getTagAutoCompletion(String input) {
+        return library.getTagAutoCompletion(input);
+    }
 }

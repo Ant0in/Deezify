@@ -14,16 +14,18 @@ import musicApp.utils.LanguageManager;
 import musicApp.views.View;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class EditMetadataView extends View<EditMetadataView, EditMetadataController> {
 
     @FXML
-    private StackPane artistStackPane;
+    StackPane artistStackPane, tagStackPane;
+
 
     @FXML
-    private TextField titleField, artistField, genreField, artistAutoCompletion;
+    TextField titleField, artistField, genreField, artistAutoCompletion;
     @FXML
-    TextField tagInputField;
+    TextField tagInputField, tagAutoCompletion;
     @FXML
     Label titleLabel, artistLabel, genreLabel;
     @FXML
@@ -37,7 +39,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
 
     @Override
     public void init() {
-        initArtistAutoCompletion();
+        initAutoCompletionFields();
         initTranslations();
         initButtons();
         initTagInput();
@@ -46,39 +48,53 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     public Scene getScene() {
         return scene;
     }
-    
-    private void initArtistAutoCompletion(){
-        artistAutoCompletion.setEditable(false);
-        artistAutoCompletion.setMouseTransparent(true);
-        artistAutoCompletion.setFocusTraversable(false);
 
-        artistField.setOnKeyPressed(event -> {
+    private void initAutoCompletionFields(){
+        initArtistAutoCompletion();
+        initTagAutoCompletion();
+    }
+
+    private void initAutoCompletion(TextField input, TextField autoCompletion, Function<String, Optional<String>> getSuggestedCompletion) {
+        autoCompletion.setEditable(false);
+        autoCompletion.setMouseTransparent(true);
+        autoCompletion.setFocusTraversable(false);
+
+        input.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
-                if (artistField.getText() == null || artistField.getText().isEmpty()){
-                    artistAutoCompletion.setText("");
+                if (input.getText() == null || input.getText().isEmpty()) {
+                    autoCompletion.setText("");
                 }
-            }
-            else if ((event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.RIGHT)
-                    && artistAutoCompletion.getLength() > 0) {
+            } else if ((event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.RIGHT)
+                    && autoCompletion.getLength() > 0) {
                 event.consume();
-                artistField.setText(artistField.getText() + artistAutoCompletion.getText().stripLeading());
-                artistAutoCompletion.setText("");
-                artistField.positionCaret(artistField.getText().length());
+                input.setText(input.getText() + autoCompletion.getText().stripLeading());
+                autoCompletion.setText("");
+                input.positionCaret(input.getText().length());
             }
         });
 
-        artistField.setOnKeyReleased(event -> {
-            String input = artistField.getText();
+        input.setOnKeyReleased(event -> {
+            String currentText = input.getText();
+            Optional<String> suggestion = getSuggestedCompletion.apply(currentText);
 
-            Optional<String> randomArtist = viewController.getArtistAutoCompletion(input);
-            if (randomArtist.isEmpty()) {
-                artistAutoCompletion.setText("");
+            if (suggestion.isEmpty()) {
+                autoCompletion.setText("");
                 return;
             }
-            String completion = randomArtist.get().substring(input.length());
-            artistField.positionCaret(artistField.getText().length());
-            artistAutoCompletion.setText(" ".repeat(artistField.getText().length()) + completion);
+
+            String completion = suggestion.get().substring(currentText.length());
+            input.positionCaret(input.getText().length());
+            autoCompletion.setText(" ".repeat(currentText.length()) + completion);
         });
+    }
+
+
+    private void initArtistAutoCompletion() {
+        initAutoCompletion(artistField, artistAutoCompletion, viewController::getArtistAutoCompletion);
+    }
+
+    private void initTagAutoCompletion() {
+        initAutoCompletion(tagInputField, tagAutoCompletion, viewController::getTagAutoCompletion);
     }
 
     private void initTranslations() {
