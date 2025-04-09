@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
 <VBox xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1"
       spacing="10"
@@ -29,6 +30,9 @@
     </ScrollPane>
     <ScrollPane fx:id="karaokeScrollPane" fitToWidth="true" fitToHeight="true">
         <VBox fx:id="karaokeLyricsContainer" spacing="5" VBox.vgrow="ALWAYS" >
+            <HBox fx:id="karaokeHeader" alignment="TOP_RIGHT" spacing="10">
+                <Button fx:id="karaokeEditButton"/>
+            </HBox>
             <VBox fx:id="karaokePlaceholder" alignment="CENTER" spacing="10" styleClass="lyrics-container">
                 <Label fx:id="karaokeNoLyricsLabel" styleClass="no-lyrics-label"/>
                 <Button fx:id="karaokeAddLyricsButton"/>
@@ -36,5 +40,3 @@
         </VBox>
     </ScrollPane>
 </VBox>
-
-

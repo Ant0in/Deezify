@@ -26,6 +26,8 @@ import musicApp.controllers.songs.KaraokeController;
  * actions to the LyricsController.
  */
 public class LyricsView extends View<LyricsView, LyricsController> {
+    @FXML
+    private HBox karaokeHeader;
 
     @FXML
     private VBox lyricsContainer, karaokeLyricsContainer, karaokePlaceholder;
@@ -34,7 +36,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     private Label lyricsTitle, karaokeNoLyricsLabel;
 
     @FXML
-    private Button simpleLyricsButton, karaokeLyricsButton, karaokeAddLyricsButton;
+    private Button simpleLyricsButton, karaokeLyricsButton, karaokeAddLyricsButton, karaokeEditButton;
 
     @FXML
     private ScrollPane scrollPane, karaokeScrollPane;
@@ -63,6 +65,9 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     public void initButtons() {
         karaokeAddLyricsButton.setOnAction(e -> {
+            karaokeController.importKaraokeLyrics();
+        });
+        karaokeEditButton.setOnAction(e -> {
             karaokeController.importKaraokeLyrics();
         });
 
@@ -95,6 +100,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     private void initTranslation() {
         LanguageManager lang = LanguageManager.getInstance();
+        karaokeEditButton.setText(lang.get("button.edit"));
         karaokeLyricsButton.setText(lang.get("button.modeKaraoke"));
         simpleLyricsButton.setText(lang.get("button.simpleLyrics"));
         karaokeNoLyricsLabel.setText(lang.get("karaoke.noLyrics"));
@@ -227,19 +233,12 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     public void updateKaraokeLyrics() {
         List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLyrics();
 
-        karaokeLyricsContainer.getChildren().removeIf(node -> node != karaokePlaceholder);
+        karaokeLyricsContainer.getChildren().removeIf(node -> node != karaokePlaceholder && node != karaokeHeader);
         if (karaokeLines.isEmpty()) {
             karaokePlaceholder.setVisible(true);
             karaokePlaceholder.setManaged(true);
 
         } else {
-            HBox header = new HBox();
-            header.setAlignment(Pos.TOP_RIGHT);
-            Button editButton = createEditButton(null);
-            editButton.setOnAction(e ->karaokeController.importKaraokeLyrics());
-            header.getChildren().add(editButton);
-            karaokeLyricsContainer.getChildren().add(header);
-
             karaokePlaceholder.setVisible(false);
             karaokePlaceholder.setManaged(false);
 
