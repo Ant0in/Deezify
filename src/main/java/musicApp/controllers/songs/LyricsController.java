@@ -29,7 +29,8 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         DataProvider dataProvider = new DataProvider();
         LyricsDataAccess lyricsDataAccess = new LyricsDataAccess(dataProvider);
         this.lyricsManager = new LyricsManager(lyricsDataAccess);
-        initView("/fxml/Lyrics.fxml");  
+        initView("/fxml/Lyrics.fxml");
+        this.view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));
     }
 
 
@@ -79,39 +80,6 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
 
     public void refreshUI() {
         this.view.refreshUI();
-    }
-
-    public List<KaraokeLine> getKaraokeLyrics() {
-        Song song = playerController.getCurrentlyLoadedSong();
-        if (song == null) return List.of();
-        return lyricsManager.getKaraokeLines(song);
-    }
-
-
-    public void importKaraokeLyrics() {
-        Song song = playerController.getCurrentlyLoadedSong();
-        if (song == null) {
-            System.err.println("No song loaded.");
-            return;
-        }
-
-        Optional<Path> selectedLrc = view.showLrcFileChooser();
-        if (selectedLrc.isEmpty()) return;
-
-        String txtPath = lyricsManager.getTxtLyricsPath(song);
-        boolean txtExists = txtPath != null && Files.exists(lyricsManager.getLyricsFile(txtPath));
-
-        boolean overwriteTxt;
-        if (txtExists) {
-            Optional<Boolean> userChoice = view.showOverwriteTxtConfirmation();
-            if (userChoice.isEmpty()) return; // User cancelled
-            overwriteTxt = userChoice.get();
-        } else {
-            overwriteTxt = true; // If no txt exists, extract by default
-        }
-
-        lyricsManager.importLrc(song, selectedLrc.get(), overwriteTxt);
-        view.updateKaraokeLyrics();
     }
 
 }

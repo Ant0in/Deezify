@@ -3,22 +3,22 @@ package musicApp.views.songs;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import musicApp.controllers.songs.LyricsController;
-import musicApp.utils.LanguageManager;
-import java.util.List;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Pos;
-import musicApp.views.View;
-import musicApp.utils.lyrics.KaraokeLine;
+import java.util.List;
 import javafx.stage.FileChooser;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
+import musicApp.views.View;
+import musicApp.utils.lyrics.KaraokeLine;
+import musicApp.controllers.songs.LyricsController;
+import musicApp.utils.LanguageManager;
+import musicApp.controllers.songs.KaraokeController;
 
 /**
  * The LyricsView class is responsible for displaying and updating
@@ -46,6 +46,8 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     private String addLyricsText;
     private String cancelButtonText;
 
+    private KaraokeController karaokeController;
+
     /**
      * Initializes the view. Sets up listeners and UI components.
      */
@@ -61,7 +63,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     public void initButtons() {
         karaokeAddLyricsButton.setOnAction(e -> {
-            viewController.importKaraokeLyrics();
+            karaokeController.importKaraokeLyrics();
         });
 
         simpleLyricsButton.setOnAction(e -> {
@@ -104,6 +106,10 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         noLyricsText = lang.get("lyrics.noLyrics");
         addLyricsText = lang.get("button.addLyrics");
         cancelButtonText = lang.get("button.cancel");
+    }
+
+    public void setKaraokeController(KaraokeController karaokeController) {
+        this.karaokeController = karaokeController;
     }
 
     /**
@@ -219,10 +225,9 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     }
 
     public void updateKaraokeLyrics() {
-        List<KaraokeLine> karaokeLines = viewController.getKaraokeLyrics();
+        List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLyrics();
 
         karaokeLyricsContainer.getChildren().removeIf(node -> node != karaokePlaceholder);
-        //TODO: Replace with karaokeManager.getKaraokeLines(song) if it exists
         if (karaokeLines.isEmpty()) {
             karaokePlaceholder.setVisible(true);
             karaokePlaceholder.setManaged(true);
@@ -260,11 +265,11 @@ public class LyricsView extends View<LyricsView, LyricsController> {
 
         var result = alert.showAndWait();
         if (result.isEmpty() || result.get() == cancel) {
-            return Optional.empty();        // Cancel
+            return Optional.empty();
         } else if (result.get() == yes) {
-            return Optional.of(true);       // Overwrite
+            return Optional.of(true);
         } else {
-            return Optional.of(false);      // Don't overwrite
+            return Optional.of(false);
         }
     }
 
