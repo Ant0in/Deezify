@@ -257,4 +257,5 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         library.add(song);
         view.updateListView();
     }
+
 }

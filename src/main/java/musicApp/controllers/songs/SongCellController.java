@@ -223,7 +223,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             view.displayError("No song to play");
         }
 
-        new DjPlayerController(song.getFilePath().toFile());
+        new DjPlayerController(song, LibraryController.getPlayerController());
 
     }
 
