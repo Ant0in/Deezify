@@ -24,7 +24,6 @@ public class LrcParser {
      * @throws IOException If reading the file fails.
      */
     public static List<KaraokeLine> parseLrcFile(Path lrcPath) throws IOException {
-        // We'll read all lines and then use a regex to extract time + text
         List<String> lines = Files.readAllLines(lrcPath);
         List<KaraokeLine> karaokeLines = new ArrayList<>();
 
@@ -54,7 +53,7 @@ public class LrcParser {
             }
         }
 
-        // You may want to sort them by time, just in case the LRC lines are out of order
+        // in case the LRC lines are out of order
         karaokeLines.sort((a, b) -> a.getTime().compareTo(b.getTime()));
 
         return karaokeLines;

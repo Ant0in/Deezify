@@ -5,9 +5,15 @@ import musicApp.models.Song;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.stream.Collectors;
 import java.util.List;
 
+import musicApp.utils.lyrics.KaraokeLine;
+import musicApp.utils.lyrics.LrcParser;
+
 public class LyricsManager {
+
     private final LyricsDataAccess lyricsDataAccess;
 
     public LyricsManager(LyricsDataAccess lyricsDataAccess) {
@@ -30,7 +36,8 @@ public class LyricsManager {
         try {
             return Files.readAllLines(lyricsFile);
         } catch (IOException e) {
-            return List.of("Error reading lyrics file: " + e.getMessage());
+            System.err.println("Error reading lyrics file: " + e.getMessage());
+            return List.of();
         }
     }
 
@@ -55,7 +62,7 @@ public class LyricsManager {
             return;
         }
 
-        lyricsDataAccess.updateLyricsMapping(song.getFilePath().toString(), lyricsFileName);
+        lyricsDataAccess.updateLyricsMappingTxt(song.getFilePath().toString(), lyricsFileName);
     }
 
     /**
@@ -68,55 +75,62 @@ public class LyricsManager {
         System.err.println("Unsupported format: " + songName);
         return null;
     }
-    
-    /**
-     * Imports a .lrc file for the given song.
-     * 1) Copies the .lrc to your lyrics folder,
-     * 2) Updates the LRC mapping in lyrics.json,
-     * 3) (Optional) Overwrites the .txt with the extracted lines.
-     *
-     * @param song          The Song object for which we import LRC.
-     * @param sourceLrcFile The path of the LRC file selected by the user.
-     * @param overwriteTxt  If true, we extract the text from LRC lines and overwrite the .txt file.
-     */
+
+    public void LrcToTxt(Song song) {
+        List<KaraokeLine> lines = getKaraokeLines(song);
+
+        String plainText = lines.stream()
+                .map(KaraokeLine::getLyric)
+                .filter(s -> !s.isBlank())
+                .collect(Collectors.joining("\n"));
+
+        saveLyrics(song, plainText);
+    }
+
     public void importLrc(Song song, Path sourceLrcFile, boolean overwriteTxt) {
         if (song == null || sourceLrcFile == null) {
             System.err.println("Song or LRC file is null. Cannot import.");
             return;
         }
-
-        // 1) Copy .lrc to your local lyrics folder
         String fileName = sourceLrcFile.getFileName().toString();
         Path destination = lyricsDataAccess.getLyricsDir().resolve(fileName);
-
         try {
             Files.copy(sourceLrcFile, destination, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("LRC file copied to " + destination);
         } catch (IOException e) {
             System.err.println("Error copying LRC file: " + e.getMessage());
             return;
         }
 
-        // 2) Update the LRC mapping in lyrics.json
-        lyricsDataAccess.updateLrcMapping(song.getFilePath().toString(), fileName);
+        lyricsDataAccess.updateLyricsMappingKaraoke(song.getFilePath().toString(), fileName);
 
-        // 3) If the user wants to overwrite .txt with the text from the LRC
-        if (overwriteTxt) {
-            try {
-                // Parse the .lrc
-                List<KaraokeLine> lines = LrcParser.parseLrcFile(destination);
+        boolean txtExists = txtLyricsExists(song);
+        boolean shouldExtractTxt = overwriteTxt || !txtExists;
+        if (shouldExtractTxt) {
+            LrcToTxt(song);
+        }
+}
 
-                // Extract just the text (without timestamps)
-                String plainText = lines.stream()
-                    .map(KaraokeLine::getText)
-                    .collect(Collectors.joining("\n"));
 
-                // Then save it as .txt
-                saveLyrics(song, plainText); // Reuses your existing method for normal lyrics
-                System.out.println(".txt file overwritten with LRC content for " + song.getTitle());
-            } catch (IOException e) {
-                System.err.println("Error parsing LRC file: " + e.getMessage());
-            }
+    public List<KaraokeLine> getKaraokeLines(Song song) {
+        String lrcFileName = lyricsDataAccess.getKaraokeLyricsPath(song.getFilePath().toString());
+        if (lrcFileName == null) return List.of();
+
+        Path lrcPath = lyricsDataAccess.getLyricsDir().resolve(lrcFileName);
+        if (!Files.exists(lrcPath)) return List.of();
+
+        try {
+            return LrcParser.parseLrcFile(lrcPath);
+        } catch (IOException e) {
+            System.err.println("Error parsing LRC: " + e.getMessage());
+            return List.of();
         }
     }
+
+    public boolean txtLyricsExists(Song song) {
+        String txtPath = lyricsDataAccess.getLyricsPathTxt(song.getFilePath().toString());
+        if (txtPath == null) return false;
+        Path file = lyricsDataAccess.getLyricsDir().resolve(txtPath);
+        return Files.exists(file);
+    }
+
 }

@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import musicApp.utils.DataProvider;
+import java.util.Objects;
 
 
 /**
@@ -35,38 +36,55 @@ public class LyricsDataAccess {
     public Path getLyricsDir() {
         return this.lyricsDir;
     }
+
     /**
      * Returns the path of the lyrics file for a given song.
      * If the song is not found, returns null.
      */
     public String getLyricsPath(String pathSong) {
+        if (pathSong == null) {
+            return null;
+        }
         LyricsLibrary lib = readLyricsLibrary();
         return lib.getSongs().stream()
                 .filter(e -> e.getPathSong().equals(pathSong))
-                .map(SongLyricsEntry::getPathLyrics)
+                .map(entry -> {
+                    if (entry.getPathLyricsTxt() != null) {
+                        return entry.getPathLyricsTxt();
+                    } else {
+                        return entry.getPathLyricsKaraoke();
+                    }
+                })
                 .findFirst()
                 .orElse(null);
     }
 
-    /**
-     * Updates the lyrics mapping for a song.
-     * If the song is not found, it will be added to the library.
-     */
-    public void updateLyricsMapping(String pathSong, String pathLyrics) {
+    public void updateLyricsMapping(String pathSong, String pathLyricsTxt, String pathLyricsKaraoke) {
         LyricsLibrary lib = readLyricsLibrary();
         boolean updated = false;
 
         for (SongLyricsEntry entry : lib.getSongs()) {
             if (entry.getPathSong().equals(pathSong)) {
-                entry.setPathLyrics(pathLyrics);
+                if (pathLyricsTxt != null) entry.setPathLyricsTxt(pathLyricsTxt);
+                if (pathLyricsKaraoke != null) entry.setPathLyricsKaraoke(pathLyricsKaraoke);
                 updated = true;
                 break;
             }
         }
+
         if (!updated) {
-            lib.getSongs().add(new SongLyricsEntry(pathSong, pathLyrics));
+            lib.getSongs().add(new SongLyricsEntry(pathSong, pathLyricsTxt, pathLyricsKaraoke));
         }
+
         writeLyricsLibrary(lib);
+    }
+
+    public void updateLyricsMappingTxt(String pathSong, String pathLyricsTxt) {
+        updateLyricsMapping(pathSong, pathLyricsTxt, null);
+    }
+
+    public void updateLyricsMappingKaraoke(String pathSong, String pathLyricsKaraoke) {
+        updateLyricsMapping(pathSong, null, pathLyricsKaraoke);
     }
 
     /**
@@ -100,4 +118,27 @@ public class LyricsDataAccess {
         }
     }
 
+    public String getKaraokeLyricsPath(String pathSong) {
+        if (pathSong == null) {
+            return null;
+        }
+        LyricsLibrary lib = readLyricsLibrary();
+        return lib.getSongs().stream()
+            .filter(e -> e != null && e.getPathSong() != null)
+            .filter(e -> e.getPathSong().equals(pathSong))
+            .map(SongLyricsEntry::getPathLyricsKaraoke)
+            .findFirst()
+            .orElse(null);
+    }
+    
+
+    public String getLyricsPathTxt(String pathSong) {
+        LyricsLibrary lib = readLyricsLibrary();
+        return lib.getSongs().stream()
+            .filter(e -> e.getPathSong().equals(pathSong))
+            .map(SongLyricsEntry::getPathLyricsTxt)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(null);
+    }
 }

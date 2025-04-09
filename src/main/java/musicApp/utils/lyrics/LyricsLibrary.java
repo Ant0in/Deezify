@@ -16,7 +16,11 @@ public class LyricsLibrary {
     }
 
     public List<SongLyricsEntry> getSongs() {
-        return songs;
+        return this.songs;
+    }
+
+    public void setSongs(List<SongLyricsEntry> songs) {
+        this.songs = songs;
     }
 
 }

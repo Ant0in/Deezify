@@ -12,6 +12,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Pos;
 import musicApp.views.View;
+import musicApp.utils.lyrics.KaraokeLine;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Objects;
+
 
 import java.util.Optional;
 
@@ -55,6 +61,10 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * When the song changes, the lyrics are updated.
      */
     public void initButtons() {
+        karaokeAddLyricsButton.setOnAction(e -> {
+            viewController.importKaraokeLyrics();
+        });
+
         simpleLyricsButton.setOnAction(e -> {
             scrollPane.setVisible(true);
             scrollPane.setManaged(true);
@@ -68,6 +78,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
             karaokeScrollPane.setManaged(true);
             scrollPane.setVisible(false);
             scrollPane.setManaged(false);
+            updateKaraokeLyrics();
         });
 
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
@@ -204,5 +215,52 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     public void refreshUI() {
         initTranslation();
         updateLyrics();
+        updateKaraokeLyrics();
     }
+
+    public void updateKaraokeLyrics() {
+        List<KaraokeLine> karaokeLines = viewController.getKaraokeLyrics();
+
+        karaokeLyricsContainer.getChildren().removeIf(node -> node != karaokePlaceholder);
+        //TODO: Replace with karaokeManager.getKaraokeLines(song) if it exists
+        if (karaokeLines.isEmpty()) {
+            karaokePlaceholder.setVisible(true);
+            karaokePlaceholder.setManaged(true);
+
+        } else {
+            karaokePlaceholder.setVisible(false);
+            karaokePlaceholder.setManaged(false);
+
+            for (KaraokeLine line : karaokeLines) {
+                Label label = new Label(line.getLyric());
+                label.getStyleClass().add("lyrics-text");
+                karaokeLyricsContainer.getChildren().add(label);
+            }
+        }
+    }
+
+    public Optional<Path> showLrcFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select .lrc File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("LRC files", "*.lrc"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+        return Optional.ofNullable(selectedFile).map(File::toPath);
+    }
+
+    public boolean showOverwriteTxtConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Overwrite .txt?");
+        alert.setHeaderText("A .txt lyrics file already exists.");
+        alert.setContentText("Do you want to overwrite the existing .txt lyrics with the text from the LRC file?");
+
+        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.NO);
+        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yes, no, cancel);
+
+        var result = alert.showAndWait();
+        return result.isPresent() && result.get() == yes;
+    }
+
+
 }

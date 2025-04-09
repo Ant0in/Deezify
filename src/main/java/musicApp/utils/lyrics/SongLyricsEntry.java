@@ -5,22 +5,21 @@ package musicApp.utils.lyrics;
  * Example JSON block:
  * {
  *   "pathSong": "Hello-Adele-185",
- *   "pathLyrics": "Hello-Adele-185.txt"
+ *   "pathLyricsTxt": "Hello-Adele-185.txt"
  * }
  */
 public class SongLyricsEntry {
+
     private String pathSong;
-    private String pathLyrics;
+    private String pathLyricsTxt;
+    private String pathLyricsKaraoke;
 
-    private String txt; 
-    private String lrc; 
+    public SongLyricsEntry() {}
 
-    public SongLyricsEntry() {
-    }
-
-    public SongLyricsEntry(String pathSong, String pathLyrics) {
+    public SongLyricsEntry(String pathSong, String pathLyricsTxt, String pathLyricsKaraoke) {
         this.pathSong = pathSong;
-        this.pathLyrics = pathLyrics;
+        this.pathLyricsTxt = pathLyricsTxt;
+        this.pathLyricsKaraoke = pathLyricsKaraoke;
     }
 
     public String getPathSong() {
@@ -31,27 +30,20 @@ public class SongLyricsEntry {
         this.pathSong = pathSong;
     }
 
-    public String getPathLyrics() {
-        return pathLyrics;
+    // Renommage correct et cohérent
+    public String getPathLyricsTxt() {
+        return pathLyricsTxt;
     }
 
-    public void setPathLyrics(String pathLyrics) {
-        this.pathLyrics = pathLyrics;
+    public void setPathLyricsTxt(String pathLyricsTxt) {
+        this.pathLyricsTxt = pathLyricsTxt;
     }
 
-    public String getTxt() {
-        return txt;
+    public String getPathLyricsKaraoke() {
+        return pathLyricsKaraoke;
     }
 
-    public void setTxt(String txt) {
-        this.txt = txt;
-    }
-
-    public String getLrc() {
-        return lrc;
-    }
-    
-    public void setLrc(String lrc) {
-        this.lrc = lrc;
+    public void setPathLyricsKaraoke(String pathLyricsKaraoke) {
+        this.pathLyricsKaraoke = pathLyricsKaraoke;
     }
 }
