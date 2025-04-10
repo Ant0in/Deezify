@@ -1,10 +1,10 @@
 package musicApp.models;
 
-import com.google.gson.annotations.Expose;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.google.gson.annotations.Expose;
 
 public class Equalizer {
     public final double MAX_GAIN_DB = 12;
@@ -63,7 +63,7 @@ public class Equalizer {
         return bandsGain;
     }
 
-    private void setBandsGain(List<Double> bandsGain) {
+    public void setBandsGain(List<Double> bandsGain) {
         this.bandsGain = bandsGain;
     }
 

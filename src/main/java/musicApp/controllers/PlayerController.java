@@ -3,23 +3,23 @@ package musicApp.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
+import be.tarsos.dsp.io.jvm.AudioPlayer;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import musicApp.controllers.playlists.PlaylistNavigatorController;
-import musicApp.controllers.songs.LyricsController;
-import musicApp.controllers.settings.EqualizerController;
-import musicApp.utils.FileDialogHelper;
-import musicApp.utils.FileManager;
-import musicApp.views.PlayerView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import musicApp.controllers.playlists.PlaylistNavigatorController;
+import musicApp.controllers.settings.EqualizerController;
+import musicApp.controllers.songs.LyricsController;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
-
-import java.util.List;
+import musicApp.utils.FileDialogHelper;
+import musicApp.utils.FileManager;
+import musicApp.views.PlayerView;
 
 /**
  * Controller class for the music player.
@@ -109,6 +109,10 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         } else {
             this.queueController.playSong(0);
         }
+    }
+
+    public MediaPlayerController getMediaPlayerController() {
+        return mediaPlayerController;
     }
 
     /**
@@ -394,6 +398,5 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     }
 
     public EqualizerController getEqualizerController() { return metaController.getEqualizerController(); }
-
 
 }
