@@ -220,7 +220,6 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
         audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }
 
-
     public void toggleLyrics(boolean show) {
         playerController.toggleLyrics(show);
     }
@@ -228,4 +227,6 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
     public void toggleMiniPlayer() {
         miniPlayerController.toggleView();
     }
+
+    public AudioPlayer getAudioPlayer() { return audioPlayer; };
 }

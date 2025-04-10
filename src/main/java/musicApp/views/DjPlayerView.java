@@ -36,7 +36,7 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
         pauseButton.setOnAction(_ -> viewController.pause());
         gainButton.setOnAction(_ -> viewController.toggleBoostGainMode());
         pressureButton.setOnAction(_ -> viewController.togglePressureMode());
-        bassBoostButton.setOnAction(_ -> viewController.toggleBassBoostMode());
+        bassBoostButton.setOnAction(_ -> viewController.toggleWaveGainMode());
     }
 
 }

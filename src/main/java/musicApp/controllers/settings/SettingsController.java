@@ -147,5 +147,4 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         return settings.getMusicDirectory();
     }
 
-    public EqualizerController getEqualizerController() { return equalizerController; }
 }

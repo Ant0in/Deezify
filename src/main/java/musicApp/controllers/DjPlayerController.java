@@ -3,39 +3,36 @@ package musicApp.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.stage.Stage;
-import javafx.scene.media.AudioClip;
-import musicApp.controllers.settings.EqualizerController;
+import javafx.scene.media.*;
 import musicApp.models.Song;
 import musicApp.views.DjPlayerView;
 
 
 public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerController> {
     
-    //private final Minim minim;
-    //private final AudioPlayer audioPlayer;
-    
     private final Song song;
     private final Stage stage = new Stage();
-    private final PlayerController player;
-    private final EqualizerController equalizerController;
     private final MediaPlayerController mediaPlayerController;
 
     private static final double MAX_HIGH = 12.0;
     private static final double MAX_LOW = -24.0;
+    private static final double NUM_BANDS = 10;
 
 
     public DjPlayerController(Song song, PlayerController player) {
  
         super(new DjPlayerView());
         this.song = song;
-        this.player = player;
-        this.equalizerController = player.getEqualizerController();
         this.mediaPlayerController = player.getMediaPlayerController();
 
         play();
-        //toggleBassBoostedMode();
-        //toggleEarrapeMode();
 
         initView("/fxml/DjPlayer.fxml");
         stage.setScene(view.getScene());
@@ -45,6 +42,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     }
 
+    /* // Commented out for now, needs to be modified
     private void resetBands(ArrayList<Integer> bands) {
 
         List<Double> bandsGain = new ArrayList<>();
@@ -59,7 +57,8 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
             }
         }
 
-    }
+    }*/
+
 
     public void toggleBassBoostMode() {
         
@@ -83,11 +82,36 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         mediaPlayerController.setEqualizerBands(bandsGain);
     }
 
-    public void play() { player.playSong(song); }
+    public void toggleWaveGainMode() {
+         // centers the function (amplitude = 18 db, offset = -6 db)
+        double amplitude = MAX_HIGH - MAX_LOW / 2.0;
+        double offset = MAX_LOW + amplitude;
+        double speed = 2.0;
 
-    public void pause() { player.pause(); }
+        // Timeline for sequential update on the bands gain
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+            double currentTime = System.currentTimeMillis() / 1000.0;
+            List<Double> bandsGain = new ArrayList<>();
 
-    public void unpause() { player.unpause(); }
+            // Gain of each band, dephased depending on the band
+            for (int i = 0; i < NUM_BANDS; i++) {
+                double phase = currentTime * speed + (i * Math.PI / NUM_BANDS);
+                double gain = offset + amplitude * Math.sin(phase);
+                bandsGain.add(gain);
+            }
+
+            mediaPlayerController.setEqualizerBands(bandsGain);
+        }));
+
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    public void play() { mediaPlayerController.playCurrent(song); }
+
+    public void pause() { mediaPlayerController.pause(); }
+
+    public void unpause() { mediaPlayerController.unpause(); }
 
     public void start() {
         // ...
