@@ -1,10 +1,7 @@
 package musicApp.models;
 
 import javafx.beans.property.*;
-import javafx.scene.media.AudioEqualizer;
-import javafx.scene.media.EqualizerBand;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.*;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -16,16 +13,36 @@ import java.util.List;
  * Class that manages the audio playing.
  */
 public class AudioPlayer {
-    private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
-    private final StringProperty currentSongString = new SimpleStringProperty("None");
-    private final BooleanProperty isPlaying = new SimpleBooleanProperty(false);
-    private final BooleanProperty isLoaded = new SimpleBooleanProperty(false);
-    private final DoubleProperty volume = new SimpleDoubleProperty(1.0);
-    List<Double> equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
+
+    private final DoubleProperty progress;
+    private final StringProperty currentSongString;
+    private final BooleanProperty isPlaying;
+    private final BooleanProperty isLoaded;
+    private final DoubleProperty volume;
+    private List<Double> equalizerBandsGain;
     private MediaPlayer mediaPlayer;
-    private Song loadedSong = null;
-    private double balance = 0.0;
-    private double speed = 1.0;
+    private Song loadedSong;
+    private double balance;
+    private double speed;
+    private final AudioSpectrumListener audioSpectrumListener;
+    private final Double audioSpectrumInterval;
+
+    public AudioPlayer(AudioSpectrumListener audioSpectrumListener) {
+        // Initialize properties in the constructor
+        this.progress = new SimpleDoubleProperty(0.0);
+        this.currentSongString = new SimpleStringProperty("None");
+        this.isPlaying = new SimpleBooleanProperty(false);
+        this.isLoaded = new SimpleBooleanProperty(false);
+        this.volume = new SimpleDoubleProperty(1.0);
+        this.equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
+        this.mediaPlayer = null;
+        this.loadedSong = null;
+        this.balance = 0.0;
+        this.speed = 1.0;
+        this.audioSpectrumListener = audioSpectrumListener;
+        this.audioSpectrumInterval = 0.05; // Optimal Speed (lower is blinky, higher is laggy)
+
+    }
 
     /**
      * Load a song into the player.
@@ -44,6 +61,8 @@ public class AudioPlayer {
         mediaPlayer.volumeProperty().bind(volume);
         mediaPlayer.setBalance(balance);
         mediaPlayer.setRate(speed);
+        mediaPlayer.setAudioSpectrumListener(audioSpectrumListener);
+        mediaPlayer.setAudioSpectrumInterval(audioSpectrumInterval);
         mediaPlayer.setOnReady(() -> {
             isLoaded.set(true);
             applyEqualizerBandsGain();

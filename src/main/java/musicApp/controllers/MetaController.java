@@ -1,10 +1,12 @@
 package musicApp.controllers;
 
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
+import musicApp.utils.AlertService;
 import musicApp.utils.DataProvider;
 import musicApp.utils.MusicLoader;
 
@@ -17,6 +19,7 @@ import java.util.List;
  */
 public class MetaController {
 
+    private final AlertService alertService = new AlertService();
     private final Stage stage;
     private final DataProvider dataProvider = new DataProvider();
     private final PlayerController playerController;
@@ -68,7 +71,7 @@ public class MetaController {
             this.playlists.set(0, loadMainLibraryFromPath(newSettings.getMusicDirectory()));
             playerController.onSettingsChanged(newSettings);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            alertService.showExceptionAlert(e);
         }
     }
 
@@ -120,7 +123,7 @@ public class MetaController {
             List<Song> songs = loader.getAllSongs(musicDirectory);
             return new Library(songs, "??library??", null);
         } catch (IOException e) {
-            System.err.println("Error while loading the main library: " + e.getMessage());
+            alertService.showExceptionAlert(e);
             return new Library(); // fallback
         }
     }  

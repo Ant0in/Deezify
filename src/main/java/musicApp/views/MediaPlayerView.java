@@ -31,7 +31,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     @FXML
     private Slider volumeSlider;
     @FXML
-    private ToggleButton shuffleToggle, lyricsToggle;
+    private ToggleButton shuffleToggle, lyricsToggle, miniPlayerToggle;
 
     /**
      * Instantiates a new Media player view.
@@ -52,7 +52,8 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         nextSongButton.setOnAction(_ -> viewController.handleNextSong());
         previousSongButton.setOnAction(_ -> viewController.handlePreviousSong());
         shuffleToggle.setOnAction(_ -> viewController.toggleShuffle());
-        lyricsToggle.setOnAction(event -> viewController.toggleLyrics(lyricsToggle.isSelected()));
+        lyricsToggle.setOnAction(_ -> viewController.toggleLyrics(lyricsToggle.isSelected()));
+        miniPlayerToggle.setOnAction(_ -> viewController.toggleMiniPlayer() );
     }
 
     private void initBindings() {

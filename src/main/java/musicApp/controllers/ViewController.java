@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 import javafx.scene.layout.Pane;
+import musicApp.utils.AlertService;
 import musicApp.views.View;
 
 
@@ -15,6 +16,7 @@ public abstract class ViewController<V extends View<V, C>, C extends ViewControl
      * The View.
      */
     protected V view;
+    protected AlertService alertService;
 
     /**
      * Instantiates a new View controller.
@@ -23,6 +25,7 @@ public abstract class ViewController<V extends View<V, C>, C extends ViewControl
      */
     public ViewController(V view) {
         this.view = view;
+        this.alertService = new AlertService();
         this.view.setViewController((C) this);
     }
 

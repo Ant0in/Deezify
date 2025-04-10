@@ -28,6 +28,7 @@
             <Button fx:id="nextSongButton" styleClass="nextbtn" />
         </HBox>
         <HBox alignment="CENTER_RIGHT" spacing="10" HBox.hgrow="ALWAYS">
+            <ToggleButton fx:id="miniPlayerToggle"  mnemonicParsing="false" text="~"/>
             <ToggleButton fx:id="lyricsToggle" styleClass="lyrics-btn" mnemonicParsing="false" />
             <ToggleButton fx:id="shuffleToggle" styleClass="shuffle-btn" mnemonicParsing="false" />
             <ComboBox fx:id="speedBox" styleClass="speed-box" prefHeight="15.0" prefWidth="95.0" />
