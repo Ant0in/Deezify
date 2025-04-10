@@ -8,11 +8,13 @@ import musicApp.controllers.DjPlayerController;
 
 public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
 
-    @FXML private Button playButton;
-    @FXML private Button pauseButton;
+    @FXML
+    private Button playButton, pauseButton;
 
     public DjPlayerView() {
-        // ...
+        playButton = new Button("Play");
+        pauseButton = new Button("Pause");
+        init();
     }
 
     public Scene getScene() {
@@ -25,7 +27,8 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
     }
 
     public void setOnAction() {
-
+        playButton.setOnAction(_ -> viewController.unpause());
+        pauseButton.setOnAction(_ -> viewController.pause());
     }
 
 }

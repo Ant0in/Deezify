@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.stage.Stage;
+import javafx.scene.media.AudioClip;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.models.Song;
 import musicApp.views.DjPlayerView;
@@ -29,7 +30,8 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         this.mediaPlayerController = player.getMediaPlayerController();
 
         play();
-        toggleBassBoostedMode();
+        //toggleBassBoostedMode();
+        //toggleEarrapeMode();
 
         initView("/fxml/DjPlayer.fxml");
         stage.setScene(view.getScene());
@@ -57,15 +59,24 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     public void toggleBassBoostedMode() {
         
-        double high = 6.0;
+        double high = 12.0;
+        double low = -3.0;
+        List<Double> bandsGain = List.of(0.0, high, high, low, low, low, low, low, low, low);
+        mediaPlayerController.setEqualizerBands(bandsGain);
+    }
+
+    public void toggleEarrapeMode() {
+
+        double high = 12.0;
         List<Double> bandsGain = List.of(high, high, high, high, high, high, high, high, high, high);
         mediaPlayerController.setEqualizerBands(bandsGain);
-
     }
 
-    public void play() {
-        player.playSong(song);
-    }
+    public void play() { player.playSong(song); }
+
+    public void pause() { player.pause(); }
+
+    public void unpause() { player.unpause(); }
 
     public void start() {
         // ...
