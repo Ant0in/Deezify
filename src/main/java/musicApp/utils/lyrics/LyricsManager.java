@@ -76,6 +76,10 @@ public class LyricsManager {
         return null;
     }
 
+    /**
+     * Converts the karaoke lines of a song to plain text.
+     * The text is saved in a .txt file.
+     */
     public void LrcToTxt(Song song) {
         List<KaraokeLine> lines = getKaraokeLines(song);
 
@@ -87,6 +91,10 @@ public class LyricsManager {
         saveLyrics(song, plainText);
     }
 
+    /**
+     * Imports a .lrc file and updates the lyrics mapping.
+     * If overwriteTxt is true, it will also extract the text lyrics from the LRC.
+     */
     public void importLrc(Song song, Path sourceLrcFile, boolean overwriteTxt) {
         if (song == null || sourceLrcFile == null) {
             System.err.println("Song or LRC file is null. Cannot import.");
@@ -108,15 +116,24 @@ public class LyricsManager {
         if (shouldExtractTxt) {
             LrcToTxt(song);
         }
-}
+    }
 
-
+    /**
+     * Returns a list of KaraokeLine objects for the given song.
+     * If no karaoke lines are found, returns an empty list.
+     */
     public List<KaraokeLine> getKaraokeLines(Song song) {
         String lrcFileName = lyricsDataAccess.getKaraokeLyricsPath(song.getFilePath().toString());
-        if (lrcFileName == null) return List.of();
+
+        if (lrcFileName == null || lrcFileName.isBlank()) {
+            return List.of();
+        }
 
         Path lrcPath = lyricsDataAccess.getLyricsDir().resolve(lrcFileName);
-        if (!Files.exists(lrcPath)) return List.of();
+        if (!Files.exists(lrcPath)) {
+            System.err.println("LRC file does not exist: " + lrcPath);
+            return List.of();
+        }
 
         try {
             return LrcParser.parseLrcFile(lrcPath);
@@ -126,6 +143,10 @@ public class LyricsManager {
         }
     }
 
+    /**
+     * Checks if the .txt lyrics file exists for the given song.
+     * If the song has no associated lyrics, returns false.
+     */
     public boolean txtLyricsExists(Song song) {
         String txtPath = lyricsDataAccess.getLyricsPathTxt(song.getFilePath().toString());
         if (txtPath == null) return false;

@@ -28,6 +28,9 @@ public class KaraokeController {
     private final LyricsManager lyricsManager;
     private final LyricsView view;
 
+    private Timeline syncTimeline;
+    private List<KaraokeLine> lyricsToDisplay = List.of();
+
     public KaraokeController(PlayerController playerController,
                              LyricsManager lyricsManager,
                              LyricsView view) {
@@ -36,26 +39,27 @@ public class KaraokeController {
         this.view = view;
     }
 
-    public List<KaraokeLine> getKaraokeLyrics() {
-        Song song = playerController.getCurrentlyLoadedSong();
-        if (song == null) return List.of();
-        return lyricsManager.getKaraokeLines(song);
+    public List<KaraokeLine> getKaraokeLines() {
+        Song currentSong = playerController.getCurrentlyLoadedSong();
+        if (currentSong == null) return List.of();
+        return lyricsManager.getKaraokeLines(currentSong);
     }
 
+    /**
+     * Imports karaoke lyrics from a .lrc file and updates the song's lyrics.
+     * If a .txt file already exists, prompts the user for confirmation to overwrite it.
+     */
     public void importKaraokeLyrics() {
-        Song song = playerController.getCurrentlyLoadedSong();
-        if (song == null) {
-            System.err.println("No song loaded.");
-            return;
-        }
+        Song currentSong = playerController.getCurrentlyLoadedSong();
+        if (currentSong == null) return;
 
-        Optional<Path> selectedLrc = view.showLrcFileChooser();
-        if (selectedLrc.isEmpty()) return;
+        Optional<Path> selectedFile = view.showLrcFileChooser();
+        if (selectedFile.isEmpty()) return;
 
-        String txtPath = lyricsManager.getTxtLyricsPath(song);
+        String txtPath = lyricsManager.getTxtLyricsPath(currentSong);
         boolean txtExists = txtPath != null && Files.exists(lyricsManager.getLyricsFile(txtPath));
-
         boolean overwriteTxt;
+
         if (txtExists) {
             Optional<Boolean> userChoice = view.showOverwriteTxtConfirmation();
             if (userChoice.isEmpty()) return;
@@ -64,8 +68,63 @@ public class KaraokeController {
             overwriteTxt = true; 
         }
 
-        lyricsManager.importLrc(song, selectedLrc.get(), overwriteTxt);
+        lyricsManager.importLrc(currentSong, selectedFile.get(), overwriteTxt);
         view.updateKaraokeLyrics();
+        startKaraoke();
     }
 
+    /**
+     * Starts the karaoke feature by creating a timeline that updates the lyrics
+     * based on the current playback time of the song.
+     */
+    public void startKaraoke() {
+        Song currentSong = playerController.getCurrentlyLoadedSong();
+
+        if (currentSong == null) return;
+
+        lyricsToDisplay = lyricsManager.getKaraokeLines(currentSong);
+        stopKaraoke();
+
+        view.updateKaraokeLyricsHighlight(lyricsToDisplay, null);
+
+        syncTimeline = new Timeline(new KeyFrame(Duration.millis(200), e -> syncLyrics()));
+        syncTimeline.setCycleCount(Timeline.INDEFINITE);
+        syncTimeline.play();
+    }
+
+    /**
+     * Stop the timeline so we no longer update lines.
+     */
+    public void stopKaraoke() {
+        if (syncTimeline != null) {
+            syncTimeline.stop();
+            syncTimeline = null;
+        }
+    }
+
+    /**
+     * Called periodically by the timeline to highlight the correct line.
+     */
+    private void syncLyrics() {
+        if (lyricsToDisplay.isEmpty()) return;
+
+        Duration currentTime = playerController.getCurrentSongTime();
+        if (currentTime == null) return;
+
+        KaraokeLine activeLine = getActiveLineAtTime(currentTime);
+        view.updateKaraokeLyricsHighlight(lyricsToDisplay, activeLine);
+    }
+
+
+    /**
+     * Finds the last line whose timestamp is before or equal to the current playback time.
+     */
+    private KaraokeLine getActiveLineAtTime(Duration currentTime) {
+        for (int i = lyricsToDisplay.size() - 1; i >= 0; i--) {
+            if (currentTime.greaterThanOrEqualTo(lyricsToDisplay.get(i).getTime())) {
+                return lyricsToDisplay.get(i);
+            }
+        }
+        return null;
+    }
 }

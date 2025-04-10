@@ -11,8 +11,8 @@ import java.util.List;
 import javafx.stage.FileChooser;
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.Optional;
+import javafx.application.Platform;
 
 import musicApp.views.View;
 import musicApp.utils.lyrics.KaraokeLine;
@@ -63,6 +63,10 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         initButtons();
     }
 
+    public void setKaraokeController(KaraokeController karaokeController) {
+        this.karaokeController = karaokeController;
+    }
+
     /**
      * Initializes the buttons by adding a listener to the currently loaded song property.
      * When the song changes, the lyrics are updated.
@@ -84,17 +88,17 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         });
 
         karaokeLyricsButton.setOnAction(e -> {
-            karaokeScrollPane.setVisible(true);
-            karaokeScrollPane.setManaged(true);
             scrollPane.setVisible(false);
             scrollPane.setManaged(false);
-            updateKaraokeLyrics();
+            karaokeScrollPane.setVisible(true);
+            karaokeScrollPane.setManaged(true);
+            karaokeController.startKaraoke();
         });
 
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
             initTranslation();
+            karaokeController.stopKaraoke();
             simpleLyricsButton.fire();
-            updateKaraokeLyrics();
         });
     }
 
@@ -123,15 +127,8 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         karaokeContentText = lang.get("karaoke.content");
     }
 
-    public void setKaraokeController(KaraokeController karaokeController) {
-        this.karaokeController = karaokeController;
-    }
-
     /**
      * Displays a dialog to edit the lyrics.
-     *
-     * @param initialText the initial text to display in the text area
-     * @return an Optional containing the edited lyrics if saved, otherwise an empty Optional
      */
     public Optional<String> showEditLyricsDialog(String initialText) {
         Dialog<String> dialog = new Dialog<>();
@@ -190,8 +187,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
 
     /**
      * Displays the lyrics along with an edit header.
-     *
-     * @param lyrics the list of lyric lines to display
+
      */
     private void displayLyricsWithHeader(List<String> lyrics) {
         HBox header = new HBox();
@@ -211,9 +207,6 @@ public class LyricsView extends View<LyricsView, LyricsController> {
 
     /**
      * Creates a button with an edit icon and optional text.
-     *
-     * @param text the text to display on the button; if null, only the icon is shown
-     * @return the configured Button instance
      */
     private Button createEditButton(String text) {
         Button button = new Button();
@@ -227,51 +220,68 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         return button;
     }
 
-    /**
-     * Refreshes the UI by reloading the translations.
-     */
-    public void refreshUI() {
-        initTranslation();
-        updateLyrics();
-        updateKaraokeLyrics();
+
+    private void clearKaraokeContainer() {
+        karaokeLyricsContainer.getChildren().removeIf(
+            node -> node != karaokePlaceholder && node != karaokeHeader
+        );
     }
 
-    /**
-     * Updates the karaoke lyrics displayed in the view.
-     * <p>
-     * This method retrieves the list of karaoke lines from the karaokeController
-     * and then updates the karaokeLyricsContainer with labels for each line.
-     * It retains the karaokePlaceholder and karaokeHeader nodes if they already exist.
-     * If there are no karaoke lines, the placeholder is set visible and managed.
-     */
-    public void updateKaraokeLyrics() {
-        List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLyrics();
+    private void setPlaceholderVisible(boolean visible) {
+        karaokePlaceholder.setVisible(visible);
+        karaokePlaceholder.setManaged(visible);
+    }
 
-        karaokeLyricsContainer.getChildren().removeIf(node -> node != karaokePlaceholder && node != karaokeHeader);
-        if (karaokeLines.isEmpty()) {
-            karaokePlaceholder.setVisible(true);
-            karaokePlaceholder.setManaged(true);
-
-        } else {
-            karaokePlaceholder.setVisible(false);
-            karaokePlaceholder.setManaged(false);
-
-            for (KaraokeLine line : karaokeLines) {
-                Label label = new Label(line.getLyric());
-                label.getStyleClass().add("lyrics-text");
-                karaokeLyricsContainer.getChildren().add(label);
-            }
+    private Label createKaraokeLabel(KaraokeLine line, boolean highlight) {
+        Label label = new Label(line.getLyric());
+        label.getStyleClass().add("lyrics-text");
+        if (highlight) {
+            label.getStyleClass().add("selected-lyrics");
         }
+        return label;
+    }
+
+    private void renderKaraokeLines(List<KaraokeLine> lines, KaraokeLine activeLine) {
+        clearKaraokeContainer();
+
+        if (lines.isEmpty()) {
+            setPlaceholderVisible(true);
+            return;
+        }
+        setPlaceholderVisible(false);
+        Label activeLabel = null;
+
+        for (KaraokeLine line : lines) {
+            boolean isActive = line.equals(activeLine);
+            Label label = createKaraokeLabel(line, isActive);
+            if (isActive) {
+                activeLabel = label;
+            }
+            karaokeLyricsContainer.getChildren().add(label);
+        }
+
+        if (activeLabel != null) {
+            final Label labelToScroll = activeLabel;
+            Platform.runLater(() -> {
+                double totalHeight = karaokeScrollPane.getContent().getBoundsInLocal().getHeight();
+                double labelY = labelToScroll.getBoundsInParent().getMinY();
+                double scrollValue = labelY / totalHeight;
+                karaokeScrollPane.setVvalue(scrollValue);
+            });
+        }
+    }
+
+    public void updateKaraokeLyrics() {
+        List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLines();
+        renderKaraokeLines(karaokeLines, null);
+    }
+
+    public void updateKaraokeLyricsHighlight(List<KaraokeLine> lines, KaraokeLine activeLine) {
+        renderKaraokeLines(lines, activeLine);
     }
 
     /**
      * Shows a file chooser dialog to select an .lrc file.
-     * <p>
-     * This method opens a FileChooser configured to filter for .lrc files.
-     * It returns an Optional<Path> containing the selected file path, or an empty Optional
-     * if no file was selected.
-     *
-     * @return an Optional containing the selected file path if a file was chosen, otherwise an empty Optional.
      */
     public Optional<Path> showLrcFileChooser() {
         FileChooser fileChooser = new FileChooser();
@@ -283,16 +293,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
 
     /**
      * Shows a confirmation dialog asking if the existing .txt lyrics should be overwritten with the text from the LRC file.
-     * <p>
      * This method displays an Alert of type CONFIRMATION using pre-defined button types for "Yes", "No", and "Cancel".
-     * It returns an Optional<Boolean>:
-     * <ul>
-     *   <li>Optional.of(true) if the user confirms ("Yes"),</li>
-     *   <li>Optional.of(false) if the user selects "No",</li>
-     *   <li>An empty Optional if the user cancels or closes the dialog.</li>
-     * </ul>
-     *
-     * @return an Optional<Boolean> indicating the user's choice.
      */
     public Optional<Boolean> showOverwriteTxtConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -312,5 +313,13 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         }
     }
 
+    /**
+     * Refreshes the UI by reloading the translations.
+    */
+    public void refreshUI() {
+        initTranslation();
+        updateLyrics();
+        updateKaraokeLyrics();
+    }
 
 }

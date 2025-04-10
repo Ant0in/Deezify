@@ -22,6 +22,14 @@
     -fx-border-radius: 10px;
 }
 
+#karaokeLyricsContainer {
+    -fx-alignment: center;
+    -fx-padding: 20px;
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-border-radius: 10px;
+}
+
+
 /* Style for the "no lyrics" label */
 .no-lyrics-label {
     -fx-font-size: 14px;
@@ -44,7 +52,10 @@
 
 /* Selection effect on lyrics */
 .selected-lyrics {
-    -fx-text-fill: #ff5733;
+    -fx-text-fill: #ffcc00;
+    -fx-font-size: 19px;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
     -fx-font-weight: bold;
 }
 
@@ -81,4 +92,5 @@
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
 }
+
 

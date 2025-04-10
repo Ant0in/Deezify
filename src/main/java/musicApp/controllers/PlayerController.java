@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.utils.FileDialogHelper;
@@ -288,6 +289,10 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
 
     public Song getSongByPathInMainLibrary(Path path) {
         return LibraryController.getSongByPath(path);
+    }
+
+    public Duration getCurrentSongTime() {
+        return mediaPlayerController.getCurrentTime();
     }
 
     /**

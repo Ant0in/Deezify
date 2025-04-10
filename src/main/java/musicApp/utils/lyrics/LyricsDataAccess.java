@@ -124,7 +124,7 @@ public class LyricsDataAccess {
         }
         LyricsLibrary lib = readLyricsLibrary();
         return lib.getSongs().stream()
-            .filter(e -> e != null && e.getPathSong() != null)
+            .filter(e -> e != null && e.getPathSong() != null && e.getPathLyricsKaraoke() != null)
             .filter(e -> e.getPathSong().equals(pathSong))
             .map(SongLyricsEntry::getPathLyricsKaraoke)
             .findFirst()
