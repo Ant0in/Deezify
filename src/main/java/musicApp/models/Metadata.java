@@ -159,4 +159,18 @@ public class Metadata {
         }
     }
 
+    /**
+     * Checks if the metadata contains the specified text in any of its fields.
+     *
+     * @param text The text to search for.
+     * @return True if the text is found in any field, false otherwise.
+     */
+    public Boolean containsText(String text) {
+        String lowerText = text.toLowerCase();
+        return getTitle().toLowerCase().contains(lowerText)
+                || getArtist().toLowerCase().contains(lowerText)
+                || getGenre().toLowerCase().contains(lowerText)
+                || getUserTags().stream().anyMatch(tag -> tag.toLowerCase().contains(lowerText));
+    }
+
 }

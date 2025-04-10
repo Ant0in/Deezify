@@ -2,6 +2,7 @@ package musicApp.models;
 
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
+import musicApp.utils.LanguageManager;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -44,10 +45,12 @@ public class Library {
      *
      * @param song The song to add.
      */
-    public void add(Song song) {
+    public void add(Song song) throws IllegalArgumentException {
         if (this.songList.contains(song)) {
-            System.err.println("Media already in library");
-            return;
+            throw new IllegalArgumentException(
+                    LanguageManager.getInstance().get("error.mediaAlreadyInLibrary")
+                            + " " + song.toString()
+            );
         }
         songList.add(song);
     }
@@ -58,10 +61,12 @@ public class Library {
      * @param index The index to add the song.
      * @param song  The media to add.
      */
-    public void add(int index, Song song) {
+    public void add(int index, Song song) throws IllegalArgumentException {
         if (this.songList.contains(song)) {
-            System.err.println("Media already in library");
-            return;
+            throw new IllegalArgumentException(
+                    LanguageManager.getInstance().get("error.mediaAlreadyInLibrary")
+                            + " " + song.toString()
+            );
         }
         songList.add(index, song);
     }

@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.scene.control.Alert;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.views.QueueView;
@@ -68,7 +69,10 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
             library.add(song);
             this.view.updateListView();
         } catch (IllegalArgumentException e) {
-            this.view.displayError("Song already in queue");
+            alertService.showExceptionAlert(
+                    e,
+                    Alert.AlertType.INFORMATION
+            );
         }
     }
 
