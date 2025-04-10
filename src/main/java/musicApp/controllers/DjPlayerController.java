@@ -3,7 +3,6 @@ package musicApp.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.tarsos.dsp.io.jvm.AudioPlayer;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.models.Song;
@@ -40,25 +39,28 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     }
 
-    private void changeFrequency(int bandIndex, double value) {
-        // ...
-    }
-
     private void resetBands(ArrayList<Integer> bands) {
-        // ...
+
+        List<Double> bandsGain = new ArrayList<>();
+
+        for (int i = 0; i < 9; i++) {
+            // if i is in the bands aray list, set the band to 0.0
+            if (bands.contains(i)) {
+                bandsGain.set(i, 0.0);
+            } else {
+                // set the band to -24.0
+                bandsGain.set(i, equalizerController.getEqualizerBandGain(i));
+            }
+        }
+
     }
 
     public void toggleBassBoostedMode() {
         
-        double minimumGain = -24.0;
-        double maximumGain = 12.0;
-        List<Double> bandsGain = List.of(
-            maximumGain, maximumGain, minimumGain, minimumGain, 
-            minimumGain, maximumGain, maximumGain, maximumGain, 
-            maximumGain, maximumGain
-        );
-
+        double high = 6.0;
+        List<Double> bandsGain = List.of(high, high, high, high, high, high, high, high, high, high);
         mediaPlayerController.setEqualizerBands(bandsGain);
+
     }
 
     public void play() {
