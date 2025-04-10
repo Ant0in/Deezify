@@ -21,6 +21,10 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     private final EqualizerController equalizerController;
     private final MediaPlayerController mediaPlayerController;
 
+    private static final double MAX_HIGH = 12.0;
+    private static final double MAX_LOW = -24.0;
+
+
     public DjPlayerController(Song song, PlayerController player) {
  
         super(new DjPlayerView());
@@ -57,7 +61,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     }
 
-    public void toggleBassBoostedMode() {
+    public void toggleBassBoostMode() {
         
         double high = 12.0;
         double low = -3.0;
@@ -65,10 +69,17 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         mediaPlayerController.setEqualizerBands(bandsGain);
     }
 
-    public void toggleEarrapeMode() {
+    public void toggleBoostGainMode() {
 
         double high = 12.0;
         List<Double> bandsGain = List.of(high, high, high, high, high, high, high, high, high, high);
+        mediaPlayerController.setEqualizerBands(bandsGain);
+    }
+
+    public void togglePressureMode() {
+
+        List<Double> bandsGain = List.of(MAX_LOW, MAX_LOW, MAX_LOW, MAX_LOW, MAX_LOW,
+                MAX_HIGH, MAX_HIGH, MAX_HIGH, MAX_HIGH, MAX_HIGH);
         mediaPlayerController.setEqualizerBands(bandsGain);
     }
 
