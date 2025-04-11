@@ -4,7 +4,8 @@ import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.utils.DataProvider;
-import musicApp.utils.LyricsManager;
+import musicApp.utils.lyrics.LyricsManager;
+import musicApp.utils.lyrics.LyricsDataAccess;
 import musicApp.utils.MetadataUtils;
 import org.jaudiotagger.tag.images.Artwork;
 
@@ -146,7 +147,7 @@ public class Song {
     }
 
     public List<String> getLyrics() {
-        LyricsManager lyricsManager = new LyricsManager(new DataProvider());
+        LyricsManager lyricsManager = new LyricsManager(new LyricsDataAccess(new DataProvider()));
         return lyricsManager.getLyrics(this);
     }
 

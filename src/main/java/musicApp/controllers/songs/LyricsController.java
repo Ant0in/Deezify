@@ -2,14 +2,20 @@ package musicApp.controllers.songs;
 
 import java.util.List;
 import java.util.Optional;
-
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.nio.file.Path;
 import javafx.beans.property.StringProperty;
+import java.nio.file.Files;
+
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Song;
-import musicApp.utils.LyricsManager;
+import musicApp.utils.lyrics.LyricsManager;
 import musicApp.utils.DataProvider;
+import musicApp.utils.lyrics.LyricsDataAccess;
 import musicApp.views.songs.LyricsView;
+import musicApp.utils.lyrics.KaraokeLine;
 
 public class LyricsController extends ViewController<LyricsView, LyricsController> {
 
@@ -20,8 +26,10 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         super(new LyricsView());
         this.playerController = playerController;
         DataProvider dataProvider = new DataProvider();
-        this.lyricsManager = new LyricsManager(dataProvider);
-        initView("/fxml/Lyrics.fxml");  
+        LyricsDataAccess lyricsDataAccess = new LyricsDataAccess(dataProvider);
+        this.lyricsManager = new LyricsManager(lyricsDataAccess);
+        initView("/fxml/Lyrics.fxml");
+        this.view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));
     }
 
 
@@ -72,6 +80,5 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     public void refreshUI() {
         this.view.refreshUI();
     }
-   
 
 }
