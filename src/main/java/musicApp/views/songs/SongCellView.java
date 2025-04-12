@@ -11,6 +11,11 @@ import musicApp.views.View;
 
 import java.util.Objects;
 
+/**
+ * The type Song cell view.
+ * This class is responsible for displaying a song in the library.
+ * It contains the play button, like button, and other song information.
+ */
 public class SongCellView extends View<SongCellView, SongCellController> {
 
     @FXML

@@ -27,13 +27,15 @@ public class PlayerView extends View<PlayerView, PlayerController> {
     private BorderPane labelContainer;
 
     /* To enable drag */
-    private double xOffset = 0;
-    private double yOffset = 0;
+    private double xOffset;
+    private double yOffset;
 
     /**
      * Instantiates a new Player view.
      */
     public PlayerView() {
+        xOffset = 0;
+        yOffset = 0;
     }
 
 

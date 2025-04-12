@@ -29,7 +29,7 @@ public class KaraokeController {
     private final LyricsView view;
 
     private Timeline syncTimeline;
-    private List<KaraokeLine> lyricsToDisplay = List.of();
+    private List<KaraokeLine> lyricsToDisplay;
 
     /**
      * Instantiates a new Karaoke controller.

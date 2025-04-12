@@ -84,14 +84,27 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
         }
     }
 
+    /**
+     * Get the context menu.
+     */
     public ContextMenu getContextMenu() {
         return contextMenu;
     }
 
+    /**
+     * Show the context menu at the specified coordinates.
+     *
+     * @param node The node to show the context menu for.
+     * @param x    The x coordinate to show the context menu at.
+     * @param y    The y coordinate to show the context menu at.
+     */
     public void show(Node node, double x, double y) {
         contextMenu.show(node, x, y);
     }
 
+    /**
+     * Refresh the translation of the context menu.
+     */
     public void refreshTranslation() {
         initTranslation();
     }

@@ -1,9 +1,12 @@
 package musicApp.controllers.songs;
 
+import javafx.beans.property.StringProperty;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
+import musicApp.utils.LanguageManager;
 import musicApp.views.songs.SongContextMenuView;
 
 import java.util.List;
@@ -77,7 +80,7 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
 
         playlists.stream().skip(2).forEach(playlist -> {
             MenuItem playlistItem = new MenuItem(playlist.getName());
-            playlistItem.setOnAction(event -> songCellController.addSongToPlaylist(playlist));
+            playlistItem.setOnAction(_ -> songCellController.addSongToPlaylist(playlist));
             addToMenu.getItems().add(playlistItem);
 
             if (isShowingMainLibrary() && songCellController.containsSong(playlist)) {

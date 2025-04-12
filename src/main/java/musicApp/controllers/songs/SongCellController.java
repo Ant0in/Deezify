@@ -170,8 +170,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
 
             util.setMetadata(newMetadata, song.getFilePath().toFile());
         } catch (Exception e) {
-            e.printStackTrace();
-            view.displayError(e.getMessage());
+            alertService.showExceptionAlert(e);
             return;
         }
 

@@ -22,7 +22,7 @@ import java.util.Set;
 public class EditMetadataController extends ViewController<EditMetadataView, EditMetadataController> {
     private File selectedFile;
     private final Song song;
-    private final Stage editStage = new Stage();
+    private final Stage editStage;
     private final SongCellController songCellController;
 
 
@@ -95,7 +95,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
                 System.err.println("Failed to load image: " + file.getName());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            alertService.showExceptionAlert(e);
         }
     }
 
@@ -127,8 +127,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
 
             util.setMetadata(newMetadata, song.getFilePath().toFile());
         } catch (Exception e) {
-            e.printStackTrace();
-            view.displayError(e.getMessage());
+            alertService.showExceptionAlert(e);
             return;
         }
 

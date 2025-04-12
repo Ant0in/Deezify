@@ -19,9 +19,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * The Settings view.
+ * The view for the settings window.
  */
-@SuppressWarnings("unused")
 public class SettingsView extends View<SettingsView, SettingsController> {
     // private final Scene scene;
     @FXML
@@ -167,12 +166,19 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         return scene;
     }
 
-
+    /**
+     * Get the selected language from the combobox.
+     *
+     * @return The selected language.
+     */
     private Language getSelectedLanguage() {
         String selectedDisplayName = languageComboBox.getSelectionModel().getSelectedItem();
         return Language.fromDisplayName(selectedDisplayName);
     }
 
+    /**
+     * Handle when the save button is pressed
+     */
     private void handleSave() {
         Language selectedLanguage = getSelectedLanguage();
         double balance = balanceSlider.getValue();
@@ -180,6 +186,9 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         viewController.handleSave(selectedLanguage, balance, musicDirectory);
     }
 
+    /**
+     * Update the view with the current settings.
+     */
     public void updateView(Settings settings) {
         initComboBox();
         initTranslations();

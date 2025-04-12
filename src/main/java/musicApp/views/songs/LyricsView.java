@@ -220,18 +220,28 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         return button;
     }
 
-
+    /**
+     * Clears the karaoke lyrics container and removes all nodes except the placeholder and header.
+     */
     private void clearKaraokeContainer() {
         karaokeLyricsContainer.getChildren().removeIf(
             node -> node != karaokePlaceholder && node != karaokeHeader
         );
     }
 
+    /**
+     * Sets the visibility of the karaoke placeholder.
+     * If visible, it shows a message indicating that no karaoke lyrics are available.
+     */
     private void setPlaceholderVisible(boolean visible) {
         karaokePlaceholder.setVisible(visible);
         karaokePlaceholder.setManaged(visible);
     }
 
+    /**
+     * Creates a label for a karaoke line with optional highlighting.
+     * The label is styled with CSS classes for karaoke and selected lyrics.
+     */
     private Label createKaraokeLabel(KaraokeLine line, boolean highlight) {
         Label label = new Label(line.getLyric());
         label.getStyleClass().add("lyrics-text");
@@ -241,6 +251,11 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         return label;
     }
 
+    /**
+     * Renders the karaoke lines in the karaoke lyrics container.
+     * It clears the container, sets the placeholder visibility, and adds labels for each line.
+     * If a line is active, it scrolls to that line.
+     */
     private void renderKaraokeLines(List<KaraokeLine> lines, KaraokeLine activeLine) {
         clearKaraokeContainer();
 
@@ -271,11 +286,19 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         }
     }
 
+    /**
+     * Updates the karaoke lyrics displayed in the view.
+     * It retrieves the karaoke lines from the karaoke controller and renders them.
+     */
     public void updateKaraokeLyrics() {
         List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLines();
         renderKaraokeLines(karaokeLines, null);
     }
 
+    /**
+     * Updates the karaoke lyrics highlight based on the active line.
+     * It retrieves the karaoke lines from the karaoke controller and renders them with highlighting.
+     */
     public void updateKaraokeLyricsHighlight(List<KaraokeLine> lines, KaraokeLine activeLine) {
         renderKaraokeLines(lines, activeLine);
     }

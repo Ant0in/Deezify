@@ -13,6 +13,10 @@ import musicApp.views.View;
 
 import java.util.List;
 
+/**
+ * The PlaylistNavigatorView class is responsible for displaying and managing the playlist navigator UI.
+ * It allows users to create, edit, and delete playlists, as well as manage their contents.
+ */
 public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistNavigatorController> {
 
     @FXML
@@ -23,49 +27,46 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
 
 
 
-    private final ContextMenu contextMenu = new ContextMenu();
-
     public PlaylistNavigatorView() {
     }
 
+    /**
+     * Initializes the PlaylistNavigatorView.
+     * This method sets up the list view, button actions, and context menu for the view.
+     */
     @Override
     public void init() {
         initListView();
         enableClickToSelect();
         setButtonActions();
         initTranslation();
-        setupContextMenu();
     }
 
+    /**
+     * Initializes the list view for displaying playlists.
+     * This method sets the cell factory for the list view to use a custom PlaylistCell.
+     */
     private void initListView() {
         listView.setCellFactory(_ -> new PlaylistCell(new PlaylistCellController(viewController)));
     }
 
+    /**
+     * Sets up the button actions for creating a new playlist.
+     * This method binds the button action to open a dialog for creating a new playlist.
+     */
     private void setButtonActions() {
-        createPlaylist.setOnAction(_ -> openCreatePlaylistDialog());
+        createPlaylist.setOnAction(_ -> viewController.openCreatePlaylistDialog());
     }
 
+    /**
+     * Initializes the translation for the UI elements.
+     * This method binds the button text to the appropriate language string.
+     */
     private void initTranslation() {
         createPlaylist.textProperty().bind(Bindings.createStringBinding(
                 () -> LanguageManager.getInstance().get("button.create_playlist"),
                 LanguageManager.getInstance().getLanguageProperty()
         ));
-    }
-
-    /**
-     * Open dialog for creating a new playlist.
-     */
-    private void openCreatePlaylistDialog() {
-        new PlaylistEditController(viewController);
-    }
-
-    /**
-     * Open dialog for editing an existing playlist.
-     *
-     * @param playlist The playlist to edit
-     */
-    private void openEditPlaylistDialog(Library playlist) {
-        new PlaylistEditController(viewController, playlist);
     }
 
     public void update(List<Library> libraries) {
@@ -82,63 +83,10 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
                 if (getSelectedPlaylist() == null) return;
                 viewController.setSelectedLibrary(listView.getSelectionModel().getSelectedItem());
             } else if (e.getButton() == MouseButton.SECONDARY) {
-                contextMenu.show(listView, e.getScreenX(), e.getScreenY());
+                System.out.println("Right click on playlist");
+                viewController.showContextMenu(e.getScreenX(), e.getScreenY(), getSelectedPlaylist());
             }
         });
-    }
-
-    private void setupContextMenu() {
-        LanguageManager lm = LanguageManager.getInstance();
-
-        MenuItem addToQueueItem = new MenuItem();
-        addToQueueItem.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("context_menu.append_to_queue"), lm.languageProperty()
-        ));
-
-        MenuItem replaceQueueItem = new MenuItem();
-        replaceQueueItem.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("context_menu.replace_queue"), lm.languageProperty()
-        ));
-
-        MenuItem editItem = new MenuItem();
-        editItem.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.edit"), lm.languageProperty()
-        ));
-
-        MenuItem deleteItem = new MenuItem();
-        deleteItem.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.delete"), lm.languageProperty()
-        ));
-
-        addToQueueItem.setOnAction(_ -> {
-            Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
-            if (selectedPlaylist != null) {
-                viewController.appendToQueue(selectedPlaylist);
-            }
-        });
-
-        replaceQueueItem.setOnAction(_ -> {
-            Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
-            if (selectedPlaylist != null) {
-                viewController.replaceQueue(selectedPlaylist);
-            }
-        });
-
-        editItem.setOnAction(_ -> {
-            Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
-            if (selectedPlaylist != null && viewController.isDeletable(selectedPlaylist)) {
-                openEditPlaylistDialog(selectedPlaylist);
-            }
-        });
-
-        deleteItem.setOnAction(_ -> {
-            Library selectedPlaylist = listView.getSelectionModel().getSelectedItem();
-            if (selectedPlaylist != null && viewController.isDeletable(selectedPlaylist)) {
-                viewController.deletePlaylist(selectedPlaylist);
-            }
-        });
-
-        contextMenu.getItems().addAll(addToQueueItem, replaceQueueItem, editItem, deleteItem);
     }
 
     /**
@@ -150,5 +98,9 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
         if (playlist != null) {
             listView.getSelectionModel().select(playlist);
         }
+    }
+
+    public Library getSelectedPlaylist() {
+        return listView.getSelectionModel().getSelectedItem();
     }
 }
