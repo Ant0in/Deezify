@@ -199,15 +199,16 @@ public class Library {
      * @return The cover image or a default image if none is set
      */
     public Image getCoverImage() {
+        String defaultCover = getClass().getResource("/images/playlist.png").toExternalForm();
         try {
             if (image != null) {
                 return new Image(image.toUri().toURL().toExternalForm());
             }
-            return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
+            return new Image(Objects.requireNonNull(defaultCover));
         } catch (Exception e) {
             AlertService alertService = new AlertService();
             alertService.showExceptionAlert(e);
-            return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
+            return new Image(Objects.requireNonNull(defaultCover));
         }
     }
     
