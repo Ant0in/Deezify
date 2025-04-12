@@ -38,11 +38,10 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
         setButtonActions();
     }
 
-
     private void setButtonActions() {
-        addSongButton.setOnAction(_ -> this.viewController.handleAddSong());
-        deleteSongButton.setOnAction(_ -> this.viewController.handleDeleteSong());
-        clearQueueButton.setOnAction(_ -> this.viewController.handleClearQueue());
+        addSongButton.setOnAction(_ -> viewController.handleAddSong());
+        deleteSongButton.setOnAction(_ -> viewController.handleDeleteSong());
+        clearQueueButton.setOnAction(_ -> viewController.handleClearQueue());
     }
 
     private void initBindings() {
@@ -58,6 +57,9 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
         addSongButton.visibleProperty().bind(viewController.isPlaylistItemSelected());
     }
 
+    /**
+     * Bind the queue buttons activation.
+     */
     private void bindQueueButtonsActivation() {
         addSongButton.disableProperty().bind(viewController.isPlaylistItemSelected().not());
         deleteSongButton.disableProperty().bind(listView.getSelectionModel().selectedItemProperty().isNull());
@@ -68,6 +70,11 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
         applyDisableStyleListener(clearQueueButton);
     }
 
+    /**
+     * Apply the disable style listener to the button.
+     *
+     * @param control The control to apply the listener to.
+     */
     private void applyDisableStyleListener(Control control) {
         control.disableProperty().addListener((_, _, isDisabled) -> {
             if (isDisabled) {
@@ -80,7 +87,9 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
         });
     }
 
-
+    /**
+     * Enables drag and drop to reorder the queue.
+     */
     private void enableQueueDragAndDrop() {
         listView.setCellFactory(_ -> {
             ListCell<Song> cell = new ListCell<>() {
@@ -178,13 +187,13 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
     protected void initTranslation() {
         LanguageManager lm = LanguageManager.getInstance();
         addSongButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.add"), lm.languageProperty()
+                () -> lm.get("button.add"), lm.getLanguageProperty()
         ));
         deleteSongButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.delete"), lm.languageProperty()
+                () -> lm.get("button.delete"), lm.getLanguageProperty()
         ));
         clearQueueButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.clear"), lm.languageProperty()
+                () -> lm.get("button.clear"), lm.getLanguageProperty()
         ));
     }
 

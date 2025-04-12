@@ -63,8 +63,8 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         initButtons();
     }
 
-    public void setKaraokeController(KaraokeController karaokeController) {
-        this.karaokeController = karaokeController;
+    public void setKaraokeController(KaraokeController controller) {
+        karaokeController = controller;
     }
 
     /**
@@ -115,12 +115,12 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         karaokeEditButton.setText(lang.get("button.edit"));
         karaokeLyricsButton.setText(lang.get("button.modeKaraoke"));
         simpleLyricsButton.setText(lang.get("button.simpleLyrics"));
-        karaokeNoLyricsLabel.setText(lang.get("karaoke.noLyrics"));
+        karaokeNoLyricsLabel.setText(lang.get("karaoke.no_lyrics"));
         karaokeAddLyricsButton.setText(lang.get("button.addKaraoke"));
         lyricsTitle.setText(lang.get("lyrics.title"));
-        dialogTitleText = lang.get("dialog.editLyrics.title");
-        dialogHeaderText = lang.get("dialog.editLyrics.header");
-        noLyricsText = lang.get("lyrics.noLyrics");
+        dialogTitleText = lang.get("dialog.edit_lyrics.title");
+        dialogHeaderText = lang.get("dialog.edit_lyrics.header");
+        noLyricsText = lang.get("lyrics.no_lyrics");
         addLyricsText = lang.get("button.addLyrics");
         karaokeTitleText = lang.get("karaoke.title");
         karaokeHeaderText = lang.get("karaoke.header");

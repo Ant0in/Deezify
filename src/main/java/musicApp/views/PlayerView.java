@@ -149,7 +149,7 @@ public class PlayerView extends View<PlayerView, PlayerController> {
     public void show(Stage stage) {
         stage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
-        stage.setScene(this.scene);
+        stage.setScene(scene);
         stage.setTitle(getTitle());
         enableDrag(stage);
         enableDoubleClickToGrow(stage);
@@ -165,6 +165,11 @@ public class PlayerView extends View<PlayerView, PlayerController> {
         stage.setTitle(LanguageManager.getInstance().get("app.title"));
     }
 
+    /**
+     * Toggle lyrics.
+     *
+     * @param show the show
+     */
     public void toggleLyrics(boolean show) {
         if (show) {
             Pane lyricsPane = viewController.getLyricsRoot();

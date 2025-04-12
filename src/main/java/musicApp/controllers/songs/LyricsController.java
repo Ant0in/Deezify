@@ -17,22 +17,35 @@ import musicApp.utils.lyrics.LyricsDataAccess;
 import musicApp.views.songs.LyricsView;
 import musicApp.utils.lyrics.KaraokeLine;
 
+/**
+ * The type Lyrics controller.
+ */
 public class LyricsController extends ViewController<LyricsView, LyricsController> {
 
     private final PlayerController playerController;
     private final LyricsManager lyricsManager;
 
-    public LyricsController(PlayerController playerController) {
+    /**
+     * Instantiates a new Lyrics controller.
+     *
+     * @param _controller the controller
+     */
+    public LyricsController(PlayerController _controller) {
         super(new LyricsView());
-        this.playerController = playerController;
+        playerController = _controller;
         DataProvider dataProvider = new DataProvider();
         LyricsDataAccess lyricsDataAccess = new LyricsDataAccess(dataProvider);
-        this.lyricsManager = new LyricsManager(lyricsDataAccess);
+        lyricsManager = new LyricsManager(lyricsDataAccess);
         initView("/fxml/Lyrics.fxml");
-        this.view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));
+        view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));
     }
 
 
+    /**
+     * Get currently loaded song string property.
+     *
+     * @return the string property
+     */
     public StringProperty getCurrentlyLoadedSongStringProperty(){
         return playerController.getCurrentlyLoadedSongStringProperty();
     }
@@ -40,6 +53,8 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     /**
      * Returns the lyrics of the currently loaded song
      * If no song is loaded, returns a list with a single element "No song loaded."
+     *
+     * @return the current song lyrics
      */
     public List<String> getCurrentSongLyrics() {
         Song song = playerController.getCurrentlyLoadedSong();
@@ -52,6 +67,8 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     /**
      * Updates the current song lyrics
      * Saves the provided lyrics to a file and updates mapping
+     *
+     * @param newLyrics the new lyrics
      */
     public void updateCurrentSongLyrics(String newLyrics) {
         Song currentSong = playerController.getCurrentlyLoadedSong();
@@ -63,6 +80,9 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         view.updateLyrics();
 }
 
+    /**
+     * Edit lyrics.
+     */
     public void editLyrics() {
         List<String> currentLyricsList = getCurrentSongLyrics();
         String initialText = "";
@@ -77,8 +97,11 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         });
     }
 
+    /**
+     * Refresh ui.
+     */
     public void refreshUI() {
-        this.view.refreshUI();
+        view.refreshUI();
     }
 
 }

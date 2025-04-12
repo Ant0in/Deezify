@@ -264,4 +264,10 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     public Optional<String> getTagAutoCompletion(String input) {
         return library.getTagAutoCompletion(input);
     }
+
+    @Override
+    public void refreshUI() {
+        super.refreshUI();
+        view.updateListView();
+    }
 }

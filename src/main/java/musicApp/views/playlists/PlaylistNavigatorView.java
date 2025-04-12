@@ -3,12 +3,9 @@ package musicApp.views.playlists;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import musicApp.controllers.playlists.PlaylistCellController;
-import musicApp.controllers.playlists.PlaylistEditController;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
@@ -23,6 +20,8 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
 
     @FXML
     private Button createPlaylist;
+
+
 
     private final ContextMenu contextMenu = new ContextMenu();
 
@@ -49,7 +48,7 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     private void initTranslation() {
         createPlaylist.textProperty().bind(Bindings.createStringBinding(
                 () -> LanguageManager.getInstance().get("button.create_playlist"),
-                LanguageManager.getInstance().languageProperty()
+                LanguageManager.getInstance().getLanguageProperty()
         ));
     }
 
@@ -80,7 +79,7 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     public void enableClickToSelect() {
         listView.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
-                if (listView.getSelectionModel().getSelectedItem() == null) return;
+                if (getSelectedPlaylist() == null) return;
                 viewController.setSelectedLibrary(listView.getSelectionModel().getSelectedItem());
             } else if (e.getButton() == MouseButton.SECONDARY) {
                 contextMenu.show(listView, e.getScreenX(), e.getScreenY());

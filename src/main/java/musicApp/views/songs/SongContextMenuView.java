@@ -1,5 +1,6 @@
 package musicApp.views.songs;
 
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
@@ -14,56 +15,71 @@ import musicApp.views.View;
  */
 public class SongContextMenuView extends View<SongContextMenuView, SongContextMenuController> {
 
+    @FXML
     private ContextMenu contextMenu;
+    @FXML
     private Menu addToPlaylistMenu;
-    private Object removeFromPlaylistMenu; // Can be Menu or MenuItem
+    @FXML
+    private MenuItem removeFromPlaylistMenu, editMetadataItem; // Can be Menu or MenuItem
 
     @Override
     public void init() {
-        createContextMenu();
+        initContextMenu();
+        initTranslation();
+    }
+
+    private void initTranslation() {
+        editMetadataItem.setText(LanguageManager.getInstance().get("button.edit_metadata"));
+        addToPlaylistMenu.setText(LanguageManager.getInstance().get("button.add_to_playlist"));
+        if (removeFromPlaylistMenu instanceof Menu) {
+            ((Menu) removeFromPlaylistMenu).setText(LanguageManager.getInstance().get("button.remove_from_playlist"));
+        } else {
+            removeFromPlaylistMenu.setText(LanguageManager.getInstance().get("button.remove_from_playlist"));
+        }
     }
 
     /**
-     * Create the context menu.
+     * initContextMenu initializes the actions for the context menu items.
      */
-    private void createContextMenu() {
-        contextMenu = new ContextMenu();
-
-        MenuItem editMetadataItem = new MenuItem(LanguageManager.getInstance().get("button.edit_metadata"));
+    private void initContextMenu() {
         editMetadataItem.setOnAction(_ -> viewController.handleEditMetadata());
 
-        addToPlaylistMenu = new Menu(LanguageManager.getInstance().get("button.add_to_playlist"));
-
         if (viewController.isShowingMainLibrary()) {
-            removeFromPlaylistMenu = new Menu(LanguageManager.getInstance().get("button.remove_from_playlist"));
+            removeFromPlaylistMenu = new Menu();
+            updateMenuItems();
+            contextMenu.getItems().remove(2);
+            contextMenu.getItems().add(removeFromPlaylistMenu);
+
         } else {
-            removeFromPlaylistMenu = new MenuItem(LanguageManager.getInstance().get("button.remove_from_playlist"));
             ((MenuItem) removeFromPlaylistMenu).setOnAction(_ -> viewController.handleRemoveFromPlaylist());
         }
-
         contextMenu.setOnShowing(e -> updateMenuItems());
-
-        contextMenu.getItems().addAll(editMetadataItem, addToPlaylistMenu);
-
-        if (removeFromPlaylistMenu instanceof Menu) {
-            contextMenu.getItems().add((Menu) removeFromPlaylistMenu);
-        } else {
-            contextMenu.getItems().add((MenuItem) removeFromPlaylistMenu);
-        }
     }
 
-    private void updateMenuItems() {
+
+    private void clearPlaylistMenuItems() {
         addToPlaylistMenu.getItems().clear();
         if (removeFromPlaylistMenu instanceof Menu) {
             ((Menu) removeFromPlaylistMenu).getItems().clear();
         }
+    }
 
+    private boolean addToPlaylistMenuIsEmpty() {
+        return addToPlaylistMenu.getItems().isEmpty();
+    }
+
+    /**
+     * Update the menu items in the context menu.
+     * This method is called when the context menu is shown.
+     */
+    private void updateMenuItems() {
+        clearPlaylistMenuItems();
         viewController.populatePlaylistMenuItems(
                 addToPlaylistMenu,
                 removeFromPlaylistMenu instanceof Menu ? (Menu) removeFromPlaylistMenu : null
         );
 
-        if (!addToPlaylistMenu.getItems().isEmpty()) {
+        if (addToPlaylistMenuIsEmpty()) {
             addToPlaylistMenu.getItems().add(new SeparatorMenuItem());
         }
     }
@@ -77,6 +93,6 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
     }
 
     public void refreshTranslation() {
-        createContextMenu();
+        initTranslation();
     }
 }

@@ -51,7 +51,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * @param stage The stage to show the view on.
      */
     public void show(Stage stage) {
-        stage.setScene(this.scene);
+        stage.setScene(scene);
         stage.setTitle(getTitle());
         stage.show();
     }
@@ -98,8 +98,8 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Initialize the balance slider.
      */
     private void initSlider() {
-        balanceSlider.setValue(this.viewController.getBalance());
-        balanceLabel.setText(String.format("%.2f", this.viewController.getBalance()));
+        balanceSlider.setValue(viewController.getBalance());
+        balanceLabel.setText(String.format("%.2f",viewController.getBalance()));
         balanceSlider.valueProperty().addListener((_, _, newVal)
                 -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
     }

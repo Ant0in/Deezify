@@ -21,18 +21,18 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
      * The Song title label.
      */
     @FXML
-    Label songTitleLabel;
+    private Label songTitleLabel;
 
     /**
      * The Cover image.
      */
     @FXML
-    ImageView coverImage;
+    private ImageView coverImage;
     /**
      * The Canvas.
      */
     @FXML
-    Canvas canvas;
+    private Canvas canvas;
     // Flag to track whether the image is clipped or not
     private boolean isClipped = true;
 

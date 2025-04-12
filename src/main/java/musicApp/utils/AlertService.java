@@ -2,6 +2,9 @@ package musicApp.utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 public class AlertService {
     private final LanguageManager languageManager = LanguageManager.getInstance();
@@ -12,6 +15,7 @@ public class AlertService {
         alert.setTitle(getTitle(alertType));
         alert.setHeaderText(getHeaderText(alertType));
         alert.setContentText(contentText);
+        alert.setResizable(true);
         alert.showAndWait();
     }
 
@@ -21,6 +25,7 @@ public class AlertService {
 
     public void showExceptionAlert(Exception ex, AlertType alertType) {
         Alert alert = new Alert(alertType);
+        alert.setResizable(true);
         alert.setTitle(getTitle(alertType));
         alert.setHeaderText(getHeaderText(alertType));
         String content = (ex == null) ? "No exception available." :
@@ -48,4 +53,5 @@ public class AlertService {
             default -> languageManager.get("alert.header.default");
         };
     }
+
 }

@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
@@ -104,7 +105,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
         chooseCoverButton.setText(LanguageManager.getInstance().get("button.choose_file"));
         saveButton.setText(LanguageManager.getInstance().get("button.save"));
         cancelButton.setText(LanguageManager.getInstance().get("button.cancel"));
-        tagInputField.setPromptText(LanguageManager.getInstance().get("prompt.addTag"));
+        tagInputField.setPromptText(LanguageManager.getInstance().get("prompt.add_tag"));
     }
 
     private void initButtons() {

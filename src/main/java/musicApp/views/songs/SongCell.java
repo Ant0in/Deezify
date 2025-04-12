@@ -9,8 +9,8 @@ public class SongCell extends ListCell<Song> {
 
     private final SongCellController songCellController;
 
-    public SongCell(SongCellController songCellController) {
-        this.songCellController = songCellController;
+    public SongCell(SongCellController controller) {
+        songCellController = controller;
     }
 
     @Override

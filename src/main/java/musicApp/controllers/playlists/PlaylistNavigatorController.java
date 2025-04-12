@@ -10,25 +10,35 @@ import musicApp.views.playlists.PlaylistNavigatorView;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.Node;
 
+/**
+ * The type Playlist navigator controller.
+ */
 public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView, PlaylistNavigatorController> {
 
     private final PlayerController playerController;
-    private List<Library> playlists = new ArrayList<>();
+    private List<Library> playlists;
     private Library selectedLibrary;
+    private final PlaylistContextMenuController playlistContextMenuController;
 
     /**
      * Instantiates a new View controller.
      *
-     * @param playerController the player controller
+     * @param controller the player controller
      */
-    public PlaylistNavigatorController(PlayerController playerController) {
+    public PlaylistNavigatorController(PlayerController controller) {
         super(new PlaylistNavigatorView());
-        this.playerController = playerController;
+        playerController = controller;
+        playlists = new ArrayList<>();
+        playlistContextMenuController = new PlaylistContextMenuController(this);
         initView("/fxml/PlaylistNavigator.fxml");
         loadPlaylists();
     }
 
+    /**
+     * Load playlists.
+     */
     public void loadPlaylists() {
         playlists = playerController.getPlaylists();
         view.update(playlists);
@@ -49,10 +59,15 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param library the library
      */
     public void setSelectedLibrary(Library library) {
-        this.selectedLibrary = library;
+        selectedLibrary = library;
         playerController.updateShownPlaylist(library);
     }
 
+    /**
+     * Handle select library.
+     *
+     * @param library the library
+     */
     public void handleSelectLibrary(Library library) {
         setSelectedLibrary(library);
     }
@@ -192,5 +207,25 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         DataProvider dataProvider = new DataProvider();
         dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
         refreshUI();
+    }
+
+    /**
+     * Open dialog for creating a new playlist.
+     */
+    public void openCreatePlaylistDialog() {
+        new EditPlaylistController(this);
+    }
+
+    /**
+     * Open dialog for editing an existing playlist.
+     *
+     * @param playlist The playlist to edit
+     */
+    public void openEditPlaylistDialog(Library playlist) {
+        new EditPlaylistController(this, playlist);
+    }
+
+    public void showContextMenu(double x, double y, Library library) {
+        playlistContextMenuController.showAt(x, y, library);
     }
 }

@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 import javafx.scene.layout.Pane;
+import javafx.stage.PopupWindow;
 import musicApp.utils.AlertService;
 import musicApp.views.View;
 
@@ -35,13 +36,28 @@ public abstract class ViewController<V extends View<V, C>, C extends ViewControl
      * @param fxmlPath the fxml path
      */
     protected void initView(String fxmlPath) {
+        initView(fxmlPath, false);
+    }
+
+    /**
+     * Init view.
+     *
+     * @param fxmlPath the fxml path
+     */
+    protected void initView(String fxmlPath, boolean isPopup) {
         try {
-            view.initializeScene(fxmlPath);
+            if (isPopup) {
+                view.initializePopupWindow(fxmlPath);
+            } else {
+                view.initializeScene(fxmlPath);
+            }
             view.init();
         } catch (Exception e) {
             view.displayError(e.getMessage());
         }
     }
+
+
 
     /**
      * Gets root.

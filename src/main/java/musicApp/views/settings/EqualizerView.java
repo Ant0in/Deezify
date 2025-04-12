@@ -100,10 +100,10 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
     private void initTranslations() {
         LanguageManager lm = LanguageManager.getInstance();
         okButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("settings.ok"), lm.languageProperty()
+                () -> lm.get("settings.ok"), lm.getLanguageProperty()
         ));
         cancelButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.cancel"), lm.languageProperty()
+                () -> lm.get("button.cancel"), lm.getLanguageProperty()
         ));
     }
 

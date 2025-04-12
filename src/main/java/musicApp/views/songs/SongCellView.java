@@ -22,7 +22,6 @@ public class SongCellView extends View<SongCellView, SongCellController> {
     @FXML
     private ImageView editButton;
 
-    private SongContextMenuController contextMenuController;
 
     public SongCellView() {
     }
@@ -61,13 +60,10 @@ public class SongCellView extends View<SongCellView, SongCellController> {
      * Setup the context menu for the song cell.
      */
     private void setupContextMenu() {
-        contextMenuController = new SongContextMenuController(viewController);
-
         // Show context menu on click
         editButton.setOnMouseClicked(e -> {
-            contextMenuController.showAt(e.getScreenX(), e.getScreenY());
+            viewController.showContextMenu(e.getScreenX(), e.getScreenY());
         });
-
     }
 
     /**
@@ -121,14 +117,13 @@ public class SongCellView extends View<SongCellView, SongCellController> {
         durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
         updatePlayButtonIcon();
         updateLikeButton();
-        contextMenuController.refreshTranslation();
     }
 
     /**
      * Set the actions for the buttons.
      */
     private void setButtonActions() {
-        playButton.setOnAction(_ -> this.viewController.handlePlay());
+        playButton.setOnAction(_ -> viewController.handlePlay());
     }
 
 }

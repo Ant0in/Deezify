@@ -12,6 +12,7 @@ import musicApp.models.Song;
  *
  * @param <V> the type parameter
  * @param <C> the type parameter
+ * @param <M> the type parameter
  */
 public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C extends SongContainerController<V, C, M>, M extends Library>
         extends View<V, C> {
