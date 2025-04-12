@@ -67,7 +67,7 @@ public class Song {
 
     /**
      * Get the path to the song as a string.
-     * @return
+     * @return The path to the song as a string.
      */
     public String getSource() {
         return filePath.toUri().toString();
@@ -76,7 +76,7 @@ public class Song {
     /**
      * Get the title of the song.
      *
-     * @return The tilte of the song.
+     * @return The title of the song.
      */
     public String getTitle() {
         return metadata.getTitle();
@@ -211,7 +211,7 @@ public class Song {
     }
 
     /**
-     * Checks if the song is equal to another song by comparing their filepaths.
+     * Checks if the song is equal to another song by comparing their file paths.
      * @param obj The object to compare with.
      */
     @Override
