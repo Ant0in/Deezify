@@ -27,6 +27,8 @@ public class SongCellView extends View<SongCellView, SongCellController> {
     @FXML
     private ImageView editButton;
 
+    private static final String PLAY_ICON = "/images/play2.png";
+    private static final String PAUSE_ICON = "/images/pause.png";
 
     public SongCellView() {
     }
@@ -42,8 +44,8 @@ public class SongCellView extends View<SongCellView, SongCellController> {
      * Initialize the components.
      */
     private void initComponents() {
-        ImageView playIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play2.png")).toExternalForm());
-        ImageView editIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/edit.png")).toExternalForm());
+        ImageView playIcon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
+        ImageView editIcon = new ImageView(Objects.requireNonNull(getClass().getResource(PAUSE_ICON)).toExternalForm());
 
         playButton.setGraphic(playIcon);
         likeButton.setOnAction(event -> {
@@ -80,14 +82,14 @@ public class SongCellView extends View<SongCellView, SongCellController> {
         if (viewController.isLoaded()) {
             getRoot().getStyleClass().add("song-playing");
             if (viewController.isPlaying()) {
-                icon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/pause.png")).toExternalForm());
+                icon = new ImageView(Objects.requireNonNull(getClass().getResource(PAUSE_ICON)).toExternalForm());
                 playButton.setOnAction(_ -> viewController.handlePause());
             } else {
-                icon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play2.png")).toExternalForm());
+                icon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
                 playButton.setOnAction(_ -> viewController.handleUnpause());
             }
         } else {
-            icon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play2.png")).toExternalForm());
+            icon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
             playButton.setOnAction(_ -> viewController.handlePlay());
         }
         icon.setFitWidth(20);

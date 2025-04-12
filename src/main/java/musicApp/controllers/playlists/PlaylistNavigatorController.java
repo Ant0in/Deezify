@@ -22,6 +22,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     private Library selectedLibrary;
     private final PlaylistContextMenuController playlistContextMenuController;
 
+    private static final int FAVORITES_INDEX = 1;
+
     /**
      * Instantiates a new View controller.
      *
@@ -82,7 +84,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         Library playlist = new Library(new ArrayList<>(), name, imagePath);
         playlists.add(playlist);
         DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -94,7 +96,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @return true if the playlist is deletable
      */
     public boolean isDeletable(Library library) {
-        return !(playlists.getFirst().equals(library) || playlists.get(1).equals(library));
+        return !(playlists.getFirst().equals(library) || playlists.get(FAVORITES_INDEX).equals(library));
     }
 
     /**
@@ -106,7 +108,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         if (isDeletable(library)) {
             playlists.remove(library);
             DataProvider dataProvider = new DataProvider();
-            dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+            dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
             refreshUI();
         }
     }
@@ -143,7 +145,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param song to add
      */
     public void toggleFavorites(Song song) {
-        Library favorites = playlists.get(1);
+        Library favorites = playlists.get(FAVORITES_INDEX);
         if (favorites.toList().contains(song)) {
             favorites.remove(song);
         } else {
@@ -153,7 +155,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
             playerController.updateShownPlaylist(favorites);
         }
         DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -166,7 +168,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     public void addSongToPlaylist(Song song, Library playlist) {
         playlist.add(song);
         DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -179,7 +181,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     public void removeSongFromPlaylist(Song song, Library playlist) {
         playlist.remove(song);
         DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -190,7 +192,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @return true if the song is in the favorites
      */
     public boolean isFavorite(Song song) {
-        Library favorites = playlists.get(1);
+        Library favorites = playlists.get(FAVORITES_INDEX);
         return favorites.toList().contains(song);
     }
 
@@ -205,7 +207,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         playlist.setName(name);
         playlist.setImage(imagePath);
         DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
+        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 

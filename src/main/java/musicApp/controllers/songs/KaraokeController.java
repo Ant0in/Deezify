@@ -100,7 +100,7 @@ public class KaraokeController {
 
         view.updateKaraokeLyricsHighlight(lyricsToDisplay, null);
 
-        syncTimeline = new Timeline(new KeyFrame(Duration.millis(200), e -> syncLyrics()));
+        syncTimeline = new Timeline(new KeyFrame(Duration.millis(200), _ -> syncLyrics()));
         syncTimeline.setCycleCount(Timeline.INDEFINITE);
         syncTimeline.play();
     }
