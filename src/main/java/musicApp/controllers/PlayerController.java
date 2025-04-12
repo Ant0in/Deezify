@@ -11,7 +11,6 @@ import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.EqualizerGainException;
-import musicApp.utils.AlertService;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.FileManager;
 import musicApp.utils.lyrics.LyricsManager;
@@ -60,7 +59,6 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         try {
             this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
         } catch (EqualizerGainException e) {
-            AlertService alertService = new AlertService();
             alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
         }
     }

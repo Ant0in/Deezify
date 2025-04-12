@@ -72,7 +72,6 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
         try {
             this.playerController.playSong(song);
         } catch (EqualizerGainException e) {
-            AlertService alertService = new AlertService();
             alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
         }
     }
