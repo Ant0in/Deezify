@@ -20,10 +20,10 @@ public class LibraryTypeAdapter extends TypeAdapter<Library> {
         out.value(playlist.getName());
 
         out.name("image");
-        if (playlist.getImage() == null) {
+        if (playlist.getImagePath() == null) {
             out.value("");
         } else {
-            out.value(playlist.getImage().toString());
+            out.value(playlist.getImagePath().toString());
         }
 
         out.name("songList");

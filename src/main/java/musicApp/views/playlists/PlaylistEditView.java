@@ -104,7 +104,7 @@ public class PlaylistEditView extends View<PlaylistEditView, PlaylistEditControl
             nameField.setText(playlist.getName());
 
             try {
-                Path imagePath = playlist.getImage();
+                Path imagePath = playlist.getImagePath();
                 if (imagePath != null) {
                     imagePathLabel.setText(imagePath.toString());
                     imagePathLabel.setUserData(imagePath);

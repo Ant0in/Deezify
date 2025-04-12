@@ -188,7 +188,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      */
     public void updatePlaylist(Library playlist, String name, Path imagePath) {
         playlist.setName(name);
-        playlist.setImage(imagePath);
+        playlist.setImagePath(imagePath);
         DataProvider dataProvider = new DataProvider();
         dataProvider.writePlaylists(playlists.subList(1, playlists.size()));
         refreshUI();

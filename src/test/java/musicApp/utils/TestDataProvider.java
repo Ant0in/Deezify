@@ -17,7 +17,7 @@ public class TestDataProvider extends DataProvider {
         List<Library> playlists = getPlaylists(Paths.get("src", "test", "resources", "playlists.json"));
         assertEquals(4, playlists.size());
         assertEquals("??favorites??", playlists.getFirst().getName());
-        assertNull(playlists.getFirst().getImage());
+        assertNull(playlists.getFirst().getImagePath());
         assertEquals(0, playlists.getFirst().size());
     }
 

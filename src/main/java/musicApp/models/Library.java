@@ -2,6 +2,7 @@ package musicApp.models;
 
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
+import musicApp.utils.AlertService;
 import musicApp.utils.LanguageManager;
 
 import java.nio.file.Path;
@@ -16,7 +17,7 @@ import java.util.function.Function;
  */
 public class Library {
     @Expose
-    List<Song> songList = new ArrayList<>();
+    List<Song> songList;
     @Expose
     private String name;
     @Expose
@@ -24,20 +25,23 @@ public class Library {
 
 
     /**
-     * Constructor
+     * Constructor to create a library with a list of songs, a name and an image.
      *
-     * @param songList The list of media.
+     * @param _songList The list of songs.
+     * @param _name     The name of the library.
+     * @param _image    The path to the cover image.
      */
-    public Library(List<Song> songList, String name, Path image) {
-        this.songList = songList;
-        this.name = name;
-        this.image = image;
+    public Library(List<Song> _songList, String _name, Path _image) {
+        songList = _songList;
+        name = _name;
+        image = _image;
     }
 
     /**
      * Constructor to create an empty library.
      */
     public Library() {
+        songList = new ArrayList<>();
     }
 
     /**
@@ -46,7 +50,7 @@ public class Library {
      * @param song The song to add.
      */
     public void add(Song song) throws IllegalArgumentException {
-        if (this.songList.contains(song)) {
+        if (songList.contains(song)) {
             throw new IllegalArgumentException(
                     LanguageManager.getInstance().get("error.mediaAlreadyInLibrary")
                             + " " + song.toString()
@@ -62,7 +66,7 @@ public class Library {
      * @param song  The media to add.
      */
     public void add(int index, Song song) throws IllegalArgumentException {
-        if (this.songList.contains(song)) {
+        if (songList.contains(song)) {
             throw new IllegalArgumentException(
                     LanguageManager.getInstance().get("error.mediaAlreadyInLibrary")
                             + " " + song.toString()
@@ -126,7 +130,7 @@ public class Library {
      * @return The list of songs.
      */
     public List<Song> toList() {
-        return this.songList;
+        return songList;
     }
 
     /**
@@ -149,7 +153,12 @@ public class Library {
                 .toList();
     }
 
-
+    /**
+     * Get a song by its path.
+     *
+     * @param path The path of the song.
+     * @return The song at the path.
+     */
     public Song getSongByPath(Path path) {
         for (Song song : songList) {
             if (song.getFilePath().equals(path)) {
@@ -159,8 +168,13 @@ public class Library {
         return null;
     }
 
+    /**
+     * Get the name of the library.
+     *
+     * @return The name of the library.
+     */
     public String getName() {
-        return this.name;
+        return name;
     }
 
     /**
@@ -168,16 +182,17 @@ public class Library {
      *
      * @param name the new name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String newName) {
+        name = newName;
     }
 
-    public Path getImage() {
-        return this.image;
-    }
-
-    public void setImage(Path image) {
-        this.image = image;
+    /**
+     * Get the image path of the library.
+     *
+     * @return The image path of the library.
+     */
+    public Path getImagePath() {
+        return image;
     }
 
     /**
@@ -186,7 +201,7 @@ public class Library {
      * @param imagePath the new image path
      */
     public void setImagePath(Path imagePath) {
-        this.image = imagePath;
+        image = imagePath;
     }
 
     /**
@@ -201,19 +216,39 @@ public class Library {
             }
             return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
         } catch (Exception e) {
-            System.err.println("Error loading cover image: " + e.getMessage());
+            AlertService alertService = new AlertService();
+            alertService.showExceptionAlert(e);
             return new Image(Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm());
         }
     }
-
+    
+    /**
+     * Get the auto-completion for a song artist.
+     * 
+     * @param input The input string to complete.
+     * @return The auto-completion for the song artist.
+     */
     public Optional<String> getArtistAutoCompletion(String input) {
         return getAutoCompletion(input, song -> List.of(song.getArtist()));
     }
 
+    /**
+     * Get the auto-completion for a song tag.
+     * 
+     * @param input The input string to complete.
+     * @return The auto-completion for the song tag.
+     */
     public Optional<String> getTagAutoCompletion(String input) {
         return getAutoCompletion(input, Song::getUserTags);
     }
 
+    /**
+     * Get the auto-completion for a string in a list given as argument.
+     * 
+     * @param input The input string to complete.
+     * @param extractor The function to extract the list of strings for the autocompletion.
+     * @return The auto-completion for the input string.
+     */
     private Optional<String> getAutoCompletion(String input, Function<Song, List<String>> extractor) {
         if (input == null || input.isEmpty() || songList.isEmpty()) {
             return Optional.empty();
@@ -223,6 +258,7 @@ public class Library {
         int size = songList.size();
         int randomIndex = (int) (Math.random() * size);
 
+        // Search for an autocompletion starting at a random index
         for (int offset = 0; offset < size; offset++) {
             int i = (randomIndex + offset) % size;
             List<String> fields = extractor.apply(songList.get(i));
@@ -235,8 +271,6 @@ public class Library {
                 }
             }
         }
-
         return Optional.empty();
     }
-
 }
