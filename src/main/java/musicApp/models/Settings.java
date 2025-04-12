@@ -14,7 +14,7 @@ public class Settings {
     private double balance;
     @Expose
     private Path musicFolder;
-    private Equalizer equalizer;
+    private final Equalizer equalizer;
     private boolean musicFolderChanged;
     
     /**
@@ -70,7 +70,7 @@ public class Settings {
 
     /**
      * Get the equalizer of the settings.
-     * @return
+     * @return The equalizer.
      */
     public Equalizer getEqualizer() {
         return equalizer;
@@ -85,7 +85,7 @@ public class Settings {
     }
 
     /**
-     * Checkls if the music folder has changed.
+     * Checks if the music folder has changed.
      * @return True if the music folder has changed, false otherwise.
      */
     public boolean isMusicFolderChanged() {
@@ -95,6 +95,7 @@ public class Settings {
     /**
      * Checks if the settings object is equal to another settings object.
      * @param obj The object to compare with.
+     * @return True if the objects are equal, false otherwise.
      */
     @Override
     public boolean equals(Object obj) {

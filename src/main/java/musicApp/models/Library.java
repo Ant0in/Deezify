@@ -76,17 +76,6 @@ public class Library {
     }
 
     /**
-     * Add a list of songs to the library.
-     *
-     * @param songs The list of songs to add.
-     */
-    public void addSongs(List<Song> songs) {
-        for (Song song : songs) {
-            add(song);
-        }
-    }
-
-    /**
      * Remove a song from the library.
      *
      * @param song The song to remove.
@@ -180,7 +169,7 @@ public class Library {
     /**
      * Set the name of the library.
      *
-     * @param name the new name
+     * @param newName the new name
      */
     public void setName(String newName) {
         name = newName;

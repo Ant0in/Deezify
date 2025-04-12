@@ -52,7 +52,7 @@ public class AudioPlayer {
      *
      * @param song The song to load.
      */
-    public void loadSong(Song song) throws EqualizerGainException {
+    public void loadSong(Song song){
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
@@ -109,7 +109,7 @@ public class AudioPlayer {
 
     /**
      * Update the equalizer bands gain.
-     * @param newEqualizerBandsGain
+     * @param newEqualizerBandsGain The new equalizer bands gain.
      */
     public void updateEqualizerBandsGain(List<Double> newEqualizerBandsGain) throws EqualizerGainException {
         equalizerBandsGain = newEqualizerBandsGain;
@@ -203,10 +203,6 @@ public class AudioPlayer {
         return isPlaying;
     }
 
-    public BooleanProperty isLoaded() {
-        return isLoaded;
-    }
-
     /**
      * Get the current song property.
      *
@@ -217,30 +213,12 @@ public class AudioPlayer {
     }
 
     /**
-     * Get the current song.
-     *
-     * @return The current song.
-     */
-    public String getCurrentSongString() {
-        return currentSongString.get();
-    }
-
-    /**
      * Get the loaded song.
      *
      * @return The loaded song.
      */
     public Song getLoadedSong() {
         return loadedSong;
-    }
-
-    /**
-     * Get the media player.
-     *
-     * @return The media player.
-     */
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
     }
 
     /**
@@ -307,7 +285,7 @@ public class AudioPlayer {
     /**
      * Set the balance of the AudioPlayer.
      *
-     * @param balance The balance of the AudioPlayer.
+     * @param newBalance The balance of the AudioPlayer.
      */
     public void setBalance(double newBalance) {
         balance = newBalance;

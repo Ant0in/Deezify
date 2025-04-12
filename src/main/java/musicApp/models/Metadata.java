@@ -139,7 +139,7 @@ public class Metadata {
     /**
      * Sets the cover image from a byte array.
      * 
-     * @param bytes
+     * @param bytes The byte array representing the cover image.
      */
     public void setCoverFromBytes(byte[] bytes) {
         Artwork artwork = ArtworkFactory.getNew();
@@ -171,7 +171,7 @@ public class Metadata {
 
     /**
      * Sets the user tags.
-     * @param newUserTags
+     * @param newUserTags The new user tags to set.
      */
     public void setUserTags(ArrayList<String> newUserTags) {
         if (newUserTags != null) {
