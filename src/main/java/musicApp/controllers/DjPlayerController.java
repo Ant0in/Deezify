@@ -9,7 +9,6 @@ import javafx.util.Duration;
 import javafx.stage.Stage;
 import musicApp.models.Song;
 import musicApp.views.DjPlayerView;
-import musicApp.controllers.PlayerController;
 
 
 public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerController> {
@@ -18,6 +17,11 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     private final MediaPlayerController mediaPlayerController;
     private List<Double> bandsGainBackup;
     private Timeline timeline;
+    
+    // parameters for the effects
+    private double timelineSpeed = 2.0;
+    private double bassBoostGain = 6.0;
+    private double pressureStrength = 0.5;
 
     private static final double MAX_HIGH = 12.0;
     private static final double MAX_LOW = -24.0;
@@ -32,7 +36,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     }
 
-    public void init_dj_player() {
+    public void init() {
 
         // initialize the view and then make a copy of the current equalizer bands
         init_view();  
@@ -53,25 +57,34 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     public void toggleBassBoostMode() {
         
-        double high = 12.0;
         double low = -3.0;
-        List<Double> bandsGain = List.of(0.0, high, high, low, low, low, low, low, low, low);
+        List<Double> bandsGain = List.of(bassBoostGain, bassBoostGain, bassBoostGain, low, low, low, low, low, low, low);
         mediaPlayerController.setEqualizerBands(bandsGain);
 
     }
 
     public void toggleBoostGainMode() {
 
-        double high = 12.0;
-        List<Double> bandsGain = List.of(high, high, high, high, high, high, high, high, high, high);
+        List<Double> bandsGain = List.of(
+            bassBoostGain, bassBoostGain, bassBoostGain, bassBoostGain, bassBoostGain,
+            bassBoostGain, bassBoostGain, bassBoostGain, bassBoostGain, bassBoostGain
+        );
         mediaPlayerController.setEqualizerBands(bandsGain);
+
     }
 
     public void togglePressureMode() {
 
-        List<Double> bandsGain = List.of(MAX_LOW, MAX_LOW, MAX_LOW, MAX_LOW, MAX_LOW,
-                MAX_HIGH, MAX_HIGH, MAX_HIGH, MAX_HIGH, MAX_HIGH);
+        double abs = Math.abs(MAX_LOW) + Math.abs(MAX_HIGH);
+        double middleFrequency = MAX_HIGH - (abs / 2.0);
+
+        double low = middleFrequency - pressureStrength;
+        double high = middleFrequency + pressureStrength;
+
+        List<Double> bandsGain = List.of(low, low, low, low, low, high, high, high, high, high);
+        System.out.println("bandsGain = " + bandsGain.toString());
         mediaPlayerController.setEqualizerBands(bandsGain);
+
     }
 
     public void toggleWaveGainMode() {
@@ -80,16 +93,15 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         
         double amplitude = MAX_HIGH - MAX_LOW / 2.0;
         double offset = MAX_LOW + amplitude;
-        double speed = 2.0;
 
         // Timeline for sequential update on the bands gain
-        timeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.millis(50), _ -> {
             double currentTime = System.currentTimeMillis() / 1000.0;
             List<Double> bandsGain = new ArrayList<>();
 
             // Gain of each band, dephased depending on the band
             for (int i = 0; i < NUM_BANDS; i++) {
-                double phase = currentTime * speed + (i * Math.PI / NUM_BANDS);
+                double phase = currentTime * timelineSpeed + (i * Math.PI / NUM_BANDS);
                 double gain = offset + amplitude * Math.sin(phase);
                 bandsGain.add(gain);
             }
@@ -101,6 +113,22 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
+    }
+
+    public void changeWaveSpeed(double speed) {
+        timelineSpeed = speed;
+    }
+
+    public void changeBassBoostGain(double gain) {
+        bassBoostGain = gain;
+    }
+
+    public void changePressureStrength(double strength) {
+        // strength must be bewteen 0 and abs(MAX_LOW) + abs(MAX_HIGH) / 2
+        if (strength < 0 || strength > (Math.abs(MAX_LOW) + Math.abs(MAX_HIGH)) / 2.0) {
+            throw new IllegalArgumentException("Strength must be between 0 and " + (Math.abs(MAX_LOW) + Math.abs(MAX_HIGH)) / 2.0);
+        }
+        pressureStrength = strength;
     }
 
     public void play(Song song) {
