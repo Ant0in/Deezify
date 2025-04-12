@@ -1,6 +1,7 @@
 package musicApp.utils;
 
 import javafx.util.Duration;
+import musicApp.enums.SupportedFileType;
 import musicApp.exceptions.BadFileTypeException;
 import musicApp.exceptions.ID3TagException;
 import musicApp.models.Metadata;
@@ -17,15 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-enum FileType {
-    MP3,
-    WAV,
-    M3U,
-//    FLAC,
-//    OGG
-    NONE
-}
 
 public class MetadataUtils {
 
@@ -60,21 +52,26 @@ public class MetadataUtils {
      * This method returns an enum based on the extension of a file
      *
      * @param fd : File Object
-     * @return FileType enum
+     * @return SupportedFileType, or null
      */
-    private FileType getFileExtension(File fd) {
+    private SupportedFileType getFileExtension(File fd) throws BadFileTypeException {
         String fileName = fd.getName();
-        String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
-
-        if (ext.equals("mp3")) {
-            return FileType.MP3;
-        } else if (ext.equals("wav")) {
-            return FileType.WAV;
-        }else if(ext.equals("m3u")) {
-            return FileType.M3U;
-        } else {
-            return FileType.NONE;
+        String ext = fileName.substring(fileName.lastIndexOf("."));
+        SupportedFileType fileType = SupportedFileType.fromExtension(ext);
+        if (fileType == null) {
+            throw new BadFileTypeException("Unsupported file extension", new Throwable());
         }
+        return fileType;
+    }
+
+    /**
+     * This method reads the tag of an AudioFile and returns it
+     *
+     * @param fd : AudioFile Object
+     * @return Tag object
+     */
+    private Tag readTag(AudioFile fd) {
+        return fd.getTag();
     }
 
     /**
@@ -87,7 +84,7 @@ public class MetadataUtils {
      */
     public Metadata getMetadata(File fd) throws ID3TagException, BadFileTypeException {
         Metadata metadata = new Metadata();
-        if (getFileExtension(fd) == FileType.M3U) {
+        if (getFileExtension(fd) == SupportedFileType.M3U) {
             return getRadioMetadata(fd);
         }
         AudioFile file = readFile(fd);
@@ -96,6 +93,24 @@ public class MetadataUtils {
             throw new ID3TagException("No ID3v2 tags found", new Throwable());
         }
 
+        return loadTagValues(file, metadata, tag);
+    }
+
+    /**
+     * Loads the tag values from the provided audio file's metadata and populates the given {@link Metadata} object with those values.
+     *
+     * <p>This method extracts various metadata fields such as the title, artist, genre, duration, and user tags from the provided
+     * {@link Tag} and assigns them to the {@link Metadata} object. It also attempts to retrieve the cover artwork. If an error
+     * occurs while retrieving user tags, an empty list is assigned instead.</p>
+     *
+     * @param file The {@link AudioFile} associated with the tag, used to extract the duration.
+     * @param metadata The {@link Metadata} object that will be populated with the extracted tag values.
+     * @param tag The {@link Tag} containing the metadata values to be loaded.
+     * @return The populated {@link Metadata} object with the extracted tag values.
+     *
+     * @throws IllegalArgumentException if the file or metadata is {@code null}.
+     */
+    private Metadata loadTagValues(AudioFile file, Metadata metadata, Tag tag) {
         metadata.setTitle(tag.getFirst(FieldKey.TITLE));
         metadata.setArtist(tag.getFirst(FieldKey.ARTIST));
         metadata.setGenre(tag.getFirst(FieldKey.GENRE));
@@ -106,20 +121,16 @@ public class MetadataUtils {
         try {
             metadata.setUserTags(parseUserTags(tag.getFirst(FieldKey.CUSTOM1)));
         } catch (UnsupportedOperationException e) {
-            metadata.setUserTags(new ArrayList<String>());
+            metadata.setUserTags(new ArrayList<>());
         }
-
-
         metadata.setCover(tag.getFirstArtwork());
-
-
         return metadata;
     }
 
     /**
      * This method assigns default metadata to a radio file
-     * @param fd
-     * @return
+     * @param fd : the File on which to read the metadata
+     * @return : A metadata object loaded with the info from the m3u file
      */
     private Metadata getRadioMetadata(File fd) {
         Metadata metadata = new Metadata();
@@ -154,11 +165,24 @@ public class MetadataUtils {
 
         audioFile.setTag(tag);
         audioFile.commit();
-
     }
 
+    /**
+     * Creates or updates the tag for the provided audio file based on the given metadata.
+     *
+     * <p>This method checks if the audio file's tag contains standard fields (e.g., title). If the tag is missing a required field,
+     * it creates or retrieves a default tag. The tag is then populated with data from the provided {@link Metadata} object,
+     * including artist, title, genre, custom user tags, and cover artwork.</p>
+     *
+     * <p>Note: The {@link FieldDataInvalidException} could potentially be thrown when setting the fields, but it cannot be
+     * artificially triggered during the normal operation of this method.</p>
+     *
+     * @param audioFile The {@link AudioFile} to which the tag will be created or updated.
+     * @param metadata The {@link Metadata} object containing the values to be written to the tag.
+     * @return The updated {@link Tag} containing the metadata fields.
+     * @throws FieldDataInvalidException If the tag data is invalid or inconsistent with expected field types.
+     */
     private Tag createTag(AudioFile audioFile, Metadata metadata) throws FieldDataInvalidException {
-
         Tag tag = audioFile.getTag();
         // Checks if the tag contains a standard field, if not initializes a default tag
         if (!tag.hasField(FieldKey.TITLE)) {
@@ -177,59 +201,6 @@ public class MetadataUtils {
     }
 
     /**
-     * This method reads the tag of an AudioFile and returns it
-     *
-     * @param fd : AudioFile Object
-     * @return Tag object
-     */
-    private Tag readTag(AudioFile fd) {
-        return fd.getTag();
-    }
-
-    /**
-     * This method reads the file and returns it as an AudioFile object
-     *
-     * @param fd : WAV File Object
-     * @return AudioFile object
-     * @throws RuntimeException (can be IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException)
-     */
-    private AudioFile readWAVFile(File fd) {
-
-        AudioFile file;
-
-        try {
-            file = AudioFileIO.read(fd);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return file;
-    }
-
-    /**
-     * This method reads the file and returns it as an AudioFile object
-     *
-     * @param fd : mp3 File Object
-     * @return AudioFile object
-     * @throws RuntimeException (can be IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException)
-     */
-
-    private AudioFile readMP3File(File fd) throws RuntimeException {
-
-        AudioFile file;
-
-        // These are the exceptions thrown by the read method if something goes wrong
-        // IOException, TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException
-
-        try {
-            file = AudioFileIO.read(fd);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return file;
-    }
-
-    /**
      * This method reads the file and returns it as an AudioFile object
      * currently supports MP3 and WAV files only
      *
@@ -237,13 +208,21 @@ public class MetadataUtils {
      * @return AudioFile object
      */
     private AudioFile readFile(File fd) throws BadFileTypeException {
-        FileType ext = getFileExtension(fd);
+        SupportedFileType ext = getFileExtension(fd);
+        AudioFile file;
 
-        return switch (ext) {
-            case MP3 -> readMP3File(fd);
-            case WAV -> readWAVFile(fd);
+        file = switch (ext) {
+            case MP3, WAV -> {
+                try {
+                    yield AudioFileIO.read(fd);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error while reading the image from file : " + fd.getName(), e);
+                }
+            }
             default -> throw new BadFileTypeException("Unsupported file type", new Throwable());
         };
+
+        return file;
     }
 
 }
