@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import musicApp.exceptions.EqualizerGainException;
+import musicApp.utils.AlertService;
+import javafx.scene.control.Alert;
+
 /**
  * AudioPlayer
  * Class that manages the audio playing.
@@ -27,21 +31,20 @@ public class AudioPlayer {
     private final AudioSpectrumListener audioSpectrumListener;
     private final Double audioSpectrumInterval;
 
-    public AudioPlayer(AudioSpectrumListener audioSpectrumListener) {
+    public AudioPlayer(AudioSpectrumListener _audioSpectrumListener) {
         // Initialize properties in the constructor
-        this.progress = new SimpleDoubleProperty(0.0);
-        this.currentSongString = new SimpleStringProperty("None");
-        this.isPlaying = new SimpleBooleanProperty(false);
-        this.isLoaded = new SimpleBooleanProperty(false);
-        this.volume = new SimpleDoubleProperty(1.0);
-        this.equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
-        this.mediaPlayer = null;
-        this.loadedSong = null;
-        this.balance = 0.0;
-        this.speed = 1.0;
-        this.audioSpectrumListener = audioSpectrumListener;
-        this.audioSpectrumInterval = 0.05; // Optimal Speed (lower is blinky, higher is laggy)
-
+        progress = new SimpleDoubleProperty(0.0);
+        currentSongString = new SimpleStringProperty("None");
+        isPlaying = new SimpleBooleanProperty(false);
+        isLoaded = new SimpleBooleanProperty(false);
+        volume = new SimpleDoubleProperty(1.0);
+        equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
+        mediaPlayer = null;
+        loadedSong = null;
+        balance = 0.0;
+        speed = 1.0;
+        audioSpectrumListener = _audioSpectrumListener;
+        audioSpectrumInterval = 0.05; // Optimal Speed (lower is blinky, higher is laggy)
     }
 
     /**
@@ -49,11 +52,11 @@ public class AudioPlayer {
      *
      * @param song The song to load.
      */
-    public void loadSong(Song song) {
+    public void loadSong(Song song) throws EqualizerGainException {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
-        this.loadedSong = song;
+        loadedSong = song;
         Media media = new Media(song.getFilePathString());
         mediaPlayer = new MediaPlayer(media);
 
@@ -65,11 +68,22 @@ public class AudioPlayer {
         mediaPlayer.setAudioSpectrumInterval(audioSpectrumInterval);
         mediaPlayer.setOnReady(() -> {
             isLoaded.set(true);
-            applyEqualizerBandsGain();
+            try {
+                applyEqualizerBandsGain();
+            } catch (EqualizerGainException e) {
+                AlertService alertService = new AlertService();
+                alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+            }
         });
-
         // Update the progression property while playing
-        mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+        setupProgressListener();
+    }
+
+    /**
+     * Set up a listener to update the progress property.
+     */
+    private void setupProgressListener() {
+        mediaPlayer.currentTimeProperty().addListener((_, _, newTime) -> {
             if (mediaPlayer.getTotalDuration().greaterThan(Duration.ZERO)) {
                 progress.set(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
             } else {
@@ -78,11 +92,13 @@ public class AudioPlayer {
         });
     }
 
-    private void applyEqualizerBandsGain() {
+    /**
+     * Apply the equalizer bands gain to the media player.
+     */
+    private void applyEqualizerBandsGain() throws EqualizerGainException {      
         AudioEqualizer audioEqualizer = mediaPlayer.getAudioEqualizer();
         if (audioEqualizer == null) {
-            System.err.println("No audio equalizer available");
-            return;
+            throw new EqualizerGainException("No audio equalizer available");
         }
         for (int bandIndex = 0; bandIndex < equalizerBandsGain.size(); bandIndex++) {
             EqualizerBand bandToSet = audioEqualizer.getBands().get(bandIndex);
@@ -91,8 +107,12 @@ public class AudioPlayer {
         }
     }
 
-    public void updateEqualizerBandsGain(List<Double> equalizerBandsGain) {
-        this.equalizerBandsGain = equalizerBandsGain;
+    /**
+     * Update the equalizer bands gain.
+     * @param newEqualizerBandsGain
+     */
+    public void updateEqualizerBandsGain(List<Double> newEqualizerBandsGain) throws EqualizerGainException {
+        equalizerBandsGain = newEqualizerBandsGain;
         if (mediaPlayer != null) {
             applyEqualizerBandsGain();
         }
@@ -121,8 +141,8 @@ public class AudioPlayer {
     /**
      * Change speed of the loaded song.
      */
-    public void changeSpeed(double speed) {
-        this.speed = speed;
+    public void changeSpeed(double newSpeed) {
+        speed = newSpeed;
         if (mediaPlayer != null) {
             mediaPlayer.setRate(speed);
         }
@@ -150,7 +170,7 @@ public class AudioPlayer {
      *
      * @return The progress of the song.
      */
-    public DoubleProperty progressProperty() {
+    public DoubleProperty getProgressProperty() {
         return progress;
     }
 
@@ -192,7 +212,7 @@ public class AudioPlayer {
      *
      * @return The current song property.
      */
-    public StringProperty currentSongStringProperty() {
+    public StringProperty getCurrentSongStringProperty() {
         return currentSongString;
     }
 
@@ -271,7 +291,7 @@ public class AudioPlayer {
      *
      * @return The volume property.
      */
-    public DoubleProperty volumeProperty() {
+    public DoubleProperty getVolumeProperty() {
         return volume;
     }
 
@@ -289,8 +309,8 @@ public class AudioPlayer {
      *
      * @param balance The balance of the AudioPlayer.
      */
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setBalance(double newBalance) {
+        balance = newBalance;
         if (mediaPlayer != null) {
             mediaPlayer.setBalance(balance);
         }

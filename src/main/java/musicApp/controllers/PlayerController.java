@@ -10,6 +10,8 @@ import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.songs.LyricsController;
+import musicApp.exceptions.EqualizerGainException;
+import musicApp.utils.AlertService;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.FileManager;
 import musicApp.utils.lyrics.LyricsManager;
@@ -21,6 +23,8 @@ import musicApp.models.Settings;
 import musicApp.models.Song;
 
 import java.util.List;
+
+import javafx.scene.control.Alert;
 
 /**
  * Controller class for the music player.
@@ -53,7 +57,12 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
 
         this.LibraryController.loadPlaylist(mainLibrary);
         this.mediaPlayerController.setBalance(settings.getBalance());
-        this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
+        try {
+            this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
+        } catch (EqualizerGainException e) {
+            AlertService alertService = new AlertService();
+            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+        }
     }
 
 
@@ -80,8 +89,9 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * Play song.
      *
      * @param song the song
+     * @throws EqualizerGainException 
      */
-    public void playSong(Song song) {
+    public void playSong(Song song) throws EqualizerGainException {
         this.mediaPlayerController.playCurrent(song);
     }
 
@@ -156,8 +166,9 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * Actions to do when the settings are changed
      *
      * @param newSettings The new settings.
+     * @throws EqualizerGainException 
      */
-    public void onSettingsChanged(Settings newSettings) {
+    public void onSettingsChanged(Settings newSettings) throws EqualizerGainException {
         this.mediaPlayerController.setBalance(newSettings.getBalance());
         this.mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
         if (newSettings.isMusicFolderChanged())

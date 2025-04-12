@@ -1,12 +1,15 @@
 package musicApp.controllers;
 
+import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
 import musicApp.models.Song;
+import musicApp.utils.AlertService;
 import musicApp.views.SongContainerView;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.control.Alert;
 
 /**
  * Abstract container class for all classes that will contain Songs.
@@ -66,7 +69,12 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
             view.displayError("Cannot play a null song.");
             return;
         }
-        this.playerController.playSong(song);
+        try {
+            this.playerController.playSong(song);
+        } catch (EqualizerGainException e) {
+            AlertService alertService = new AlertService();
+            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+        }
     }
 
     /**

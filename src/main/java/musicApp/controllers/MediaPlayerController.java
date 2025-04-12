@@ -4,6 +4,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
+import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.AudioPlayer;
 import musicApp.models.Song;
 import musicApp.views.MediaPlayerView;
@@ -48,7 +49,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @return The progress of the song.
      */
     public DoubleProperty progressProperty() {
-        return audioPlayer.progressProperty();
+        return audioPlayer.getProgressProperty();
     }
 
     /**
@@ -93,7 +94,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @return The volume property.
      */
     public DoubleProperty volumeProperty() {
-        return audioPlayer.volumeProperty();
+        return audioPlayer.getVolumeProperty();
     }
 
     /**
@@ -111,7 +112,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @return The current song property.
      */
     public StringProperty currentSongProperty() {
-        return audioPlayer.currentSongStringProperty();
+        return audioPlayer.getCurrentSongStringProperty();
     }
 
     /**
@@ -191,8 +192,9 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * Load and Play the currently selected song.
      *
      * @param song the song
+     * @throws EqualizerGainException 
      */
-    public void playCurrent(Song song) {
+    public void playCurrent(Song song) throws EqualizerGainException {
         audioPlayer.loadSong(song);
         audioPlayer.setOnEndOfMedia(this.playerController::skip);
         audioPlayer.unpause();
@@ -215,8 +217,9 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * Set the equalizer bands.
      *
      * @param equalizerBandsGain The gain of the equalizer bands.
+     * @throws EqualizerGainException 
      */
-    public void setEqualizerBands(List<Double> equalizerBandsGain) {
+    public void setEqualizerBands(List<Double> equalizerBandsGain) throws EqualizerGainException {
         audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }
 
