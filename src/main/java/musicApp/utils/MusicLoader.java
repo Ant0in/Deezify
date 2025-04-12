@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import musicApp.exceptions.BadM3URadioException;
 import musicApp.models.Radio;
 import java.util.ArrayList;
 import musicApp.models.Song;
@@ -29,7 +31,12 @@ public class MusicLoader {
         songPaths = getAllSongPaths(folderPath);
         for (Path songPath : songPaths) {
             if (songPath.toString().endsWith(".m3u")) {
-                songList.add(new Radio(songPath));
+                try{
+                    songList.add(new Radio(songPath));
+                } catch (BadM3URadioException e) {
+                    AlertService alertService = new AlertService();
+                    alertService.showExceptionAlert(e);
+                }
             } else {
                 songList.add(new Song(songPath));
             }

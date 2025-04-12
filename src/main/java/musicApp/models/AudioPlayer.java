@@ -57,10 +57,10 @@ public class AudioPlayer {
             mediaPlayer.stop();
         }
         loadedSong = song;
-        Media media = new Media(song.getFilePathString());
+        Media media = new Media(song.getSource());
         mediaPlayer = new MediaPlayer(media);
 
-        currentSongString.set(song.getFilePathString());
+        currentSongString.set(song.getSource());
         mediaPlayer.volumeProperty().bind(volume);
         mediaPlayer.setBalance(balance);
         mediaPlayer.setRate(speed);

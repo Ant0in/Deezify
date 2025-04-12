@@ -61,7 +61,7 @@ public class Song {
         return filePath;
     }
 
-    public String getFilePathString() {
+    public String getSource() {
         return filePath.toUri().toString();
     }
 
