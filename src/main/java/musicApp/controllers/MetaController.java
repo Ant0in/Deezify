@@ -125,6 +125,4 @@ public class MetaController {
             return new Library(); // fallback
         }
     }  
-
-    // public EqualizerController getEqualizerController() { return settingsController.getEqualizerController(); }
 }
