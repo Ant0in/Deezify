@@ -34,7 +34,7 @@ public class MetaController {
     public MetaController(Stage stage) throws IOException {
         this.stage = stage;
         this.playlists = dataProvider.readPlaylists();
-        Library mainLibrary = loadMainLibraryFromPath(dataProvider.readSettings().getMusicDirectory());
+        Library mainLibrary = loadMainLibraryFromPath(dataProvider.readSettings().getMusicFolder());
         this.playlists.add(0, mainLibrary);
         this.playerController = new PlayerController(this, dataProvider.readSettings(), mainLibrary);
         this.settingsController = new SettingsController(this, dataProvider.readSettings());
@@ -68,7 +68,7 @@ public class MetaController {
     public void notifySettingsChanged(Settings newSettings) {
         try {
             dataProvider.writeSettings(newSettings);
-            this.playlists.set(0, loadMainLibraryFromPath(newSettings.getMusicDirectory()));
+            this.playlists.set(0, loadMainLibraryFromPath(newSettings.getMusicFolder()));
             playerController.onSettingsChanged(newSettings);
         } catch (Exception e) {
             alertService.showExceptionAlert(e);

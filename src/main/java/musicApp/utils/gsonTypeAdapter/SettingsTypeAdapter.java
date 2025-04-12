@@ -23,7 +23,7 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         out.value(settings.getBalance());
 
         out.name("musicFolder");
-        out.value(settings.getMusicDirectory().toString());
+        out.value(settings.getMusicFolder().toString());
 
         out.name("equalizerBands");
         out.beginArray();

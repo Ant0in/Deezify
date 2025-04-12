@@ -36,6 +36,6 @@ public class TestDataProvider extends DataProvider {
         Settings settings = getSettings(Paths.get("src", "test", "resources", "settings.json"));
         assertEquals(0.0, settings.getBalance(), 0.0);
         assertEquals(10, settings.getEqualizerBands().size());
-        assertNotNull(settings.getMusicDirectory());
+        assertNotNull(settings.getMusicFolder());
     }
 }

@@ -14,40 +14,22 @@ public class Settings {
     private double balance;
     @Expose
     private Path musicFolder;
-    private Equalizer equalizer = new Equalizer();
-    private boolean musicFolderChanged = false;
-
+    private Equalizer equalizer;
+    private boolean musicFolderChanged;
+    
     /**
-     * Constructor
+     * Constructor for Settings.
      *
-     * @param balance     The balance of the application.
-     * @param musicFolder The path to the music folder.
+     * @param _balance      The balance of the settings.
+     * @param _musicFolder  The music folder of the settings.
+     * @param _equalizer    The equalizer of the settings.
      */
-    public Settings(double balance, Path musicFolder, Equalizer equalizer) {
-        this.balance = balance;
-        this.musicFolder = musicFolder;
-        this.equalizer = equalizer;
-    }
-
-    /**
-     * Parses a settings string to a Settings object.
-     * The settings string must be in the following format:
-     * balance=0.0
-     * musicFolder=/path/to/music/folder
-     * if the settings string is null or empty, an IllegalArgumentException is thrown.
-     * if the settings string does not contain one of the required fields, it will take the default value.
-     *
-     * @param settings The settings string.
-     */
-    public Settings(String settings) throws IllegalArgumentException {
-        this.balance = 0.0;
-        DataProvider dataProvider = new DataProvider();
-        this.musicFolder = dataProvider.getDefaultMusicFolder();
-
-        if (settings == null || settings.isEmpty()) {
-            System.err.println("Settings string is null or empty");
-        }
-    }
+    public Settings(double _balance, Path _musicFolder, Equalizer _equalizer) {
+        equalizer = _equalizer;
+        musicFolderChanged = false;
+        balance = _balance;
+        musicFolder = _musicFolder;
+    }  
 
     /**
      * Get the balance of the settings.
@@ -61,10 +43,10 @@ public class Settings {
     /**
      * Set the balance of the settings.
      *
-     * @param balance The balance.
+     * @param newBalance The balance.
      */
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setBalance(double newBalance) {
+        balance = newBalance;
     }
 
     /**
@@ -72,32 +54,48 @@ public class Settings {
      *
      * @return The music folder.
      */
-    public Path getMusicDirectory() {
-        return this.musicFolder;
+    public Path getMusicFolder() {
+        return musicFolder;
     }
 
     /**
      * Set the music folder of the settings.
      *
-     * @param musicFolder The music folder.
+     * @param newMusicFolder The music folder.
      */
-    public void setMusicFolder(Path musicFolder) {
-        this.musicFolder = musicFolder;
-        this.musicFolderChanged = true;
+    public void setMusicFolder(Path newMusicFolder) {
+        musicFolder = newMusicFolder;
+        musicFolderChanged = true;
     }
 
+    /**
+     * Get the equalizer of the settings.
+     * @return
+     */
     public Equalizer getEqualizer() {
-        return this.equalizer;
+        return equalizer;
     }
 
+    /**
+     * Get the equalizer bands of the settings.
+     * @return The equalizer bands.
+     */
     public List<Double> getEqualizerBands() {
-        return this.equalizer.getBandsGain();
+        return equalizer.getBandsGain();
     }
 
+    /**
+     * Checkls if the music folder has changed.
+     * @return True if the music folder has changed, false otherwise.
+     */
     public boolean isMusicFolderChanged() {
-        return this.musicFolderChanged;
+        return musicFolderChanged;
     }
 
+    /**
+     * Checks if the settings object is equal to another settings object.
+     * @param obj The object to compare with.
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -106,11 +104,15 @@ public class Settings {
         if (!(obj instanceof Settings settings)) {
             return false;
         }
-        return Double.compare(settings.getBalance(), this.getBalance()) == 0 &&
-                settings.getMusicDirectory().equals(this.getMusicDirectory()) &&
-                settings.getEqualizerBands().equals(this.getEqualizerBands());
+        return Double.compare(settings.getBalance(), getBalance()) == 0 &&
+                settings.getMusicFolder().equals(getMusicFolder()) &&
+                settings.getEqualizerBands().equals(getEqualizerBands());
     }
 
+    /**
+     * Returns a string representation of the settings object.
+     * @return A string representation of the settings object.
+     */
     @Override
     public String toString() {
         return "balance=" + balance + "\n" +

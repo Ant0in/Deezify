@@ -184,6 +184,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         initComboBox();
         initTranslations();
         balanceSlider.setValue(settings.getBalance());
-        directoryLabel.setText(settings.getMusicDirectory().toString());
+        directoryLabel.setText(settings.getMusicFolder().toString());
     }
 }
