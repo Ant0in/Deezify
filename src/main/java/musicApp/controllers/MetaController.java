@@ -1,17 +1,17 @@
 package musicApp.controllers;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
 import javafx.stage.Stage;
-import musicApp.controllers.settings.SettingsController;
 import musicApp.controllers.settings.EqualizerController;
+import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
 import musicApp.utils.DataProvider;
 import musicApp.utils.MusicLoader;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
 
 /**
  * The Meta controller.
@@ -126,5 +126,5 @@ public class MetaController {
         }
     }  
 
-    public EqualizerController getEqualizerController() { return settingsController.getEqualizerController(); }
+    // public EqualizerController getEqualizerController() { return settingsController.getEqualizerController(); }
 }

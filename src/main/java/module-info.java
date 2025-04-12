@@ -25,9 +25,6 @@ module ulb.musicApp {
     requires java.prefs;
     requires jaudiotagger;
     requires com.google.gson;
-    requires minim;
-    requires TarsosDSP.core;
-    requires TarsosDSP.jvm;
     requires java.desktop;
 
 

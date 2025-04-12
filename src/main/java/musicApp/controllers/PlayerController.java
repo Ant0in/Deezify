@@ -36,6 +36,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     private QueueController queueController;
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
+    private DjPlayerController djPlayerController;
 
     /**
      * Constructor
@@ -44,6 +45,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @throws IOException the io exception
      */
     public PlayerController(MetaController metaController, Settings settings, Library mainLibrary) throws IOException {
+        
         super(new PlayerView());
         this.metaController = metaController;
         initSubControllers();
@@ -52,6 +54,8 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         this.LibraryController.loadPlaylist(mainLibrary);
         this.mediaPlayerController.setBalance(settings.getBalance());
         this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
+        this.djPlayerController = new DjPlayerController(this);
+
     }
 
 
@@ -396,6 +400,10 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         }
     }
 
-    public EqualizerController getEqualizerController() { return metaController.getEqualizerController(); }
+    /**
+     * Handle add song to queue.
+     * This method opens a file dialog to select an audio file and adds it to the queue.
+     */
+    public DjPlayerController getDjPlayerController() { return djPlayerController; }
 
 }

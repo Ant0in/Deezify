@@ -223,7 +223,10 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             view.displayError("No song to play");
         }
 
-        new DjPlayerController(song, LibraryController.getPlayerController());
+        // we get the player controller to initialize the DJ mode view & play
+        DjPlayerController djPlayerController = LibraryController.getPlayerController().getDjPlayerController();
+        djPlayerController.init_view();
+        djPlayerController.play(song);
 
     }
 
