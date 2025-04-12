@@ -225,7 +225,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
 
         // we get the player controller to initialize the DJ mode view & play
         DjPlayerController djPlayerController = LibraryController.getPlayerController().getDjPlayerController();
-        djPlayerController.init_view();
+        djPlayerController.init_dj_player();
         djPlayerController.play(song);
 
     }

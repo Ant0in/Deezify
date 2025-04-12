@@ -16,6 +16,8 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     
     private final Stage stage = new Stage();
     private final MediaPlayerController mediaPlayerController;
+    private List<Double> bandsGainBackup;
+    private Timeline timeline;
 
     private static final double MAX_HIGH = 12.0;
     private static final double MAX_LOW = -24.0;
@@ -26,6 +28,15 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
  
         super(new DjPlayerView());
         this.mediaPlayerController = player.getMediaPlayerController();
+        this.bandsGainBackup = mediaPlayerController.getEqualizerBands();
+
+    }
+
+    public void init_dj_player() {
+
+        // initialize the view and then make a copy of the current equalizer bands
+        init_view();  
+        bandsGainBackup = mediaPlayerController.getEqualizerBands();
 
     }
 
@@ -33,29 +44,12 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
         initView("/fxml/DjPlayer.fxml");
         stage.setScene(view.getScene());
+        stage.setOnCloseRequest(_ -> onQuit());
         stage.setTitle("DJ Player");
         stage.setResizable(false);
         stage.show();
 
     }
-
-    /* // Commented out for now, needs to be modified
-    private void resetBands(ArrayList<Integer> bands) {
-
-        List<Double> bandsGain = new ArrayList<>();
-
-        for (int i = 0; i < 9; i++) {
-            // if i is in the bands aray list, set the band to 0.0
-            if (bands.contains(i)) {
-                bandsGain.set(i, 0.0);
-            } else {
-                // set the band to -24.0
-                bandsGain.set(i, equalizerController.getEqualizerBandGain(i));
-            }
-        }
-
-    }*/
-
 
     public void toggleBassBoostMode() {
         
@@ -81,13 +75,15 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     }
 
     public void toggleWaveGainMode() {
-         // centers the function (amplitude = 18 db, offset = -6 db)
+        
+        // centers the function (amplitude = 18 db, offset = -6 db)
+        
         double amplitude = MAX_HIGH - MAX_LOW / 2.0;
         double offset = MAX_LOW + amplitude;
         double speed = 2.0;
 
         // Timeline for sequential update on the bands gain
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
             double currentTime = System.currentTimeMillis() / 1000.0;
             List<Double> bandsGain = new ArrayList<>();
 
@@ -99,20 +95,34 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
             }
 
             mediaPlayerController.setEqualizerBands(bandsGain);
+
         }));
 
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
     }
 
-    public void play(Song song) { mediaPlayerController.playCurrent(song); }
+    public void play(Song song) {
+        mediaPlayerController.playCurrent(song);
+    }
 
-    public void pause() { mediaPlayerController.pause(); }
+    public void pause() {
+        mediaPlayerController.pause();
+    }
 
-    public void unpause() { mediaPlayerController.unpause(); }
+    public void unpause() {
+        mediaPlayerController.unpause();
+    }
 
     public void start() {
         // ...
+    }
+
+    public void onQuit() {
+        mediaPlayerController.setEqualizerBands(bandsGainBackup);
+        if (timeline != null) { timeline.stop(); }
+        stage.close();
     }
 
 }

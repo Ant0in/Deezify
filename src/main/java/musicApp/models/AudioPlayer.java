@@ -91,6 +91,10 @@ public class AudioPlayer {
         }
     }
 
+    public List<Double> getEqualizerBandsGain() {
+        return equalizerBandsGain;
+    }
+
     public void updateEqualizerBandsGain(List<Double> equalizerBandsGain) {
         this.equalizerBandsGain = equalizerBandsGain;
         if (mediaPlayer != null) {
