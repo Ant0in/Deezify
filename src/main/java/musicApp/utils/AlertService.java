@@ -23,6 +23,12 @@ public class AlertService {
         showExceptionAlert(ex, AlertType.ERROR);
     }
 
+    /**
+     * Displays an alert dialog to show information about an exception.
+     *
+     * @param ex The exception to display. If {@code null}, the alert will display a default message indicating no exception is available.
+     * @param alertType The type of alert to show (e.g., ERROR, WARNING, INFO).
+     */
     public void showExceptionAlert(Exception ex, AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setResizable(true);
@@ -33,7 +39,12 @@ public class AlertService {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
+    /**
+     * Retrieves the title for the alert based on the specified alert type.
+     *
+     * @param alertType The type of alert (e.g., ERROR, WARNING, INFO, CONFIRMATION).
+     * @return The title string corresponding to the alert type.
+     */
     private String getTitle(AlertType alertType) {
         return switch (alertType) {
             case ERROR -> languageManager.get("alert.title.error");
@@ -43,7 +54,12 @@ public class AlertService {
             default -> languageManager.get("alert.title.default");
         };
     }
-
+    /**
+     * Retrieves the header text for the alert based on the specified alert type.
+     *
+     * @param alertType The type of alert (e.g., ERROR, WARNING, INFO, CONFIRMATION).
+     * @return The header text string corresponding to the alert type.
+     */
     private String getHeaderText(AlertType alertType) {
         return switch (alertType) {
             case ERROR -> languageManager.get("alert.header.error");
