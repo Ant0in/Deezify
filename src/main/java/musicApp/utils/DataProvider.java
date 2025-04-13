@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
+import musicApp.models.Song;
 import musicApp.utils.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.utils.gsonTypeAdapter.SettingsTypeAdapter;
 
@@ -171,11 +172,52 @@ public class DataProvider {
      * @return The playlists read from the playlists file.
      * @throws IllegalArgumentException If an error occurs while reading the playlists file.
      */
-    public List<Library> readPlaylists() throws IllegalArgumentException {
+    private List<Library> readPlaylists() throws IllegalArgumentException {
         if (!Files.exists(playlistsFile)) {
             writePlaylists(List.of());
         }
         return getPlaylists(playlistsFile);
+    }
+
+    /**
+     * Loads the main library from the specified music directory.
+     *
+     * <p>This method attempts to load all songs from the provided music directory using the {@link MusicLoader}.
+     * If successful, it returns a new {@link Library} object containing all the songs. In case of any
+     * {@link IOException}, an empty library with a default name ("??library??") is returned as a fallback.</p>
+     *
+     * @param musicDirectory The directory from which to load the songs. This is usually the user's default
+     *                       music folder.
+     * @return A {@link Library} containing all songs from the specified directory, or an empty library
+     *         if loading fails due to an IOException.
+     */
+    public Library loadMainLibrary(Path musicDirectory) {
+        try {
+            MusicLoader loader = new MusicLoader();
+            List<Song> songs = loader.getAllSongs(musicDirectory);
+            return new Library(songs, "??library??", null);
+        } catch (IOException e) {
+            System.err.println("Failed to load main library: " + e.getMessage());
+            return new Library(new ArrayList<>(), "??library??", null);
+        }
+    }
+
+    /**
+     * Loads all libraries, starting with the main library, followed by the user-defined playlists.
+     *
+     * <p>This method first loads the main library, which contains all songs available in the default music folder.</p>
+     * <p>Then, it loads the playlists from the playlists file, if available, and combines both the main library and the playlists into a single list.</p>
+     *
+     * @return A list containing the main library followed by the playlists.
+     *         The main library is loaded first, followed by any existing playlists.
+     */
+    public List<Library> loadAllLibraries(){
+        Library mainLibrary = loadMainLibrary(readSettings().getMusicDirectory());
+        List<Library> playlists = readPlaylists();
+        List<Library> libraries = new ArrayList<>();
+        libraries.add(mainLibrary);
+        libraries.addAll(playlists);
+        return libraries;
     }
 
     /**

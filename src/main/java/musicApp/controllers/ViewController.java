@@ -26,8 +26,8 @@ public abstract class ViewController<V extends View<V, C>, C extends ViewControl
      */
     public ViewController(V view) {
         this.view = view;
-        this.alertService = new AlertService();
-        this.view.setViewController((C) this);
+        alertService = new AlertService();
+        view.setViewController((C) this);
     }
 
     /**

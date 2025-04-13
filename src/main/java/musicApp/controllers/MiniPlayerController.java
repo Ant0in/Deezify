@@ -8,28 +8,32 @@ import musicApp.views.MiniPlayerView;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 /**
  * Controller managing the MiniPlayerView and processing audio spectrum data received on `spectrumDataUpdate`
  */
-public class MiniPlayerController extends ViewController< MiniPlayerView , MiniPlayerController> implements AudioSpectrumListener {
-    private final Stage stage = new Stage();
-    private final int bandsNumber = 128;
+public class MiniPlayerController extends ViewController<MiniPlayerView, MiniPlayerController> implements AudioSpectrumListener {
+
+    private static final int DEFAULT_BANDS_NUMBER = 128;
+    private static final float MIN_DECIBEL_LEVEL = -60f;
+    private static final float MAX_DECIBEL_LEVEL = 0f;
+    private static final float LOG_SCALE_OFFSET = 1.1f;
+    private static final float VISUAL_INTENSITY_MULTIPLIER = 1.5f;
+
+    private final Stage stage;
 
     /**
-     * Instantiates a new View controller.
+     * Instantiates the MiniPlayerController and initializes the MiniPlayer view.
      */
-    public MiniPlayerController( ) {
+    public MiniPlayerController() {
         super(new MiniPlayerView());
-
         initView("/fxml/MiniPlayer.fxml");
-
+        stage = new Stage();
         stage.setScene(view.getScene());
         stage.setTitle("MiniPlayer");
     }
 
     /**
-     * Toggle view.
+     * Toggle the visibility of the mini player window.
      */
     public void toggleView() {
         if (stage.isShowing()) {
@@ -40,62 +44,61 @@ public class MiniPlayerController extends ViewController< MiniPlayerView , MiniP
     }
 
     /**
-     * Gets bands number.
+     * Returns the number of audio spectrum bands used for visualization.
      *
-     * @return the bands number
+     * @return the number of bands
      */
     public int getBandsNumber() {
-        return bandsNumber;
+        return DEFAULT_BANDS_NUMBER;
     }
 
     /**
-     * Load song.
+     * Loads the given song into the view by updating its title and cover image.
      *
-     * @param song the song
+     * @param song the song to load
      */
     public void loadSong(Song song) {
         view.updateSongProperties(song.getTitle(), song.getCoverImage());
     }
 
     /**
-     * Callback method receiving audio spectrum data from the currently playing song
-     * This method is called by the JavaFX media player
+     * Callback method that receives real-time audio spectrum data from the JavaFX media player.
+     * This method processes the magnitude values to a visually normalized and corrected form
+     * and then updates the view for visualization.
      *
-     * The spectrum data is received as an array of magnitudes and phases, which are
-     * processed to create a visual representation of the audio spectrum.
-     *
-     * @param timestamp The timestamp of the audio data
-     * @param duration The duration of the audio data
-     * @param magnitudes The array of magnitudes representing the audio spectrum
-     * @param phases The array of phases representing the audio spectrum
+     * @param timestamp  the timestamp of the audio data
+     * @param duration   the duration of the audio data
+     * @param magnitudes the array of magnitude values
+     * @param phases     the array of phase values (not used in this implementation)
      */
     @Override
     public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
-        // AudioSpectrumThreshold is usually -60 dB by default in JavaFX
-        final float minDb = -60f;
-        final float maxDb = 0f;
-        final float rangeDb = maxDb - minDb; // should be 60f
+        float rangeDb = MAX_DECIBEL_LEVEL - MIN_DECIBEL_LEVEL;
 
-        // Apply normalization and correction in a single stream pipeline
         List<Float> correctedMagnitudes = IntStream.range(0, magnitudes.length)
                 .mapToObj(i -> {
-                    float clamped = Math.max(minDb, Math.min(maxDb, magnitudes[i]));
-                    float normalized = (clamped - minDb) / rangeDb;
-
-                    // Apply correction function here
-                    return applyCorrection(normalized, i) ;
+                    float clamped = Math.max(MIN_DECIBEL_LEVEL, Math.min(MAX_DECIBEL_LEVEL, magnitudes[i]));
+                    float normalized = (clamped - MIN_DECIBEL_LEVEL) / rangeDb;
+                    return applyCorrection(normalized, i);
                 })
                 .collect(Collectors.toList());
 
-        // Visualize
         view.draw(correctedMagnitudes);
     }
 
-    /*
-     * Method use to process the magnitude data and flatten it for better visuals.
+    /**
+     * Applies a visual correction to a normalized magnitude value.
+     * This correction enhances the representation by scaling and centering the output visually.
+     *
+     * @param normalizedValue the normalized magnitude (0.0 to 1.0)
+     * @param index           the index of the frequency band
+     * @return the corrected value for visual representation
      */
-    private Float applyCorrection( float f, int i) {
-        float f1 = f * ( (float) Math.log10( 1.1 + i ));
-        return (float) (f1 * 1.5 * Math.exp(-Math.abs((i - bandsNumber/2)/(bandsNumber/4))));
+    private float applyCorrection(float normalizedValue, int index) {
+        float scaled = normalizedValue * ((float) Math.log10(LOG_SCALE_OFFSET + index));
+        float center = DEFAULT_BANDS_NUMBER / 2f;
+        float spread = DEFAULT_BANDS_NUMBER / 4f;
+
+        return (float) (scaled * VISUAL_INTENSITY_MULTIPLIER * Math.exp(-Math.abs((index - center) / spread)));
     }
 }
