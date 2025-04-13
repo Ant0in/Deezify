@@ -3,20 +3,21 @@ package musicApp.controllers.songs;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import javafx.stage.FileChooser;
-import java.io.File;
+
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
 import musicApp.controllers.PlayerController;
+import musicApp.exceptions.LyricsNotFoundException;
+import musicApp.exceptions.LyricsOperationException;
 import musicApp.models.Song;
-import musicApp.utils.lyrics.KaraokeLine;
-import musicApp.utils.lyrics.LyricsManager;
+import musicApp.models.KaraokeLine;
+import musicApp.utils.AlertService;
+import musicApp.utils.lyrics.LyricsService;
 import musicApp.views.songs.LyricsView;
-
-import java.util.List;
 
 /**
  * This controller handles the synchronization of karaoke lines
@@ -25,7 +26,7 @@ import java.util.List;
 public class KaraokeController {
 
     private final PlayerController playerController;
-    private final LyricsManager lyricsManager;
+    private final LyricsService lyricsManager;
     private final LyricsView view;
 
     private Timeline syncTimeline;
@@ -39,7 +40,7 @@ public class KaraokeController {
      * @param _view       the view
      */
     public KaraokeController(PlayerController _controller,
-                             LyricsManager _manager,
+                             LyricsService _manager,
                              LyricsView _view) {
         playerController = _controller;
         lyricsToDisplay = List.of();
@@ -54,8 +55,11 @@ public class KaraokeController {
      */
     public List<KaraokeLine> getKaraokeLines() {
         Song currentSong = playerController.getCurrentlyLoadedSong();
-        if (currentSong == null) return List.of();
-        return lyricsManager.getKaraokeLines(currentSong);
+        try {
+            return currentSong.getKaraokeLines();
+        } catch (LyricsNotFoundException e) {
+            return List.of();
+        }
     }
 
     /**
@@ -69,19 +73,12 @@ public class KaraokeController {
         Optional<Path> selectedFile = view.showLrcFileChooser();
         if (selectedFile.isEmpty()) return;
 
-        String txtPath = lyricsManager.getTxtLyricsPath(currentSong);
-        boolean txtExists = txtPath != null && Files.exists(lyricsManager.getLyricsFile(txtPath));
-        boolean overwriteTxt;
-
-        if (txtExists) {
-            Optional<Boolean> userChoice = view.showOverwriteTxtConfirmation();
-            if (userChoice.isEmpty()) return;
-            overwriteTxt = userChoice.get();
-        } else {
-            overwriteTxt = true; 
+        try {
+            lyricsManager.importLrc(currentSong, selectedFile.get());
+        } catch (Exception e) {
+            AlertService as = new AlertService();
+            as.showExceptionAlert(e);
         }
-
-        lyricsManager.importLrc(currentSong, selectedFile.get(), overwriteTxt);
         view.updateKaraokeLyrics();
         startKaraoke();
     }
@@ -95,7 +92,12 @@ public class KaraokeController {
 
         if (currentSong == null) return;
 
-        lyricsToDisplay = lyricsManager.getKaraokeLines(currentSong);
+        try {
+            lyricsToDisplay = currentSong.getKaraokeLines();
+        } catch (LyricsNotFoundException e) {
+            System.err.println("Error getting karaoke lines: " + e.getMessage());
+            return;
+        }
         stopKaraoke();
 
         view.updateKaraokeLyricsHighlight(lyricsToDisplay, null);

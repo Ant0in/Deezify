@@ -15,7 +15,7 @@ import java.util.Optional;
 import javafx.application.Platform;
 
 import musicApp.views.View;
-import musicApp.utils.lyrics.KaraokeLine;
+import musicApp.models.KaraokeLine;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.utils.LanguageManager;
 import musicApp.controllers.songs.KaraokeController;
