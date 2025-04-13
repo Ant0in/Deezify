@@ -7,7 +7,6 @@ import musicApp.models.Song;
 import musicApp.utils.AlertService;
 import musicApp.views.SongContainerView;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.Alert;
@@ -28,7 +27,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
     /**
      * The Library.
      */
-    protected M library = (M) new Library(new ArrayList<>(), "??library??", null);
+    protected M library;
 
     /**
      * Instantiates a new SongContainer controller.
@@ -38,6 +37,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
      */
     public SongContainerController(V view, PlayerController playerController) {
         super(view);
+        library = (M) new Library(new ArrayList<>(), "??library??", null);
         this.playerController = playerController;
     }
 
@@ -71,7 +71,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
             return;
         }
         try {
-            this.playerController.playSong(song);
+            playerController.playSong(song);
         } catch (BadSongException e) {
             alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
         }
@@ -87,7 +87,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
             view.displayError("Invalid song index: " + index);
             return;
         }
-        Song song = this.getSong(index);
+        Song song = getSong(index);
         if (song == null) {
             view.displayError("No song found at index: " + index);
             return;
@@ -95,21 +95,34 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
         playSong(song);
     }
 
+    /**
+     * Pause the playback of the current song.
+     * Delegates the pause operation to the player controller.
+     */
     public void pause() {
         playerController.pause();
     }
 
+    /**
+     * Resume playback of the current song if paused.
+     * Delegates the unpause operation to the player controller.
+     */
     public void unpause() {
         playerController.unpause();
     }
 
+    /**
+     * Check if a song is currently being played.
+     *
+     * @return true if the player is playing, false if paused or stopped.
+     */
     public boolean isPlaying() {
         return playerController.isPlaying();
     }
 
 
     /**
-     * To list list.
+     * Transforms the library into a list of Song.
      *
      * @return the list
      */
@@ -131,11 +144,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
      * Clear selection.
      */
     public void clearSelection() {
-        this.view.clearSelection();
-    }
-
-    public Song getSongByPath(Path path) {
-        return library.getSongByPath(path);
+        view.clearSelection();
     }
 
     public Library getLibrary() {
@@ -146,7 +155,6 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
      * Refresh ui.
      */
     public void refreshUI() {
-        this.view.refreshUI();
+        view.refreshUI();
     }
 }
-

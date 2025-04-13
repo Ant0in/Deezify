@@ -19,9 +19,9 @@ import java.util.List;
  */
 public class MetaController {
 
-    private final AlertService alertService = new AlertService();
+    private final AlertService alertService;
     private final Stage stage;
-    private final DataProvider dataProvider = new DataProvider();
+    private final DataProvider dataProvider;
     private final PlayerController playerController;
     private final SettingsController settingsController;
     private final List<Library> playlists;
@@ -33,13 +33,13 @@ public class MetaController {
      */
     public MetaController(Stage stage) throws IOException {
         this.stage = stage;
-        this.playlists = dataProvider.readPlaylists();
-        Library mainLibrary = loadMainLibraryFromPath(dataProvider.readSettings().getMusicFolder());
-        this.playlists.add(0, mainLibrary);
-        this.playerController = new PlayerController(this, dataProvider.readSettings(), mainLibrary);
-        this.settingsController = new SettingsController(this, dataProvider.readSettings());
+        alertService = new AlertService();
+        dataProvider = new DataProvider();
+        playlists = dataProvider.loadAllLibraries();
+        playerController = new PlayerController(this, dataProvider.readSettings(), getMainLibrary());
+        settingsController = new SettingsController(this, dataProvider.readSettings());
     }
-    
+
 
     /**
      * Switches the scene to the specified scene.
@@ -48,8 +48,8 @@ public class MetaController {
      */
     public final void switchScene(Scenes scene) {
         switch (scene) {
-            case MAINWINDOW -> this.playerController.show(this.stage);
-            case SETTINGS -> this.settingsController.show();
+            case MAINWINDOW -> playerController.show(stage);
+            case SETTINGS -> settingsController.show();
         }
     }
 
@@ -57,7 +57,7 @@ public class MetaController {
      * Refreshes the UI.
      */
     public final void refreshUI() {
-        this.playerController.refreshUI();
+        playerController.refreshUI();
     }
 
     /**
@@ -68,7 +68,8 @@ public class MetaController {
     public void notifySettingsChanged(Settings newSettings) {
         try {
             dataProvider.writeSettings(newSettings);
-            this.playlists.set(0, loadMainLibraryFromPath(newSettings.getMusicFolder()));
+            Library mainLibrary = dataProvider.loadMainLibrary(newSettings.getMusicFolder());
+            playlists.set(0, mainLibrary);
             playerController.onSettingsChanged(newSettings);
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
@@ -89,7 +90,7 @@ public class MetaController {
      * @return the main library
      */
     public Library getMainLibrary() {
-        return this.playlists.getFirst();
+        return playlists.getFirst();
     }
 
     /**
@@ -97,35 +98,16 @@ public class MetaController {
      * NOTE: settings is not a scene but a pop-up window.
      */
     public enum Scenes {
-        /**
-         * Mainwindow scenes.
-         */
         MAINWINDOW,
         SETTINGS
     }
 
     /**
-     * Get the music directory from the settings controller.
-     * @return
+     * Retrieves the current music directory from the settings controller.
+     *
+     * @return The path to the music directory as defined in the settings.
      */
     public Path getMusicDirectory() {
-        return this.settingsController.getMusicDirectory();
+        return settingsController.getMusicDirectory();
     }
-
-    /**
-     * Charge the main library from the settings.
-     *
-     * @return the main library
-     */
-    public Library loadMainLibraryFromPath(Path musicDirectory) {
-        try {
-            MusicLoader loader = new MusicLoader();
-            List<Song> songs = loader.getAllSongs(musicDirectory);
-            return new Library(songs, "??library??", null);
-        } catch (IOException e) {
-            alertService.showExceptionAlert(e);
-            return new Library(); // fallback
-        }
-    }  
-
 }

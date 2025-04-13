@@ -24,25 +24,26 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     /**
      * Instantiates a new Settings controller.
      *
-     * @param metaController the meta controller
+     * @param _controller the meta controller
+     * @param _settings   the settings
      * @throws IOException the io exception
      */
-    public SettingsController(MetaController metaController, Settings settings) throws IOException {
+    public SettingsController(MetaController _controller, Settings _settings) throws IOException {
         super(new SettingsView());
-        this.settings = settings;
-        this.metaController = metaController;
-        this.equalizerController = new EqualizerController(this, settings.getEqualizer());
+        settings = _settings;
+        metaController = _controller;
+        equalizerController = new EqualizerController(this, _settings.getEqualizer());
         initView("/fxml/Settings.fxml");
-        this.settingsStage = new Stage();
+        settingsStage = new Stage();
         initSettingsStage();
     }
 
     private void initSettingsStage() {
-        this.settingsStage.initModality(Modality.APPLICATION_MODAL);
-        this.settingsStage.setResizable(false);
-        this.settingsStage.setTitle("Settings");
-        this.settingsStage.setScene(this.view.getScene());
-        this.settingsStage.setOnCloseRequest(_ -> {
+        settingsStage.initModality(Modality.APPLICATION_MODAL);
+        settingsStage.setResizable(false);
+        settingsStage.setTitle("Settings");
+        settingsStage.setScene(view.getScene());
+        settingsStage.setOnCloseRequest(_ -> {
             handleCancel();
         });
     }
@@ -106,6 +107,9 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
         settings.setBalance(balance);
     }
 
+    /**
+     * Open equalizer.
+     */
     public void openEqualizer() {
         close();
         equalizerController.show();
@@ -113,6 +117,10 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
 
     /**
      * Handle when the save button is pressed
+     *
+     * @param language       the language
+     * @param balance        the balance
+     * @param musicDirectory the music directory
      */
     public void handleSave(Language language, double balance, Path musicDirectory) {
         LanguageManager.getInstance().setLanguage(language);
@@ -141,6 +149,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
 
     /**
      * Get the path of the music directory
+     *
      * @return The path of the music directory
      */
     public Path getMusicDirectory() {

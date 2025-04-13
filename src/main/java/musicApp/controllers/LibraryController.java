@@ -17,7 +17,7 @@ import java.util.Random;
  */
 public class LibraryController extends SongContainerController<LibraryView, LibraryController, Library> {
     private int currentIndex;
-    private Boolean shuffle = false;
+    private Boolean shuffle;
 
     /**
      * Instantiates a new Main library controller.
@@ -26,11 +26,17 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      */
     public LibraryController(PlayerController controller) {
         super(new LibraryView(), controller);
+        shuffle = false;
         initView("/fxml/MainLibrary.fxml");
     }
 
+    /**
+     * Loads a new playlist into the library and updates the view.
+     *
+     * @param playlist The Library object representing the new playlist to load.
+     */
     public void loadPlaylist(Library playlist) {
-        this.library = playlist;
+        library = playlist;
         view.updateListView();
     }
 
@@ -40,11 +46,11 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     public void skip() {
         if (shuffle) {
             Random random = new Random();
-            this.playSong(random.nextInt(library.size()));
+            playSong(random.nextInt(library.size()));
         } else {
             if (currentIndex < library.size() - 1) {
-                this.currentIndex++;
-                this.playSong(this.currentIndex);
+                currentIndex++;
+                playSong(currentIndex);
             }
         }
     }
@@ -54,7 +60,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      */
     public void prec() {
         if (currentIndex > 0) {
-            this.playSong(currentIndex - 1);
+            playSong(currentIndex - 1);
         }
     }
 
@@ -93,28 +99,32 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         view.updateListView();
     }
 
+    /**
+     * Retrieves the index of a given song in the music library.
+     *
+     * @param song The Song object whose index is to be found.
+     * @return The index of the song in the library list, or -1 if the song is not found.
+     */
     private int getSongIndex(Song song) {
         return library.toList().indexOf(song);
     }
 
     /**
-     * Go to song.
+     * Plays a song at the specified index in the library.
      *
-     * @param song the song
+     * @param index The index of the song to play.
      */
-    public void goToSong(Song song) {
-        int index = getSongIndex(song);
-        if (index != -1) {
-            playSong(index);
-        }
-    }
-
     @Override
     public void playSong(int index) {
         currentIndex = index;
         super.playSong(index);
     }
 
+    /**
+     * Plays the specified song.
+     *
+     * @param song The Song object to play.
+     */
     @Override
     public void playSong(Song song) {
         currentIndex = getSongIndex(song);
@@ -129,19 +139,10 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     }
 
     /**
-     * Is shuffle boolean.
-     *
-     * @return the boolean
-     */
-    public Boolean isShuffle() {
-        return this.shuffle;
-    }
-
-    /**
      * Toggle shuffle.
      */
     public void toggleShuffle() {
-        this.shuffle = !this.shuffle;
+        shuffle = !shuffle;
     }
 
     /**
@@ -228,7 +229,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      * @param song the song
      */
     public void removeSongFromPlaylist(Song song) {
-        playerController.removeSongFromPlaylist(song, this.library);
+        playerController.removeSongFromPlaylist(song, library);
         refreshUI();
     }
 
@@ -236,7 +237,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      * Checks if the main library is currently being shown
      */
     public boolean isShowingMainLibrary() {
-        return playerController.getPlaylists().get(0).equals(library);
+        return playerController.getPlaylists().getFirst().equals(library);
     }
 
 
@@ -248,8 +249,9 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     }
 
     /**
-     * Add song to library.
-     * @param songPath
+     * Adds a song to the library.
+     *
+     * @param songPath The path to the song file to be added.
      */
     public void addSong(Path songPath) {
         Song song = new Song(songPath);
@@ -257,10 +259,22 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         view.updateListView();
     }
 
+    /**
+     * Provides artist name auto-completion based on user input.
+     *
+     * @param input The partial artist name entered by the user.
+     * @return An Optional containing the completed artist name if found.
+     */
     public Optional<String> getArtistAutoCompletion(String input) {
         return library.getArtistAutoCompletion(input);
     }
 
+    /**
+     * Provides tag auto-completion based on user input.
+     *
+     * @param input The partial tag entered by the user.
+     * @return An Optional containing the completed tag if found.
+     */
     public Optional<String> getTagAutoCompletion(String input) {
         return library.getTagAutoCompletion(input);
     }

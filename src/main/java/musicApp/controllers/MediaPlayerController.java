@@ -17,17 +17,17 @@ import java.util.List;
  */
 public class MediaPlayerController extends ViewController<MediaPlayerView, MediaPlayerController> {
     private final PlayerController playerController;
-    private final AudioPlayer audioPlayer;
     private final MiniPlayerController miniPlayerController;
+    private final AudioPlayer audioPlayer;
 
     /**
      * Instantiates a new Media player controller.
      *
-     * @param playerController the player controller
+     * @param controller the player controller
      */
-    public MediaPlayerController(PlayerController playerController) {
+    public MediaPlayerController(PlayerController controller) {
         super(new MediaPlayerView());
-        this.playerController = playerController;
+        playerController = controller;
         miniPlayerController = new MiniPlayerController();
         audioPlayer = new AudioPlayer(miniPlayerController);
 
@@ -129,7 +129,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * Toggle shuffle.
      */
     public void toggleShuffle() {
-        this.playerController.toggleShuffle();
+        playerController.toggleShuffle();
     }
 
     /**
@@ -169,7 +169,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * Method that handles the next song button.
      */
     public void handleNextSong() {
-        this.playerController.skip();
+        playerController.skip();
     }
 
     /**
@@ -186,7 +186,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @param balance the balance
      */
     public void setBalance(double balance) {
-        this.audioPlayer.setBalance(balance);
+        audioPlayer.setBalance(balance);
     }
 
     /**
@@ -197,7 +197,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      */
     public void playCurrent(Song song) throws BadSongException {
         audioPlayer.loadSong(song);
-        audioPlayer.setOnEndOfMedia(this.playerController::skip);
+        audioPlayer.setOnEndOfMedia(playerController::skip);
         audioPlayer.unpause();
         miniPlayerController.loadSong(song);
         System.out.println("Playing: " + song.getTitle());

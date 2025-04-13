@@ -7,7 +7,8 @@ import musicApp.models.Song;
 import musicApp.views.QueueView;
 
 /**
- * The type Queue controller.
+ * Controller responsible for managing the song queue view and logic.
+ * Handles adding, removing, reordering, and playing songs in the queue.
  */
 public class QueueController extends SongContainerController<QueueView, QueueController, Library> {
 
@@ -52,12 +53,18 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
         playerController.clearPlayListViewSelection();
     }
 
-
+    /**
+     * Plays the given song from the queue.
+     * Removes the song from the queue before playing it,
+     * then triggers the view to update the list visually.
+     *
+     * @param song The song to play.
+     */
     @Override
     public void playSong(Song song) {
         library.remove(song);
         super.playSong(song);
-        this.view.updateListView();
+        view.updateListView();
     }
 
     /**
@@ -67,7 +74,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
         Song song = playerController.getSelectedPlayListSong();
         try {
             library.add(song);
-            this.view.updateListView();
+            view.updateListView();
         } catch (IllegalArgumentException e) {
             alertService.showExceptionAlert(
                     e,
@@ -80,9 +87,9 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
      * Handle delete song.
      */
     public void handleDeleteSong() {
-        Song song = library.get(this.view.getSelectedSongIndex());
+        Song song = library.get(view.getSelectedSongIndex());
         library.remove(song);
-        this.view.updateListView();
+        view.updateListView();
     }
 
     /**
@@ -90,7 +97,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
      */
     public void handleClearQueue() {
         library.clear();
-        this.view.updateListView();
+        view.updateListView();
     }
 
     /**
@@ -104,7 +111,6 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
 
     /**
      * Append playlist to queue.
-     * TODO: Maybe refactor the library add to accept the same songs if queued
      *
      * @param playlist the playlist
      */
@@ -112,7 +118,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
         for (Song song : playlist.toList()) {
             library.toList().add(song);
         }
-        this.view.updateListView();
+        view.updateListView();
     }
 
     /**

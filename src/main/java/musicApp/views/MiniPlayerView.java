@@ -21,30 +21,37 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
      * The Song title label.
      */
     @FXML
-    Label songTitleLabel;
+    private Label songTitleLabel;
 
     /**
      * The Cover image.
      */
     @FXML
-    ImageView coverImage;
+    private ImageView coverImage;
     /**
      * The Canvas.
      */
     @FXML
-    Canvas canvas;
+    private Canvas canvas;
     // Flag to track whether the image is clipped or not
-    private boolean isClipped = true;
+    private boolean isClipped;
 
     /**
      * The Is basic mode.
      */
-    Boolean isBasicMode = false;
+    Boolean isBasicMode;
+
+    public MiniPlayerView() {
+        super();
+        isClipped = true;
+        isBasicMode = false;
+    }
 
     @Override
     public void init() {
         scene.setOnMouseClicked(_ -> changeVisualizerMode());
     }
+
     private void changeVisualizerMode() {
         isBasicMode = !isBasicMode;
         toggleClip();
@@ -94,7 +101,6 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
     /**
      * Toggle clip.
      */
-// Method to switch between clipped and non-clipped states
     public void toggleClip() {
         if (isClipped) {
             // Remove the clip (non-clipped state)
@@ -108,6 +114,9 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
         isClipped = !isClipped;
     }
 
+    /**
+     * Draw a frame for the audio spectrum visualizer.
+     */
     private void drawFrame( List<Float> values) {
         int numBars = viewController.getBandsNumber();
         double barWidth = canvas.getWidth() / numBars; // Width of each bar
@@ -130,6 +139,9 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
         }
     }
 
+    /**
+     * Draw a circular frame for the audio spectrum visualizer.
+     */
     private void drawCircularFrame(List<Float> values) {
         int numBars = viewController.getBandsNumber();
         double radius = Math.min(canvas.getWidth(), canvas.getHeight()) / 3; // Radius for the circle
