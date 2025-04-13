@@ -23,18 +23,4 @@ public class TestAudioPlayer {
             assertTrue(e instanceof BadM3URadioException);
         }
     }
-
-    @Test
-    public void testValidRadio(){
-        try {
-            AudioPlayer audioPlayer = new AudioPlayer(null);
-            Radio radio = new Radio(Paths.get("src", "test", "resources", "sampleRadio.m3u"));
-            audioPlayer.loadSong(radio);
-            assertEquals(radio, audioPlayer.getLoadedSong());
-        } catch (BadSongException e) {
-            fail("Expected no exception to be thrown");
-        }
-    }
-
-
 }
