@@ -4,13 +4,16 @@ import javafx.scene.control.ListCell;
 import musicApp.controllers.songs.SongCellController;
 import musicApp.models.Song;
 
-
+/**
+ * A custom ListCell for displaying a song in a ListView.
+ * This class extends ListCell and uses a SongCellController
+ */
 public class SongCell extends ListCell<Song> {
 
     private final SongCellController songCellController;
 
-    public SongCell(SongCellController songCellController) {
-        this.songCellController = songCellController;
+    public SongCell(SongCellController controller) {
+        songCellController = controller;
     }
 
     @Override

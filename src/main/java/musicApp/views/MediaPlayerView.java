@@ -78,7 +78,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         pauseIcon.setFitWidth(20);
         pauseIcon.setFitHeight(20);
 
-        this.viewController.isPlaying().addListener((_, _, isPlaying) -> {
+        viewController.isPlaying().addListener((_, _, isPlaying) -> {
             if (isPlaying) {
                 pauseSongButton.setGraphic(pauseIcon);
                 currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");

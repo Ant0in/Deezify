@@ -29,16 +29,29 @@ public class KaraokeController {
     private final LyricsView view;
 
     private Timeline syncTimeline;
-    private List<KaraokeLine> lyricsToDisplay = List.of();
+    private List<KaraokeLine> lyricsToDisplay;
 
-    public KaraokeController(PlayerController playerController,
-                             LyricsManager lyricsManager,
-                             LyricsView view) {
-        this.playerController = playerController;
-        this.lyricsManager = lyricsManager;
-        this.view = view;
+    /**
+     * Instantiates a new Karaoke controller.
+     *
+     * @param _controller the controller
+     * @param _manager    the manager
+     * @param _view       the view
+     */
+    public KaraokeController(PlayerController _controller,
+                             LyricsManager _manager,
+                             LyricsView _view) {
+        playerController = _controller;
+        lyricsToDisplay = List.of();
+        lyricsManager = _manager;
+        view = _view;
     }
 
+    /**
+     * Gets karaoke lines.
+     *
+     * @return the karaoke lines
+     */
     public List<KaraokeLine> getKaraokeLines() {
         Song currentSong = playerController.getCurrentlyLoadedSong();
         if (currentSong == null) return List.of();
@@ -87,7 +100,7 @@ public class KaraokeController {
 
         view.updateKaraokeLyricsHighlight(lyricsToDisplay, null);
 
-        syncTimeline = new Timeline(new KeyFrame(Duration.millis(200), e -> syncLyrics()));
+        syncTimeline = new Timeline(new KeyFrame(Duration.millis(200), _ -> syncLyrics()));
         syncTimeline.setCycleCount(Timeline.INDEFINITE);
         syncTimeline.play();
     }

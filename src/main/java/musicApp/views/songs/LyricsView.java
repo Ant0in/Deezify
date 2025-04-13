@@ -44,14 +44,6 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     @FXML
     private ScrollPane scrollPane, karaokeScrollPane;
 
-    private String dialogTitleText;
-    private String dialogHeaderText;
-    private String noLyricsText;
-    private String addLyricsText;
-    private String karaokeTitleText;
-    private String karaokeHeaderText;
-    private String karaokeContentText;
-
     private KaraokeController karaokeController;
 
     /**
@@ -63,8 +55,8 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         initButtons();
     }
 
-    public void setKaraokeController(KaraokeController karaokeController) {
-        this.karaokeController = karaokeController;
+    public void setKaraokeController(KaraokeController controller) {
+        karaokeController = controller;
     }
 
     /**
@@ -108,32 +100,31 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     private void initTranslation() {
         LanguageManager lang = LanguageManager.getInstance();
+        initButtonsTypes();
+        karaokeEditButton.setText(lang.get("button.edit"));
+        karaokeLyricsButton.setText(lang.get("button.modeKaraoke"));
+        simpleLyricsButton.setText(lang.get("button.simpleLyrics"));
+        karaokeNoLyricsLabel.setText(lang.get("karaoke.no_lyrics"));
+        karaokeAddLyricsButton.setText(lang.get("button.addKaraoke"));
+        lyricsTitle.setText(lang.get("lyrics.title"));
+    }
+
+    private void initButtonsTypes(){
+        LanguageManager lang = LanguageManager.getInstance();
         yesButton = new ButtonType(lang.get("button.yes"), ButtonBar.ButtonData.YES);
         noButton = new ButtonType(lang.get("button.no"), ButtonBar.ButtonData.NO);
         cancelButton = new ButtonType(lang.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         saveButton = new ButtonType(lang.get("button.save"), ButtonBar.ButtonData.OK_DONE);
-        karaokeEditButton.setText(lang.get("button.edit"));
-        karaokeLyricsButton.setText(lang.get("button.modeKaraoke"));
-        simpleLyricsButton.setText(lang.get("button.simpleLyrics"));
-        karaokeNoLyricsLabel.setText(lang.get("karaoke.noLyrics"));
-        karaokeAddLyricsButton.setText(lang.get("button.addKaraoke"));
-        lyricsTitle.setText(lang.get("lyrics.title"));
-        dialogTitleText = lang.get("dialog.editLyrics.title");
-        dialogHeaderText = lang.get("dialog.editLyrics.header");
-        noLyricsText = lang.get("lyrics.noLyrics");
-        addLyricsText = lang.get("button.addLyrics");
-        karaokeTitleText = lang.get("karaoke.title");
-        karaokeHeaderText = lang.get("karaoke.header");
-        karaokeContentText = lang.get("karaoke.content");
     }
 
     /**
      * Displays a dialog to edit the lyrics.
      */
     public Optional<String> showEditLyricsDialog(String initialText) {
+        LanguageManager lang = LanguageManager.getInstance();
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle(dialogTitleText);
-        dialog.setHeaderText(dialogHeaderText);
+        dialog.setTitle(lang.get("dialog.edit_lyrics.title"));
+        dialog.setHeaderText(lang.get("dialog.edit_lyrics.header"));
         dialog.getDialogPane().getButtonTypes().addAll(saveButton, cancelButton);
 
         TextArea textArea = new TextArea(initialText);
@@ -174,10 +165,11 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * The placeholder includes a message and a button to add lyrics.
      */
     private void displayEmptyLyricsPlaceholder() {
-        Label noLyricsLabel = new Label(noLyricsText);
+        LanguageManager lang = LanguageManager.getInstance();
+        Label noLyricsLabel = new Label(lang.get("lyrics.no_lyrics"));
         noLyricsLabel.getStyleClass().add("no-lyrics-label");
 
-        Button addLyricsButton = createEditButton(addLyricsText);
+        Button addLyricsButton = createEditButton(lang.get("button.addLyrics"));
         addLyricsButton.setOnAction(e -> viewController.editLyrics());
 
         VBox placeholder = new VBox(10, noLyricsLabel, addLyricsButton);
@@ -220,18 +212,28 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         return button;
     }
 
-
+    /**
+     * Clears the karaoke lyrics container and removes all nodes except the placeholder and header.
+     */
     private void clearKaraokeContainer() {
         karaokeLyricsContainer.getChildren().removeIf(
-            node -> node != karaokePlaceholder && node != karaokeHeader
+                node -> node != karaokePlaceholder && node != karaokeHeader
         );
     }
 
+    /**
+     * Sets the visibility of the karaoke placeholder.
+     * If visible, it shows a message indicating that no karaoke lyrics are available.
+     */
     private void setPlaceholderVisible(boolean visible) {
         karaokePlaceholder.setVisible(visible);
         karaokePlaceholder.setManaged(visible);
     }
 
+    /**
+     * Creates a label for a karaoke line with optional highlighting.
+     * The label is styled with CSS classes for karaoke and selected lyrics.
+     */
     private Label createKaraokeLabel(KaraokeLine line, boolean highlight) {
         Label label = new Label(line.getLyric());
         label.getStyleClass().add("lyrics-text");
@@ -241,6 +243,11 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         return label;
     }
 
+    /**
+     * Renders the karaoke lines in the karaoke lyrics container.
+     * It clears the container, sets the placeholder visibility, and adds labels for each line.
+     * If a line is active, it scrolls to that line.
+     */
     private void renderKaraokeLines(List<KaraokeLine> lines, KaraokeLine activeLine) {
         clearKaraokeContainer();
 
@@ -271,11 +278,19 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         }
     }
 
+    /**
+     * Updates the karaoke lyrics displayed in the view.
+     * It retrieves the karaoke lines from the karaoke controller and renders them.
+     */
     public void updateKaraokeLyrics() {
         List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLines();
         renderKaraokeLines(karaokeLines, null);
     }
 
+    /**
+     * Updates the karaoke lyrics highlight based on the active line.
+     * It retrieves the karaoke lines from the karaoke controller and renders them with highlighting.
+     */
     public void updateKaraokeLyricsHighlight(List<KaraokeLine> lines, KaraokeLine activeLine) {
         renderKaraokeLines(lines, activeLine);
     }
@@ -296,10 +311,11 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * This method displays an Alert of type CONFIRMATION using pre-defined button types for "Yes", "No", and "Cancel".
      */
     public Optional<Boolean> showOverwriteTxtConfirmation() {
+        LanguageManager lang = LanguageManager.getInstance();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(karaokeTitleText);
-        alert.setHeaderText(karaokeHeaderText);
-        alert.setContentText(karaokeContentText);
+        alert.setTitle(lang.get("karaoke.title"));
+        alert.setHeaderText(lang.get("karaoke.header"));
+        alert.setContentText(lang.get("karaoke.content"));
 
         alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
 
@@ -315,7 +331,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
 
     /**
      * Refreshes the UI by reloading the translations.
-    */
+     */
     public void refreshUI() {
         initTranslation();
         updateLyrics();

@@ -105,7 +105,7 @@ public class LanguageManager {
         return Language.getSupportedLanguages().contains(language);
     }
 
-    public StringProperty languageProperty() {return languageProperty;}
+    public StringProperty getLanguageProperty() {return languageProperty;}
 }
 
 

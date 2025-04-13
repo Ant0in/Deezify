@@ -2,15 +2,23 @@ package musicApp.utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 public class AlertService {
     private final LanguageManager languageManager = LanguageManager.getInstance();
 
-    /**
-     * Displays an alert dialog to show information about an exception.
-     *
-     * @param ex The exception to display. If {@code null}, the alert will display a default message indicating no exception is available.
-     */
+
+    public void showAlert(String contentText, AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(getTitle(alertType));
+        alert.setHeaderText(getHeaderText(alertType));
+        alert.setContentText(contentText);
+        alert.setResizable(true);
+        alert.showAndWait();
+    }
+
     public void showExceptionAlert(Exception ex) {
         showExceptionAlert(ex, AlertType.ERROR);
     }
@@ -23,6 +31,7 @@ public class AlertService {
      */
     public void showExceptionAlert(Exception ex, AlertType alertType) {
         Alert alert = new Alert(alertType);
+        alert.setResizable(true);
         alert.setTitle(getTitle(alertType));
         alert.setHeaderText(getHeaderText(alertType));
         String content = (ex == null) ? "No exception available." :
@@ -60,4 +69,5 @@ public class AlertService {
             default -> languageManager.get("alert.header.default");
         };
     }
+
 }
