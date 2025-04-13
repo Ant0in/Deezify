@@ -3,6 +3,8 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
+import musicApp.exceptions.BadM3URadioException;
+import musicApp.exceptions.BadSongException;
 import musicApp.utils.DataProvider;
 import musicApp.utils.lyrics.LyricsManager;
 import musicApp.utils.lyrics.LyricsDataAccess;
@@ -69,7 +71,7 @@ public class Song {
      * Get the path to the song as a string.
      * @return The path to the song as a string.
      */
-    public String getSource() {
+    public String getSource() throws BadSongException {
         return filePath.toUri().toString();
     }
 

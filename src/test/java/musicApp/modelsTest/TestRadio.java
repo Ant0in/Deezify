@@ -1,6 +1,10 @@
 package musicApp.modelsTest;
 
+import javafx.scene.media.AudioSpectrumListener;
+import musicApp.controllers.MiniPlayerController;
 import musicApp.exceptions.BadM3URadioException;
+import musicApp.exceptions.BadSongException;
+import musicApp.models.AudioPlayer;
 import musicApp.models.Radio;
 import org.junit.Test;
 
@@ -35,4 +39,18 @@ public class TestRadio {
             throw new RuntimeException("Failed to create Radio object", e);
         }        
     }
+
+    @Test
+    public void testBadM3URadioException() {
+        try {
+            AudioPlayer audioPlayer = new AudioPlayer(null);
+            Radio radio = new Radio(Paths.get("src", "test", "resources", "badRadio.m3u"));
+            audioPlayer.loadSong(radio);
+            fail("Expected BadM3URadioException to be thrown");
+        } catch (BadSongException e) {
+            assertTrue(e instanceof BadM3URadioException);
+        }
+    }
+
+
 }

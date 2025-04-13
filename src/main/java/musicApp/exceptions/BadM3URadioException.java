@@ -1,6 +1,6 @@
 package musicApp.exceptions;
 
-public class BadM3URadioException extends Exception {
+public class BadM3URadioException extends BadSongException {
     public BadM3URadioException(String message) {
         super(message);
     }

@@ -1,5 +1,6 @@
 package musicApp.controllers;
 
+import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
 import musicApp.models.Song;
@@ -71,7 +72,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
         }
         try {
             this.playerController.playSong(song);
-        } catch (EqualizerGainException e) {
+        } catch (BadSongException e) {
             alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
         }
     }

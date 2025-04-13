@@ -2,6 +2,11 @@ package musicApp.models;
 
 import musicApp.exceptions.BadM3URadioException;
 import javafx.scene.image.Image;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.List;
@@ -21,6 +26,22 @@ public class Radio extends Song {
     public Radio(Path filePath) throws BadM3URadioException {
         super(filePath);
         webUrl = parseM3U(filePath);
+    }
+
+    /**
+     * Checks if the line looks like a URL.
+     * @param line the line to check
+     * @return true if the line looks like a URL, false otherwise
+     */
+    private boolean looksLikeURL(String line) {
+        try {
+            URI uri = new URI(line);
+            // Vérifie que le scheme est http ou https, et qu'il y a un host
+            return (uri.getScheme() != null && (uri.getScheme().equals("http") || uri.getScheme().equals("https"))
+                    && uri.getHost() != null);
+        } catch (URISyntaxException e) {
+            return false;
+        }
     }
 
     /**
@@ -58,7 +79,10 @@ public class Radio extends Song {
      * @return the web url as a string.
      */
     @Override
-    public String getSource() {
+    public String getSource() throws BadM3URadioException {
+        if (!looksLikeURL(webUrl)) {
+            throw new BadM3URadioException("The M3U file is empty or does not contain a valid URL.");
+        }
         return webUrl;
     } 
 

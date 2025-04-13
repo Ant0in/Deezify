@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.utils.AlertService;
 import javafx.scene.control.Alert;
@@ -52,7 +53,7 @@ public class AudioPlayer {
      *
      * @param song The song to load.
      */
-    public void loadSong(Song song){
+    public void loadSong(Song song) throws BadSongException {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }

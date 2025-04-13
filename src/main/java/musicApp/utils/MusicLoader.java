@@ -31,12 +31,15 @@ public class MusicLoader {
         songPaths = getAllSongPaths(folderPath);
         for (Path songPath : songPaths) {
             if (songPath.toString().endsWith(".m3u")) {
-                try{
-                    songList.add(new Radio(songPath));
+
+                Radio newRadio = null;
+                try {
+                    newRadio = new Radio(songPath);
+                    songList.add(newRadio);
                 } catch (BadM3URadioException e) {
-                    AlertService alertService = new AlertService();
-                    alertService.showExceptionAlert(e);
+                    // Couldn't read the radio, so we skip it
                 }
+
             } else {
                 songList.add(new Song(songPath));
             }

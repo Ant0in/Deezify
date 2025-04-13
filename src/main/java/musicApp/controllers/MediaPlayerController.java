@@ -4,6 +4,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
+import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.AudioPlayer;
 import musicApp.models.Song;
@@ -194,7 +195,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @param song the song
      * @throws EqualizerGainException 
      */
-    public void playCurrent(Song song) throws EqualizerGainException {
+    public void playCurrent(Song song) throws BadSongException {
         audioPlayer.loadSong(song);
         audioPlayer.setOnEndOfMedia(this.playerController::skip);
         audioPlayer.unpause();

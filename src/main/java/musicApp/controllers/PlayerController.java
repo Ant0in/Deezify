@@ -10,6 +10,7 @@ import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.songs.LyricsController;
+import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.FileManager;
@@ -89,7 +90,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @param song the song
      * @throws EqualizerGainException 
      */
-    public void playSong(Song song) throws EqualizerGainException {
+    public void playSong(Song song) throws BadSongException {
         this.mediaPlayerController.playCurrent(song);
     }
 
