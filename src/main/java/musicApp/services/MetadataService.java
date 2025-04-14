@@ -183,7 +183,7 @@ public class MetadataService {
      * @throws FieldDataInvalidException If the tag data is invalid or inconsistent with expected field types.
      */
     private Tag createTag(AudioFile audioFile, Metadata metadata) throws FieldDataInvalidException {
-        Tag tag = audioFile.getTag();
+        Tag tag = audioFile.getTagOrCreateAndSetDefault();
         // Checks if the tag contains a standard field, if not initializes a default tag
         if (!tag.hasField(FieldKey.TITLE)) {
             tag = audioFile.getTagAndConvertOrCreateDefault();

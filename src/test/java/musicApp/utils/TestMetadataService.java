@@ -234,4 +234,56 @@ public class TestMetadataService {
         ArrayList<String> parsed = (ArrayList<String>) parseMethod.invoke(null, formatted);
         assertEquals(original, parsed);
     }
+
+    /**
+     * Tests creating tags and setting metadata (title, artist, genre) on MP3 files without tags.
+     */
+    @Test
+    public void testCreateTagsNoTagsMP3() throws Exception {
+        Path target = prepareWritableCopy("noID3TagMP3.mp3", "testNoTagMP3.mp3");
+
+        // Create Metadata object and set values
+        Metadata metadata = new Metadata();
+        metadata.setTitle("New Title");
+        metadata.setArtist("New Artist");
+        metadata.setGenre("New Genre");
+
+        // Set the metadata on the MP3 file
+        utils.setMetadata(metadata, target.toFile());
+
+        // Load the metadata from the file and verify it's correctly set
+        Metadata loaded = utils.getMetadata(target.toFile());
+
+        assertEquals(metadata.getTitle(), loaded.getTitle());
+        assertEquals(metadata.getArtist(), loaded.getArtist());
+        assertEquals(metadata.getGenre(), loaded.getGenre());
+
+        Files.delete(target);
+    }
+
+    /**
+     * Tests creating tags and setting metadata (title, artist, genre) on WAV files without tags.
+     */
+    @Test
+    public void testCreateTagsNoTagsWAV() throws Exception {
+        Path target = prepareWritableCopy("noTagWAV.wav", "testNoTagWAV.wav");
+
+        // Create Metadata object and set values
+        Metadata metadata = new Metadata();
+        metadata.setTitle("New Title");
+        metadata.setArtist("New Artist");
+        metadata.setGenre("New Genre");
+
+        // Set the metadata on the WAV file
+        utils.setMetadata(metadata, target.toFile());
+
+        // Load the metadata from the file and verify it's correctly set
+        Metadata loaded = utils.getMetadata(target.toFile());
+
+        assertEquals(metadata.getTitle(), loaded.getTitle());
+        assertEquals(metadata.getArtist(), loaded.getArtist());
+        assertEquals(metadata.getGenre(), loaded.getGenre());
+
+        Files.delete(target);
+    }
 }
