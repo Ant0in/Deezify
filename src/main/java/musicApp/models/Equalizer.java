@@ -1,33 +1,55 @@
 package musicApp.models;
 
 import com.google.gson.annotations.Expose;
+import javafx.scene.media.EqualizerBand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
+
+import javafx.scene.media.EqualizerBand;
+
 public class Equalizer {
-    public final double MAX_GAIN_DB = 12;
-    public final double MIN_GAIN_DB = -24;
+    public final double MAX_GAIN_DB = EqualizerBand.MAX_GAIN;
+    public final double MIN_GAIN_DB = EqualizerBand.MIN_GAIN;
     // default javafx frequencies
     private final ArrayList<Integer> BANDS_FREQUENCY = new ArrayList<>(Arrays.asList(32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000));
     @Expose
-    private List<Double> bandsGain = new ArrayList<>();
+    private List<Double> bandsGain;
 
+    /**
+     * Default constructor for Equalizer.
+     */
     public Equalizer() {
+        bandsGain = new ArrayList<>();
         List<Double> defaultBandsGain = Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         setBandsGain(defaultBandsGain);
     }
 
+    /**
+     * Constructor for Equalizer with specified bands gain.
+     * @param bandsGain
+     */
     public Equalizer(List<Double> bandsGain) {
         checkBandsGain(bandsGain);
         setBandsGain(bandsGain);
     }
 
+    /**
+     * Get the number of bands in the equalizer.
+     * @return the number of bands
+     */
     private int getBandsSize() {
         return BANDS_FREQUENCY.size();
     }
 
+    /**
+     * Check if the band index and gain are valid.
+     * @param bandIndex Index of the band to check
+     * @param gain Gain value to check
+     */
     private void checkBand(int bandIndex, double gain) {
         checkBandIndex(bandIndex);
         if (gain < MIN_GAIN_DB || gain > MAX_GAIN_DB) {
@@ -35,12 +57,20 @@ public class Equalizer {
         }
     }
 
+    /**
+     * Check if the band index is valid.
+     * @param bandIndex Index of the band to check
+     */
     private void checkBandIndex(int bandIndex) {
         if (bandIndex < 0 || bandIndex >= getBandsSize()) {
             throw new IllegalArgumentException("Invalid band index: " + bandIndex);
         }
     }
 
+    /**
+     * Check if the bands gain list is valid.
+     * @param bandsGain List of bands gain to check
+     */
     private void checkBandsGain(List<Double> bandsGain) {
         if (bandsGain == null || bandsGain.size() != getBandsSize()) {
             throw new IllegalArgumentException("Equalizer bands must have exactly " + getBandsSize() + " values.");
@@ -49,36 +79,71 @@ public class Equalizer {
             checkBand(i, bandsGain.get(i));
         }
     }
-
+    
+    /**
+     * Get the gain of a specific band.
+     * @param bandIndex Index of the band to get the gain for
+     * @return The gain of the band at the specified index
+     */
     public double getBandGain(int bandIndex) {
         return bandsGain.get(bandIndex);
     }
 
+    /**
+     * Set the gain of a specific band.
+     * @param bandIndex Index of the band to set the gain for
+     * @param gain The gain value to set for the band at the specified index
+     */
     public void setBandGain(int bandIndex, double gain) {
         checkBand(bandIndex, gain);
         bandsGain.set(bandIndex, gain);
     }
 
+    /**
+     * Get the list of bands gain.
+     * @return the list of bands gain
+     */
     public List<Double> getBandsGain() {
         return bandsGain;
     }
 
-    private void setBandsGain(List<Double> bandsGain) {
-        this.bandsGain = bandsGain;
+    /**
+     * Set the list of bands gain.
+     * @param newBandsGain the new list of bands gain
+     */
+    public void setBandsGain(List<Double> newBandsGain) {
+        bandsGain = newBandsGain;
     }
 
+    /**
+     * Get the maximum gain in decibels.
+     * @return the maximum gain in decibels
+     */
     public double getMaxGainDB() {
         return MAX_GAIN_DB;
     }
 
+    /**
+     * Get the minimum gain in decibels.
+     * @return the minimum gain in decibels
+     */
     public double getMinGainDB() {
         return MIN_GAIN_DB;
     }
-
+    
+    /**
+     * Get the frequency of a specific band.
+     * @param bandIndex Index of the band to get the frequency for
+     * @return the frequency of the band at the specified index
+     */
     public int getBandFrequency(int bandIndex) {
         return BANDS_FREQUENCY.get(bandIndex);
     }
 
+    /**
+     * Get the list of bands frequency.
+     * @return the list of bands frequency
+     */
     @Override
     public String toString() {
         return String.join(",",

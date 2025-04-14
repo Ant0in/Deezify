@@ -1,13 +1,12 @@
 package musicApp.views;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.songs.SongCellController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.songs.SongCell;
 
 /**
@@ -22,21 +21,15 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
     @FXML
     private Button addSongButton;
 
-    /**
-     * Instantiates a new Main library view.
-     */
-    public LibraryView() {
-    }
-
     @Override
     public void init() {
         initSongInput();
         initButtons();
         initPlayListView();
         updateListView();
-        initTranslation();
         setupListSelectionListeners();
         enableDoubleClickToPlay();
+        refreshTranslation();
     }
 
     /**
@@ -44,13 +37,15 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
      */
     private void initSongInput() {
         songInput.textProperty().addListener((_, _, newVal) -> {
-            if (newVal != null && !newVal.isEmpty()) {
-                listView.getItems().setAll(viewController.searchLibrary(newVal));
-            } else {
+            if (newVal == null || newVal.isEmpty()) {
                 updateListView();
+            } else {
+                listView.getItems().setAll(viewController.searchLibrary(newVal));
             }
         });
     }
+
+
 
     /**
      * Initialize the buttons in the view.
@@ -62,11 +57,9 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
     /**
      * Initialize the translations of the texts in the view.
      */
-    protected void initTranslation() {
-        songInput.promptTextProperty().bind(Bindings.createStringBinding(
-                () -> LanguageManager.getInstance().get("search"),
-                LanguageManager.getInstance().languageProperty()
-        ));
+    @Override
+    protected void refreshTranslation() {
+        songInput.setPromptText(LanguageService.getInstance().get("search"));
     }
 
 

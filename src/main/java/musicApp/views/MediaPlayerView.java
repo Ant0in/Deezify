@@ -31,13 +31,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     @FXML
     private Slider volumeSlider;
     @FXML
-    private ToggleButton shuffleToggle, lyricsToggle;
-
-    /**
-     * Instantiates a new Media player view.
-     */
-    public MediaPlayerView() {
-    }
+    private ToggleButton shuffleToggle, lyricsToggle, miniPlayerToggle;
 
     @Override
     public void init() {
@@ -52,7 +46,8 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         nextSongButton.setOnAction(_ -> viewController.handleNextSong());
         previousSongButton.setOnAction(_ -> viewController.handlePreviousSong());
         shuffleToggle.setOnAction(_ -> viewController.toggleShuffle());
-        lyricsToggle.setOnAction(event -> viewController.toggleLyrics(lyricsToggle.isSelected()));
+        lyricsToggle.setOnAction(_ -> viewController.toggleLyrics(lyricsToggle.isSelected()));
+        miniPlayerToggle.setOnAction(_ -> viewController.toggleMiniPlayer() );
     }
 
     private void initBindings() {
@@ -77,7 +72,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         pauseIcon.setFitWidth(20);
         pauseIcon.setFitHeight(20);
 
-        this.viewController.isPlaying().addListener((_, _, isPlaying) -> {
+        viewController.isPlaying().addListener((_, _, isPlaying) -> {
             if (isPlaying) {
                 pauseSongButton.setGraphic(pauseIcon);
                 currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");

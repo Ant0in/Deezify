@@ -1,9 +1,12 @@
 package musicApp.views;
 
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.PopupWindow;
 import musicApp.controllers.ViewController;
+import musicApp.services.LanguageService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +30,12 @@ public abstract class View<V extends View<V, C>, C extends ViewController<V, C>>
      * The Root pane.
      */
     protected Pane rootPane;
+    protected PopupWindow rootWindow;
+    protected StringProperty languageProperty;
+
+    public View() {
+        initializeLanguageProperty();
+    }
 
     /**
      * Sets view controller.
@@ -49,6 +58,22 @@ public abstract class View<V extends View<V, C>, C extends ViewController<V, C>>
         loader.setController(this);
         rootPane = loader.load();
         scene = new Scene(rootPane);
+    }
+
+    public void initializePopupWindow(String fxmlPath) throws IOException {
+        URL url = getClass().getResource(fxmlPath);
+        FXMLLoader loader = new FXMLLoader(url);
+        loader.setController(this);
+        rootWindow = loader.load();
+    }
+
+    public void initializeLanguageProperty() {
+        languageProperty = LanguageService.getInstance().getLanguageProperty();
+        languageProperty.addListener((_, _, _) -> refreshTranslation());
+    }
+
+    protected void refreshTranslation() {
+        // Override this method in subclasses to refresh translations
     }
 
     /**

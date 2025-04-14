@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<ContextMenu xmlns="http://javafx.com/javafx/23.0.1"
+             xmlns:fx="http://javafx.com/fxml/1"
+             fx:id="contextMenu" >
+    <items>
+        <MenuItem fx:id="addToQueueItem"/>
+        <MenuItem fx:id="replaceQueueItem"/>
+        <MenuItem fx:id="editItem"/>
+        <MenuItem fx:id="deleteItem"/>
+    </items>
+</ContextMenu>

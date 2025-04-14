@@ -1,6 +1,5 @@
 package musicApp.views.settings;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -10,11 +9,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.EqualizerController;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 import java.util.List;
 
+/**
+ * This is the view for the Equalizer settings.
+ * It contains sliders for each band of the equalizer.
+ */
 public class EqualizerView extends View<EqualizerView, EqualizerController> {
 
 
@@ -26,20 +29,26 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
     @Override
     public void init() {
         initButtons();
-        initTranslations();
+        refreshTranslation();
         initSliders();
     }
 
+    /**
+     * Show the equalizer view.
+     *
+     * @param stage The stage to show the view on.
+     */
     public void show(Stage stage) {
         stage.setScene(scene);
         stage.setTitle("Equalizer");
         stage.show();
-        stage.setOnCloseRequest(event -> {
-            viewController.close();
-        });
+        stage.setOnCloseRequest(_ -> viewController.close());
     }
 
-
+    /**
+     * Initialize the sliders for the equalizer bands.
+     * Each slider is created with a VBox containing the slider, its value label, and frequency label.
+     */
     private void initSliders() {
         int numberOfSliders = 10;
         for (int i = 0; i < numberOfSliders; i++) {
@@ -48,6 +57,12 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
         }
     }
 
+    /**
+     * Create a VBox containing a slider, its value label, and frequency label.
+     *
+     * @param sliderIndex The index of the slider.
+     * @return A VBox containing the slider and its labels.
+     */
     private VBox sliderVBox(int sliderIndex) {
         int padding = 15;
         VBox sliderVBox = new VBox(10);
@@ -60,6 +75,12 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
         return sliderVBox;
     }
 
+    /**
+     * Create a slider for the equalizer band.
+     *
+     * @param sliderIndex The index of the slider.
+     * @return A Slider object for the equalizer band.
+     */
     private Slider Slider(int sliderIndex) {
         double initGainValue = viewController.getEqualizerBandGain(sliderIndex);
         Slider slider = new Slider(viewController.getMinGainDB(), viewController.getMaxGainDB(), initGainValue);
@@ -72,6 +93,12 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
         return slider;
     }
 
+    /**
+     * Create a label for the slider value.
+     *
+     * @param slider The slider to bind the label to.
+     * @return A Label object for the slider value.
+     */
     private Label sliderValueLabel(Slider slider) {
         Label label = new Label();
         label.setMinWidth(50);
@@ -80,6 +107,12 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
         return label;
     }
 
+    /**
+     * Create a label for the band frequency.
+     *
+     * @param bandIndex The index of the band.
+     * @return A Label object for the band frequency.
+     */
     private Label bandFrequenciesLabel(int bandIndex) {
         Label label = new Label();
         int frequency = viewController.getBandFrequency(bandIndex);
@@ -88,6 +121,12 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
         return label;
     }
 
+    /**
+     * Get the frequency label string based on the value.
+     *
+     * @param value The frequency value.
+     * @return A string representing the frequency label.
+     */
     private String getFreqLabelString(int value) {
         String freq = "Hz";
         if (value >= 1000) {
@@ -97,21 +136,29 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
         return value + " " + freq;
     }
 
-    private void initTranslations() {
-        LanguageManager lm = LanguageManager.getInstance();
-        okButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("settings.ok"), lm.languageProperty()
-        ));
-        cancelButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.cancel"), lm.languageProperty()
-        ));
+    /**
+     * Initialize the language combobox to display the current language.
+     */
+    @Override
+    protected void refreshTranslation() {
+        LanguageService ls = LanguageService.getInstance();
+        okButton.setText(ls.get("button.ok"));
+        cancelButton.setText(ls.get("button.cancel"));
     }
 
+    /**
+     * Initialize the buttons in the view.
+     */
     private void initButtons() {
         okButton.setOnMouseClicked(_ -> viewController.close());
         cancelButton.setOnMouseClicked(_ -> viewController.handleCancel());
     }
 
+    /**
+     * Get the values of the sliders in the equalizer view.
+     *
+     * @return A list of doubles representing the values of the sliders.
+     */
     public List<Double> getSlidersValues() {
         return slidersContainer.getChildren().stream()
                 .filter(node -> node instanceof VBox)
@@ -124,6 +171,10 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
                 .toList();
     }
 
+    /**
+     * Update the values of the sliders in the equalizer view.
+     * This method sets the value of each slider to the corresponding value from the equalizer controller.
+     */
     public void updateSlidersValues() {
         int sliderIndex = 0;
 

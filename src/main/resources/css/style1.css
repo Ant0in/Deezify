@@ -53,6 +53,23 @@
     -fx-background-color: transparent;
 }
 
+/* Pre Completion Text Field */
+.pre-completion-text-field {
+    -fx-font-family: "MonoSpaced";
+    -fx-background-color: #1e2a38;
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+
+/* AutoCompletion Text Field */
+.auto-completion-text-field {
+    -fx-font-family: "MonoSpaced";
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-text-fill: red;
+}
+
 /* Song Progress Time Label */
 #songProgressTimeLabel {
     -fx-text-fill: #b0b3d6;

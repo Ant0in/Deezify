@@ -2,30 +2,38 @@ package musicApp.controllers.playlists;
 
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.playlists.PlaylistCellView;
 
+/**
+ * The type Playlist cell controller.
+ */
 public class PlaylistCellController extends ViewController<PlaylistCellView, PlaylistCellController> {
 
     private final PlaylistNavigatorController navigatorController;
     private Library library;
 
-    public PlaylistCellController(PlaylistNavigatorController navigatorController) {
+    /**
+     * Instantiates a new Playlist cell controller.
+     *
+     * @param controller the controller
+     */
+    public PlaylistCellController(PlaylistNavigatorController controller) {
         super(new PlaylistCellView());
-        this.navigatorController = navigatorController;
+        navigatorController = controller;
         initView("/fxml/PlaylistCell.fxml");
     }
 
     /**
      * Update the song in the view.
      *
-     * @param library the new selected library
+     * @param _library the new selected library
      */
-    public void update(Library library) {
-        if (!library.equals(getLibrary())) {
-            this.library = library;
+    public void update(Library _library) {
+        if (!_library.equals(getLibrary())) {
+            library = _library;
         }
-        this.view.update(library);
+        view.update(library);
     }
 
     /**
@@ -47,25 +55,15 @@ public class PlaylistCellController extends ViewController<PlaylistCellView, Pla
     }
 
     /**
-     * Is the library deletable.
-     * For now, only the main Library and the favorites ar not deletable.
-     *
-     * @return True if the library is deletable, false otherwise.
-     */
-    public boolean isDeletable() {
-        return navigatorController.isDeletable(library);
-    }
-
-    /**
      * Get the name of the library.
      *
      * @return the name of the library
      */
     public String getLibraryName() {
         if (library.getName().equals("??favorites??")) {
-            return LanguageManager.getInstance().get("favorites");
+            return LanguageService.getInstance().get("favorites");
         } else if (library.getName().equals("??library??")) {
-            return LanguageManager.getInstance().get("library");
+            return LanguageService.getInstance().get("library");
         } else {
             return library.getName();
         }

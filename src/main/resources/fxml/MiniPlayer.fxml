@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<VBox alignment="CENTER" spacing="5" prefWidth="550" prefHeight="500" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/style2.css">
+    <StackPane>
+
+        <ImageView fx:id="coverImage" fitWidth="250" fitHeight="250" >
+            <clip>
+                <Circle centerX="125" centerY="125" radius="125" />
+            </clip>
+        </ImageView>
+
+
+        <Label fx:id="songTitleLabel"
+               textFill="white"
+               translateY="-150"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-font-family:Helvetica Neue "/>
+        <Canvas fx:id="canvas" height="400" width="400"/>
+    </StackPane>
+</VBox>
+

@@ -1,22 +1,33 @@
 package musicApp.controllers.settings;
 
-import javafx.stage.Stage;
-import musicApp.controllers.ViewController;
-import musicApp.models.Equalizer;
-import musicApp.views.settings.EqualizerView;
-
 import java.util.List;
 
+import javafx.stage.Stage;
+import musicApp.controllers.ViewController;
+import musicApp.views.settings.EqualizerView;
+import musicApp.models.Equalizer;
+
+
+/**
+ * The type Equalizer controller.
+ */
 public class EqualizerController extends ViewController<EqualizerView, EqualizerController> {
+    
     private final SettingsController settingsController;
     private final Stage stage;
     private final Equalizer equalizer;
 
-    public EqualizerController(SettingsController settingsController, Equalizer equalizer) {
+    /**
+     * Instantiates a new Equalizer controller.
+     *
+     * @param _controller the controller
+     * @param _equalizer  the equalizer
+     */
+    public EqualizerController(SettingsController _controller, Equalizer _equalizer) {
         super(new EqualizerView());
-        this.settingsController = settingsController;
-        this.stage = new Stage();
-        this.equalizer = equalizer;
+        settingsController = _controller;
+        stage = new Stage();
+        equalizer = _equalizer;
         initView("/fxml/Equalizer.fxml");
     }
 
@@ -24,7 +35,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      * Show the equalizer.
      */
     public void show() {
-        this.view.show(stage);
+        view.show(stage);
     }
 
     /**
@@ -32,7 +43,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      */
     public void close() {
         stage.close();
-        this.settingsController.show();
+        settingsController.show();
     }
 
     /**
@@ -42,57 +53,72 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      * @param value     The new value of the band.
      */
     public void updateEqualizerBand(int bandIndex, double value) {
-        this.equalizer.setBandGain(bandIndex, value);
+        equalizer.setBandGain(bandIndex, value);
+    }
+
+    /**
+     * * Update a band in the equalizer.
+     *
+     * @param bandsGain The new values of the bands.
+    */
+    public void updateEqualizerBands(List<Double> bandsGain) {
+        equalizer.setBandsGain(bandsGain);
     }
 
     /**
      * Get the band frequency.
      *
      * @param bandIndex The index of the band.
+     * @return the band frequency
      */
     public int getBandFrequency(int bandIndex) {
-        return this.equalizer.getBandFrequency(bandIndex);
+        return equalizer.getBandFrequency(bandIndex);
     }
 
     /**
      * Get the band gain.
      *
      * @param bandIndex The index of the band.
+     * @return the equalizer band gain
      */
     public double getEqualizerBandGain(int bandIndex) {
-        return this.equalizer.getBandGain(bandIndex);
+        return equalizer.getBandGain(bandIndex);
     }
 
     /**
      * Get the maximum gain in dB.
+     *
+     * @return the max gain db
      */
     public double getMaxGainDB() {
-        return this.equalizer.getMaxGainDB();
+        return equalizer.getMaxGainDB();
     }
 
     /**
      * Get the minimum gain in dB.
+     *
+     * @return the min gain db
      */
     public double getMinGainDB() {
-        return this.equalizer.getMinGainDB();
+        return equalizer.getMinGainDB();
     }
 
     /**
      * Update the equalizer.
      */
     public void update() {
-        List<Double> equalizerBands = this.view.getSlidersValues();
+        List<Double> equalizerBands = view.getSlidersValues();
         for (int bandIndex = 0; bandIndex < equalizerBands.size(); bandIndex++) {
             updateEqualizerBand(bandIndex, equalizerBands.get(bandIndex));
         }
-        this.view.updateSlidersValues();
+        view.updateSlidersValues();
     }
 
     /**
      * Handle the cancel button.
      */
     public void handleCancel() {
-        this.view.updateSlidersValues();
+        view.updateSlidersValues();
     }
 
 }

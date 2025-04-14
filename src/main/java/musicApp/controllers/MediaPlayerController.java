@@ -1,31 +1,36 @@
 package musicApp.controllers;
 
+import java.util.List;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
+import musicApp.exceptions.BadSongException;
+import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.AudioPlayer;
 import musicApp.models.Song;
 import musicApp.views.MediaPlayerView;
-
-import java.util.List;
 
 /**
  * The  MediaPlayer controller.
  */
 public class MediaPlayerController extends ViewController<MediaPlayerView, MediaPlayerController> {
     private final PlayerController playerController;
+    private final MiniPlayerController miniPlayerController;
     private final AudioPlayer audioPlayer;
 
     /**
      * Instantiates a new Media player controller.
      *
-     * @param playerController the player controller
+     * @param controller the player controller
      */
-    public MediaPlayerController(PlayerController playerController) {
+    public MediaPlayerController(PlayerController controller) {
         super(new MediaPlayerView());
-        this.playerController = playerController;
-        audioPlayer = new AudioPlayer();
+        playerController = controller;
+        miniPlayerController = new MiniPlayerController();
+        audioPlayer = new AudioPlayer(miniPlayerController);
+
         initView("/fxml/MediaPlayer.fxml");
     }
 
@@ -45,7 +50,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @return The progress of the song.
      */
     public DoubleProperty progressProperty() {
-        return audioPlayer.progressProperty();
+        return audioPlayer.getProgressProperty();
     }
 
     /**
@@ -90,7 +95,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @return The volume property.
      */
     public DoubleProperty volumeProperty() {
-        return audioPlayer.volumeProperty();
+        return audioPlayer.getVolumeProperty();
     }
 
     /**
@@ -108,7 +113,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @return The current song property.
      */
     public StringProperty currentSongProperty() {
-        return audioPlayer.currentSongStringProperty();
+        return audioPlayer.getCurrentSongStringProperty();
     }
 
     /**
@@ -124,7 +129,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * Toggle shuffle.
      */
     public void toggleShuffle() {
-        this.playerController.toggleShuffle();
+        playerController.toggleShuffle();
     }
 
     /**
@@ -164,7 +169,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * Method that handles the next song button.
      */
     public void handleNextSong() {
-        this.playerController.skip();
+        playerController.skip();
     }
 
     /**
@@ -181,20 +186,20 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * @param balance the balance
      */
     public void setBalance(double balance) {
-        this.audioPlayer.setBalance(balance);
+        audioPlayer.setBalance(balance);
     }
 
     /**
      * Load and Play the currently selected song.
      *
      * @param song the song
+     * @throws EqualizerGainException 
      */
-    public void playCurrent(Song song) {
+    public void playCurrent(Song song) throws BadSongException {
         audioPlayer.loadSong(song);
-        audioPlayer.setOnEndOfMedia(this.playerController::skip);
+        audioPlayer.setOnEndOfMedia(playerController::skip);
         audioPlayer.unpause();
-        System.out.println("Playing: " + song.getTitle());
-
+        miniPlayerController.loadSong(song);
     }
 
     /**
@@ -211,13 +216,23 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      * Set the equalizer bands.
      *
      * @param equalizerBandsGain The gain of the equalizer bands.
+     * @throws EqualizerGainException 
      */
-    public void setEqualizerBands(List<Double> equalizerBandsGain) {
+    public void setEqualizerBands(List<Double> equalizerBandsGain) throws EqualizerGainException {
         audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
     }
 
+    public List<Double> getEqualizerBands() {
+        return audioPlayer.getEqualizerBandsGain();
+    }
 
     public void toggleLyrics(boolean show) {
         playerController.toggleLyrics(show);
     }
+
+    public void toggleMiniPlayer() {
+        miniPlayerController.toggleView();
+    }
+
+    public AudioPlayer getAudioPlayer() { return audioPlayer; };
 }
