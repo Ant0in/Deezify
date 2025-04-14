@@ -1,13 +1,13 @@
 package musicApp.controllers;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.util.Duration;
-
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import musicApp.models.Song;
 import musicApp.views.DjPlayerView;
 
@@ -21,7 +21,6 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     
     // parameters for the effects
     private double timelineSpeed;
-    private double gainValue;
     private double bassBoostGain;
     private double pressureStrength;
     List<Double> gainModeBands = new ArrayList<>(Collections.nCopies(10, 0.0));
@@ -37,7 +36,6 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     private static final double MAX_DB = 12.0;
     private static final double MIN_DB = -24.0;
     private static final double NUM_BANDS = 10;
-    private static final double MIN_STRENGTH = 0.0;
     private static final double MAX_STRENGHT = 18.0;
     private static final double MIN_BASS_BOOST = 6.0;
 
@@ -67,17 +65,12 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         stage.setOnCloseRequest(_ -> onQuit());
         stage.setTitle("DJ Player");
         stage.setResizable(false);
-        toggleView();
+        stage.show();
     }
 
-    public void toggleView() {
-        if (stage.isShowing()) {
-            stage.close();
-        } else {
-            stage.show();
-        }
-    }
-
+    /**
+     * Toggles the bass boost mode.
+     */
     public void toggleBassBoostMode() {
 
         double low = -3.0;
@@ -85,6 +78,9 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     }
 
+    /**
+     * Toggles the gain mode.
+     */
     public void toggleBoostGainMode() {
 
         gainModeBands = List.of(
@@ -94,6 +90,9 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     }
 
+    /**
+     * Toggles the pressure mode.
+     */
     public void togglePressureMode() {
 
         double abs = Math.abs(MIN_DB) + Math.abs(MAX_DB);
@@ -106,6 +105,9 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     }
 
+    /**
+     * Toggles the wave gain mode.
+     */
     public void toggleWaveGainMode() {
 
         if (timeline != null && timeline.getStatus() == javafx.animation.Animation.Status.RUNNING) {
@@ -138,6 +140,9 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     }
 
+    /**
+     * Applies the mixed effects to the media player.
+     */
     public void applyMixedEffects() {
 
         if (timeline != null) { timeline.stop(); }
@@ -175,7 +180,10 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         mediaPlayerController.setEqualizerBands(mixedBands);
     }
 
-
+    /**
+     * Changes the wave speed.
+     * @param speed the speed of the wave (0 to 100)
+     */
     public void changeWaveSpeed(double speed) {
         // From 1 to 10 wave speed
         if (speed == 0.0) {
@@ -192,6 +200,10 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         }
     }
 
+    /**
+     * Changes the bass boost gain.
+     * @param gain the gain of the bass boost (0 to 100)
+     */
     public void changeBassBoostGain(double gain) {
         // From 6 to 12 db
         if (gain > 0.0) {
@@ -205,6 +217,10 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         applyMixedEffects();
     }
 
+    /**
+     * Changes the gain mode.
+     * @param gain the gain of the gain mode (0 to 100)
+     */
     public void changeGainMode (double gain) {
         // From -24 to 12 db
         if (gain > 0.0) {
@@ -218,6 +234,10 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         applyMixedEffects();
     }
 
+    /**
+     * Changes the pressure strength.
+     * @param strength the strength of the pressure (0 to 100)
+     */
     public void changePressureStrength(double strength) {
         // strength must be bewteen 0 and abs(MAX_LOW) + abs(MAX_HIGH) / 2
         // From 0 to 18
@@ -232,18 +252,31 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
         applyMixedEffects();
     }
 
+    /**
+     * Plays the song.
+     * @param song the song to play
+     */
     public void play(Song song) {
         mediaPlayerController.playCurrent(song);
     }
 
+    /**
+     * Stops the song.
+     */
     public void pause() {
         mediaPlayerController.pause();
     }
 
+    /**
+     * Stops the song.
+     */
     public void unpause() {
         mediaPlayerController.unpause();
     }
 
+    /**
+     * On quit called method. Destroy all timelines, restore the old config and close the stage.
+     */
     public void onQuit() {
         if (timeline != null) { timeline.stop(); }
         mediaPlayerController.setEqualizerBands(bandsGainBackup);
