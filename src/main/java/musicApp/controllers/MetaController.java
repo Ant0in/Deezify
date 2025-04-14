@@ -1,5 +1,9 @@
 package musicApp.controllers;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Library;
@@ -7,10 +11,6 @@ import musicApp.models.Settings;
 import musicApp.services.AlertService;
 import musicApp.services.PlaylistService;
 import musicApp.services.SettingsService;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
 
 /**
  * The Meta controller.
@@ -24,6 +24,7 @@ public class MetaController {
     private final PlayerController playerController;
     private final SettingsController settingsController;
     private final List<Library> playlists;
+    private final DjPlayerController djPlayerController;
     /**
      * Instantiates a new Meta controller.
      *
@@ -38,6 +39,7 @@ public class MetaController {
         playlists = playlistService.loadAllLibraries();
         playerController = new PlayerController(this, settingsService.readSettings(), getMainLibrary());
         settingsController = new SettingsController(this, settingsService.readSettings());
+        djPlayerController = new DjPlayerController(this.playerController);
     }
 
 

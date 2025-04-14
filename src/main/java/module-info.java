@@ -27,6 +27,7 @@ module ulb.musicApp {
     requires jaudiotagger;
     requires com.google.gson;
     requires java.logging;
+    requires java.desktop;
 
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;

@@ -155,4 +155,6 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
     public void refreshUI() {
         view.refreshUI();
     }
+
+    public PlayerController getPlayerController() { return playerController; }
 }

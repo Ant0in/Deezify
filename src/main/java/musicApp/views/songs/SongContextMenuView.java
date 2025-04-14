@@ -9,6 +9,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
+import musicApp.exceptions.BadSongException;
 
 /**
  * View for the context menu that appears when right-clicking a song in the library.
@@ -55,6 +56,17 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
             ((MenuItem) removeFromPlaylistMenu).setOnAction(_ -> viewController.handleRemoveFromPlaylist());
         }
         contextMenu.setOnShowing(e -> updateMenuItems());
+
+        MenuItem launchDjMode = new MenuItem("DJ Mode");
+        launchDjMode.setOnAction(_ -> {
+            try {
+                viewController.launchDjMode();
+            } catch (BadSongException e) {
+                e.printStackTrace(); // Handle the exception appropriately
+            }
+        });
+        contextMenu.getItems().add(launchDjMode);
+
     }
 
 

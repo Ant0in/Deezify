@@ -1,5 +1,10 @@
 package musicApp.controllers;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -8,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
+import musicApp.controllers.settings.EqualizerController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
@@ -39,6 +45,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     private QueueController queueController;
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
+    private DjPlayerController djPlayerController;
 
     /**
      * Constructor
@@ -47,6 +54,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @throws IOException the io exception
      */
     public PlayerController(MetaController metaController, Settings settings, Library mainLibrary) throws IOException {
+
         super(new PlayerView());
         this.metaController = metaController;
         initSubControllers();
@@ -71,7 +79,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         toolBarController = new ToolBarController(this);
         lyricsController = new LyricsController(this);
         playlistNavigatorController = new PlaylistNavigatorController(this);
-
+        this.djPlayerController = new DjPlayerController(this);
     }
 
     /**
@@ -118,6 +126,10 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         } else {
             queueController.playSong(0);
         }
+    }
+
+    public MediaPlayerController getMediaPlayerController() {
+        return mediaPlayerController;
     }
 
     /**
@@ -417,4 +429,11 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
             }
         }
     }
+
+    /**
+     * Handle add song to queue.
+     * This method opens a file dialog to select an audio file and adds it to the queue.
+     */
+    public DjPlayerController getDjPlayerController() { return djPlayerController; }
+
 }

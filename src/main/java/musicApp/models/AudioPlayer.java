@@ -107,6 +107,10 @@ public class AudioPlayer {
         }
     }
 
+    public List<Double> getEqualizerBandsGain() {
+        return equalizerBandsGain;
+    }
+
     /**
      * Update the equalizer bands gain.
      * @param newEqualizerBandsGain The new equalizer bands gain.

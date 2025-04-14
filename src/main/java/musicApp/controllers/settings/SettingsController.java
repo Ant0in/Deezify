@@ -155,4 +155,5 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     public Path getMusicDirectory() {
         return settings.getMusicFolder();
     }
+
 }

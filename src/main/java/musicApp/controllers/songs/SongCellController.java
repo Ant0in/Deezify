@@ -1,16 +1,20 @@
 package musicApp.controllers.songs;
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import musicApp.controllers.DjPlayerController;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.ViewController;
+import musicApp.exceptions.BadSongException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.views.songs.SongCellView;
 
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The type Song cell controller.
@@ -210,6 +214,22 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      */
     public void openMetadataEditor() {
         new EditMetadataController(this);
+    }
+
+    /**
+     * Launch DJ mode.
+     */
+    public void launchDjMode() throws BadSongException {
+
+        if (song == null) {
+            view.displayError("No song to play");
+        }
+
+        // we get the player controller to initialize the DJ mode view & play
+        DjPlayerController djPlayerController = LibraryController.getPlayerController().getDjPlayerController();
+        djPlayerController.init();
+        djPlayerController.play(song);
+
     }
 
     /**

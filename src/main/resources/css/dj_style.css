@@ -1,0 +1,19 @@
+.mainContainer {
+    -fx-background-color: linear-gradient(to bottom, #0d1b2a, #000000);
+    -fx-padding: 30;
+}
+
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.slider .thumb {
+    -fx-background-color: linear-gradient(to bottom, #ff7f50, #ff4500);
+    -fx-background-radius: 0;
+    -fx-min-width: 40px;
+    -fx-min-height: 20px;
+    -fx-background-insets: 0;
+    -fx-effect: none;
+}
+

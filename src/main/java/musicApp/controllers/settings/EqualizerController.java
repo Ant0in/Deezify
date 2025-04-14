@@ -1,16 +1,18 @@
 package musicApp.controllers.settings;
 
+import java.util.List;
+
 import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
-import musicApp.models.Equalizer;
 import musicApp.views.settings.EqualizerView;
+import musicApp.models.Equalizer;
 
-import java.util.List;
 
 /**
  * The type Equalizer controller.
  */
 public class EqualizerController extends ViewController<EqualizerView, EqualizerController> {
+    
     private final SettingsController settingsController;
     private final Stage stage;
     private final Equalizer equalizer;
@@ -52,6 +54,15 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      */
     public void updateEqualizerBand(int bandIndex, double value) {
         equalizer.setBandGain(bandIndex, value);
+    }
+
+    /**
+     * * Update a band in the equalizer.
+     *
+     * @param bandsGain The new values of the bands.
+    */
+    public void updateEqualizerBands(List<Double> bandsGain) {
+        equalizer.setBandsGain(bandsGain);
     }
 
     /**

@@ -7,6 +7,7 @@ import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.services.LanguageService;
 import musicApp.views.songs.SongContextMenuView;
+import musicApp.exceptions.BadSongException;
 
 import java.util.List;
 
@@ -94,4 +95,9 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
     public void showAt(double x, double y) {
         view.show(songCellController.getRoot(), x, y);
     }
+
+    public void launchDjMode() throws BadSongException {
+        songCellController.launchDjMode();
+    }
+    
 }

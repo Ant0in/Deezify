@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox fx:id="mainContainer"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      prefWidth="300" prefHeight="200"
+      spacing="20" alignment="TOP_CENTER"
+      stylesheets="@../css/dj_style.css"
+      styleClass = "mainContainer">
+
+    <HBox alignment="CENTER" spacing="50">
+
+        <VBox alignment="CENTER" spacing="5">
+
+            <Label fx:id="gainLabel"/>
+
+            <Slider fx:id="gainSlider"
+                    orientation="VERTICAL"
+                    prefHeight="100"
+            />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5">
+
+            <Label fx:id="bassBoostLabel"/>
+
+            <Slider fx:id="bassBoostSlider"
+                    orientation="VERTICAL"
+                    prefHeight="100"
+            />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5">
+
+            <Label fx:id="pressureLabel"/>
+
+            <Slider fx:id="pressureSlider"
+                    orientation="VERTICAL"
+                    prefHeight="100"
+            />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5">
+
+            <Label fx:id="speedLabel"/>
+
+            <Slider fx:id="waveSlider"
+                    orientation="VERTICAL"
+                    prefHeight="100"
+            />
+        </VBox>
+
+    </HBox>
+</VBox>
