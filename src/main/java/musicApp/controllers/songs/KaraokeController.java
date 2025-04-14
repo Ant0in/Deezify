@@ -57,7 +57,7 @@ public class KaraokeController {
         Song currentSong = playerController.getCurrentlyLoadedSong();
         try {
             return currentSong.getKaraokeLines();
-        } catch (LyricsNotFoundException e) {
+        } catch (Exception e) {
             return List.of();
         }
     }
