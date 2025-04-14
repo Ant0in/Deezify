@@ -3,8 +3,9 @@ package musicApp.services;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import java.io.File;
 import musicApp.enums.SupportedFileType;
+
+import java.io.File;
 
 public class FileDialogService {
 

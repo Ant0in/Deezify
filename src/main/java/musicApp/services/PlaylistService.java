@@ -1,7 +1,6 @@
 package musicApp.services;
 
 import musicApp.models.Library;
-import musicApp.models.Settings;
 import musicApp.models.Song;
 import musicApp.repositories.JsonRepository;
 import musicApp.repositories.PathRepository;

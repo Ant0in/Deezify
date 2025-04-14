@@ -1,13 +1,12 @@
 package musicApp.views.playlists;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import musicApp.services.LanguageService;
 import musicApp.controllers.playlists.PlaylistContextMenuController;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
-import javafx.scene.Node;
 
 public class PlaylistContextMenuView extends View<PlaylistContextMenuView, PlaylistContextMenuController> {
     @FXML

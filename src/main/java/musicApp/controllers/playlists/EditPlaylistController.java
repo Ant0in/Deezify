@@ -49,8 +49,7 @@ public class EditPlaylistController extends ViewController<EditPlaylistView, Edi
         playlistToEdit = _playlist;
         initView("/fxml/EditPlaylist.fxml");
         stage.setTitle(LanguageService.getInstance().get("edit_playlist.title"));
-        view.init();
-        view.populateFields(_playlist);
+        stage.setScene(view.getScene());
         stage.show();
     }
 

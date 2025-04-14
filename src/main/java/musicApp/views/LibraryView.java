@@ -1,9 +1,8 @@
 package musicApp.views;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.songs.SongCellController;
 import musicApp.models.Library;
@@ -55,10 +54,10 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
         addSongButton.setOnAction(event -> viewController.handleAddSong());
     }
 
-    @Override
     /**
      * Initialize the translations of the texts in the view.
      */
+    @Override
     protected void refreshTranslation() {
         songInput.setPromptText(LanguageService.getInstance().get("search"));
     }

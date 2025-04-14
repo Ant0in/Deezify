@@ -1,15 +1,14 @@
 package musicApp.controllers.songs;
 
-import java.util.List;
-import java.util.Optional;
-
 import javafx.beans.property.StringProperty;
-
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Song;
 import musicApp.services.LyricsService;
 import musicApp.views.songs.LyricsView;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The type Lyrics controller.

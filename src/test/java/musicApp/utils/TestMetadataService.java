@@ -74,6 +74,7 @@ public class TestMetadataService {
         }
         assertEquals("Chinese DOIT sound effect", metadata.getTitle());
         assertEquals("ant0in", metadata.getArtist());
+        assertEquals("china idk", metadata.getAlbum());
         assertEquals("Electro", metadata.getGenre());
         assertEquals(Duration.seconds(2), metadata.getDuration());
     }
@@ -93,6 +94,7 @@ public class TestMetadataService {
         }
         assertEquals("3seconds", metadata.getTitle());
         assertEquals("Sample", metadata.getArtist());
+        assertEquals("Seconds", metadata.getAlbum());
         assertEquals("Celtic", metadata.getGenre());
         assertNull(metadata.getCover());
         assertEquals(Duration.seconds(3), metadata.getDuration());
@@ -108,6 +110,7 @@ public class TestMetadataService {
         LanguageService lm = LanguageService.getInstance();
         assertEquals(lm.get("metadata.title"), metadata.getTitle());
         assertEquals(lm.get("metadata.artist"), metadata.getArtist());
+        assertEquals(lm.get("metadata.album"), metadata.getAlbum());
         assertEquals(lm.get("metadata.genre"), metadata.getGenre());
     }
 
@@ -129,11 +132,13 @@ public class TestMetadataService {
         Metadata metadata = new Metadata();
         metadata.setTitle("Edited Title");
         metadata.setArtist("Edited Artist");
+        metadata.setAlbum("Edited Album");
         metadata.setGenre("Edited Genre");
         utils.setMetadata(metadata, target.toFile());
         Metadata loaded = utils.getMetadata(target.toFile());
         assertEquals(metadata.getTitle(), loaded.getTitle());
         assertEquals(metadata.getArtist(), loaded.getArtist());
+        assertEquals(metadata.getAlbum(), loaded.getAlbum());
         assertEquals(metadata.getGenre(), loaded.getGenre());
         Files.delete(target);
     }
@@ -147,11 +152,13 @@ public class TestMetadataService {
         Metadata metadata = new Metadata();
         metadata.setTitle("Edited Title");
         metadata.setArtist("Edited Artist");
+        metadata.setAlbum("Edited Album");
         metadata.setGenre("Edited Genre");
         utils.setMetadata(metadata, target.toFile());
         Metadata loaded = utils.getMetadata(target.toFile());
         assertEquals(metadata.getTitle(), loaded.getTitle());
         assertEquals(metadata.getArtist(), loaded.getArtist());
+        assertEquals(metadata.getAlbum(), loaded.getAlbum());
         assertEquals(metadata.getGenre(), loaded.getGenre());
         Files.delete(target);
     }
@@ -233,5 +240,61 @@ public class TestMetadataService {
         String formatted = (String) formatMethod.invoke(null, original);
         ArrayList<String> parsed = (ArrayList<String>) parseMethod.invoke(null, formatted);
         assertEquals(original, parsed);
+    }
+
+    /**
+     * Tests creating tags and setting metadata (title, artist, genre) on MP3 files without tags.
+     */
+    @Test
+    public void testCreateTagsNoTagsMP3() throws Exception {
+        Path target = prepareWritableCopy("noID3TagMP3.mp3", "testNoTagMP3.mp3");
+
+        // Create Metadata object and set values
+        Metadata metadata = new Metadata();
+        metadata.setTitle("New Title");
+        metadata.setArtist("New Artist");
+        metadata.setAlbum("Edited Album");
+        metadata.setGenre("New Genre");
+
+        // Set the metadata on the MP3 file
+        utils.setMetadata(metadata, target.toFile());
+
+        // Load the metadata from the file and verify it's correctly set
+        Metadata loaded = utils.getMetadata(target.toFile());
+
+        assertEquals(metadata.getTitle(), loaded.getTitle());
+        assertEquals(metadata.getArtist(), loaded.getArtist());
+        assertEquals(metadata.getAlbum(), loaded.getAlbum());
+        assertEquals(metadata.getGenre(), loaded.getGenre());
+
+        Files.delete(target);
+    }
+
+    /**
+     * Tests creating tags and setting metadata (title, artist, genre) on WAV files without tags.
+     */
+    @Test
+    public void testCreateTagsNoTagsWAV() throws Exception {
+        Path target = prepareWritableCopy("noTagWAV.wav", "testNoTagWAV.wav");
+
+        // Create Metadata object and set values
+        Metadata metadata = new Metadata();
+        metadata.setTitle("New Title");
+        metadata.setArtist("New Artist");
+        metadata.setAlbum("Edited Album");
+        metadata.setGenre("New Genre");
+
+        // Set the metadata on the WAV file
+        utils.setMetadata(metadata, target.toFile());
+
+        // Load the metadata from the file and verify it's correctly set
+        Metadata loaded = utils.getMetadata(target.toFile());
+
+        assertEquals(metadata.getTitle(), loaded.getTitle());
+        assertEquals(metadata.getArtist(), loaded.getArtist());
+        assertEquals(metadata.getAlbum(), loaded.getAlbum());
+        assertEquals(metadata.getGenre(), loaded.getGenre());
+
+        Files.delete(target);
     }
 }

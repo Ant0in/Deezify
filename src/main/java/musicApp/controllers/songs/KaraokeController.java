@@ -3,18 +3,17 @@ package musicApp.controllers.songs;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import musicApp.controllers.PlayerController;
+import musicApp.exceptions.LyricsNotFoundException;
+import musicApp.models.KaraokeLine;
+import musicApp.models.Song;
+import musicApp.services.AlertService;
+import musicApp.services.LyricsService;
+import musicApp.views.songs.LyricsView;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-
-import musicApp.controllers.PlayerController;
-import musicApp.exceptions.LyricsNotFoundException;
-import musicApp.models.Song;
-import musicApp.models.KaraokeLine;
-import musicApp.services.AlertService;
-import musicApp.services.LyricsService;
-import musicApp.views.songs.LyricsView;
 
 /**
  * This controller handles the synchronization of karaoke lines

@@ -1,24 +1,25 @@
 package musicApp.views.songs;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.geometry.Pos;
-import java.util.List;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import java.io.File;
-import java.nio.file.Path;
-import java.util.Optional;
-import javafx.application.Platform;
-
+import musicApp.controllers.songs.KaraokeController;
+import musicApp.controllers.songs.LyricsController;
+import musicApp.models.KaraokeLine;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
-import musicApp.models.KaraokeLine;
-import musicApp.controllers.songs.LyricsController;
-import musicApp.controllers.songs.KaraokeController;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The LyricsView class is responsible for displaying and updating
@@ -65,14 +66,10 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * When the song changes, the lyrics are updated.
      */
     public void initButtons() {
-        karaokeAddLyricsButton.setOnAction(e -> {
-            karaokeController.importKaraokeLyrics();
-        });
-        karaokeEditButton.setOnAction(e -> {
-            karaokeController.importKaraokeLyrics();
-        });
+        karaokeAddLyricsButton.setOnAction(_ -> karaokeController.importKaraokeLyrics());
+        karaokeEditButton.setOnAction(_ -> karaokeController.importKaraokeLyrics());
 
-        simpleLyricsButton.setOnAction(e -> {
+        simpleLyricsButton.setOnAction(_ -> {
             scrollPane.setVisible(true);
             scrollPane.setManaged(true);
             karaokeScrollPane.setVisible(false);
@@ -80,7 +77,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
             updateLyrics();
         });
 
-        karaokeLyricsButton.setOnAction(e -> {
+        karaokeLyricsButton.setOnAction(_ -> {
             scrollPane.setVisible(false);
             scrollPane.setManaged(false);
             karaokeScrollPane.setVisible(true);
@@ -88,7 +85,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
             karaokeController.startKaraoke();
         });
 
-        viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
+        viewController.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
             initButtonsTypes();
             karaokeController.stopKaraoke();
             simpleLyricsButton.fire();
@@ -172,7 +169,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         noLyricsLabel.getStyleClass().add("no-lyrics-label");
 
         Button addLyricsButton = createEditButton(lang.get("button.addLyrics"));
-        addLyricsButton.setOnAction(e -> viewController.editLyrics());
+        addLyricsButton.setOnAction(_ -> viewController.editLyrics());
 
         VBox placeholder = new VBox(10, noLyricsLabel, addLyricsButton);
         placeholder.setAlignment(Pos.CENTER);
@@ -187,7 +184,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         HBox header = new HBox();
         header.setAlignment(Pos.TOP_RIGHT);
         Button editButton = createEditButton(null);
-        editButton.setOnAction(e -> viewController.editLyrics());
+        editButton.setOnAction(_ -> viewController.editLyrics());
         header.getChildren().add(editButton);
         lyricsContainer.getChildren().add(header);
 
@@ -207,7 +204,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         if (text != null) {
             button.setText(text);
         }
-        ImageView pencilIcon = new ImageView(new Image(getClass().getResource("/images/edit.png").toExternalForm()));
+        ImageView pencilIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/edit.png")).toExternalForm()));
         pencilIcon.setFitWidth(16);
         pencilIcon.setFitHeight(16);
         button.setGraphic(pencilIcon);

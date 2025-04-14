@@ -1,5 +1,8 @@
 package musicApp.models;
 
+import com.google.gson.annotations.Expose;
+import javafx.scene.media.EqualizerBand;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +33,6 @@ public class Equalizer {
      * @param bandsGain
      */
     public Equalizer(List<Double> bandsGain) {
-        bandsGain = new ArrayList<>();
         checkBandsGain(bandsGain);
         setBandsGain(bandsGain);
     }

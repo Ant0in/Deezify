@@ -1,17 +1,15 @@
 package musicApp.models;
 
-import musicApp.exceptions.BadM3URadioException;
 import javafx.scene.image.Image;
+import musicApp.exceptions.BadM3URadioException;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Objects;
-import java.util.List;
-import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
 
 
 public class Radio extends Song {

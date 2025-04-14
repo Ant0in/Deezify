@@ -1,6 +1,5 @@
 package musicApp.views.settings;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -43,9 +42,7 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
         stage.setScene(scene);
         stage.setTitle("Equalizer");
         stage.show();
-        stage.setOnCloseRequest(event -> {
-            viewController.close();
-        });
+        stage.setOnCloseRequest(_ -> viewController.close());
     }
 
     /**

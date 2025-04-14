@@ -270,6 +270,16 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     }
 
     /**
+     * Provides album name auto-completion based on user input.
+     *
+     * @param input The partial album name entered by the user.
+     * @return An Optional containing the completed album name if found.
+     */
+    public Optional<String> getAlbumAutoCompletion(String input) {
+        return library.getAlbumAutoCompletion(input);
+    }
+
+    /**
      * Provides tag auto-completion based on user input.
      *
      * @param input The partial tag entered by the user.
