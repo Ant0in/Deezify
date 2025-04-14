@@ -29,6 +29,7 @@ public class SongCellView extends View<SongCellView, SongCellController> {
 
     private static final String PLAY_ICON = "/images/play2.png";
     private static final String PAUSE_ICON = "/images/pause.png";
+    private static final String EDIT_ICON = "/images/edit.png";
 
     public SongCellView() {
     }
@@ -45,7 +46,7 @@ public class SongCellView extends View<SongCellView, SongCellController> {
      */
     private void initComponents() {
         ImageView playIcon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
-        ImageView editIcon = new ImageView(Objects.requireNonNull(getClass().getResource(PAUSE_ICON)).toExternalForm());
+        ImageView editIcon = new ImageView(Objects.requireNonNull(getClass().getResource(EDIT_ICON)).toExternalForm());
 
         playButton.setGraphic(playIcon);
         likeButton.setOnAction(event -> {
