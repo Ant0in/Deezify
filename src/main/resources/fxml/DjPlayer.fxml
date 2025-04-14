@@ -4,18 +4,63 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 
-<VBox fx:id="labelContainer"
+<VBox fx:id="mainContainer"
       xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
-      prefWidth="400" prefHeight="600"
+      prefWidth="300" prefHeight="250"
       spacing="20" alignment="TOP_CENTER"
-      style="-fx-background-color: linear-gradient(to bottom, #0d1b2a, #000000); -fx-padding: 30;">
+      stylesheets="@../css/dj_style.css"
+      styleClass = "mainContainer">
 
     <HBox fx:id="djButtonContainer">
-        <Button fx:id="playButton" text="Play" style="-fx-background-color: #41729f; -fx-text-fill: white;"/>
-        <Button fx:id="pauseButton" text="Pause" style="-fx-background-color: #41729f; -fx-text-fill: white;"/>
-        <Button fx:id="gainButton" text="Gain Mode" style="-fx-background-color: #41729f; -fx-text-fill: white;"/>
-        <Button fx:id="pressureButton" text="Pressure Mode" style="-fx-background-color: #41729f; -fx-text-fill: white;"/>
-        <Button fx:id="bassBoostButton" text="Bass Boost Mode" style="-fx-background-color: #41729f; -fx-text-fill: white;"/>
+        <Button fx:id="playButton"/>
+        <Button fx:id="pauseButton"/>
+        <Button fx:id="gainButton"/>
+        <Button fx:id="pressureButton"/>
+        <Button fx:id="bassBoostButton"/>
+    </HBox>
+
+    <HBox alignment="CENTER" spacing="50">
+
+        <VBox alignment="CENTER" spacing="5">
+
+            <Label fx:id="gainLabel"/>
+
+            <Slider fx:id="gainSlider"
+                    orientation="VERTICAL"
+                    prefHeight="100"
+            />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5">
+
+            <Label fx:id="bassBoostLabel"/>
+
+            <Slider fx:id="bassBoostSlider"
+                    orientation="VERTICAL"
+                    prefHeight="100"
+            />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5">
+
+            <Label fx:id="pressureLabel"/>
+
+            <Slider fx:id="pressureSlider"
+                    orientation="VERTICAL"
+                    prefHeight="100"
+            />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5">
+
+            <Label fx:id="speedLabel"/>
+
+            <Slider fx:id="waveSlider"
+                    orientation="VERTICAL"
+                    prefHeight="100"
+            />
+        </VBox>
+
     </HBox>
 </VBox>

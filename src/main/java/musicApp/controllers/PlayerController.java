@@ -54,8 +54,6 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         this.LibraryController.loadPlaylist(mainLibrary);
         this.mediaPlayerController.setBalance(settings.getBalance());
         this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
-        this.djPlayerController = new DjPlayerController(this);
-
     }
 
 
@@ -66,7 +64,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         this.toolBarController = new ToolBarController(this);
         this.lyricsController = new LyricsController(this);
         this.playlistNavigatorController = new PlaylistNavigatorController(this);
-
+        this.djPlayerController = new DjPlayerController(this);
     }
 
     /**
