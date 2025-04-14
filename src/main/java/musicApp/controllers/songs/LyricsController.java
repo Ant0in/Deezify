@@ -2,20 +2,15 @@ package musicApp.controllers.songs;
 
 import java.util.List;
 import java.util.Optional;
-import javafx.stage.FileChooser;
-import java.io.File;
-import java.nio.file.Path;
+
 import javafx.beans.property.StringProperty;
-import java.nio.file.Files;
 
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Song;
-import musicApp.utils.lyrics.LyricsManager;
+import musicApp.utils.lyrics.LyricsService;
 import musicApp.utils.DataProvider;
-import musicApp.utils.lyrics.LyricsDataAccess;
 import musicApp.views.songs.LyricsView;
-import musicApp.utils.lyrics.KaraokeLine;
 
 /**
  * The type Lyrics controller.
@@ -23,7 +18,7 @@ import musicApp.utils.lyrics.KaraokeLine;
 public class LyricsController extends ViewController<LyricsView, LyricsController> {
 
     private final PlayerController playerController;
-    private final LyricsManager lyricsManager;
+    private final LyricsService lyricsManager;
 
     /**
      * Instantiates a new Lyrics controller.
@@ -33,9 +28,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     public LyricsController(PlayerController _controller) {
         super(new LyricsView());
         playerController = _controller;
-        DataProvider dataProvider = new DataProvider();
-        LyricsDataAccess lyricsDataAccess = new LyricsDataAccess(dataProvider);
-        lyricsManager = new LyricsManager(lyricsDataAccess);
+        lyricsManager = new LyricsService();
         initView("/fxml/Lyrics.fxml");
         view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));
     }
@@ -61,7 +54,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         if (song == null) {
             return List.of("No song loaded."); 
         }
-        return lyricsManager.getLyrics(song);
+        return song.getLyrics();
     }
 
     /**
@@ -76,7 +69,12 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             System.err.println("No song loaded.");
             return;
         }
-        lyricsManager.saveLyrics(currentSong, newLyrics);
+        try {
+            lyricsManager.saveLyrics(currentSong, newLyrics);
+        } catch (Exception e) {
+            alertService.showExceptionAlert(e);
+            e.printStackTrace();
+        }
         view.updateLyrics();
 }
 

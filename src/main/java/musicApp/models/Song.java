@@ -3,11 +3,9 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
-import musicApp.exceptions.BadM3URadioException;
 import musicApp.exceptions.BadSongException;
-import musicApp.utils.DataProvider;
-import musicApp.utils.lyrics.LyricsManager;
-import musicApp.utils.lyrics.LyricsDataAccess;
+import musicApp.exceptions.LyricsNotFoundException;
+import musicApp.utils.lyrics.LyricsService;
 import musicApp.utils.MetadataUtils;
 import org.jaudiotagger.tag.images.Artwork;
 
@@ -16,12 +14,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Song {
     
     @Expose
     private final Path filePath;
-    private Metadata metadata; 
+    private Metadata metadata;
+    private Optional<SongLyrics> lyricsEntry;
 
     /**
      * Constructor from MetadataReader.
@@ -36,28 +36,9 @@ public class Song {
         } catch (Exception e) {
             metadata = new Metadata(); // Default metadata on error
         }
+        refreshLyrics();
     }
 
-    /**
-     * Returns if the song is a radio or not.
-     * @return boolean isSong.
-     */
-    public Boolean isSong() {
-        return true;
-    }
-
-    /**
-     * Reload metadata for the song.
-     */
-    public void reloadMetadata() {
-        MetadataUtils metadataReader = new MetadataUtils();
-        try {
-            metadata = metadataReader.getMetadata(filePath.toFile());
-        } catch (Exception e) {
-            metadata = new Metadata(); // Default metadata on error
-        }
-    }
-    
     /**
      * Get the path to the song.
      *
@@ -65,6 +46,10 @@ public class Song {
      */
     public Path getFilePath() {
         return filePath;
+    }
+
+    public Boolean isSong() {
+        return true;
     }
 
     /**
@@ -204,6 +189,39 @@ public class Song {
     }
 
     /**
+     * Returns the current lyrics entry without loading it.
+     * May return null if lyrics haven't been loaded yet.
+     */
+    public Optional<SongLyrics> getLyricsEntry() {
+        return lyricsEntry;
+    }
+
+    /**
+     * Set the lyrics entry for this song.
+     * @param entry The lyrics entry.
+     */
+    public void setLyricsEntry(SongLyrics entry) {
+        lyricsEntry = Optional.of(entry);
+    }
+
+    /**
+     * Get the plain text lyrics for this song.
+     * @return The lyrics of the song.
+     */
+    public List<String> getLyrics() {
+        return lyricsEntry.map(SongLyrics::getLyrics)
+                .orElseGet(ArrayList::new);
+    }
+    
+    /**
+     * Get the karaoke lines for this song.
+     * @return List of KaraokeLine objects or empty list if no karaoke lyrics available.
+     */
+    public List<KaraokeLine> getKaraokeLines() throws LyricsNotFoundException {
+        return lyricsEntry.orElseThrow(() -> new LyricsNotFoundException("No Lyrics found")).getKaraokeLines();
+    }
+
+    /**
      * Get the title and artist of the song.
      * @return The title and artist of the song.
      */
@@ -225,25 +243,17 @@ public class Song {
     }
 
     /**
-     * Get the lyrics of the song.
-     * @return The lyrics of the song.
-     */
-    public List<String> getLyrics() {
-        LyricsManager lyricsManager = new LyricsManager(new LyricsDataAccess(new DataProvider()));
-        return lyricsManager.getLyrics(this);
-    }
-
-    /**
-     * Search for a specific text in the lyrics of the song.
+     * Search for text in the lyrics.
      * @param text The text to search for.
      * @return True if the text is found in the lyrics, false otherwise.
      */
     private boolean searchLyrics(String text) {
-        if (text.isEmpty()) {
+        if (text == null || text.isEmpty()) {
             return false;
         }
-        List<String> lyrics = getLyrics();
-        return lyrics.stream().anyMatch(line -> line.toLowerCase().contains(text));
+        String lowerText = text.toLowerCase();
+        return getLyrics().stream()
+            .anyMatch(line -> line.toLowerCase().contains(lowerText));
     }
 
     /**
@@ -258,6 +268,31 @@ public class Song {
             return searchLyrics(lowerText);
         } else {
             return metadata.containsText(lowerText);
+        }
+    }
+
+    /**
+     * Refresh the lyrics for this song.
+     * This will load the lyrics from the file system.
+     */
+    public void refreshLyrics() {
+        LyricsService lyricsService = new LyricsService();
+        try {
+            lyricsEntry = Optional.of(lyricsService.getLyricsEntry(this));
+        } catch (Exception e) {
+            lyricsEntry = Optional.of(new SongLyrics());
+        }
+    }
+
+    /**
+     * Reload metadata for the song.
+     */
+    public void reloadMetadata() {
+        MetadataUtils metadataReader = new MetadataUtils();
+        try {
+            metadata = metadataReader.getMetadata(filePath.toFile());
+        } catch (Exception e) {
+            metadata = new Metadata(); // Default metadata on error
         }
     }
 

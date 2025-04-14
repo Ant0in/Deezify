@@ -15,6 +15,13 @@ import java.nio.file.Paths;
  * This class is used to serialize and deserialize the Settings class to and from JSON.
  */
 public class SettingsTypeAdapter extends TypeAdapter<Settings> {
+    /**
+     * Writes the Settings object to JSON format.
+     *
+     * @param out      The JsonWriter to write to.
+     * @param settings The Settings object to write.
+     * @throws IOException If writing fails.
+     */
     @Override
     public void write(JsonWriter out, Settings settings) throws IOException {
         out.beginObject();
@@ -35,6 +42,13 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         out.endObject();
     }
 
+    /**
+     * Reads a Settings object from JSON format.
+     *
+     * @param in The JsonReader to read from.
+     * @return The Settings object read from JSON.
+     * @throws IOException If reading fails.
+     */
     @Override
     public Settings read(JsonReader in) throws IOException {
         double balance = 0.0;

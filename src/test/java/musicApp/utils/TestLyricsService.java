@@ -1,9 +1,10 @@
 package musicApp.utils;
 
 
+import musicApp.exceptions.LyricsOperationException;
 import musicApp.models.Song;
-import musicApp.utils.lyrics.LyricsDataAccess;
-import musicApp.utils.lyrics.LyricsManager;
+import musicApp.utils.lyrics.LyricsRepository;
+import musicApp.utils.lyrics.LyricsService;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,11 +16,11 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TestLyricsManager {
+public class TestLyricsService {
 
-    private LyricsManager lyricsManager;
+    private LyricsService lyricsManager;
     private DataProvider dataProvider;
-    private LyricsDataAccess lyricsDataAccess;
+    private LyricsRepository lyricsDataAccess;
     private Path lyricsDir;
     private Path lyricsFile;
     private Path jsonFile;
@@ -30,8 +31,8 @@ public class TestLyricsManager {
     @Before
     public void setUp() throws IOException {
         dataProvider = new DataProvider();
-        lyricsDataAccess = new LyricsDataAccess(dataProvider); 
-        lyricsManager = new LyricsManager(lyricsDataAccess);
+        lyricsDataAccess = new LyricsRepository(new DataProvider());
+        lyricsManager = new LyricsService();
         lyricsDir = lyricsDataAccess.getLyricsDir(); 
 
         Files.createDirectories(lyricsDir);
@@ -53,9 +54,9 @@ public class TestLyricsManager {
     }
 
     @Test
-    public void testSaveAndReadLyrics() {
+    public void testSaveAndReadLyrics() throws LyricsOperationException, IOException {
         lyricsManager.saveLyrics(testSong, lyricsContent);
-        List<String> readLyrics = lyricsManager.getLyrics(testSong);
+        List<String> readLyrics = testSong.getLyrics();
 
         assertNotNull(readLyrics);
         assertEquals(3, readLyrics.size());
@@ -66,7 +67,7 @@ public class TestLyricsManager {
 
     @Test
     public void testReadLyricsWhenMissing() {
-        List<String> lyrics = lyricsManager.getLyrics(testSong);
+        List<String> lyrics = testSong.getLyrics();
         assertNotNull(lyrics);
         assertTrue(lyrics.isEmpty());
     }
@@ -78,9 +79,10 @@ public class TestLyricsManager {
     }
 
     @Test
-    public void testMappingIsCreated() {
+    public void testMappingIsCreated() throws LyricsOperationException, IOException {
         lyricsManager.saveLyrics(testSong, lyricsContent);
-        String path = lyricsDataAccess.getLyricsPathTxt(testSong.getFilePath().toString());
-        assertEquals("TestSong.txt", path);
+        LyricsRepository.LyricsFilePaths paths = lyricsDataAccess.getLyricsPaths(testSong.getFilePath().toString())
+                .orElseThrow(() -> new IOException("Mapping not found"));
+        assertEquals("TestSong.txt", paths.getTextPath());
     }
 }
