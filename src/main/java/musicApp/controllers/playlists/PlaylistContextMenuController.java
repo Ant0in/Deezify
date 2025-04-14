@@ -1,8 +1,9 @@
 package musicApp.controllers.playlists;
 
+import javafx.scene.control.Alert;
 import musicApp.controllers.ViewController;
-import javafx.scene.Node;
 import musicApp.models.Library;
+import musicApp.services.LanguageService;
 import musicApp.views.playlists.PlaylistContextMenuView;
 
 public class PlaylistContextMenuController extends ViewController<PlaylistContextMenuView, PlaylistContextMenuController> {
@@ -23,7 +24,11 @@ public class PlaylistContextMenuController extends ViewController<PlaylistContex
     }
 
     public void editPlaylist() {
-        playlistNavigatorController.openEditPlaylistDialog(selectedLibrary);
+        if (playlistNavigatorController.isModifiable(selectedLibrary)) {
+            playlistNavigatorController.openEditPlaylistDialog(selectedLibrary);
+        } else {
+            alertService.showAlert(LanguageService.getInstance().get("error.edit_playlist"), Alert.AlertType.WARNING);
+        }
     }
 
     public void appendToQueue() {

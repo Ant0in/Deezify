@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class Metadata {
     private String title;
     private String artist;
+    private String album;
     private String genre;
     private Duration duration;
     private Artwork cover;
@@ -29,6 +30,7 @@ public class Metadata {
         LanguageService languageService = LanguageService.getInstance();
         title = languageService.get("metadata.title");
         artist = languageService.get("metadata.artist");
+        album = languageService.get("metadata.album");
         genre = languageService.get("metadata.genre");
         duration = Duration.ZERO;
         userTags = new ArrayList<>();
@@ -73,6 +75,28 @@ public class Metadata {
     public void setArtist(String newArtist) {
         if (newArtist != null && !newArtist.isEmpty()) {
             artist = newArtist;
+        }
+    }
+
+    /**
+     * Returns the album name associated with this metadata.
+     *
+     * @return the album name, or {@code null} if none has been set.
+     */
+    public String getAlbum() {
+        return album;
+    }
+
+    /**
+     * Sets the album name for this metadata.
+     * <p>
+     * The album name is only updated if {@code newAlbum} is non-null and not empty.
+     *
+     * @param newAlbum the new album name to set; ignored if {@code null} or empty.
+     */
+    public void setAlbum(String newAlbum) {
+        if (newAlbum != null && !newAlbum.isEmpty()) {
+            album = newAlbum;
         }
     }
 
@@ -189,6 +213,7 @@ public class Metadata {
         String lowerText = text.toLowerCase();
         return getTitle().toLowerCase().contains(lowerText)
                 || getArtist().toLowerCase().contains(lowerText)
+                || getAlbum().toLowerCase().contains(lowerText)
                 || getGenre().toLowerCase().contains(lowerText)
                 || getUserTags().stream().anyMatch(tag -> tag.toLowerCase().contains(lowerText));
     }

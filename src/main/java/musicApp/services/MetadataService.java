@@ -13,7 +13,6 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -113,6 +112,7 @@ public class MetadataService {
     private Metadata loadTagValues(AudioFile file, Metadata metadata, Tag tag) {
         metadata.setTitle(tag.getFirst(FieldKey.TITLE));
         metadata.setArtist(tag.getFirst(FieldKey.ARTIST));
+        metadata.setAlbum(tag.getFirst(FieldKey.ALBUM));
         metadata.setGenre(tag.getFirst(FieldKey.GENRE));
         metadata.setDuration(Duration.seconds(file.getAudioHeader().getTrackLength()));
         /* The following call to tag.getFirst can throw an unexpected error, we catch it and
@@ -136,6 +136,7 @@ public class MetadataService {
         Metadata metadata = new Metadata();
         metadata.setTitle(fd.getName().replace(".m3u", ""));
         metadata.setArtist("N/A");
+        metadata.setAlbum("N/A");
         metadata.setGenre("Radio");
         metadata.setDuration(Duration.ZERO);
     
@@ -183,13 +184,14 @@ public class MetadataService {
      * @throws FieldDataInvalidException If the tag data is invalid or inconsistent with expected field types.
      */
     private Tag createTag(AudioFile audioFile, Metadata metadata) throws FieldDataInvalidException {
-        Tag tag = audioFile.getTag();
+        Tag tag = audioFile.getTagOrCreateAndSetDefault();
         // Checks if the tag contains a standard field, if not initializes a default tag
         if (!tag.hasField(FieldKey.TITLE)) {
             tag = audioFile.getTagAndConvertOrCreateDefault();
         }
         // !!  FieldDataInvalidException can technically be thrown but could not be triggered artificially by us.
         tag.setField(FieldKey.ARTIST, metadata.getArtist());
+        tag.setField(FieldKey.ALBUM, metadata.getAlbum());
         tag.setField(FieldKey.TITLE, metadata.getTitle());
         tag.setField(FieldKey.GENRE, metadata.getGenre());
         tag.setField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));

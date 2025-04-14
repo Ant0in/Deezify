@@ -1,15 +1,9 @@
 package musicApp.repositories;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Repository for managing lyrics file paths.
@@ -23,7 +17,7 @@ public class LyricsRepository {
     /**
      * Store both the text and karaoke paths for a song
      */
-    public class LyricsFilePaths {
+    public static class LyricsFilePaths {
         private String textPath;
         private String karaokePath;
         private final String songPath;
@@ -88,7 +82,6 @@ public class LyricsRepository {
      * @param songPath Path to the song file
      * @param textPath Path to the text lyrics file (relative to lyrics directory)
      * @param karaokePath Path to the karaoke lyrics file (relative to lyrics directory)
-     * @return true if successful, false otherwise
      */
     private void updateLyricsPaths(String songPath, String textPath, String karaokePath) throws IllegalArgumentException, IOException {
         if (songPath == null) throw new IllegalArgumentException("Song path cannot be null");

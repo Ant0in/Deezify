@@ -8,24 +8,26 @@ import java.util.List;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
-import musicApp.services.FileDialogService;
-import musicApp.services.PlaylistService;
-import musicApp.views.PlayerView;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
+import musicApp.services.FileDialogService;
+import musicApp.services.PlaylistService;
+import musicApp.views.PlayerView;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
-
-import javafx.scene.control.Alert;
 
 /**
  * Controller class for the music player.
@@ -52,7 +54,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @throws IOException the io exception
      */
     public PlayerController(MetaController metaController, Settings settings, Library mainLibrary) throws IOException {
-        
+
         super(new PlayerView());
         this.metaController = metaController;
         initSubControllers();
@@ -421,7 +423,6 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
             try {
                 PlaylistService playlistService = new PlaylistService();
                 Path copiedFilePath = playlistService.addSongToMainLibrary(selectedFile);
-                System.out.println("File copied with succes : " + copiedFilePath);
                 libraryController.addSong(copiedFilePath);
             } catch (IOException e) {
                 alertService.showExceptionAlert(e);

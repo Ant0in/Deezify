@@ -6,8 +6,8 @@ import musicApp.exceptions.LyricsOperationException;
 import musicApp.models.KaraokeLine;
 import musicApp.models.Song;
 import musicApp.models.SongLyrics;
-import musicApp.repositories.LyricsRepository;
 import musicApp.repositories.JsonRepository;
+import musicApp.repositories.LyricsRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;

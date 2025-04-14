@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import musicApp.controllers.songs.SongCellController;
-import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.models.Song;
 import musicApp.views.View;
 
@@ -46,19 +45,13 @@ public class SongCellView extends View<SongCellView, SongCellController> {
         ImageView editIcon = new ImageView(Objects.requireNonNull(getClass().getResource(EDIT_ICON)).toExternalForm());
 
         playButton.setGraphic(playIcon);
-        likeButton.setOnAction(event -> {
-            viewController.toggleFavorites();
-        });
+        likeButton.setOnAction(_ -> viewController.toggleFavorites());
         editButton.setImage(editIcon.getImage());
         editButton.setPickOnBounds(true);
 
 
-        viewController.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
-            updatePlayButtonIcon();
-        });
-        viewController.isPlayingProperty().addListener((_, _, _) -> {
-            updatePlayButtonIcon();
-        });
+        viewController.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> updatePlayButtonIcon());
+        viewController.isPlayingProperty().addListener((_, _, _) -> updatePlayButtonIcon());
     }
 
     /**
@@ -66,9 +59,7 @@ public class SongCellView extends View<SongCellView, SongCellController> {
      */
     private void setupContextMenu() {
         // Show context menu on click
-        editButton.setOnMouseClicked(e -> {
-            viewController.showContextMenu(e.getScreenX(), e.getScreenY());
-        });
+        editButton.setOnMouseClicked(e -> viewController.showContextMenu(e.getScreenX(), e.getScreenY()));
     }
 
     /**

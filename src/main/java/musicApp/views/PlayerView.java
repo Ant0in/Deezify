@@ -5,12 +5,12 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import musicApp.controllers.PlayerController;
 import musicApp.services.LanguageService;
-import javafx.scene.layout.Priority;
 
 /**
  * PlayerView

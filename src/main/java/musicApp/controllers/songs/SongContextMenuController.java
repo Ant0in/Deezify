@@ -1,6 +1,5 @@
 package musicApp.controllers.songs;
 
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -79,7 +78,7 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
 
             if (isShowingMainLibrary() && songCellController.containsSong(playlist)) {
                 MenuItem removeItem = new MenuItem(playlist.getName());
-                removeItem.setOnAction(event -> songCellController.removeSongFromPlaylist(playlist));
+                removeItem.setOnAction(_ -> songCellController.removeSongFromPlaylist(playlist));
                 if (removeFromMenu != null) {
                     removeFromMenu.getItems().add(removeItem);
                 }
