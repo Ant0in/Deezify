@@ -1,17 +1,16 @@
 package musicApp.models;
 
 import javafx.beans.property.*;
+import javafx.scene.control.Alert;
 import javafx.scene.media.*;
 import javafx.util.Duration;
+import musicApp.exceptions.BadSongException;
+import musicApp.exceptions.EqualizerGainException;
+import musicApp.services.AlertService;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import musicApp.exceptions.BadSongException;
-import musicApp.exceptions.EqualizerGainException;
-import musicApp.services.AlertService;
-import javafx.scene.control.Alert;
 
 /**
  * AudioPlayer

@@ -1,18 +1,19 @@
 package musicApp.repositories;
 
+import musicApp.enums.SupportedFileType;
+import musicApp.exceptions.BadM3URadioException;
+import musicApp.models.Radio;
+import musicApp.models.Song;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import musicApp.exceptions.BadM3URadioException;
-import musicApp.enums.SupportedFileType;
-import musicApp.models.Radio;
-import java.util.ArrayList;
-import musicApp.models.Song;
 
 public class PathRepository {
     /**
@@ -33,7 +34,7 @@ public class PathRepository {
         songPaths = getAllSongPaths(folderPath);
         for (Path songPath : songPaths) {
             if (songPath.toString().endsWith(SupportedFileType.M3U.getExt())) {
-                Radio newRadio = null;
+                Radio newRadio;
                 try {
                     newRadio = new Radio(songPath);
                     songList.add(newRadio);

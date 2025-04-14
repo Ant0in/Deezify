@@ -55,16 +55,6 @@ public class PlaylistCellController extends ViewController<PlaylistCellView, Pla
     }
 
     /**
-     * Is the library deletable.
-     * For now, only the main Library and the favorites ar not deletable.
-     *
-     * @return True if the library is deletable, false otherwise.
-     */
-    public boolean isDeletable() {
-        return navigatorController.isDeletable(library);
-    }
-
-    /**
      * Get the name of the library.
      *
      * @return the name of the library

@@ -6,12 +6,9 @@ import javafx.beans.property.StringProperty;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.models.Metadata;
 import musicApp.models.Song;
-import musicApp.services.MetadataService;
 import musicApp.views.songs.SongCellView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

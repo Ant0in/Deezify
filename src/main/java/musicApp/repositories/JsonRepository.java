@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
-import musicApp.models.Song;
 import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
 
@@ -75,7 +74,7 @@ public class JsonRepository {
             try {
                 Files.createDirectories(folder);
             } catch (IOException e) {
-                System.out.println("An error occurred while creating the folder");
+                System.err.println("An error occurred while creating the folder");
             }
         }
     }
@@ -270,19 +269,18 @@ public class JsonRepository {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
-        if (!Files.exists(lyricsFile)) return new ArrayList<LyricsRepository.LyricsFilePaths>();
+        if (!Files.exists(lyricsFile)) return new ArrayList<>();
         try (var reader = Files.newBufferedReader(lyricsFile)) {
             var type = new TypeToken<List<LyricsRepository.LyricsFilePaths>>() {}.getType();
             return gson.fromJson(reader, type);
         } catch (IOException e) {
             System.err.println("An error occurred while reading the lyrics file: " + e.getMessage());
-            return new ArrayList<LyricsRepository.LyricsFilePaths>();
+            return new ArrayList<>();
         }
     }
 
     /**
      * Writes the lyrics library to the lyrics file.
-     * @return true if successful, false otherwise
      */
     public void writeLyricsLibrary(List<LyricsRepository.LyricsFilePaths> lib) throws IOException {
         Gson gson = new GsonBuilder()

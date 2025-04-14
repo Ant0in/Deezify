@@ -200,8 +200,6 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
         audioPlayer.setOnEndOfMedia(playerController::skip);
         audioPlayer.unpause();
         miniPlayerController.loadSong(song);
-        System.out.println("Playing: " + song.getTitle());
-
     }
 
     /**

@@ -1,6 +1,5 @@
 package musicApp.views.playlists;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -82,7 +81,6 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
                 if (getSelectedPlaylist() == null) return;
                 viewController.setSelectedLibrary(listView.getSelectionModel().getSelectedItem());
             } else if (e.getButton() == MouseButton.SECONDARY) {
-                System.out.println("Right click on playlist");
                 viewController.showContextMenu(e.getScreenX(), e.getScreenY(), getSelectedPlaylist());
             }
         });

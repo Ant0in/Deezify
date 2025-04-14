@@ -1,6 +1,5 @@
 package musicApp.views;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -70,9 +69,7 @@ public abstract class View<V extends View<V, C>, C extends ViewController<V, C>>
 
     public void initializeLanguageProperty() {
         languageProperty = LanguageService.getInstance().getLanguageProperty();
-        languageProperty.addListener((observable, oldValue, newValue) -> {
-            refreshTranslation();
-        });
+        languageProperty.addListener((_, _, _) -> refreshTranslation());
     }
 
     protected void refreshTranslation() {

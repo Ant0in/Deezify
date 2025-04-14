@@ -1,10 +1,11 @@
 package musicApp.controllers.playlists;
 
+import javafx.scene.control.Alert;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.repositories.JsonRepository;
+import musicApp.services.LanguageService;
 import musicApp.services.PlaylistService;
 import musicApp.views.playlists.PlaylistNavigatorView;
 
@@ -65,14 +66,6 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         playerController.updateShownPlaylist(library);
     }
 
-    /**
-     * Handle select library.
-     *
-     * @param library the library
-     */
-    public void handleSelectLibrary(Library library) {
-        setSelectedLibrary(library);
-    }
 
     /**
      * Create a new playlist.
@@ -95,7 +88,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param library the playlist
      * @return true if the playlist is deletable
      */
-    public boolean isDeletable(Library library) {
+    public boolean isModifiable(Library library) {
         return !(playlists.getFirst().equals(library) || playlists.get(FAVORITES_INDEX).equals(library));
     }
 
@@ -105,11 +98,13 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param library the playlist
      */
     public void deletePlaylist(Library library) {
-        if (isDeletable(library)) {
+        if (isModifiable(library)) {
             playlists.remove(library);
             PlaylistService playlistService = new PlaylistService();
             playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
             refreshUI();
+        } else {
+            alertService.showAlert(LanguageService.getInstance().get("error.delete_playlist"), Alert.AlertType.WARNING);
         }
     }
 

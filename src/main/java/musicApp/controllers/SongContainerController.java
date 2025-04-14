@@ -1,5 +1,6 @@
 package musicApp.controllers;
 
+import javafx.scene.control.Alert;
 import musicApp.exceptions.BadSongException;
 import musicApp.models.Library;
 import musicApp.models.Song;
@@ -7,7 +8,6 @@ import musicApp.views.SongContainerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.control.Alert;
 
 /**
  * Abstract container class for all classes that will contain Songs.
