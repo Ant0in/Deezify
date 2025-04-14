@@ -26,7 +26,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     @FXML
     StackPane artistStackPane, tagStackPane;
     @FXML
-    TextField titleField, artistField, genreField, artistAutoCompletion;
+    TextField titleField, artistField, albumField, genreField, artistAutoCompletion, albumAutoCompletion;
     @FXML
     TextField tagInputField, tagAutoCompletion;
     @FXML
@@ -67,6 +67,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
      */
     private void initAutoCompletionFields(){
         initArtistAutoCompletion();
+        initAlbumAutoCompletion();
         initTagAutoCompletion();
     }
 
@@ -119,6 +120,13 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     }
 
     /**
+     * Initializes the auto-completion for the album field.
+     */
+    private void initAlbumAutoCompletion() {
+        initAutoCompletion(albumField, albumAutoCompletion, viewController::getAlbumAutoCompletion);
+    }
+
+    /**
      * Initializes the auto-completion for the tag input field.
      */
     private void initTagAutoCompletion() {
@@ -148,6 +156,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
         saveButton.setOnAction(_ -> viewController.handleSaveMetadata(
                 titleField.getText(),
                 artistField.getText(),
+                albumField.getText(),
                 genreField.getText(),
                 currentTags
         ));
@@ -187,9 +196,10 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
      * @param genre    The genre of the song.
      * @param userTags The user tags associated with the song.
      */
-    public void populateFields(String title, String artist, String genre, ArrayList<String> userTags) {
+    public void populateFields(String title, String artist, String album, String genre, ArrayList<String> userTags) {
         titleField.setText(title);
         artistField.setText(artist);
+        albumField.setText(album);
         genreField.setText(genre);
         setTags(new HashSet<>(userTags)); // Convert ArrayList to Set and populate tags
     }

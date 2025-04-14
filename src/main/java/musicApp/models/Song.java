@@ -87,6 +87,8 @@ public class Song {
         return metadata.getArtist();
     }
 
+
+
     /**
      * Set the artist of the song.
      *
@@ -94,6 +96,24 @@ public class Song {
      */
     public void setArtist(String artist) {
         metadata.setArtist(artist);
+    }
+
+    /**
+     * Get the album of the song.
+     *
+     * @return The album of the song.
+     */
+    public String getAlbum() {
+        return metadata.getAlbum();
+    }
+
+    /**
+     * Set the album of the song.
+     *
+     * @param album The album of the song.
+     */
+    public void setAlbum(String album) {
+        metadata.setAlbum(album);
     }
 
     /**

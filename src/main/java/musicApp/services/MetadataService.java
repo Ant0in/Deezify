@@ -113,6 +113,7 @@ public class MetadataService {
     private Metadata loadTagValues(AudioFile file, Metadata metadata, Tag tag) {
         metadata.setTitle(tag.getFirst(FieldKey.TITLE));
         metadata.setArtist(tag.getFirst(FieldKey.ARTIST));
+        metadata.setAlbum(tag.getFirst(FieldKey.ALBUM));
         metadata.setGenre(tag.getFirst(FieldKey.GENRE));
         metadata.setDuration(Duration.seconds(file.getAudioHeader().getTrackLength()));
         /* The following call to tag.getFirst can throw an unexpected error, we catch it and
@@ -136,6 +137,7 @@ public class MetadataService {
         Metadata metadata = new Metadata();
         metadata.setTitle(fd.getName().replace(".m3u", ""));
         metadata.setArtist("N/A");
+        metadata.setAlbum("N/A");
         metadata.setGenre("Radio");
         metadata.setDuration(Duration.ZERO);
     
@@ -190,6 +192,7 @@ public class MetadataService {
         }
         // !!  FieldDataInvalidException can technically be thrown but could not be triggered artificially by us.
         tag.setField(FieldKey.ARTIST, metadata.getArtist());
+        tag.setField(FieldKey.ALBUM, metadata.getAlbum());
         tag.setField(FieldKey.TITLE, metadata.getTitle());
         tag.setField(FieldKey.GENRE, metadata.getGenre());
         tag.setField(FieldKey.CUSTOM1, formatUserTags(metadata.getUserTags()));

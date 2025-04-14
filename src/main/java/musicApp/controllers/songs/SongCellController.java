@@ -22,7 +22,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
 
     private final LibraryController LibraryController;
     private Song song;
-    private SongContextMenuController contextMenuController;
+    private final SongContextMenuController contextMenuController;
 
 
     /**
@@ -143,42 +143,6 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
         return LibraryController.isFavorite(song);
     }
 
-
-    /**
-     * Handle edit metadata.
-     *
-     * @param title     the title
-     * @param artist    the artist
-     * @param genre     the genre
-     * @param userTags  the user tags
-     * @param coverPath the cover path
-     */
-    public void handleEditMetadata(String title, String artist, String genre, ArrayList<String> userTags, String coverPath) {
-
-        if (song == null) {
-            view.displayError("No song to edit");
-            return;
-        }
-        try {
-            Metadata newMetadata = song.getMetadata();
-            newMetadata.setTitle(title);
-            newMetadata.setArtist(artist);
-            newMetadata.setGenre(genre);
-            newMetadata.setUserTags(userTags);
-            newMetadata.loadCoverFromPath(coverPath);
-            MetadataService util = new MetadataService();
-
-            util.setMetadata(newMetadata, song.getFilePath().toFile());
-        } catch (Exception e) {
-            alertService.showExceptionAlert(e);
-            return;
-        }
-
-        // update the view
-        song.reloadMetadata();
-        view.update(song);
-    }
-
     /**
      * Get all available playlists.
      *
@@ -259,13 +223,23 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
     }
 
     /**
-     * Gets artist auto completion.
+     * Gets artist auto-completion.
      *
      * @param input the input
-     * @return the artist auto completion
+     * @return the artist auto-completion
      */
     public Optional<String> getArtistAutoCompletion(String input) {
         return LibraryController.getArtistAutoCompletion(input);
+    }
+
+    /**
+     * Gets album auto completion.
+     *
+     * @param input the input
+     * @return the album auto-completion
+     */
+    public Optional<String> getAlbumAutoCompletion(String input) {
+        return LibraryController.getAlbumAutoCompletion(input);
     }
 
     /**

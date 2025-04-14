@@ -223,6 +223,16 @@ public class Library {
     }
 
     /**
+     * Get the auto-completion for a song album.
+     *
+     * @param input The input string to complete.
+     * @return The auto-completion for the song album.
+     */
+    public Optional<String> getAlbumAutoCompletion(String input) {
+        return getAutoCompletion(input, song -> List.of(song.getAlbum()));
+    }
+
+    /**
      * Get the auto-completion for a song tag.
      * 
      * @param input The input string to complete.

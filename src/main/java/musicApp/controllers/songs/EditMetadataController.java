@@ -41,6 +41,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             view.populateFields(
                     song.getTitle(),
                     song.getArtist(),
+                    song.getAlbum(),
                     song.getGenre(),
                     song.getUserTags()
             );
@@ -105,10 +106,11 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      *
      * @param title    the title
      * @param artist   the artist
+     * @param album    the album
      * @param genre    the genre
      * @param userTags the user tags
      */
-    public void handleSaveMetadata(String title, String artist, String genre, Set<String> userTags) {
+    public void handleSaveMetadata(String title, String artist, String album, String genre, Set<String> userTags) {
         if (song == null) {
             view.displayError("No song to edit");
             return;
@@ -117,6 +119,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             Metadata newMetadata = song.getMetadata();
             newMetadata.setTitle(title);
             newMetadata.setArtist(artist);
+            newMetadata.setAlbum(album);
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(new ArrayList<>(userTags));
             if (selectedFile != null) {
@@ -151,6 +154,16 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      */
     public Optional<String> getArtistAutoCompletion(String input){
         return songCellController.getArtistAutoCompletion(input);
+    }
+
+    /**
+     * Get album auto completion optional.
+     *
+     * @param input the input
+     * @return the optional
+     */
+    public Optional<String> getAlbumAutoCompletion(String input){
+        return songCellController.getAlbumAutoCompletion(input);
     }
 
     /**

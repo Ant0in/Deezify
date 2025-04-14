@@ -37,6 +37,23 @@
                 </children>
             </StackPane>
         </HBox>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="albumLabel" text="Album:" textFill="white"/>
+            <StackPane HBox.hgrow="ALWAYS">
+                <children>
+                    <TextField fx:id="albumField"
+                               styleClass="pre-completion-text-field"
+                               promptText="Album"
+                               HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="albumAutoCompletion"
+                               styleClass="auto-completion-text-field"
+                               editable="false"
+                               mouseTransparent="true"
+                               focusTraversable="false"
+                               HBox.hgrow="ALWAYS"/>
+                </children>
+            </StackPane>
+        </HBox>
 
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label fx:id="genreLabel" text="Genre:" textFill="white"/>
