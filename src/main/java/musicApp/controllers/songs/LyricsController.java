@@ -28,7 +28,6 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     public LyricsController(PlayerController _controller) {
         super(new LyricsView());
         playerController = _controller;
-        DataProvider dataProvider = new DataProvider();
         lyricsManager = new LyricsService();
         initView("/fxml/Lyrics.fxml");
         view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));

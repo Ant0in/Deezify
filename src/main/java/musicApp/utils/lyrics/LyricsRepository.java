@@ -27,7 +27,7 @@ public class LyricsRepository {
     public class LyricsFilePaths {
         private String textPath;
         private String karaokePath;
-        private String songPath;
+        private final String songPath;
         
         public LyricsFilePaths(String _songPath, String _textPath, String _karaokePath) {
             textPath = _textPath;
@@ -54,10 +54,6 @@ public class LyricsRepository {
         public void setPathLyricsKaraoke(String path) {
             karaokePath = path;
         }
-
-        public void setSongPath(String path) {
-            songPath = path;
-        }
     }
 
     /**
@@ -66,14 +62,14 @@ public class LyricsRepository {
     public LyricsRepository(DataProvider dataProvider) {
         lyricsDir = dataProvider.getLyricsDir();
         dataProvider.createFolderIfNotExists(lyricsDir);
-        lyricsFile = this.lyricsDir.resolve("lyrics.json");
+        lyricsFile = lyricsDir.resolve("lyrics.json");
     }
 
     /**
      * Returns the path of the lyrics directory.
      */
     public Path getLyricsDir() {
-        return this.lyricsDir;
+        return lyricsDir;
     }
 
     /**
@@ -82,17 +78,12 @@ public class LyricsRepository {
      * @return LyricsFilePaths containing text and karaoke paths, or null if not found
      */
     public Optional<LyricsFilePaths> getLyricsPaths(String songPath) {
-        if (songPath == null) {
-            return null;
-        }
-        
+        if (songPath == null) return Optional.empty();
+
         List<LyricsFilePaths> lib = readLyricsLibrary();
-        for (LyricsFilePaths entry : lib) {
-            if (entry.getSongPath().equals(songPath)) {
-                return Optional.of(entry);
-            }
-        }
-        return Optional.empty();
+
+        return lib.stream().filter(entry -> entry.getSongPath().equals(songPath))
+                .findFirst();
     }
 
     /**
@@ -102,15 +93,10 @@ public class LyricsRepository {
      * @param karaokePath Path to the karaoke lyrics file (relative to lyrics directory)
      * @return true if successful, false otherwise
      */
-    public boolean updateLyricsPaths(String songPath, String textPath, String karaokePath) {
-        if (songPath == null) {
-            return false;
-        }
-        
+    private void updateLyricsPaths(String songPath, String textPath, String karaokePath) throws IllegalArgumentException, IOException {
+        if (songPath == null) throw new IllegalArgumentException("Song path cannot be null");
         List<LyricsFilePaths> lib = readLyricsLibrary();
         boolean updated = false;
-
-        // Try to update existing entry
         for (LyricsFilePaths entry : lib) {
             if (entry.getSongPath().equals(songPath)) {
                 if (textPath != null) entry.setPathLyricsTxt(textPath);
@@ -119,27 +105,30 @@ public class LyricsRepository {
                 break;
             }
         }
-
-        // Create new entry if not found
         if (!updated) {
             lib.add(new LyricsFilePaths(songPath, textPath, karaokePath));
         }
-
-        return writeLyricsLibrary(lib);
+        writeLyricsLibrary(lib);
     }
 
     /**
      * Updates just the text lyrics path for a song.
      */
-    public boolean updateTextLyricsPath(String songPath, String textPath) {
-        return updateLyricsPaths(songPath, textPath, null);
+    public void updateTextLyricsPath(String songPath, String textPath) throws IllegalArgumentException, IOException {
+        updateLyricsPaths(songPath, textPath, null);
     }
 
     /**
      * Updates just the karaoke lyrics path for a song.
      */
-    public boolean updateKaraokeLyricsPath(String songPath, String karaokePath) {
-        return updateLyricsPaths(songPath, null, karaokePath);
+    public void updateKaraokeLyricsPath(String songPath, String karaokePath) throws IllegalArgumentException, IOException {
+        updateLyricsPaths(songPath, null, karaokePath);
+    }
+
+    private Gson createGson() {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
     }
 
     /**
@@ -147,9 +136,7 @@ public class LyricsRepository {
      * If the lyrics file does not exist, it will be created with an empty library.
      */
     private List<LyricsFilePaths> readLyricsLibrary() {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        Gson gson = createGson();
         if (!Files.exists(lyricsFile)) return new ArrayList<LyricsFilePaths>();
         try (var reader = Files.newBufferedReader(lyricsFile)) {
             var type = new TypeToken<List<LyricsFilePaths>>() {}.getType();
@@ -164,16 +151,8 @@ public class LyricsRepository {
      * Writes the lyrics library to the lyrics file.
      * @return true if successful, false otherwise
      */
-    private boolean writeLyricsLibrary(List<LyricsFilePaths> lib) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        try {
-            Files.writeString(lyricsFile, gson.toJson(lib));
-            return true;
-        } catch (IOException e) {
-            System.err.println("An error occurred while writing the lyrics file: " + e.getMessage());
-            return false;
-        }
+    private void writeLyricsLibrary(List<LyricsFilePaths> lib) throws IOException {
+        Gson gson = createGson();
+        Files.writeString(lyricsFile, gson.toJson(lib));
     }
 }

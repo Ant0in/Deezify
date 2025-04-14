@@ -73,14 +73,38 @@ public class KaraokeController {
         Optional<Path> selectedFile = view.showLrcFileChooser();
         if (selectedFile.isEmpty()) return;
 
+        Optional<Boolean> evaluation = evaluateOverwriteTxt(currentSong);
+        if (evaluation.isEmpty()) return;
+        boolean overwriteTxt = evaluation.get();
         try {
-            lyricsManager.importLrc(currentSong, selectedFile.get());
+            lyricsManager.importLrc(currentSong, selectedFile.get(), overwriteTxt);
         } catch (Exception e) {
             AlertService as = new AlertService();
             as.showExceptionAlert(e);
         }
         view.updateKaraokeLyrics();
         startKaraoke();
+    }
+
+    /**
+     * Evaluates whether to overwrite the existing .txt file for the current song.
+     * If the .txt file exists, prompts the user for confirmation.
+     *
+     * @param currentSong The current song
+     * @return Optional containing true if the user chooses to overwrite, false otherwise
+     */
+    private Optional<Boolean> evaluateOverwriteTxt(Song currentSong) {
+        boolean txtExists = lyricsManager.txtExists(currentSong);
+        boolean overwriteTxt;
+
+        if (txtExists) {
+            Optional<Boolean> userChoice =view.showOverwriteTxtConfirmation();
+            if (userChoice.isEmpty()) return Optional.empty();
+            overwriteTxt = userChoice.get();
+        } else {
+            overwriteTxt = true;
+        }
+        return Optional.of(overwriteTxt);
     }
 
     /**

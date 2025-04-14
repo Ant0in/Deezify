@@ -5,9 +5,7 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.LyricsNotFoundException;
-import musicApp.utils.DataProvider;
 import musicApp.utils.lyrics.LyricsService;
-import musicApp.utils.lyrics.LyricsRepository;
 import musicApp.utils.MetadataUtils;
 import org.jaudiotagger.tag.images.Artwork;
 
@@ -23,7 +21,7 @@ public class Song {
     @Expose
     private final Path filePath;
     private Metadata metadata;
-    private Optional<SongLyricsEntry> lyricsEntry;
+    private Optional<SongLyrics> lyricsEntry;
 
     /**
      * Constructor from MetadataReader.
@@ -194,7 +192,7 @@ public class Song {
      * Returns the current lyrics entry without loading it.
      * May return null if lyrics haven't been loaded yet.
      */
-    public Optional<SongLyricsEntry> getLyricsEntry() {
+    public Optional<SongLyrics> getLyricsEntry() {
         return lyricsEntry;
     }
 
@@ -202,8 +200,8 @@ public class Song {
      * Set the lyrics entry for this song.
      * @param entry The lyrics entry.
      */
-    public void setLyricsEntry(SongLyricsEntry entry) {
-        this.lyricsEntry = Optional.of(entry);
+    public void setLyricsEntry(SongLyrics entry) {
+        lyricsEntry = Optional.of(entry);
     }
 
     /**
@@ -211,7 +209,7 @@ public class Song {
      * @return The lyrics of the song.
      */
     public List<String> getLyrics() {
-        return lyricsEntry.map(SongLyricsEntry::getLyrics)
+        return lyricsEntry.map(SongLyrics::getLyrics)
                 .orElseGet(ArrayList::new);
     }
     
@@ -221,31 +219,6 @@ public class Song {
      */
     public List<KaraokeLine> getKaraokeLines() throws LyricsNotFoundException {
         return lyricsEntry.orElseThrow(() -> new LyricsNotFoundException("No Lyrics found")).getKaraokeLines();
-    }
-    
-    /**
-     * Check if this song has text lyrics.
-     */
-    public boolean hasTextLyrics() {
-        if (lyricsEntry.isPresent()) {
-            return lyricsEntry.get().hasTextLyrics();
-        } else {
-            refreshLyrics();
-            return lyricsEntry.map(SongLyricsEntry::hasTextLyrics).orElse(false);
-        }
-    }
-    
-    /**
-     * Check if this song has karaoke lyrics.
-     * @param dataProvider The data provider to use for loading lyrics if needed
-     */
-    public boolean hasKaraokeLyrics(DataProvider dataProvider) {
-        if (lyricsEntry.isPresent()) {
-            return lyricsEntry.get().hasKaraokeLyrics();
-        } else {
-            refreshLyrics();
-            return lyricsEntry.map(SongLyricsEntry::hasKaraokeLyrics).orElse(false);
-        }
     }
 
     /**
@@ -298,12 +271,16 @@ public class Song {
         }
     }
 
+    /**
+     * Refresh the lyrics for this song.
+     * This will load the lyrics from the file system.
+     */
     public void refreshLyrics() {
         LyricsService lyricsService = new LyricsService();
         try {
             lyricsEntry = Optional.of(lyricsService.getLyricsEntry(this));
         } catch (Exception e) {
-            lyricsEntry = Optional.of(new SongLyricsEntry());
+            lyricsEntry = Optional.of(new SongLyrics());
         }
     }
 

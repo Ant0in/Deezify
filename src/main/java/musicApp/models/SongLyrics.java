@@ -7,7 +7,7 @@ import java.util.List;
  * Data Transfer Object for song lyrics.
  * Contains the actual lyrics content, not just paths.
  */
-public class SongLyricsEntry {
+public class SongLyrics {
     
     private List<String> textLyrics;
     private List<KaraokeLine> karaokeLyrics;
@@ -15,17 +15,17 @@ public class SongLyricsEntry {
     /**
      * Default constructor
      */
-    public SongLyricsEntry() {
-        this.textLyrics = Collections.emptyList();
-        this.karaokeLyrics = Collections.emptyList();
+    public SongLyrics() {
+        textLyrics = Collections.emptyList();
+        karaokeLyrics = Collections.emptyList();
     }
     
     /**
      * Constructor with lyrics content
      */
-    public SongLyricsEntry(List<String> textLyrics, List<KaraokeLine> karaokeLyrics) {
-        this.textLyrics = textLyrics != null ? textLyrics : Collections.emptyList();
-        this.karaokeLyrics = karaokeLyrics != null ? karaokeLyrics : Collections.emptyList();
+    public SongLyrics(List<String> _textLyrics, List<KaraokeLine> _karaokeLyrics) {
+        textLyrics = _textLyrics != null ? _textLyrics : Collections.emptyList();
+        karaokeLyrics = _karaokeLyrics != null ? _karaokeLyrics : Collections.emptyList();
     }
     
     /**
@@ -39,7 +39,7 @@ public class SongLyricsEntry {
      * Set the plain text lyrics
      */
     public void setLyrics(List<String> lyrics) {
-        this.textLyrics = lyrics != null ? lyrics : Collections.emptyList();
+        textLyrics = lyrics != null ? lyrics : Collections.emptyList();
     }
     
     /**
@@ -48,25 +48,11 @@ public class SongLyricsEntry {
     public List<KaraokeLine> getKaraokeLines() {
         return karaokeLyrics;
     }
-    
-    /**
-     * Set the karaoke lyrics
-     */
-    public void setKaraokeLines(List<KaraokeLine> karaokeLines) {
-        this.karaokeLyrics = karaokeLines != null ? karaokeLines : Collections.emptyList();
-    }
-    
+
     /**
      * Check if this entry has text lyrics
      */
     public boolean hasTextLyrics() {
         return textLyrics != null && !textLyrics.isEmpty();
-    }
-    
-    /**
-     * Check if this entry has karaoke lyrics
-     */
-    public boolean hasKaraokeLyrics() {
-        return karaokeLyrics != null && !karaokeLyrics.isEmpty();
     }
 }

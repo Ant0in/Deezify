@@ -19,6 +19,10 @@ public class KaraokeLine {
         setLyric(lyric);
     }
 
+    /**
+     * Constructs a KaraokeLine with the given timestamp and lyric.
+     * This constructor is used for deserialization.
+     */
     private void setTimestamp(Duration _timestamp) throws IllegalArgumentException {
         if (_timestamp == null || _timestamp.lessThan(Duration.ZERO)) {
             throw new IllegalArgumentException("Timestamp cannot be null or negative.");
@@ -26,6 +30,10 @@ public class KaraokeLine {
         timestamp = _timestamp;
     }
 
+    /**
+     * Sets the lyric for this line.
+     * This method is used for deserialization.
+     */
     private void setLyric(String _lyric) throws IllegalArgumentException {
         if (_lyric == null) {
             throw new IllegalArgumentException("Lyric cannot be null.");
