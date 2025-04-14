@@ -1,31 +1,39 @@
 package musicApp.controllers;
 
+import javafx.fxml.Initializable;
 import musicApp.views.ToolBarView;
 
 /**
  * The type Tool bar controller.
  */
-public class ToolBarController extends ViewController<ToolBarView, ToolBarController> {
+public class ToolBarController extends TestViewController<ToolBarView.ToolBarViewListener, ToolBarView> implements ToolBarView.ToolBarViewListener{
     private final PlayerController playerController;
 
     /**
      * Instantiates a new Tool bar controller.
      *
-     * @param playerController the player controller
+     * @param _playerController the player controller
      */
-    public ToolBarController(PlayerController playerController) {
+    public ToolBarController(PlayerController _playerController) {
         super(new ToolBarView());
-        this.playerController = playerController;
+        playerController = _playerController;
         initView("/fxml/ToolBar.fxml");
     }
 
     /**
      * Open settings.
      */
+    @Override
     public void openSettings(){ playerController.openSettings(); }
 
     /**
      * Exit app properly.
      */
+    @Override
     public void exitApp() { System.exit(0); }
+
+    @Override
+    protected ToolBarView.ToolBarViewListener getListener() {
+        return this;
+    }
 }
