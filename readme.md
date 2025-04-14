@@ -12,6 +12,7 @@
 - [🗺️ Roadmap](#roadmap)
    - [Phase 1](#-phase-1)
    - [Phase 2](#-phase-2)
+   - [Phase 3](#-phase-3)
 - [🤝 Aknowledgements](#aknowledgements)
 
 ## 📖 Overview
@@ -77,9 +78,9 @@ mvn exec:java
 ### 📌 Phase 3
 - [x] 🔎 **Research**: Lets the user search for musics in its library based on title, artist, album or tags 
 - [x] 〰️ **Visualizer**: Audio Visualizer, draws a nice looking graph that updates based on the sounds that are playing
-- [ ] 📜 **Metadata autocompletion**: proposes values for artist, album and tags when modifying the metadata
-- [ ] 🎤 **Karaoke**: allows for the user to sing along with the music playing thanks to lyrics updating in real time with the song
-- [ ] 🎛️ **DJ mode**: Allows for audio effects to be applied in real time
+- [x] 📜 **Metadata autocompletion**: proposes values for artist, album and tags when modifying the metadata
+- [x] 🎤 **Karaoke**: allows for the user to sing along with the music playing thanks to lyrics updating in real time with the song
+- [x] 🎛️ **DJ mode**: Allows for audio effects to be applied in real time
 
 ## 🤝 Aknowledgements
 This project uses the following libraries:
