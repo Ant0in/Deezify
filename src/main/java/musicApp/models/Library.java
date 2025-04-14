@@ -2,8 +2,8 @@ package musicApp.models;
 
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
-import musicApp.utils.AlertService;
-import musicApp.utils.LanguageManager;
+import musicApp.services.AlertService;
+import musicApp.services.LanguageService;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class Library {
     public void add(Song song) throws IllegalArgumentException {
         if (songList.contains(song)) {
             throw new IllegalArgumentException(
-                    LanguageManager.getInstance().get("error.media_already_in_library")
+                    LanguageService.getInstance().get("error.media_already_in_library")
                             + " " + song.toString()
             );
         }
@@ -68,7 +68,7 @@ public class Library {
     public void add(int index, Song song) throws IllegalArgumentException {
         if (songList.contains(song)) {
             throw new IllegalArgumentException(
-                    LanguageManager.getInstance().get("error.media_already_in_library")
+                    LanguageService.getInstance().get("error.media_already_in_library")
                             + " " + song.toString()
             );
         }

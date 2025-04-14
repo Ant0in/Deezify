@@ -5,8 +5,8 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.LyricsNotFoundException;
-import musicApp.utils.lyrics.LyricsService;
-import musicApp.utils.MetadataUtils;
+import musicApp.services.LyricsService;
+import musicApp.services.MetadataService;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +30,7 @@ public class Song {
      */
     public Song(Path _filePath) {
         filePath = _filePath;
-        MetadataUtils metadataReader = new MetadataUtils();
+        MetadataService metadataReader = new MetadataService();
         try {
             metadata = metadataReader.getMetadata(filePath.toFile());
         } catch (Exception e) {
@@ -288,7 +288,7 @@ public class Song {
      * Reload metadata for the song.
      */
     public void reloadMetadata() {
-        MetadataUtils metadataReader = new MetadataUtils();
+        MetadataService metadataReader = new MetadataService();
         try {
             metadata = metadataReader.getMetadata(filePath.toFile());
         } catch (Exception e) {

@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.EqualizerController;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 import java.util.List;
@@ -143,7 +143,7 @@ public class EqualizerView extends View<EqualizerView, EqualizerController> {
      * Initialize the language combobox to display the current language.
      */
     private void initTranslations() {
-        LanguageManager lm = LanguageManager.getInstance();
+        LanguageService lm = LanguageService.getInstance();
         okButton.textProperty().bind(Bindings.createStringBinding(
                 () -> lm.get("settings.ok"), lm.getLanguageProperty()
         ));

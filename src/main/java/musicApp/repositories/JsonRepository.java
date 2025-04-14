@@ -1,4 +1,4 @@
-package musicApp.utils;
+package musicApp.repositories;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,8 +9,8 @@ import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
-import musicApp.utils.gsonTypeAdapter.LibraryTypeAdapter;
-import musicApp.utils.gsonTypeAdapter.SettingsTypeAdapter;
+import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
+import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,15 +35,17 @@ import java.util.List;
  * The default music folder is the user's music folder.
  * If the settings file does not exist, it will be created with the default settings.
  */
-public class DataProvider {
+public class JsonRepository {
     private final Path settingFolder;
     private final Path settingsFile;
     private final Path playlistsFile;
+    private final Path lyricsDir;
+    private final Path lyricsFile;
 
     /**
      * Constructor
      */
-    public DataProvider() {
+    public JsonRepository() {
         String os = System.getProperty("os.name").toLowerCase();
         String configFolder = "Deezify";
         if (os.contains("win")) {
@@ -56,7 +58,10 @@ public class DataProvider {
         createFolderIfNotExists(settingFolder);
         settingsFile = settingFolder.resolve("settings.json");
         playlistsFile = settingFolder.resolve("playlists.json");
+        lyricsDir = settingFolder.resolve("lyrics");
+        lyricsFile = lyricsDir.resolve("lyrics.json");
     }
+
     /**
      * Creates a folder at the specified path if it does not already exist.
      *
@@ -172,53 +177,13 @@ public class DataProvider {
      * @return The playlists read from the playlists file.
      * @throws IllegalArgumentException If an error occurs while reading the playlists file.
      */
-    private List<Library> readPlaylists() throws IllegalArgumentException {
+    public List<Library> readPlaylists() throws IllegalArgumentException {
         if (!Files.exists(playlistsFile)) {
             writePlaylists(List.of());
         }
         return getPlaylists(playlistsFile);
     }
 
-    /**
-     * Loads the main library from the specified music directory.
-     *
-     * <p>This method attempts to load all songs from the provided music directory using the {@link MusicLoader}.
-     * If successful, it returns a new {@link Library} object containing all the songs. In case of any
-     * {@link IOException}, an empty library with a default name ("??library??") is returned as a fallback.</p>
-     *
-     * @param musicDirectory The directory from which to load the songs. This is usually the user's default
-     *                       music folder.
-     * @return A {@link Library} containing all songs from the specified directory, or an empty library
-     *         if loading fails due to an IOException.
-     */
-    public Library loadMainLibrary(Path musicDirectory) {
-        try {
-            MusicLoader loader = new MusicLoader();
-            List<Song> songs = loader.getAllSongs(musicDirectory);
-            return new Library(songs, "??library??", null);
-        } catch (IOException e) {
-            System.err.println("Failed to load main library: " + e.getMessage());
-            return new Library(new ArrayList<>(), "??library??", null);
-        }
-    }
-
-    /**
-     * Loads all libraries, starting with the main library, followed by the user-defined playlists.
-     *
-     * <p>This method first loads the main library, which contains all songs available in the default music folder.</p>
-     * <p>Then, it loads the playlists from the playlists file, if available, and combines both the main library and the playlists into a single list.</p>
-     *
-     * @return A list containing the main library followed by the playlists.
-     *         The main library is loaded first, followed by any existing playlists.
-     */
-    public List<Library> loadAllLibraries(){
-        Library mainLibrary = loadMainLibrary(readSettings().getMusicFolder());
-        List<Library> playlists = readPlaylists();
-        List<Library> libraries = new ArrayList<>();
-        libraries.add(mainLibrary);
-        libraries.addAll(playlists);
-        return libraries;
-    }
 
     /**
      * Reads the playlists from the given path.
@@ -295,6 +260,35 @@ public class DataProvider {
 
         writePlaylists(validPlaylists);
         return validPlaylists;
+    }
+
+    /**
+     * Reads the lyrics library from the lyrics file.
+     * If the lyrics file does not exist, it will be created with an empty library.
+     */
+    public List<LyricsRepository.LyricsFilePaths> readLyricsLibrary() {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        if (!Files.exists(lyricsFile)) return new ArrayList<LyricsRepository.LyricsFilePaths>();
+        try (var reader = Files.newBufferedReader(lyricsFile)) {
+            var type = new TypeToken<List<LyricsRepository.LyricsFilePaths>>() {}.getType();
+            return gson.fromJson(reader, type);
+        } catch (IOException e) {
+            System.err.println("An error occurred while reading the lyrics file: " + e.getMessage());
+            return new ArrayList<LyricsRepository.LyricsFilePaths>();
+        }
+    }
+
+    /**
+     * Writes the lyrics library to the lyrics file.
+     * @return true if successful, false otherwise
+     */
+    public void writeLyricsLibrary(List<LyricsRepository.LyricsFilePaths> lib) throws IOException {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        Files.writeString(lyricsFile, gson.toJson(lib));
     }
 
     /**

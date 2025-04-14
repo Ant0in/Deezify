@@ -4,7 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.controllers.playlists.PlaylistContextMenuController;
 import musicApp.views.View;
 import javafx.scene.Node;
@@ -29,16 +29,16 @@ public class PlaylistContextMenuView extends View<PlaylistContextMenuView, Playl
      * Initializes the translations for the context menu items.
      */
     private void initTranslations() {
-        LanguageManager languageManager = LanguageManager.getInstance();
+        LanguageService languageService = LanguageService.getInstance();
         addToQueueItem.textProperty().bind(Bindings.createStringBinding(
-                () -> languageManager.get("context_menu.append_to_queue"),
-                languageManager.getLanguageProperty()));
+                () -> languageService.get("context_menu.append_to_queue"),
+                languageService.getLanguageProperty()));
         replaceQueueItem.textProperty().bind(Bindings.createStringBinding(
-                () -> languageManager.get("context_menu.replace_queue"), languageManager.getLanguageProperty()));
+                () -> languageService.get("context_menu.replace_queue"), languageService.getLanguageProperty()));
         editItem.textProperty().bind(Bindings.createStringBinding(
-                () -> languageManager.get("button.edit"), languageManager.getLanguageProperty()));
+                () -> languageService.get("button.edit"), languageService.getLanguageProperty()));
         deleteItem.textProperty().bind(Bindings.createStringBinding(
-                () -> languageManager.get("button.delete"), languageManager.getLanguageProperty()));
+                () -> languageService.get("button.delete"), languageService.getLanguageProperty()));
     }
 
     /**

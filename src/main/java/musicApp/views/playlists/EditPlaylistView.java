@@ -8,11 +8,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import musicApp.controllers.playlists.EditPlaylistController;
 import musicApp.models.Library;
-import musicApp.utils.AlertService;
-import musicApp.utils.LanguageManager;
+import musicApp.services.AlertService;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 import java.io.File;
@@ -47,14 +46,14 @@ public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistControl
     }
 
     private void initTranslations() {
-        nameLabel.setText(LanguageManager.getInstance().get("create_playlist.name"));
-        coverLabel.setText(LanguageManager.getInstance().get("create_playlist.image_path"));
-        chooseCoverButton.setText(LanguageManager.getInstance().get("playlist.select_image"));
+        nameLabel.setText(LanguageService.getInstance().get("create_playlist.name"));
+        coverLabel.setText(LanguageService.getInstance().get("create_playlist.image_path"));
+        chooseCoverButton.setText(LanguageService.getInstance().get("playlist.select_image"));
         String actionButtonText = viewController.isCreation()
-                ? LanguageManager.getInstance().get("button.create")
-                : LanguageManager.getInstance().get("button.save");
+                ? LanguageService.getInstance().get("button.create")
+                : LanguageService.getInstance().get("button.save");
         actionButton.setText(actionButtonText);
-        cancelButton.setText(LanguageManager.getInstance().get("button.cancel"));
+        cancelButton.setText(LanguageService.getInstance().get("button.cancel"));
     }
 
     /**
@@ -76,7 +75,7 @@ public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistControl
      */
     private void handleChooseImage() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(LanguageManager.getInstance().get("playlist.select_image"));
+        fileChooser.setTitle(LanguageService.getInstance().get("playlist.select_image"));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );

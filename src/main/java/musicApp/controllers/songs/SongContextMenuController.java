@@ -6,7 +6,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.songs.SongContextMenuView;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
     }
 
     private void initLanguageProperty() {
-        languageProperty = LanguageManager.getInstance().getLanguageProperty();
+        languageProperty = LanguageService.getInstance().getLanguageProperty();
         languageProperty.addListener((_, _, _) -> refreshTranslation());
     }
 
@@ -48,7 +48,7 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
         if (songCellController.getSong().isSong()) {
             songCellController.openMetadataEditor();
         } else {
-            String errorMessage = LanguageManager.getInstance().get("error.edit_metadata");
+            String errorMessage = LanguageService.getInstance().get("error.edit_metadata");
             alertService.showAlert(errorMessage, Alert.AlertType.WARNING);
         }
     }

@@ -4,13 +4,13 @@ import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.utils.DataProvider;
+import musicApp.repositories.JsonRepository;
+import musicApp.services.PlaylistService;
 import musicApp.views.playlists.PlaylistNavigatorView;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.Node;
 
 /**
  * The type Playlist navigator controller.
@@ -83,8 +83,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     public void createPlaylist(String name, Path imagePath) {
         Library playlist = new Library(new ArrayList<>(), name, imagePath);
         playlists.add(playlist);
-        DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        PlaylistService playlistService = new PlaylistService();
+        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -107,8 +107,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     public void deletePlaylist(Library library) {
         if (isDeletable(library)) {
             playlists.remove(library);
-            DataProvider dataProvider = new DataProvider();
-            dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+            PlaylistService playlistService = new PlaylistService();
+            playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
             refreshUI();
         }
     }
@@ -154,8 +154,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         if (selectedLibrary == favorites) {
             playerController.updateShownPlaylist(favorites);
         }
-        DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        PlaylistService playlistService = new PlaylistService();
+        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -167,8 +167,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      */
     public void addSongToPlaylist(Song song, Library playlist) {
         playlist.add(song);
-        DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        PlaylistService playlistService = new PlaylistService();
+        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -180,8 +180,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      */
     public void removeSongFromPlaylist(Song song, Library playlist) {
         playlist.remove(song);
-        DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        PlaylistService playlistService = new PlaylistService();
+        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -206,8 +206,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     public void updatePlaylist(Library playlist, String name, Path imagePath) {
         playlist.setName(name);
         playlist.setImagePath(imagePath);
-        DataProvider dataProvider = new DataProvider();
-        dataProvider.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        PlaylistService playlistService = new PlaylistService();
+        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 

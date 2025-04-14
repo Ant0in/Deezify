@@ -1,10 +1,8 @@
 package musicApp.controllers;
 
 import musicApp.exceptions.BadSongException;
-import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.utils.AlertService;
 import musicApp.views.SongContainerView;
 
 import java.util.ArrayList;

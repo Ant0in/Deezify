@@ -10,7 +10,7 @@ import java.util.List;
 
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
-import musicApp.utils.AlertService;
+import musicApp.services.AlertService;
 import javafx.scene.control.Alert;
 
 /**

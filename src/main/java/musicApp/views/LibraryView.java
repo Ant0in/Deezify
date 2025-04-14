@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.songs.SongCellController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.songs.SongCell;
 
 /**
@@ -66,8 +66,8 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
      */
     protected void initTranslation() {
         songInput.promptTextProperty().bind(Bindings.createStringBinding(
-                () -> LanguageManager.getInstance().get("search"),
-                LanguageManager.getInstance().getLanguageProperty()
+                () -> LanguageService.getInstance().get("search"),
+                LanguageService.getInstance().getLanguageProperty()
         ));
     }
 

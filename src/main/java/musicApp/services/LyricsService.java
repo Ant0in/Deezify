@@ -1,4 +1,4 @@
-package musicApp.utils.lyrics;
+package musicApp.services;
 
 import javafx.util.Duration;
 import musicApp.exceptions.LyricsNotFoundException;
@@ -6,7 +6,8 @@ import musicApp.exceptions.LyricsOperationException;
 import musicApp.models.KaraokeLine;
 import musicApp.models.Song;
 import musicApp.models.SongLyrics;
-import musicApp.utils.DataProvider;
+import musicApp.repositories.LyricsRepository;
+import musicApp.repositories.JsonRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,7 +27,7 @@ public class LyricsService {
     private final LyricsRepository repository;
 
     public LyricsService() {
-        repository = new LyricsRepository(new DataProvider());
+        repository = new LyricsRepository(new JsonRepository());
     }
 
     /**

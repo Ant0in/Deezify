@@ -1,7 +1,7 @@
 package musicApp.models;
 
 import javafx.util.Duration;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
@@ -26,10 +26,10 @@ public class Metadata {
      * Constructor to create a new Metadata object with default values.
      */
     public Metadata() {
-        LanguageManager languageManager = LanguageManager.getInstance();
-        title = languageManager.get("metadata.title");
-        artist = languageManager.get("metadata.artist");
-        genre = languageManager.get("metadata.genre");
+        LanguageService languageService = LanguageService.getInstance();
+        title = languageService.get("metadata.title");
+        artist = languageService.get("metadata.artist");
+        genre = languageService.get("metadata.genre");
         duration = Duration.ZERO;
         userTags = new ArrayList<>();
     }

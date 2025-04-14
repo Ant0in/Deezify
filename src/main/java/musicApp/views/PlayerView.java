@@ -9,9 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import musicApp.controllers.PlayerController;
-import musicApp.utils.LanguageManager;
-import javafx.stage.StageStyle;
-import javafx.scene.paint.Color;
+import musicApp.services.LanguageService;
 import javafx.scene.layout.Priority;
 
 /**
@@ -140,7 +138,7 @@ public class PlayerView extends View<PlayerView, PlayerController> {
      * @return The title of the application.
      */
     public String getTitle() {
-        return LanguageManager.getInstance().get("app.title");
+        return LanguageService.getInstance().get("app.title");
     }
 
     /**
@@ -164,7 +162,7 @@ public class PlayerView extends View<PlayerView, PlayerController> {
      */
     public void refreshUI() {
         Stage stage = (Stage) scene.getWindow();
-        stage.setTitle(LanguageManager.getInstance().get("app.title"));
+        stage.setTitle(LanguageService.getInstance().get("app.title"));
     }
 
     /**

@@ -14,10 +14,10 @@ import java.nio.file.Path;
 import java.util.Optional;
 import javafx.application.Platform;
 
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 import musicApp.models.KaraokeLine;
 import musicApp.controllers.songs.LyricsController;
-import musicApp.utils.LanguageManager;
 import musicApp.controllers.songs.KaraokeController;
 
 /**
@@ -95,11 +95,11 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     }
 
     /**
-     * Initializes translations for UI elements using the LanguageManager.
+     * Initializes translations for UI elements using the LanguageService.
      * This method loads translated text for labels, buttons, and dialogs.
      */
     private void initTranslation() {
-        LanguageManager lang = LanguageManager.getInstance();
+        LanguageService lang = LanguageService.getInstance();
         initButtonsTypes();
         karaokeEditButton.setText(lang.get("button.edit"));
         karaokeLyricsButton.setText(lang.get("button.modeKaraoke"));
@@ -110,7 +110,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     }
 
     private void initButtonsTypes(){
-        LanguageManager lang = LanguageManager.getInstance();
+        LanguageService lang = LanguageService.getInstance();
         yesButton = new ButtonType(lang.get("button.yes"), ButtonBar.ButtonData.YES);
         noButton = new ButtonType(lang.get("button.no"), ButtonBar.ButtonData.NO);
         cancelButton = new ButtonType(lang.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -121,7 +121,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * Displays a dialog to edit the lyrics.
      */
     public Optional<String> showEditLyricsDialog(String initialText) {
-        LanguageManager lang = LanguageManager.getInstance();
+        LanguageService lang = LanguageService.getInstance();
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle(lang.get("dialog.edit_lyrics.title"));
         dialog.setHeaderText(lang.get("dialog.edit_lyrics.header"));
@@ -165,7 +165,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * The placeholder includes a message and a button to add lyrics.
      */
     private void displayEmptyLyricsPlaceholder() {
-        LanguageManager lang = LanguageManager.getInstance();
+        LanguageService lang = LanguageService.getInstance();
         Label noLyricsLabel = new Label(lang.get("lyrics.no_lyrics"));
         noLyricsLabel.getStyleClass().add("no-lyrics-label");
 
@@ -311,7 +311,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * This method displays an Alert of type CONFIRMATION using pre-defined button types for "Yes", "No", and "Cancel".
      */
     public Optional<Boolean> showOverwriteTxtConfirmation() {
-        LanguageManager lang = LanguageManager.getInstance();
+        LanguageService lang = LanguageService.getInstance();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(lang.get("karaoke.title"));
         alert.setHeaderText(lang.get("karaoke.header"));

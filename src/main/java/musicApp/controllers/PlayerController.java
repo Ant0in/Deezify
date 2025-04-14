@@ -12,8 +12,8 @@ import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
-import musicApp.utils.FileDialogHelper;
-import musicApp.utils.FileManager;
+import musicApp.services.FileDialogService;
+import musicApp.services.PlaylistService;
 import musicApp.views.PlayerView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -407,11 +407,12 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * This method opens a file dialog to select an audio file and adds it to the main library.
      */
     public void handleAddSongToMainLibrary() {
-        File selectedFile = FileDialogHelper.chooseAudioFile(null, "Select Music File");
+        File selectedFile = FileDialogService.chooseAudioFile(null, "Select Music File");
         if (selectedFile != null) {
             Path mainLibraryPath = metaController.getMusicDirectory();
             try {
-                Path copiedFilePath = FileManager.copyFileToDirectory(selectedFile, mainLibraryPath);
+                PlaylistService playlistService = new PlaylistService();
+                Path copiedFilePath = playlistService.addSongToMainLibrary(selectedFile);
                 System.out.println("File copied with succes : " + copiedFilePath);
                 libraryController.addSong(copiedFilePath);
             } catch (IOException e) {

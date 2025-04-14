@@ -8,7 +8,7 @@ import javafx.scene.input.MouseButton;
 import musicApp.controllers.playlists.PlaylistCellController;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 import java.util.List;
@@ -64,8 +64,8 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
      */
     private void initTranslation() {
         createPlaylist.textProperty().bind(Bindings.createStringBinding(
-                () -> LanguageManager.getInstance().get("button.create_playlist"),
-                LanguageManager.getInstance().getLanguageProperty()
+                () -> LanguageService.getInstance().get("button.create_playlist"),
+                LanguageService.getInstance().getLanguageProperty()
         ));
     }
 

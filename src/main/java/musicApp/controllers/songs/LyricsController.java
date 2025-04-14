@@ -8,8 +8,7 @@ import javafx.beans.property.StringProperty;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Song;
-import musicApp.utils.lyrics.LyricsService;
-import musicApp.utils.DataProvider;
+import musicApp.services.LyricsService;
 import musicApp.views.songs.LyricsView;
 
 /**

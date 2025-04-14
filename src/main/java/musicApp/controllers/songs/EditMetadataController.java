@@ -6,13 +6,12 @@ import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
-import musicApp.utils.LanguageManager;
-import musicApp.utils.MetadataUtils;
+import musicApp.services.LanguageService;
+import musicApp.services.MetadataService;
 import musicApp.views.songs.EditMetadataView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -48,7 +47,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             view.setCoverImage(song.getCoverImage());
         }
 
-        editStage.setTitle(LanguageManager.getInstance().get("button.edit_metadata"));
+        editStage.setTitle(LanguageService.getInstance().get("button.edit_metadata"));
         editStage.setScene(view.getScene());
         editStage.show();
     }
@@ -123,7 +122,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             if (selectedFile != null) {
                 newMetadata.loadCoverFromPath(selectedFile.getAbsolutePath());
             }
-            MetadataUtils util = new MetadataUtils();
+            MetadataService util = new MetadataService();
 
             util.setMetadata(newMetadata, song.getFilePath().toFile());
         } catch (Exception e) {

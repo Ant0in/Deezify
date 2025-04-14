@@ -7,7 +7,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import musicApp.controllers.songs.SongContextMenuController;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 /**
@@ -29,12 +29,12 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
     }
 
     private void initTranslation() {
-        editMetadataItem.setText(LanguageManager.getInstance().get("button.edit_metadata"));
-        addToPlaylistMenu.setText(LanguageManager.getInstance().get("button.add_to_playlist"));
+        editMetadataItem.setText(LanguageService.getInstance().get("button.edit_metadata"));
+        addToPlaylistMenu.setText(LanguageService.getInstance().get("button.add_to_playlist"));
         if (removeFromPlaylistMenu instanceof Menu) {
-            ((Menu) removeFromPlaylistMenu).setText(LanguageManager.getInstance().get("button.remove_from_playlist"));
+            ((Menu) removeFromPlaylistMenu).setText(LanguageService.getInstance().get("button.remove_from_playlist"));
         } else {
-            removeFromPlaylistMenu.setText(LanguageManager.getInstance().get("button.remove_from_playlist"));
+            removeFromPlaylistMenu.setText(LanguageService.getInstance().get("button.remove_from_playlist"));
         }
     }
 

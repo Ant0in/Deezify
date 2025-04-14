@@ -3,7 +3,7 @@ package musicApp.controllers.playlists;
 import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.playlists.EditPlaylistView;
 
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ public class EditPlaylistController extends ViewController<EditPlaylistView, Edi
         navigatorController = _controller;
         playlistToEdit = null;
         initView("/fxml/EditPlaylist.fxml");
-        stage.setTitle(LanguageManager.getInstance().get("create_playlist.title"));
+        stage.setTitle(LanguageService.getInstance().get("create_playlist.title"));
         stage.setScene(view.getScene());
         stage.show();
     }
@@ -48,7 +48,7 @@ public class EditPlaylistController extends ViewController<EditPlaylistView, Edi
         navigatorController = _controller;
         playlistToEdit = _playlist;
         initView("/fxml/EditPlaylist.fxml");
-        stage.setTitle(LanguageManager.getInstance().get("edit_playlist.title"));
+        stage.setTitle(LanguageService.getInstance().get("edit_playlist.title"));
         view.init();
         view.populateFields(_playlist);
         stage.show();

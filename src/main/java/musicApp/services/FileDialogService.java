@@ -1,4 +1,4 @@
-package musicApp.utils;
+package musicApp.services;
 
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -6,7 +6,7 @@ import javafx.stage.Window;
 import java.io.File;
 import musicApp.enums.SupportedFileType;
 
-public class FileDialogHelper {
+public class FileDialogService {
 
     /**
      * Opens a directory chooser dialog and returns the selected directory.

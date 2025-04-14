@@ -9,7 +9,7 @@ import javafx.scene.input.*;
 import musicApp.controllers.QueueController;
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 
 /**
  * The Queue view.
@@ -185,7 +185,7 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
      * Initialize the translations of the texts in the view.
      */
     protected void initTranslation() {
-        LanguageManager lm = LanguageManager.getInstance();
+        LanguageService lm = LanguageService.getInstance();
         addSongButton.textProperty().bind(Bindings.createStringBinding(
                 () -> lm.get("button.add"), lm.getLanguageProperty()
         ));

@@ -6,7 +6,7 @@ import musicApp.controllers.MetaController;
 import musicApp.controllers.ViewController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.settings.SettingsView;
 
 import java.io.IOException;
@@ -123,7 +123,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      * @param musicDirectory the music directory
      */
     public void handleSave(Language language, double balance, Path musicDirectory) {
-        LanguageManager.getInstance().setLanguage(language);
+        LanguageService.getInstance().setLanguage(language);
         refreshLanguage();
         setBalance(balance);
         setMusicDirectoryPath(musicDirectory);
