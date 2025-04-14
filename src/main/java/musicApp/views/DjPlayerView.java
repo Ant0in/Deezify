@@ -2,7 +2,6 @@ package musicApp.views;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import musicApp.controllers.DjPlayerController;
@@ -11,10 +10,6 @@ import musicApp.exceptions.EqualizerGainException;
 
 public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
 
-    @FXML
-    private Button playButton, pauseButton;
-    @FXML
-    private Button gainButton, pressureButton, bassBoostButton, waveButton;
     @FXML
     private Slider gainSlider, bassBoostSlider, pressureSlider, waveSlider;
     @FXML
@@ -29,7 +24,6 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
 
     @Override
     public void init() {
-        setOnAction();
         addListeners();
     }
 
@@ -83,14 +77,6 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
                 speedLabel.setText("x3");
             }
         });
-    }
-
-    public void setOnAction() {
-        playButton.setOnAction(_ -> viewController.unpause());
-        pauseButton.setOnAction(_ -> viewController.pause());
-        gainButton.setOnAction(_ -> viewController.toggleBoostGainMode());
-        pressureButton.setOnAction(_ -> viewController.togglePressureMode());
-        bassBoostButton.setOnAction(_ -> viewController.toggleWaveGainMode());
     }
 
     private void toggleBoostGainMode(double value) throws EqualizerGainException {

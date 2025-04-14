@@ -7,18 +7,10 @@
 <VBox fx:id="mainContainer"
       xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
-      prefWidth="300" prefHeight="250"
+      prefWidth="300" prefHeight="200"
       spacing="20" alignment="TOP_CENTER"
       stylesheets="@../css/dj_style.css"
       styleClass = "mainContainer">
-
-    <HBox fx:id="djButtonContainer">
-        <Button fx:id="playButton"/>
-        <Button fx:id="pauseButton"/>
-        <Button fx:id="gainButton"/>
-        <Button fx:id="pressureButton"/>
-        <Button fx:id="bassBoostButton"/>
-    </HBox>
 
     <HBox alignment="CENTER" spacing="50">
 
