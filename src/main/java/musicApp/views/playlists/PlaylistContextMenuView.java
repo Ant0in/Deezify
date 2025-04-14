@@ -21,24 +21,20 @@ public class PlaylistContextMenuView extends View<PlaylistContextMenuView, Playl
      */
     @Override
     public void init() {
-        initTranslations();
+        refreshTranslation();
         initActions();
     }
 
     /**
      * Initializes the translations for the context menu items.
      */
-    private void initTranslations() {
+    @Override
+    protected void refreshTranslation() {
         LanguageService languageService = LanguageService.getInstance();
-        addToQueueItem.textProperty().bind(Bindings.createStringBinding(
-                () -> languageService.get("context_menu.append_to_queue"),
-                languageService.getLanguageProperty()));
-        replaceQueueItem.textProperty().bind(Bindings.createStringBinding(
-                () -> languageService.get("context_menu.replace_queue"), languageService.getLanguageProperty()));
-        editItem.textProperty().bind(Bindings.createStringBinding(
-                () -> languageService.get("button.edit"), languageService.getLanguageProperty()));
-        deleteItem.textProperty().bind(Bindings.createStringBinding(
-                () -> languageService.get("button.delete"), languageService.getLanguageProperty()));
+        addToQueueItem.setText(languageService.get("context_menu.add_to_queue"));
+        replaceQueueItem.setText(languageService.get("context_menu.replace_queue"));
+        editItem.setText(languageService.get("button.edit"));
+        deleteItem.setText(languageService.get("button.delete"));
     }
 
     /**
@@ -51,11 +47,14 @@ public class PlaylistContextMenuView extends View<PlaylistContextMenuView, Playl
         deleteItem.setOnAction(_ -> viewController.deletePlaylist());
     }
 
+    /**
+     * Shows the context menu at the specified coordinates.
+     *
+     * @param node The node to show the context menu on.
+     * @param x    The x coordinate to show the context menu at.
+     * @param y    The y coordinate to show the context menu at.
+     */
     public void show(Node node, double x, double y) {
         contextMenu.show(node, x, y);
-    }
-
-    public void refreshTranslations() {
-        initTranslations();
     }
 }

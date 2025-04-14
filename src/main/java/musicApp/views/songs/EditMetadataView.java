@@ -41,13 +41,14 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     private final Set<String> currentTags;
 
     public EditMetadataView() {
+        super();
         currentTags = new HashSet<>();
     }
 
     @Override
     public void init() {
         initAutoCompletionFields();
-        initTranslations();
+        refreshTranslation();
         initButtons();
         initTagInput();
     }
@@ -127,7 +128,8 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     /**
      * Initializes the translations for the labels and buttons in the view.
      */
-    private void initTranslations() {
+    @Override
+    protected void refreshTranslation() {
         titleLabel.setText(LanguageService.getInstance().get("song.title"));
         artistLabel.setText(LanguageService.getInstance().get("song.artist"));
         genreLabel.setText(LanguageService.getInstance().get("song.genre"));

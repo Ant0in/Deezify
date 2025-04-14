@@ -51,8 +51,9 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     @Override
     public void init() {
-        initTranslation();
         initButtons();
+        initButtonsTypes();
+        refreshTranslation();
     }
 
     public void setKaraokeController(KaraokeController controller) {
@@ -88,7 +89,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         });
 
         viewController.getCurrentlyLoadedSongStringProperty().addListener((obs, oldTitle, newTitle) -> {
-            initTranslation();
+            initButtonsTypes();
             karaokeController.stopKaraoke();
             simpleLyricsButton.fire();
         });
@@ -98,7 +99,8 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * Initializes translations for UI elements using the LanguageService.
      * This method loads translated text for labels, buttons, and dialogs.
      */
-    private void initTranslation() {
+    @Override
+    protected void refreshTranslation() {
         LanguageService lang = LanguageService.getInstance();
         initButtonsTypes();
         karaokeEditButton.setText(lang.get("button.edit"));
@@ -333,7 +335,6 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * Refreshes the UI by reloading the translations.
      */
     public void refreshUI() {
-        initTranslation();
         updateLyrics();
         updateKaraokeLyrics();
     }

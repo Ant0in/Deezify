@@ -39,12 +39,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     private String title;
 
     /**
-     * Instantiates a new Settings view.
-     */
-    public SettingsView() {
-    }
-
-    /**
      * Show the settings view.
      *
      * @param stage The stage to show the view on.
@@ -62,9 +56,9 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     public void init() {
         initComboBox();
         initSlider();
-        initTranslations();
         initButtons();
         initDirectoryLabel();
+        refreshTranslation();
     }
 
     /**
@@ -106,7 +100,8 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     /**
      * Initialize the translations of the view.
      */
-    private void initTranslations() {
+    @Override
+    protected void refreshTranslation() {
         LanguageService languageService = LanguageService.getInstance();
         languageTitle.setText(languageService.get("settings.lang_title"));
         languageSelect.setText(languageService.get("settings.lang_select"));
@@ -118,13 +113,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         cancelButton.setText(languageService.get("button.cancel"));
         browseButton.setText(languageService.get("settings.select_music_folder"));
         equalizerButton.setText(languageService.get("settings.manage_audio_equalizer"));
-    }
-
-    /**
-     * Refresh the language of the view.
-     */
-    public void refreshLanguage() {
-        initTranslations();
         updateLanguageComboBox();
     }
 
@@ -191,7 +179,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     public void updateView(Settings settings) {
         initComboBox();
-        initTranslations();
         balanceSlider.setValue(settings.getBalance());
         directoryLabel.setText(settings.getMusicFolder().toString());
     }

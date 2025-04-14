@@ -25,10 +25,11 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
     @Override
     public void init() {
         initContextMenu();
-        initTranslation();
+        refreshTranslation();
     }
 
-    private void initTranslation() {
+    @Override
+    protected void refreshTranslation() {
         editMetadataItem.setText(LanguageService.getInstance().get("button.edit_metadata"));
         addToPlaylistMenu.setText(LanguageService.getInstance().get("button.add_to_playlist"));
         if (removeFromPlaylistMenu instanceof Menu) {
@@ -100,12 +101,5 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
      */
     public void show(Node node, double x, double y) {
         contextMenu.show(node, x, y);
-    }
-
-    /**
-     * Refresh the translation of the context menu.
-     */
-    public void refreshTranslation() {
-        initTranslation();
     }
 }

@@ -32,6 +32,7 @@ public class PlayerView extends View<PlayerView, PlayerController> {
      * Instantiates a new Player view.
      */
     public PlayerView() {
+        super();
         xOffset = 0;
         yOffset = 0;
     }

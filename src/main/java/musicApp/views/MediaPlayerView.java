@@ -33,12 +33,6 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     @FXML
     private ToggleButton shuffleToggle, lyricsToggle, miniPlayerToggle;
 
-    /**
-     * Instantiates a new Media player view.
-     */
-    public MediaPlayerView() {
-    }
-
     @Override
     public void init() {
         initBindings();

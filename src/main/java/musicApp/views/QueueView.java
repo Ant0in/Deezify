@@ -20,13 +20,6 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
 
-    /**
-     * Instantiates a new Queue view.
-     */
-    public QueueView() {
-    }
-
-
     @Override
     public void init() {
         initBindings();
@@ -34,8 +27,8 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
         enableQueueDragAndDrop();
         setupListSelectionListeners();
         enableDoubleClickToPlay();
-        initTranslation();
         setButtonActions();
+        refreshTranslation();
     }
 
     private void setButtonActions() {
@@ -180,21 +173,15 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
         });
     }
 
-
+    @Override
     /**
      * Initialize the translations of the texts in the view.
      */
-    protected void initTranslation() {
-        LanguageService lm = LanguageService.getInstance();
-        addSongButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.add"), lm.getLanguageProperty()
-        ));
-        deleteSongButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.delete"), lm.getLanguageProperty()
-        ));
-        clearQueueButton.textProperty().bind(Bindings.createStringBinding(
-                () -> lm.get("button.clear"), lm.getLanguageProperty()
-        ));
+    protected void refreshTranslation() {
+        LanguageService ls = LanguageService.getInstance();
+        addSongButton.setText(ls.get("button.add"));
+        deleteSongButton.setText(ls.get("button.delete"));
+        clearQueueButton.setText(ls.get("button.clear"));
     }
 
 }

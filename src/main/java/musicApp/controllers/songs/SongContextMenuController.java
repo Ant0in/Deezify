@@ -21,7 +21,6 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
      */
     public SongCellController songCellController;
     private final boolean isMainLibrary;
-    private StringProperty languageProperty;
 
     /**
      * Instantiates a new Song context menu controller.
@@ -33,12 +32,6 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
         songCellController = cellController;
         isMainLibrary = cellController.isShowingMainLibrary();
         initView("/fxml/SongContextMenu.fxml", true);
-        initLanguageProperty();
-    }
-
-    private void initLanguageProperty() {
-        languageProperty = LanguageService.getInstance().getLanguageProperty();
-        languageProperty.addListener((_, _, _) -> refreshTranslation());
     }
 
     /**
@@ -101,12 +94,5 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
      */
     public void showAt(double x, double y) {
         view.show(songCellController.getRoot(), x, y);
-    }
-
-    /**
-     * Refresh translation.
-     */
-    public void refreshTranslation() {
-        view.refreshTranslation();
     }
 }

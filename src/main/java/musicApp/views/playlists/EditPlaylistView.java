@@ -34,7 +34,6 @@ public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistControl
     @FXML
     private VBox popupLayout;
 
-
     /**
      * Initializes the PlaylistEditView.
      * This method is called to set up the view when it is created.
@@ -42,10 +41,11 @@ public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistControl
     @Override
     public void init() {
         initControls();
-        initTranslations();
+        refreshTranslation();
     }
 
-    private void initTranslations() {
+    @Override
+    protected void refreshTranslation() {
         nameLabel.setText(LanguageService.getInstance().get("create_playlist.name"));
         coverLabel.setText(LanguageService.getInstance().get("create_playlist.image_path"));
         chooseCoverButton.setText(LanguageService.getInstance().get("playlist.select_image"));
