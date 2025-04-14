@@ -8,7 +8,7 @@ import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
-import musicApp.utils.MetadataUtils;
+import musicApp.services.MetadataService;
 import musicApp.views.songs.SongCellView;
 
 import java.util.ArrayList;
@@ -166,7 +166,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(userTags);
             newMetadata.loadCoverFromPath(coverPath);
-            MetadataUtils util = new MetadataUtils();
+            MetadataService util = new MetadataService();
 
             util.setMetadata(newMetadata, song.getFilePath().toFile());
         } catch (Exception e) {

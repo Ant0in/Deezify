@@ -18,6 +18,7 @@ public class PlaylistCell extends ListCell<Library> {
      * @param controller the controller
      */
     public PlaylistCell(PlaylistCellController controller) {
+        super();
         playlistCellController = controller;
     }
 

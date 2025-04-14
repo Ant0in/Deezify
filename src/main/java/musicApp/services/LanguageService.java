@@ -1,4 +1,4 @@
-package musicApp.utils;
+package musicApp.services;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -9,22 +9,22 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 /**
- * LanguageManager
+ * LanguageService
  * Manages application language settings and retrieves localized messages.
  * The class is a singleton and uses the Preferences API to store the selected language.
  */
-public class LanguageManager {
+public class LanguageService {
 
-    private static LanguageManager instance;
+    private static LanguageService instance;
 
     private final Preferences prefs;
     private final String[] BUNDLE_NAMES;
     private final ResourceBundle[] bundles;
     private final StringProperty languageProperty;
 
-    public LanguageManager() {
+    public LanguageService() {
         // Initialize non-static variables in the constructor
-       prefs = Preferences.userNodeForPackage(LanguageManager.class);
+       prefs = Preferences.userNodeForPackage(LanguageService.class);
        BUNDLE_NAMES = new String[]{
                 "lang.messages",
                 "lang.general",
@@ -43,13 +43,13 @@ public class LanguageManager {
     }
 
     /**
-     * Get the instance of the LanguageManager.
+     * Get the instance of the LanguageService.
      *
-     * @return The instance of the LanguageManager.
+     * @return The instance of the LanguageService.
      */
-    public static LanguageManager getInstance() {
+    public static LanguageService getInstance() {
         if (instance == null) {
-            instance = new LanguageManager();
+            instance = new LanguageService();
         }
         return instance;
     }

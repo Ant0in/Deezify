@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import musicApp.controllers.songs.EditMetadataController;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 import java.util.*;
@@ -41,13 +41,14 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     private final Set<String> currentTags;
 
     public EditMetadataView() {
+        super();
         currentTags = new HashSet<>();
     }
 
     @Override
     public void init() {
         initAutoCompletionFields();
-        initTranslations();
+        refreshTranslation();
         initButtons();
         initTagInput();
     }
@@ -127,14 +128,15 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     /**
      * Initializes the translations for the labels and buttons in the view.
      */
-    private void initTranslations() {
-        titleLabel.setText(LanguageManager.getInstance().get("song.title"));
-        artistLabel.setText(LanguageManager.getInstance().get("song.artist"));
-        genreLabel.setText(LanguageManager.getInstance().get("song.genre"));
-        chooseCoverButton.setText(LanguageManager.getInstance().get("button.choose_file"));
-        saveButton.setText(LanguageManager.getInstance().get("button.save"));
-        cancelButton.setText(LanguageManager.getInstance().get("button.cancel"));
-        tagInputField.setPromptText(LanguageManager.getInstance().get("prompt.add_tag"));
+    @Override
+    protected void refreshTranslation() {
+        titleLabel.setText(LanguageService.getInstance().get("song.title"));
+        artistLabel.setText(LanguageService.getInstance().get("song.artist"));
+        genreLabel.setText(LanguageService.getInstance().get("song.genre"));
+        chooseCoverButton.setText(LanguageService.getInstance().get("button.choose_file"));
+        saveButton.setText(LanguageService.getInstance().get("button.save"));
+        cancelButton.setText(LanguageService.getInstance().get("button.cancel"));
+        tagInputField.setPromptText(LanguageService.getInstance().get("prompt.add_tag"));
     }
 
     /**

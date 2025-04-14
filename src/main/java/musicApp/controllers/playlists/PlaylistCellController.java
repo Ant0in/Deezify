@@ -2,7 +2,7 @@ package musicApp.controllers.playlists;
 
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.playlists.PlaylistCellView;
 
 /**
@@ -71,9 +71,9 @@ public class PlaylistCellController extends ViewController<PlaylistCellView, Pla
      */
     public String getLibraryName() {
         if (library.getName().equals("??favorites??")) {
-            return LanguageManager.getInstance().get("favorites");
+            return LanguageService.getInstance().get("favorites");
         } else if (library.getName().equals("??library??")) {
-            return LanguageManager.getInstance().get("library");
+            return LanguageService.getInstance().get("library");
         } else {
             return library.getName();
         }

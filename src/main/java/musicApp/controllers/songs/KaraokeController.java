@@ -4,19 +4,16 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
 import musicApp.controllers.PlayerController;
 import musicApp.exceptions.LyricsNotFoundException;
-import musicApp.exceptions.LyricsOperationException;
 import musicApp.models.Song;
 import musicApp.models.KaraokeLine;
-import musicApp.utils.AlertService;
-import musicApp.utils.lyrics.LyricsService;
+import musicApp.services.AlertService;
+import musicApp.services.LyricsService;
 import musicApp.views.songs.LyricsView;
 
 /**
@@ -57,7 +54,7 @@ public class KaraokeController {
         Song currentSong = playerController.getCurrentlyLoadedSong();
         try {
             return currentSong.getKaraokeLines();
-        } catch (LyricsNotFoundException e) {
+        } catch (Exception e) {
             return List.of();
         }
     }

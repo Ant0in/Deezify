@@ -1,4 +1,4 @@
-package musicApp.utils.lyrics;
+package musicApp.repositories;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,16 +10,15 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import musicApp.utils.DataProvider;
 
 /**
- * Repository for accessing and managing lyrics file paths.
- * Handles the mapping between songs and their lyrics files.
+ * Repository for managing lyrics file paths.
+ * This class handles the storage and retrieval of lyrics file paths for songs.
+ * It uses a JSON file to store the paths and provides methods to read and write these paths, but also ensure
+ * the integrity of the data.
  */
 public class LyricsRepository {
-
-    private final Path lyricsFile;
-    private final Path lyricsDir;
+    private final JsonRepository jsonRepository;
     
     /**
      * Store both the text and karaoke paths for a song
@@ -59,17 +58,15 @@ public class LyricsRepository {
     /**
      * Constructor injecting a DataProvider, which handles file paths and JSON reading/writing.
      */
-    public LyricsRepository(DataProvider dataProvider) {
-        lyricsDir = dataProvider.getLyricsDir();
-        dataProvider.createFolderIfNotExists(lyricsDir);
-        lyricsFile = lyricsDir.resolve("lyrics.json");
+    public LyricsRepository(JsonRepository jsonRepository) {
+        this.jsonRepository = jsonRepository;
     }
 
     /**
      * Returns the path of the lyrics directory.
      */
     public Path getLyricsDir() {
-        return lyricsDir;
+        return jsonRepository.getLyricsDir();
     }
 
     /**
@@ -80,7 +77,7 @@ public class LyricsRepository {
     public Optional<LyricsFilePaths> getLyricsPaths(String songPath) {
         if (songPath == null) return Optional.empty();
 
-        List<LyricsFilePaths> lib = readLyricsLibrary();
+        List<LyricsFilePaths> lib = jsonRepository.readLyricsLibrary();
 
         return lib.stream().filter(entry -> entry.getSongPath().equals(songPath))
                 .findFirst();
@@ -95,7 +92,7 @@ public class LyricsRepository {
      */
     private void updateLyricsPaths(String songPath, String textPath, String karaokePath) throws IllegalArgumentException, IOException {
         if (songPath == null) throw new IllegalArgumentException("Song path cannot be null");
-        List<LyricsFilePaths> lib = readLyricsLibrary();
+        List<LyricsFilePaths> lib = jsonRepository.readLyricsLibrary();
         boolean updated = false;
         for (LyricsFilePaths entry : lib) {
             if (entry.getSongPath().equals(songPath)) {
@@ -108,7 +105,7 @@ public class LyricsRepository {
         if (!updated) {
             lib.add(new LyricsFilePaths(songPath, textPath, karaokePath));
         }
-        writeLyricsLibrary(lib);
+        jsonRepository.writeLyricsLibrary(lib);
     }
 
     /**
@@ -125,34 +122,6 @@ public class LyricsRepository {
         updateLyricsPaths(songPath, null, karaokePath);
     }
 
-    private Gson createGson() {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-    }
 
-    /**
-     * Reads the lyrics library from the lyrics file.
-     * If the lyrics file does not exist, it will be created with an empty library.
-     */
-    private List<LyricsFilePaths> readLyricsLibrary() {
-        Gson gson = createGson();
-        if (!Files.exists(lyricsFile)) return new ArrayList<LyricsFilePaths>();
-        try (var reader = Files.newBufferedReader(lyricsFile)) {
-            var type = new TypeToken<List<LyricsFilePaths>>() {}.getType();
-            return gson.fromJson(reader, type);
-        } catch (IOException e) {
-            System.err.println("An error occurred while reading the lyrics file: " + e.getMessage());
-            return new ArrayList<LyricsFilePaths>();
-        }
-    }
 
-    /**
-     * Writes the lyrics library to the lyrics file.
-     * @return true if successful, false otherwise
-     */
-    private void writeLyricsLibrary(List<LyricsFilePaths> lib) throws IOException {
-        Gson gson = createGson();
-        Files.writeString(lyricsFile, gson.toJson(lib));
-    }
 }

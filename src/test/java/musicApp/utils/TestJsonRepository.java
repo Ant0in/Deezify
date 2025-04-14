@@ -2,6 +2,7 @@ package musicApp.utils;
 
 import musicApp.models.Library;
 import musicApp.models.Settings;
+import musicApp.repositories.JsonRepository;
 import org.junit.Test;
 
 import java.net.URISyntaxException;
@@ -10,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TestDataProvider extends DataProvider {
+public class TestJsonRepository extends JsonRepository {
     @Test
     public void testGetPlaylist() throws URISyntaxException {
 //        readPlaylists();

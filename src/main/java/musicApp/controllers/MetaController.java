@@ -1,14 +1,13 @@
 package musicApp.controllers;
 
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Library;
 import musicApp.models.Settings;
-import musicApp.models.Song;
-import musicApp.utils.AlertService;
-import musicApp.utils.DataProvider;
-import musicApp.utils.MusicLoader;
+import musicApp.services.AlertService;
+import musicApp.repositories.JsonRepository;
+import musicApp.services.PlaylistService;
+import musicApp.services.SettingsService;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -21,7 +20,8 @@ public class MetaController {
 
     private final AlertService alertService;
     private final Stage stage;
-    private final DataProvider dataProvider;
+    private final SettingsService settingsService;
+    private final PlaylistService playlistService;
     private final PlayerController playerController;
     private final SettingsController settingsController;
     private final List<Library> playlists;
@@ -34,10 +34,11 @@ public class MetaController {
     public MetaController(Stage stage) throws IOException {
         this.stage = stage;
         alertService = new AlertService();
-        dataProvider = new DataProvider();
-        playlists = dataProvider.loadAllLibraries();
-        playerController = new PlayerController(this, dataProvider.readSettings(), getMainLibrary());
-        settingsController = new SettingsController(this, dataProvider.readSettings());
+        settingsService = new SettingsService();
+        playlistService = new PlaylistService();
+        playlists = playlistService.loadAllLibraries();
+        playerController = new PlayerController(this, settingsService.readSettings(), getMainLibrary());
+        settingsController = new SettingsController(this, settingsService.readSettings());
     }
 
 
@@ -67,8 +68,8 @@ public class MetaController {
      */
     public void notifySettingsChanged(Settings newSettings) {
         try {
-            dataProvider.writeSettings(newSettings);
-            Library mainLibrary = dataProvider.loadMainLibrary(newSettings.getMusicFolder());
+            settingsService.writeSettings(newSettings);
+            Library mainLibrary = playlistService.loadMainLibrary(newSettings.getMusicFolder());
             playlists.set(0, mainLibrary);
             playerController.onSettingsChanged(newSettings);
         } catch (Exception e) {

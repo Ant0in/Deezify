@@ -1,4 +1,4 @@
-package musicApp.utils.gsonTypeAdapter;
+package musicApp.repositories.gsonTypeAdapter;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

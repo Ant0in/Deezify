@@ -1,5 +1,5 @@
 /**
- * Test suite for the MetadataUtils class.
+ * Test suite for the MetadataService class.
  * These tests cover reading and writing metadata (title, artist, genre, user tags, duration, and cover images)
  * for both MP3 and WAV files. They also test error handling, edge cases, and format-specific behavior.
  */
@@ -9,6 +9,8 @@ import javafx.util.Duration;
 import musicApp.exceptions.BadFileTypeException;
 import musicApp.exceptions.ID3TagException;
 import musicApp.models.Metadata;
+import musicApp.services.LanguageService;
+import musicApp.services.MetadataService;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,9 +22,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TestMetadataUtils {
+public class TestMetadataService {
 
-    private static final MetadataUtils utils = new MetadataUtils();
+    private static final MetadataService utils = new MetadataService();
 
     private File resolveTestFile(String filename) {
         return Paths.get("src", "test", "resources", filename).toFile();
@@ -103,7 +105,7 @@ public class TestMetadataUtils {
     public void testNoTagsWAV() throws Exception {
         File file = resolveTestFile("noTagWAV.wav");
         Metadata metadata = utils.getMetadata(file);
-        LanguageManager lm = LanguageManager.getInstance();
+        LanguageService lm = LanguageService.getInstance();
         assertEquals(lm.get("metadata.title"), metadata.getTitle());
         assertEquals(lm.get("metadata.artist"), metadata.getArtist());
         assertEquals(lm.get("metadata.genre"), metadata.getGenre());
@@ -211,7 +213,7 @@ public class TestMetadataUtils {
      */
     @Test
     public void testParseUserTagsEdgeCases() throws Exception {
-        Method parseMethod = MetadataUtils.class.getDeclaredMethod("parseUserTags", String.class);
+        Method parseMethod = MetadataService.class.getDeclaredMethod("parseUserTags", String.class);
         parseMethod.setAccessible(true);
         assertEquals(Arrays.asList("tag1", "", "tag3", ""), parseMethod.invoke(null, "tag1;;tag3;"));
         assertEquals(List.of(""), parseMethod.invoke(null, new Object[]{null}));
@@ -223,9 +225,9 @@ public class TestMetadataUtils {
      */
     @Test
     public void testFormatUserTagsRoundtrip() throws Exception {
-        Method formatMethod = MetadataUtils.class.getDeclaredMethod("formatUserTags", ArrayList.class);
+        Method formatMethod = MetadataService.class.getDeclaredMethod("formatUserTags", ArrayList.class);
         formatMethod.setAccessible(true);
-        Method parseMethod = MetadataUtils.class.getDeclaredMethod("parseUserTags", String.class);
+        Method parseMethod = MetadataService.class.getDeclaredMethod("parseUserTags", String.class);
         parseMethod.setAccessible(true);
         ArrayList<String> original = new ArrayList<>(Arrays.asList("tagA", "", "tagB"));
         String formatted = (String) formatMethod.invoke(null, original);

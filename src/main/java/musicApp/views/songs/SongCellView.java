@@ -31,9 +31,6 @@ public class SongCellView extends View<SongCellView, SongCellController> {
     private static final String PAUSE_ICON = "/images/pause.png";
     private static final String EDIT_ICON = "/images/edit.png";
 
-    public SongCellView() {
-    }
-
     @Override
     public void init() {
         initComponents();

@@ -10,8 +10,8 @@ import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
-import musicApp.utils.FileDialogHelper;
-import musicApp.utils.LanguageManager;
+import musicApp.services.FileDialogService;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 import java.io.File;
@@ -39,12 +39,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     private String title;
 
     /**
-     * Instantiates a new Settings view.
-     */
-    public SettingsView() {
-    }
-
-    /**
      * Show the settings view.
      *
      * @param stage The stage to show the view on.
@@ -62,9 +56,9 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     public void init() {
         initComboBox();
         initSlider();
-        initTranslations();
         initButtons();
         initDirectoryLabel();
+        refreshTranslation();
     }
 
     /**
@@ -78,7 +72,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Update the language combobox to display the current language.
      */
     private void updateLanguageComboBox() {
-        Language currentLang = LanguageManager.getInstance().getCurrentLanguage();
+        Language currentLang = LanguageService.getInstance().getCurrentLanguage();
         languageComboBox.getSelectionModel().select(currentLang.getDisplayName());
     }
 
@@ -106,25 +100,19 @@ public class SettingsView extends View<SettingsView, SettingsController> {
     /**
      * Initialize the translations of the view.
      */
-    private void initTranslations() {
-        LanguageManager languageManager = LanguageManager.getInstance();
-        languageTitle.setText(languageManager.get("settings.lang_title"));
-        languageSelect.setText(languageManager.get("settings.lang_select"));
-        left.setText(languageManager.get("settings.left"));
-        right.setText(languageManager.get("settings.right"));
-        balanceTitle.setText(languageManager.get("settings.balance_title"));
-        title = languageManager.get("settings.title");
-        saveButton.setText(languageManager.get("button.save"));
-        cancelButton.setText(languageManager.get("button.cancel"));
-        browseButton.setText(languageManager.get("settings.select_music_folder"));
-        equalizerButton.setText(languageManager.get("settings.manage_audio_equalizer"));
-    }
-
-    /**
-     * Refresh the language of the view.
-     */
-    public void refreshLanguage() {
-        initTranslations();
+    @Override
+    protected void refreshTranslation() {
+        LanguageService languageService = LanguageService.getInstance();
+        languageTitle.setText(languageService.get("settings.lang_title"));
+        languageSelect.setText(languageService.get("settings.lang_select"));
+        left.setText(languageService.get("settings.left"));
+        right.setText(languageService.get("settings.right"));
+        balanceTitle.setText(languageService.get("settings.balance_title"));
+        title = languageService.get("settings.title");
+        saveButton.setText(languageService.get("button.save"));
+        cancelButton.setText(languageService.get("button.cancel"));
+        browseButton.setText(languageService.get("settings.select_music_folder"));
+        equalizerButton.setText(languageService.get("settings.manage_audio_equalizer"));
         updateLanguageComboBox();
     }
 
@@ -142,7 +130,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Handle when the browse button is pressed
      */
     private void handleBrowseDirectory() {
-        File selectedDirectory = FileDialogHelper.chooseDirectory(null, "Select Music Folder");
+        File selectedDirectory = FileDialogService.chooseDirectory(null, "Select Music Folder");
         if (selectedDirectory != null) {
             this.directoryLabel.setText(selectedDirectory.getAbsolutePath());
         }
@@ -191,7 +179,6 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     public void updateView(Settings settings) {
         initComboBox();
-        initTranslations();
         balanceSlider.setValue(settings.getBalance());
         directoryLabel.setText(settings.getMusicFolder().toString());
     }

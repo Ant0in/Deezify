@@ -8,7 +8,7 @@ import javafx.scene.input.MouseButton;
 import musicApp.controllers.playlists.PlaylistCellController;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 import java.util.List;
@@ -25,11 +25,6 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
     @FXML
     private Button createPlaylist;
 
-
-
-    public PlaylistNavigatorView() {
-    }
-
     /**
      * Initializes the PlaylistNavigatorView.
      * This method sets up the list view, button actions, and context menu for the view.
@@ -39,7 +34,7 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
         initListView();
         enableClickToSelect();
         setButtonActions();
-        initTranslation();
+        refreshTranslation();
     }
 
     /**
@@ -62,13 +57,17 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
      * Initializes the translation for the UI elements.
      * This method binds the button text to the appropriate language string.
      */
-    private void initTranslation() {
-        createPlaylist.textProperty().bind(Bindings.createStringBinding(
-                () -> LanguageManager.getInstance().get("button.create_playlist"),
-                LanguageManager.getInstance().getLanguageProperty()
-        ));
+    @Override
+    protected void refreshTranslation() {
+        createPlaylist.setText(LanguageService.getInstance().get("button.create_playlist"));
     }
 
+    /**
+     * Updates the list view with the provided list of libraries.
+     * This method clears the current items in the list view and adds the new libraries.
+     *
+     * @param libraries The list of libraries to display in the list view.
+     */
     public void update(List<Library> libraries) {
         listView.getItems().clear();
         listView.getItems().addAll(libraries);
@@ -87,17 +86,6 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
                 viewController.showContextMenu(e.getScreenX(), e.getScreenY(), getSelectedPlaylist());
             }
         });
-    }
-
-    /**
-     * Sets the currently selected playlist in the list view
-     *
-     * @param playlist The playlist to select
-     */
-    public void setSelectedPlaylist(Library playlist) {
-        if (playlist != null) {
-            listView.getSelectionModel().select(playlist);
-        }
     }
 
     public Library getSelectedPlaylist() {

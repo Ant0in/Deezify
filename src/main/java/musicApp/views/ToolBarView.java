@@ -20,13 +20,6 @@ public class ToolBarView extends View<ToolBarView, ToolBarController> {
     private Region spacer;
 
     /**
-     * Instantiates a new Tool bar view.
-     */
-    public ToolBarView() {
-
-    }
-
-    /**
      * Initialize the view.
      */
     public void init() {

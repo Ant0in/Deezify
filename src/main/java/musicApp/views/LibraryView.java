@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.songs.SongCellController;
 import musicApp.models.Library;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import musicApp.views.songs.SongCell;
 
 /**
@@ -22,21 +22,15 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
     @FXML
     private Button addSongButton;
 
-    /**
-     * Instantiates a new Main library view.
-     */
-    public LibraryView() {
-    }
-
     @Override
     public void init() {
         initSongInput();
         initButtons();
         initPlayListView();
         updateListView();
-        initTranslation();
         setupListSelectionListeners();
         enableDoubleClickToPlay();
+        refreshTranslation();
     }
 
     /**
@@ -61,14 +55,12 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
         addSongButton.setOnAction(event -> viewController.handleAddSong());
     }
 
+    @Override
     /**
      * Initialize the translations of the texts in the view.
      */
-    protected void initTranslation() {
-        songInput.promptTextProperty().bind(Bindings.createStringBinding(
-                () -> LanguageManager.getInstance().get("search"),
-                LanguageManager.getInstance().getLanguageProperty()
-        ));
+    protected void refreshTranslation() {
+        songInput.setPromptText(LanguageService.getInstance().get("search"));
     }
 
 

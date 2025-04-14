@@ -3,8 +3,9 @@ package musicApp.utils;
 
 import musicApp.exceptions.LyricsOperationException;
 import musicApp.models.Song;
-import musicApp.utils.lyrics.LyricsRepository;
-import musicApp.utils.lyrics.LyricsService;
+import musicApp.repositories.JsonRepository;
+import musicApp.repositories.LyricsRepository;
+import musicApp.services.LyricsService;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +20,7 @@ import static org.junit.Assert.*;
 public class TestLyricsService {
 
     private LyricsService lyricsManager;
-    private DataProvider dataProvider;
+    private JsonRepository jsonRepository;
     private LyricsRepository lyricsDataAccess;
     private Path lyricsDir;
     private Path lyricsFile;
@@ -30,8 +31,8 @@ public class TestLyricsService {
 
     @Before
     public void setUp() throws IOException {
-        dataProvider = new DataProvider();
-        lyricsDataAccess = new LyricsRepository(new DataProvider());
+        jsonRepository = new JsonRepository();
+        lyricsDataAccess = new LyricsRepository(new JsonRepository());
         lyricsManager = new LyricsService();
         lyricsDir = lyricsDataAccess.getLyricsDir(); 
 

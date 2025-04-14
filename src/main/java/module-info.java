@@ -6,8 +6,9 @@ module ulb.musicApp {
     exports musicApp.controllers.playlists;
     exports musicApp.exceptions;
     exports musicApp.models;
-    exports musicApp.utils;
-    exports musicApp.utils.gsonTypeAdapter;
+    exports musicApp.services;
+    exports musicApp.repositories;
+    exports musicApp.repositories.gsonTypeAdapter;
     exports musicApp.views;
     exports musicApp.views.playlists;
     exports musicApp.views.songs;
@@ -30,8 +31,7 @@ module ulb.musicApp {
     opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;
     opens musicApp.models to javafx.fxml, javafx.controls, javafx.media, com.google.gson;
     opens musicApp.views to javafx.fxml, javafx.controls, javafx.media;
-    opens musicApp.utils to javafx.fxml, javafx.controls, javafx.media, jaudiotagger;
-    opens musicApp.utils.gsonTypeAdapter to javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.repositories.gsonTypeAdapter to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.views.playlists to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.controllers to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.controllers.settings to javafx.controls, javafx.fxml, javafx.media;
@@ -39,5 +39,7 @@ module ulb.musicApp {
     opens musicApp.controllers.playlists to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.views.songs to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.views.settings to javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.services to jaudiotagger, javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.repositories to jaudiotagger, javafx.controls, javafx.fxml, javafx.media;
 
 }

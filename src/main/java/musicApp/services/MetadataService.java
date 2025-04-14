@@ -1,4 +1,4 @@
-package musicApp.utils;
+package musicApp.services;
 
 import javafx.util.Duration;
 import musicApp.enums.SupportedFileType;
@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MetadataUtils {
+public class MetadataService {
 
     /**
      * Parses the user tags String into separate tag strings contained in an ArrayList
