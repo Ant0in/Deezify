@@ -8,6 +8,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import musicApp.exceptions.BadSongException;
+import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Song;
 import musicApp.views.DjPlayerView;
 
@@ -22,6 +24,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     // parameters for the effects
     private double timelineSpeed;
     private double bassBoostGain;
+    private double gainValue;
     private double pressureStrength;
     List<Double> gainModeBands = new ArrayList<>(Collections.nCopies(10, 0.0));
     List<Double> bassBoostModeBands = new ArrayList<>(Collections.nCopies(10, 0.0));
@@ -84,8 +87,8 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     public void toggleBoostGainMode() {
 
         gainModeBands = List.of(
-            bassBoostGain, bassBoostGain, bassBoostGain, bassBoostGain, bassBoostGain,
-            bassBoostGain, bassBoostGain, bassBoostGain, bassBoostGain, bassBoostGain
+            gainValue, gainValue, gainValue, gainValue, gainValue,
+            gainValue, gainValue, gainValue, gainValue, gainValue
         );
 
     }
@@ -132,7 +135,11 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
                 bandsGain.add(gain);
             }
 
-            mediaPlayerController.setEqualizerBands(bandsGain);
+            try {
+                mediaPlayerController.setEqualizerBands(bandsGain);
+            } catch (EqualizerGainException e) {
+                // cannot happen
+            }
         }));
 
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -143,7 +150,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
     /**
      * Applies the mixed effects to the media player.
      */
-    public void applyMixedEffects() {
+    public void applyMixedEffects() throws EqualizerGainException {
 
         if (timeline != null) { timeline.stop(); }
 
@@ -177,6 +184,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
             if (count != 0) { mixedBands.set(band, sum / count); }
             else { mixedBands.set(band, sum); }
         }
+
         mediaPlayerController.setEqualizerBands(mixedBands);
     }
 
@@ -184,7 +192,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
      * Changes the wave speed.
      * @param speed the speed of the wave (0 to 100)
      */
-    public void changeWaveSpeed(double speed) {
+    public void changeWaveSpeed(double speed) throws EqualizerGainException {
         // From 1 to 10 wave speed
         if (speed == 0.0) {
             if (timeline != null) {
@@ -204,7 +212,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
      * Changes the bass boost gain.
      * @param gain the gain of the bass boost (0 to 100)
      */
-    public void changeBassBoostGain(double gain) {
+    public void changeBassBoostGain(double gain) throws EqualizerGainException {
         // From 6 to 12 db
         if (gain > 0.0) {
             bassBoostModeOn = true;
@@ -221,7 +229,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
      * Changes the gain mode.
      * @param gain the gain of the gain mode (0 to 100)
      */
-    public void changeGainMode (double gain) {
+    public void changeGainMode (double gain) throws EqualizerGainException {
         // From -24 to 12 db
         if (gain > 0.0) {
             gainModeOn = true;
@@ -238,7 +246,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
      * Changes the pressure strength.
      * @param strength the strength of the pressure (0 to 100)
      */
-    public void changePressureStrength(double strength) {
+    public void changePressureStrength(double strength) throws EqualizerGainException {
         // strength must be bewteen 0 and abs(MAX_LOW) + abs(MAX_HIGH) / 2
         // From 0 to 18
         if (strength > 0.0) {
@@ -256,7 +264,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
      * Plays the song.
      * @param song the song to play
      */
-    public void play(Song song) {
+    public void play(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);
     }
 
@@ -279,7 +287,11 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
      */
     public void onQuit() {
         if (timeline != null) { timeline.stop(); }
-        mediaPlayerController.setEqualizerBands(bandsGainBackup);
+        try {
+            mediaPlayerController.setEqualizerBands(bandsGainBackup);
+        } catch (EqualizerGainException e) {
+            e.printStackTrace();
+        }
         stage.close();
     }
 

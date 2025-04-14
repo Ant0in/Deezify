@@ -2,7 +2,7 @@ package musicApp.modelsTest;
 
 import javafx.util.Duration;
 import musicApp.models.Song;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import org.junit.Test;
 
 import java.nio.file.Paths;
@@ -22,9 +22,9 @@ public class TestSong {
 
         // Test default metadata when the song has no ID3 tag
         Song song2 = new Song(Paths.get("src", "test", "resources", "noID3TagMP3.mp3"));
-        assertEquals(LanguageManager.getInstance().get("metadata.title"), song2.getTitle());
-        assertEquals(LanguageManager.getInstance().get("metadata.artist"), song2.getArtist());
-        assertEquals(LanguageManager.getInstance().get("metadata.genre"), song2.getGenre());
+        assertEquals(LanguageService.getInstance().get("metadata.title"), song2.getTitle());
+        assertEquals(LanguageService.getInstance().get("metadata.artist"), song2.getArtist());
+        assertEquals(LanguageService.getInstance().get("metadata.genre"), song2.getGenre());
         assertNull(song2.getCover());
         assertEquals(Duration.ZERO, song2.getDuration());
     }

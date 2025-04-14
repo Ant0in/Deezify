@@ -4,27 +4,40 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.beans.property.StringProperty;
+
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Song;
-import musicApp.utils.LyricsManager;
-import musicApp.utils.DataProvider;
+import musicApp.services.LyricsService;
 import musicApp.views.songs.LyricsView;
 
+/**
+ * The type Lyrics controller.
+ */
 public class LyricsController extends ViewController<LyricsView, LyricsController> {
 
     private final PlayerController playerController;
-    private final LyricsManager lyricsManager;
+    private final LyricsService lyricsManager;
 
-    public LyricsController(PlayerController playerController) {
+    /**
+     * Instantiates a new Lyrics controller.
+     *
+     * @param _controller the controller
+     */
+    public LyricsController(PlayerController _controller) {
         super(new LyricsView());
-        this.playerController = playerController;
-        DataProvider dataProvider = new DataProvider();
-        this.lyricsManager = new LyricsManager(dataProvider);
-        initView("/fxml/Lyrics.fxml");  
+        playerController = _controller;
+        lyricsManager = new LyricsService();
+        initView("/fxml/Lyrics.fxml");
+        view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));
     }
 
 
+    /**
+     * Get currently loaded song string property.
+     *
+     * @return the string property
+     */
     public StringProperty getCurrentlyLoadedSongStringProperty(){
         return playerController.getCurrentlyLoadedSongStringProperty();
     }
@@ -32,18 +45,22 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     /**
      * Returns the lyrics of the currently loaded song
      * If no song is loaded, returns a list with a single element "No song loaded."
+     *
+     * @return the current song lyrics
      */
     public List<String> getCurrentSongLyrics() {
         Song song = playerController.getCurrentlyLoadedSong();
         if (song == null) {
             return List.of("No song loaded."); 
         }
-        return lyricsManager.getLyrics(song);
+        return song.getLyrics();
     }
 
     /**
      * Updates the current song lyrics
      * Saves the provided lyrics to a file and updates mapping
+     *
+     * @param newLyrics the new lyrics
      */
     public void updateCurrentSongLyrics(String newLyrics) {
         Song currentSong = playerController.getCurrentlyLoadedSong();
@@ -51,10 +68,18 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             System.err.println("No song loaded.");
             return;
         }
-        lyricsManager.saveLyrics(currentSong, newLyrics);
+        try {
+            lyricsManager.saveLyrics(currentSong, newLyrics);
+        } catch (Exception e) {
+            alertService.showExceptionAlert(e);
+            e.printStackTrace();
+        }
         view.updateLyrics();
 }
 
+    /**
+     * Edit lyrics.
+     */
     public void editLyrics() {
         List<String> currentLyricsList = getCurrentSongLyrics();
         String initialText = "";
@@ -69,9 +94,11 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
         });
     }
 
+    /**
+     * Refresh ui.
+     */
     public void refreshUI() {
-        this.view.refreshUI();
+        view.refreshUI();
     }
-   
 
 }

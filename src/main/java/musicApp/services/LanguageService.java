@@ -1,55 +1,55 @@
-package musicApp.utils;
+package musicApp.services;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.enums.Language;
 
-import java.util.EnumSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.prefs.Preferences;
 
 /**
- * LanguageManager
+ * LanguageService
  * Manages application language settings and retrieves localized messages.
  * The class is a singleton and uses the Preferences API to store the selected language.
  */
-public class LanguageManager {
-    private static final Set<Language> SUPPORTED_LANGUAGES = EnumSet.of(Language.ENGLISH, Language.FRENCH, Language.DUTCH);
-    private static LanguageManager instance;
-    private final Preferences prefs = Preferences.userNodeForPackage(LanguageManager.class);
-    private final Language DEFAULT_LANGUAGE = Language.ENGLISH; // default language if pc language is not supported
-    private final String[] BUNDLE_NAMES = {
-            "lang.messages",
-            "lang.general",
-            "lang.buttons",
-            "lang.settings",
-            "lang.default_values",
-            "lang.create_playlist"
-    }; // bundle names
-    private final ResourceBundle[] bundles = new ResourceBundle[BUNDLE_NAMES.length];
-    private final StringProperty languageProperty = new SimpleStringProperty();
+public class LanguageService {
 
+    private static LanguageService instance;
 
-    public LanguageManager() {
+    private final Preferences prefs;
+    private final String[] BUNDLE_NAMES;
+    private final ResourceBundle[] bundles;
+    private final StringProperty languageProperty;
+
+    public LanguageService() {
+        // Initialize non-static variables in the constructor
+       prefs = Preferences.userNodeForPackage(LanguageService.class);
+       BUNDLE_NAMES = new String[]{
+                "lang.messages",
+                "lang.general",
+                "lang.buttons",
+                "lang.settings",
+                "lang.default_values",
+                "lang.create_playlist"
+        };
+       bundles = new ResourceBundle[BUNDLE_NAMES.length];
+       languageProperty = new SimpleStringProperty();
+
+        // Initialize language settings based on saved preferences
         String savedLanguageString = prefs.get("language", Locale.getDefault().getLanguage());
         Language savedLanguage = Language.fromCode(savedLanguageString);
         setLanguage(savedLanguage);
     }
 
-    public LanguageManager(Language language) {
-        setLanguage(language);
-    }
-
     /**
-     * Get the instance of the LanguageManager.
+     * Get the instance of the LanguageService.
      *
-     * @return The instance of the LanguageManager.
+     * @return The instance of the LanguageService.
      */
-    public static LanguageManager getInstance() {
+    public static LanguageService getInstance() {
         if (instance == null) {
-            instance = new LanguageManager();
+            instance = new LanguageService();
         }
         return instance;
     }
@@ -61,7 +61,7 @@ public class LanguageManager {
      */
     public void setLanguage(Language language) {
         if (!isLanguageSupported(language)) {
-            language = DEFAULT_LANGUAGE; // set default language if not supported
+            language = Language.DEFAULT; // set default language if not supported
         }
         Locale currentLocale = Locale.forLanguageTag(language.getCode());
 
@@ -102,10 +102,10 @@ public class LanguageManager {
      * @return True if the language is supported, False otherwise.
      */
     private boolean isLanguageSupported(Language language) {
-        return SUPPORTED_LANGUAGES.contains(language);
+        return Language.getSupportedLanguages().contains(language);
     }
 
-    public StringProperty languageProperty() {return languageProperty;}
+    public StringProperty getLanguageProperty() {return languageProperty;}
 }
 
 

@@ -1,7 +1,7 @@
 package musicApp.models;
 
 import javafx.util.Duration;
-import musicApp.utils.LanguageManager;
+import musicApp.services.LanguageService;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
@@ -26,12 +26,12 @@ public class Metadata {
      * Constructor to create a new Metadata object with default values.
      */
     public Metadata() {
-        LanguageManager languageManager = LanguageManager.getInstance();
-        this.title = languageManager.get("metadata.title");
-        this.artist = languageManager.get("metadata.artist");
-        this.genre = languageManager.get("metadata.genre");
-        this.duration = Duration.ZERO;
-        this.userTags = new ArrayList<>();
+        LanguageService languageService = LanguageService.getInstance();
+        title = languageService.get("metadata.title");
+        artist = languageService.get("metadata.artist");
+        genre = languageService.get("metadata.genre");
+        duration = Duration.ZERO;
+        userTags = new ArrayList<>();
     }
 
     /**
@@ -41,17 +41,17 @@ public class Metadata {
      * @return The title of the song.
      */
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     /**
      * Sets the title of the song.
      *
-     * @param title The title of the song.
+     * @param newTitle The title of the song.
      */
-    public void setTitle(String title) {
-        if (title != null && !title.isEmpty()) {
-            this.title = title;
+    public void setTitle(String newTitle) {
+        if (newTitle != null && !newTitle.isEmpty()) {
+            title = newTitle;
         }
     }
 
@@ -62,17 +62,17 @@ public class Metadata {
      * @return The artist of the song.
      */
     public String getArtist() {
-        return this.artist;
+        return artist;
     }
 
     /**
      * Sets the artist of the song.
      *
-     * @param artist The artist of the song.
+     * @param newArtist The artist of the song.
      */
-    public void setArtist(String artist) {
-        if (artist != null && !artist.isEmpty()) {
-            this.artist = artist;
+    public void setArtist(String newArtist) {
+        if (newArtist != null && !newArtist.isEmpty()) {
+            artist = newArtist;
         }
     }
 
@@ -83,17 +83,17 @@ public class Metadata {
      * @return The genre of the song.
      */
     public String getGenre() {
-        return this.genre;
+        return genre;
     }
 
     /**
      * Sets the genre of the song.
      *
-     * @param genre The genre of the song.
+     * @param newGenre The genre of the song.
      */
-    public void setGenre(String genre) {
-        if (genre != null && !genre.isEmpty()) {
-            this.genre = genre;
+    public void setGenre(String newGenre) {
+        if (newGenre != null && !newGenre.isEmpty()) {
+            genre = newGenre;
         }
     }
 
@@ -104,17 +104,17 @@ public class Metadata {
      * @return The duration of the media item as a Duration object.
      */
     public Duration getDuration() {
-        return this.duration;
+        return duration;
     }
 
     /**
      * Sets the duration of the song.
      *
-     * @param duration The duration of the song.
+     * @param newDuration The duration of the song.
      */
-    public void setDuration(Duration duration) {
-        if (duration != null && duration.greaterThan(Duration.ZERO)) {
-            this.duration = duration;
+    public void setDuration(Duration newDuration) {
+        if (newDuration != null && newDuration.greaterThan(Duration.ZERO)) {
+            duration = newDuration;
         }
     }
 
@@ -124,24 +124,35 @@ public class Metadata {
      * @return The cover image in byte array format or empty if not available.
      */
     public Artwork getCover() {
-        return this.cover;
+        return cover;
     }
 
     /**
      * Sets the cover image
      *
-     * @param cover The cover image.
+     * @param newCover The cover image.
      */
-    public void setCover(Artwork cover) {
-        this.cover = cover;
+    public void setCover(Artwork newCover) {
+        cover = newCover;
     }
 
+    /**
+     * Sets the cover image from a byte array.
+     * 
+     * @param bytes The byte array representing the cover image.
+     */
     public void setCoverFromBytes(byte[] bytes) {
         Artwork artwork = ArtworkFactory.getNew();
         artwork.setBinaryData(bytes);
-        this.cover = artwork;
+        cover = artwork;
     }
 
+    /**
+     * Loads the cover image from a file path.
+     *
+     * @param path The path to the image file.
+     * @throws IOException If an error occurs while loading the image.
+     */
     public void loadCoverFromPath(String path) throws IOException {
         if (path != null && !path.isEmpty()) {
             Artwork artwork = ArtworkFactory.createArtworkFromFile(new File(path));
@@ -149,13 +160,22 @@ public class Metadata {
         }
     }
 
+    /**
+     * Get the user tags.
+     * 
+     * @return The user tags associated with the song.
+     */
     public ArrayList<String> getUserTags() {
-        return this.userTags;
+        return userTags;
     }
 
-    public void setUserTags(ArrayList<String> userTags) {
-        if (userTags != null) {
-            this.userTags = userTags;
+    /**
+     * Sets the user tags.
+     * @param newUserTags The new user tags to set.
+     */
+    public void setUserTags(ArrayList<String> newUserTags) {
+        if (newUserTags != null) {
+            userTags = newUserTags;
         }
     }
 

@@ -3,9 +3,10 @@ package musicApp.views;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import musicApp.controllers.DjPlayerController;
+import musicApp.exceptions.EqualizerGainException;
 
 
 public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
@@ -28,13 +29,8 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
 
     @Override
     public void init() {
-        configureComponents();
         setOnAction();
         addListeners();
-    }
-
-    public void configureComponents() {
-        //
     }
 
     public void addListeners() {
@@ -46,19 +42,35 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
 
 
         gainSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            toggleBoostGainMode(newVal.doubleValue());
+            try {
+                toggleBoostGainMode(newVal.doubleValue());
+            } catch (EqualizerGainException e) {
+                e.printStackTrace();
+            }
         });
 
         pressureSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            togglePressureMode(newVal.doubleValue());
+            try {
+                togglePressureMode(newVal.doubleValue());
+            } catch (EqualizerGainException e) {
+                e.printStackTrace();
+            }
         });
 
         bassBoostSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            toggleBassBoostMode(newVal.doubleValue());
+            try {
+                toggleBassBoostMode(newVal.doubleValue());
+            } catch (EqualizerGainException e) {
+                e.printStackTrace();
+            }
         });
 
         waveSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            toggleWaveMode(newVal.doubleValue());
+            try {
+                toggleWaveMode(newVal.doubleValue());
+            } catch (EqualizerGainException e) {
+                e.printStackTrace();
+            }
             double value = newVal.doubleValue();
             speedLabel.setText("x0");
             if (value >= 33) {
@@ -81,19 +93,19 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
         bassBoostButton.setOnAction(_ -> viewController.toggleWaveGainMode());
     }
 
-    private void toggleBoostGainMode(double value) {
+    private void toggleBoostGainMode(double value) throws EqualizerGainException {
         viewController.changeGainMode(value);
     }
 
-    private void togglePressureMode(double value) {
+    private void togglePressureMode(double value) throws EqualizerGainException {
         viewController.changePressureStrength(value);
     }
 
-    private void toggleBassBoostMode(double value) {
+    private void toggleBassBoostMode(double value) throws EqualizerGainException {
         viewController.changeBassBoostGain(value);
     }
 
-    private void toggleWaveMode(double value) {
+    private void toggleWaveMode(double value) throws EqualizerGainException {
         viewController.changeWaveSpeed(value);
     }
 

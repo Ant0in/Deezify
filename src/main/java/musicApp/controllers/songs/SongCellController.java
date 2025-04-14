@@ -3,27 +3,41 @@ package musicApp.controllers.songs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.controllers.DjPlayerController;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.ViewController;
+import musicApp.exceptions.BadSongException;
 import musicApp.models.Library;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
-import musicApp.utils.MetadataUtils;
+import musicApp.services.MetadataService;
 import musicApp.views.songs.SongCellView;
 
+/**
+ * The type Song cell controller.
+ */
 public class SongCellController extends ViewController<SongCellView, SongCellController> {
 
     private final LibraryController LibraryController;
     private Song song;
+    private SongContextMenuController contextMenuController;
 
-    public SongCellController(LibraryController LibraryController) {
+
+    /**
+     * Instantiates a new Song cell controller.
+     *
+     * @param controller the controller
+     */
+    public SongCellController(LibraryController controller) {
         super(new SongCellView());
-        this.LibraryController = LibraryController;
+        LibraryController = controller;
+        contextMenuController = new SongContextMenuController(this);
         initView("/fxml/SongCell.fxml");
+
     }
 
     /**
@@ -33,8 +47,8 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      */
     public void update(Song newSong) {
         if (!newSong.equals(getSong())) {
-            this.song = newSong;
-            this.view.update(song);
+            song = newSong;
+            view.update(song);
         }
     }
 
@@ -45,6 +59,10 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      */
     public Song getSong() {
         return song;
+    }
+
+    public void showContextMenu(double x, double y) {
+        contextMenuController.showAt(x,y);
     }
 
     /**
@@ -110,16 +128,33 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
         return LibraryController.isPlayingProperty();
     }
 
+    /**
+     * Toggle favorites.
+     */
     public void toggleFavorites() {
         LibraryController.toggleFavorites(song);
         view.update(song);
     }
 
+    /**
+     * Is favorite boolean.
+     *
+     * @return the boolean
+     */
     public boolean isFavorite() {
         return LibraryController.isFavorite(song);
     }
 
 
+    /**
+     * Handle edit metadata.
+     *
+     * @param title     the title
+     * @param artist    the artist
+     * @param genre     the genre
+     * @param userTags  the user tags
+     * @param coverPath the cover path
+     */
     public void handleEditMetadata(String title, String artist, String genre, ArrayList<String> userTags, String coverPath) {
 
         if (song == null) {
@@ -133,12 +168,11 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(userTags);
             newMetadata.loadCoverFromPath(coverPath);
-            MetadataUtils util = new MetadataUtils();
+            MetadataService util = new MetadataService();
 
             util.setMetadata(newMetadata, song.getFilePath().toFile());
         } catch (Exception e) {
-            e.printStackTrace();
-            view.displayError(e.getMessage());
+            alertService.showExceptionAlert(e);
             return;
         }
 
@@ -193,6 +227,11 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
         LibraryController.removeSongFromPlaylist(song);
     }
 
+    /**
+     * Is showing main library boolean.
+     *
+     * @return the boolean
+     */
     public boolean isShowingMainLibrary() {
         return LibraryController.isShowingMainLibrary();
     }
@@ -217,7 +256,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
     /**
      * Launch DJ mode.
      */
-    public void launchDjMode() {
+    public void launchDjMode() throws BadSongException {
         
         if (song == null) {
             view.displayError("No song to play");
@@ -230,7 +269,30 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
 
     }
 
+    /**
+     * Refresh song.
+     */
     public void refreshSong() {
         view.update(song);
+    }
+
+    /**
+     * Gets artist auto completion.
+     *
+     * @param input the input
+     * @return the artist auto completion
+     */
+    public Optional<String> getArtistAutoCompletion(String input) {
+        return LibraryController.getArtistAutoCompletion(input);
+    }
+
+    /**
+     * Gets tag auto completion.
+     *
+     * @param input the input
+     * @return the tag auto completion
+     */
+    public Optional<String> getTagAutoCompletion(String input) {
+        return LibraryController.getTagAutoCompletion(input);
     }
 }

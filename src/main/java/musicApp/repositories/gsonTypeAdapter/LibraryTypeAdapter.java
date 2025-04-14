@@ -1,4 +1,4 @@
-package musicApp.utils.gsonTypeAdapter;
+package musicApp.repositories.gsonTypeAdapter;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -12,6 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryTypeAdapter extends TypeAdapter<Library> {
+    /**
+     * Writes the Library object to JSON format.
+     *
+     * @param out The JsonWriter to write to.
+     * @param playlist The Library object to write.
+     * @throws IOException If writing fails.
+     */
     @Override
     public void write(JsonWriter out, Library playlist) throws IOException {
         out.beginObject();
@@ -20,10 +27,10 @@ public class LibraryTypeAdapter extends TypeAdapter<Library> {
         out.value(playlist.getName());
 
         out.name("image");
-        if (playlist.getImage() == null) {
+        if (playlist.getImagePath() == null) {
             out.value("");
         } else {
-            out.value(playlist.getImage().toString());
+            out.value(playlist.getImagePath().toString());
         }
 
         out.name("songList");
@@ -36,6 +43,13 @@ public class LibraryTypeAdapter extends TypeAdapter<Library> {
         out.endObject();
     }
 
+    /**
+     * Reads a Library object from JSON format.
+     *
+     * @param in The JsonReader to read from.
+     * @return The Library object read from JSON.
+     * @throws IOException If reading fails.
+     */
     @Override
     public Library read(JsonReader in) throws IOException {
         String name = null;

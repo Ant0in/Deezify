@@ -1,12 +1,12 @@
-package musicApp.utils;
+package musicApp.services;
 
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-
 import java.io.File;
+import musicApp.enums.SupportedFileType;
 
-public class FileDialogHelper {
+public class FileDialogService {
 
     /**
      * Opens a directory chooser dialog and returns the selected directory.
@@ -34,7 +34,7 @@ public class FileDialogHelper {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav")
+            new FileChooser.ExtensionFilter("Audio Files", SupportedFileType.getExtensionsForFileFilter())
         );
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 

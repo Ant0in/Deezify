@@ -1,6 +1,9 @@
 package musicApp.enums;
 
 
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
  * The Language enumeration.
  * Contains the different languages the application can be displayed in.
@@ -10,8 +13,13 @@ public enum Language {
     FRENCH("fr", "Français"),
     DUTCH("nl", "Nederlands");
 
+    // Default language
+    public static final Language DEFAULT = Language.ENGLISH;
+
     private final String code;
     private final String displayName;
+
+
 
     Language(String code, String displayName) {
         this.code = code;
@@ -30,7 +38,7 @@ public enum Language {
                 return lang;
             }
         }
-        return ENGLISH;
+        return DEFAULT;
     }
 
     /**
@@ -45,7 +53,7 @@ public enum Language {
                 return lang;
             }
         }
-        return ENGLISH;
+        return DEFAULT;
     }
 
     /**
@@ -64,5 +72,14 @@ public enum Language {
      */
     public String getDisplayName() {
         return displayName;
+    }
+
+    /**
+     * Returns a set of all the supported Languages.
+     *
+     * @return A set containing all the Languages enum values.
+     */
+    public static Set<Language> getSupportedLanguages() {
+        return EnumSet.allOf(Language.class); // Dynamically gets all enum values
     }
 }

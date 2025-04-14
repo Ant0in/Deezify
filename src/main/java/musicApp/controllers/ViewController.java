@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 import javafx.scene.layout.Pane;
+import musicApp.services.AlertService;
 import musicApp.views.View;
 
 
@@ -15,6 +16,7 @@ public abstract class ViewController<V extends View<V, C>, C extends ViewControl
      * The View.
      */
     protected V view;
+    protected AlertService alertService;
 
     /**
      * Instantiates a new View controller.
@@ -23,7 +25,8 @@ public abstract class ViewController<V extends View<V, C>, C extends ViewControl
      */
     public ViewController(V view) {
         this.view = view;
-        this.view.setViewController((C) this);
+        alertService = new AlertService();
+        view.setViewController((C) this);
     }
 
     /**
@@ -32,13 +35,28 @@ public abstract class ViewController<V extends View<V, C>, C extends ViewControl
      * @param fxmlPath the fxml path
      */
     protected void initView(String fxmlPath) {
+        initView(fxmlPath, false);
+    }
+
+    /**
+     * Init view.
+     *
+     * @param fxmlPath the fxml path
+     */
+    protected void initView(String fxmlPath, boolean isPopup) {
         try {
-            view.initializeScene(fxmlPath);
+            if (isPopup) {
+                view.initializePopupWindow(fxmlPath);
+            } else {
+                view.initializeScene(fxmlPath);
+            }
             view.init();
         } catch (Exception e) {
             view.displayError(e.getMessage());
         }
     }
+
+
 
     /**
      * Gets root.

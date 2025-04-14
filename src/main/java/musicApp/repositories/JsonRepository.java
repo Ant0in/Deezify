@@ -1,4 +1,4 @@
-package musicApp.utils;
+package musicApp.repositories;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,8 +8,9 @@ import com.google.gson.reflect.TypeToken;
 import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
-import musicApp.utils.gsonTypeAdapter.LibraryTypeAdapter;
-import musicApp.utils.gsonTypeAdapter.SettingsTypeAdapter;
+import musicApp.models.Song;
+import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
+import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -34,40 +35,47 @@ import java.util.List;
  * The default music folder is the user's music folder.
  * If the settings file does not exist, it will be created with the default settings.
  */
-public class DataProvider {
+public class JsonRepository {
     private final Path settingFolder;
     private final Path settingsFile;
     private final Path playlistsFile;
-    private final Path lyricsFile;
     private final Path lyricsDir;
+    private final Path lyricsFile;
 
     /**
      * Constructor
      */
-    public DataProvider() {
+    public JsonRepository() {
         String os = System.getProperty("os.name").toLowerCase();
         String configFolder = "Deezify";
         if (os.contains("win")) {
-            this.settingFolder = Path.of(System.getenv("APPDATA"), configFolder);
+            settingFolder = Path.of(System.getenv("APPDATA"), configFolder);
         } else if (os.contains("mac")) {
-            this.settingFolder = Path.of(System.getProperty("user.home"), "Library", "Application Support", configFolder);
+            settingFolder = Path.of(System.getProperty("user.home"), "Library", "Application Support", configFolder);
         } else {
-            this.settingFolder = Path.of(System.getProperty("user.home"), ".config", configFolder);
+            settingFolder = Path.of(System.getProperty("user.home"), ".config", configFolder);
         }
         createFolderIfNotExists(settingFolder);
-        this.settingsFile = settingFolder.resolve("settings.json");
-        this.playlistsFile = settingFolder.resolve("playlists.json");
-        this.lyricsDir = settingFolder.resolve("lyrics");
-        createFolderIfNotExists(lyricsDir);
-        this.lyricsFile = lyricsDir.resolve("lyrics.json");
+        settingsFile = settingFolder.resolve("settings.json");
+        playlistsFile = settingFolder.resolve("playlists.json");
+        lyricsDir = settingFolder.resolve("lyrics");
+        lyricsFile = lyricsDir.resolve("lyrics.json");
     }
 
-    private void createFolderIfNotExists(Path folder) {
+    /**
+     * Creates a folder at the specified path if it does not already exist.
+     *
+     * <p>If the folder already exists, no action is taken. If an error occurs during the folder creation,
+     * an error message will be printed to the console.</p>
+     *
+     * @param folder The path of the folder to create.
+     */
+    public void createFolderIfNotExists(Path folder) {
         if (!Files.exists(folder)) {
             try {
                 Files.createDirectories(folder);
             } catch (IOException e) {
-                System.out.println("An error occurred while creating the settings folder");
+                System.out.println("An error occurred while creating the folder");
             }
         }
     }
@@ -84,8 +92,6 @@ public class DataProvider {
 
         if (os.contains("win")) {
             folderPath = Path.of(System.getenv("USERPROFILE"), folderName);
-        } else if (os.contains("mac")) {
-            folderPath = Path.of(System.getProperty("user.home"), folderName);
         } else {
             folderPath = Path.of(System.getProperty("user.home"), folderName);
         }
@@ -141,7 +147,16 @@ public class DataProvider {
         }
         return getSettings(settingsFile);
     }
-
+    /**
+     * Retrieves the settings from a JSON file located at the specified path.
+     *
+     * <p>The file is parsed into a {@link Settings} object using Gson. If an error occurs during the file reading
+     * or parsing (e.g., due to invalid JSON syntax, IO issues), an error message is logged, and default settings
+     * are returned instead.</p>
+     *
+     * @param path The path to the JSON settings file.
+     * @return A {@link Settings} object populated with the data from the file, or default settings if an error occurs.
+     */
     protected Settings getSettings(Path path) {
         try (FileReader reader = new FileReader(path.toFile())) {
             Gson gson = new GsonBuilder()
@@ -168,6 +183,7 @@ public class DataProvider {
         }
         return getPlaylists(playlistsFile);
     }
+
 
     /**
      * Reads the playlists from the given path.
@@ -225,6 +241,15 @@ public class DataProvider {
         }
     }
 
+    /**
+     * Checks and ensures that a playlist with the name "??favorites??" exists in the provided list of playlists.
+     *
+     * <p>If the list of playlists is {@code null} or does not contain a playlist named "??favorites??", a new playlist
+     * with this name is added to the beginning of the list. The updated list is then written back to storage.</p>
+     *
+     * @param playlists The list of playlists to check.
+     * @return The updated list of playlists, including the "??favorites??" playlist if necessary.
+     */
     private List<Library> checkPlaylists(List<Library> playlists) {
         List<Library> validPlaylists = playlists != null ? new ArrayList<>(playlists) : new ArrayList<>();
 
@@ -237,83 +262,44 @@ public class DataProvider {
         return validPlaylists;
     }
 
-    public Path getLyricsDir() {
-        return lyricsDir;
-    }
-    /**
-     * Returns the path of the lyrics file for a given song.
-     * If the song is not found, returns null.
-     *
-     * @param pathSong The path of the song.
-     * @return The path of the lyrics file or null if not found.
-     */
-    public String getLyricsPath(String pathSong) {
-        LyricsLibrary lib = readLyricsLibrary();
-        return lib.getSongs().stream()
-                .filter(e -> e.getPathSong().equals(pathSong))
-                .map(SongLyricsEntry::getPathLyrics)
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * Updates the lyrics mapping for a song.
-     * If the song is not found, it will be added to the library.
-     *
-     * @param pathSong   The path of the song.
-     * @param pathLyrics The path of the lyrics.
-     */
-    public void updateLyricsMapping(String pathSong, String pathLyrics) {
-        LyricsLibrary lib = readLyricsLibrary();
-        boolean updated = false;
-
-        for (SongLyricsEntry entry : lib.getSongs()) {
-            if (entry.getPathSong().equals(pathSong)) {
-                entry.setPathLyrics(pathLyrics);
-                updated = true;
-                break;
-            }
-        }
-
-        if (!updated) {
-            lib.getSongs().add(new SongLyricsEntry(pathSong, pathLyrics));
-        }
-
-        writeLyricsLibrary(lib);
-    }
-
     /**
      * Reads the lyrics library from the lyrics file.
      * If the lyrics file does not exist, it will be created with an empty library.
-     *
-     * @return The lyrics library read from the lyrics file.
      */
-    private LyricsLibrary readLyricsLibrary() {
-       Gson gson = new GsonBuilder()
+    public List<LyricsRepository.LyricsFilePaths> readLyricsLibrary() {
+        Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
-        if (!Files.exists(lyricsFile)) return new LyricsLibrary();
+        if (!Files.exists(lyricsFile)) return new ArrayList<LyricsRepository.LyricsFilePaths>();
         try (var reader = Files.newBufferedReader(lyricsFile)) {
-            return gson.fromJson(reader, LyricsLibrary.class);
+            var type = new TypeToken<List<LyricsRepository.LyricsFilePaths>>() {}.getType();
+            return gson.fromJson(reader, type);
         } catch (IOException e) {
             System.err.println("An error occurred while reading the lyrics file: " + e.getMessage());
-            return new LyricsLibrary();
+            return new ArrayList<LyricsRepository.LyricsFilePaths>();
         }
     }
 
     /**
      * Writes the lyrics library to the lyrics file.
-     *
-     * @param lib The lyrics library to write.
+     * @return true if successful, false otherwise
      */
-    private void writeLyricsLibrary(LyricsLibrary lib) {
+    public void writeLyricsLibrary(List<LyricsRepository.LyricsFilePaths> lib) throws IOException {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
-        try {
-            Files.writeString(lyricsFile, gson.toJson(lib));
-        } catch (IOException e) {
-            System.err.println("An error occurred while writing the lyrics file: " + e.getMessage());
-        }
+        Files.writeString(lyricsFile, gson.toJson(lib));
     }
+
+    /**
+     * Returns the path to the directory where lyrics are stored.
+     *
+     * <p>The path is constructed by resolving the "lyrics" subdirectory within the settings folder.</p>
+     *
+     * @return The path to the lyrics directory.
+     */
+    public Path getLyricsDir() {
+        return settingFolder.resolve("lyrics");
+    }
+
 }

@@ -2,7 +2,7 @@ package musicApp.modelsTest;
 
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.utils.MusicLoader;
+import musicApp.repositories.PathRepository;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,13 +13,13 @@ import java.util.Objects;
 
 import static org.junit.Assert.*;
 
-public class TestLibrary extends MusicLoader {
+public class TestLibrary extends PathRepository {
     private Library loadLibrary() {
         Library library = new Library();
         Path folderPath = Paths.get("src", "test", "resources");
         List<Path> songs;
         try {
-            MusicLoader loader = new MusicLoader();
+            PathRepository loader = new PathRepository();
             songs = loader.getAllSongPaths(folderPath);
         } catch (IOException e) {
             System.out.println("Error while loading library: " + e.getMessage() + " \n Song list initialized empty");

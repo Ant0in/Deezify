@@ -8,17 +8,24 @@ import java.util.List;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.controllers.songs.LyricsController;
+import musicApp.exceptions.BadSongException;
+import musicApp.exceptions.EqualizerGainException;
+import musicApp.services.FileDialogService;
+import musicApp.services.PlaylistService;
+import musicApp.views.PlayerView;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
-import musicApp.utils.FileDialogHelper;
-import musicApp.utils.FileManager;
-import musicApp.views.PlayerView;
+
+import java.util.List;
+
+import javafx.scene.control.Alert;
 
 /**
  * Controller class for the music player.
@@ -32,7 +39,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     private final MetaController metaController;
     private MediaPlayerController mediaPlayerController;
     private ToolBarController toolBarController;
-    private LibraryController LibraryController;
+    private LibraryController libraryController;
     private QueueController queueController;
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
@@ -51,19 +58,25 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
 
-        this.LibraryController.loadPlaylist(mainLibrary);
-        this.mediaPlayerController.setBalance(settings.getBalance());
-        this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
+        libraryController.loadPlaylist(mainLibrary);
+        mediaPlayerController.setBalance(settings.getBalance());
+        try {
+            this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
+        } catch (EqualizerGainException e) {
+            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+        }
     }
 
-
+    /**
+     * Initializes all sub-controllers that are part of the player controller.
+     */
     private void initSubControllers() {
-        this.LibraryController = new LibraryController(this);
-        this.queueController = new QueueController(this);
-        this.mediaPlayerController = new MediaPlayerController(this);
-        this.toolBarController = new ToolBarController(this);
-        this.lyricsController = new LyricsController(this);
-        this.playlistNavigatorController = new PlaylistNavigatorController(this);
+        libraryController = new LibraryController(this);
+        queueController = new QueueController(this);
+        mediaPlayerController = new MediaPlayerController(this);
+        toolBarController = new ToolBarController(this);
+        lyricsController = new LyricsController(this);
+        playlistNavigatorController = new PlaylistNavigatorController(this);
         this.djPlayerController = new DjPlayerController(this);
     }
 
@@ -73,23 +86,24 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @param stage The stage to show the view on.
      */
     public void show(Stage stage) {
-        this.view.show(stage);
+        view.show(stage);
     }
 
     /**
      * Play song.
      *
      * @param song the song
+     * @throws EqualizerGainException
      */
-    public void playSong(Song song) {
-        this.mediaPlayerController.playCurrent(song);
+    public void playSong(Song song) throws BadSongException {
+        mediaPlayerController.playCurrent(song);
     }
 
     /**
      * Pause the song
      */
     public void pause() {
-        this.mediaPlayerController.pause();
+        mediaPlayerController.pause();
     }
 
     /**
@@ -105,10 +119,10 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * Otherwise, the next song in the library is played.
      */
     public void skip() {
-        if (this.queueController.queueIsEmpty()) {
-            this.LibraryController.skip();
+        if (queueController.queueIsEmpty()) {
+            libraryController.skip();
         } else {
-            this.queueController.playSong(0);
+            queueController.playSong(0);
         }
     }
 
@@ -120,7 +134,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * Handle the previous song
      */
     public void handlePreviousSong() {
-        this.LibraryController.prec();
+        libraryController.prec();
     }
 
 
@@ -128,7 +142,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * Close the audio player.
      */
     public void close() {
-        this.mediaPlayerController.close();
+        mediaPlayerController.close();
     }
 
     /**
@@ -143,29 +157,30 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      */
     public void refreshUI() {
         view.refreshUI();
-        this.queueController.refreshUI();
-        this.lyricsController.refreshUI();
-        this.playlistNavigatorController.refreshUI();
-        this.LibraryController.refreshUI();
+        queueController.refreshUI();
+        lyricsController.refreshUI();
+        playlistNavigatorController.refreshUI();
+        libraryController.refreshUI();
     }
 
     /**
      * Toggle the shuffle mode.
      */
     public void toggleShuffle() {
-        this.LibraryController.toggleShuffle();
+        libraryController.toggleShuffle();
     }
 
     /**
      * Actions to do when the settings are changed
      *
      * @param newSettings The new settings.
+     * @throws EqualizerGainException
      */
-    public void onSettingsChanged(Settings newSettings) {
-        this.mediaPlayerController.setBalance(newSettings.getBalance());
-        this.mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
+    public void onSettingsChanged(Settings newSettings) throws EqualizerGainException {
+        mediaPlayerController.setBalance(newSettings.getBalance());
+        mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
         if (newSettings.isMusicFolderChanged())
-            this.LibraryController.loadPlaylist(metaController.getMainLibrary());
+            libraryController.loadPlaylist(metaController.getMainLibrary());
     }
 
     /**
@@ -174,16 +189,16 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the control panel root
      */
     public Pane getControlPanelRoot() {
-        return this.mediaPlayerController.getRoot();
+        return mediaPlayerController.getRoot();
     }
 
     /**
-     * Gets tool bar root.
+     * Gets toolbar root.
      *
-     * @return the tool bar root
+     * @return the toolbar root
      */
     public Pane getToolBarRoot() {
-        return this.toolBarController.getRoot();
+        return toolBarController.getRoot();
     }
 
     /**
@@ -192,7 +207,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the play list root
      */
     public Pane getMainLibraryRoot() {
-        return this.LibraryController.getRoot();
+        return libraryController.getRoot();
     }
 
     /**
@@ -201,7 +216,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the play lists root
      */
     public Pane getPlaylistNavigatorRoot() {
-        return this.playlistNavigatorController.getRoot();
+        return playlistNavigatorController.getRoot();
     }
 
     /**
@@ -210,7 +225,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the queue root
      */
     public Pane getQueueRoot() {
-        return this.queueController.getRoot();
+        return queueController.getRoot();
     }
 
 
@@ -220,14 +235,14 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the boolean binding
      */
     public BooleanBinding isPlaylistItemSelected() {
-        return LibraryController.isSelected();
+        return libraryController.isSelected();
     }
 
     /**
      * Clear play list view selection.
      */
     public void clearPlayListViewSelection() {
-        LibraryController.clearSelection();
+        libraryController.clearSelection();
     }
 
     /**
@@ -236,7 +251,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return the selected play list song
      */
     public Song getSelectedPlayListSong() {
-        return LibraryController.getSelectedSong();
+        return libraryController.getSelectedSong();
     }
 
     /**
@@ -274,25 +289,41 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     }
 
     /**
-     * Get the isPlaying property.
-     * True if unpaused, false if paused.
+     * Returns the property representing whether music is currently playing.
+     * This can be observed by UI elements to reflect playback state (e.g., play/pause button).
      *
-     * @return The is playing property.
+     * @return A BooleanProperty that is true if the music is playing, BooleanProperty false if paused.
      */
     public BooleanProperty isPlayingProperty() {
         return mediaPlayerController.isPlayingProperty();
     }
 
+    /**
+     * Show or hide the lyrics view depending on the given flag.
+     *
+     * @param show True to show lyrics, false to hide.
+     */
     public void toggleLyrics(boolean show) {
-        this.view.toggleLyrics(show);
+        view.toggleLyrics(show);
     }
 
+    /**
+     * Returns the root pane of the lyrics section.
+     * Useful for embedding or showing the lyrics view in different parts of the UI.
+     *
+     * @return The Pane containing the lyrics UI.
+     */
     public Pane getLyricsRoot() {
-        return this.lyricsController.getRoot();
+        return lyricsController.getRoot();
     }
 
-    public Song getSongByPathInMainLibrary(Path path) {
-        return LibraryController.getSongByPath(path);
+    /**
+     * Retrieves the current playback position of the song.
+     *
+     * @return A Duration object representing the current timestamp in the playing track.
+     */
+    public Duration getCurrentSongTime() {
+        return mediaPlayerController.getCurrentTime();
     }
 
     /**
@@ -308,7 +339,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * Update the playlist shown in the mainLibrary
      */
     public void updateShownPlaylist(Library library) {
-        LibraryController.loadPlaylist(library);
+        libraryController.loadPlaylist(library);
     }
 
     /**
@@ -317,7 +348,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return The main library
      */
     public Library getLibrary() {
-        return LibraryController.getLibrary();
+        return libraryController.getLibrary();
     }
 
     /**
@@ -384,16 +415,16 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * This method opens a file dialog to select an audio file and adds it to the main library.
      */
     public void handleAddSongToMainLibrary() {
-        File selectedFile = FileDialogHelper.chooseAudioFile(null, "Select Music File");
+        File selectedFile = FileDialogService.chooseAudioFile(null, "Select Music File");
         if (selectedFile != null) {
             Path mainLibraryPath = metaController.getMusicDirectory();
             try {
-                FileManager fileManager = new FileManager();
-                Path copiedFilePath = fileManager.copyFileToDirectory(selectedFile, mainLibraryPath);
+                PlaylistService playlistService = new PlaylistService();
+                Path copiedFilePath = playlistService.addSongToMainLibrary(selectedFile);
                 System.out.println("File copied with succes : " + copiedFilePath);
-                LibraryController.addSong(copiedFilePath);
+                libraryController.addSong(copiedFilePath);
             } catch (IOException e) {
-                System.err.println("Error while copying : " + e.getMessage());
+                alertService.showExceptionAlert(e);
             }
         }
     }

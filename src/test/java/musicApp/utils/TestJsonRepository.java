@@ -2,6 +2,7 @@ package musicApp.utils;
 
 import musicApp.models.Library;
 import musicApp.models.Settings;
+import musicApp.repositories.JsonRepository;
 import org.junit.Test;
 
 import java.net.URISyntaxException;
@@ -10,14 +11,14 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TestDataProvider extends DataProvider {
+public class TestJsonRepository extends JsonRepository {
     @Test
     public void testGetPlaylist() throws URISyntaxException {
 //        readPlaylists();
         List<Library> playlists = getPlaylists(Paths.get("src", "test", "resources", "playlists.json"));
         assertEquals(4, playlists.size());
         assertEquals("??favorites??", playlists.getFirst().getName());
-        assertNull(playlists.getFirst().getImage());
+        assertNull(playlists.getFirst().getImagePath());
         assertEquals(0, playlists.getFirst().size());
     }
 
@@ -36,6 +37,6 @@ public class TestDataProvider extends DataProvider {
         Settings settings = getSettings(Paths.get("src", "test", "resources", "settings.json"));
         assertEquals(0.0, settings.getBalance(), 0.0);
         assertEquals(10, settings.getEqualizerBands().size());
-        assertNotNull(settings.getMusicDirectory());
+        assertNotNull(settings.getMusicFolder());
     }
 }
