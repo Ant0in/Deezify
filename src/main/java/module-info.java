@@ -19,13 +19,14 @@ module ulb.musicApp {
     // provides some.service.Interface with musicApp.implementation.Class;
 
     // Declare dependencies on other modules
-    requires java.base; // This is implicit, but good to declare
+    // This is implicit, but good to declare
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
     requires java.prefs;
     requires jaudiotagger;
     requires com.google.gson;
+    requires java.logging;
 
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;
