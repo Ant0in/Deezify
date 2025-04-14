@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
 import musicApp.controllers.songs.EditMetadataController;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
@@ -23,8 +22,6 @@ import java.util.function.Function;
  */
 public class EditMetadataView extends View<EditMetadataView, EditMetadataController> {
 
-    @FXML
-    StackPane artistStackPane, tagStackPane;
     @FXML
     TextField titleField, artistField, albumField, genreField, artistAutoCompletion, albumAutoCompletion;
     @FXML
@@ -97,7 +94,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
             }
         });
 
-        input.setOnKeyReleased(event -> {
+        input.setOnKeyReleased(_ -> {
             String currentText = input.getText();
             Optional<String> suggestion = getSuggestedCompletion.apply(currentText);
 
@@ -179,7 +176,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
         if (!tag.isEmpty() && currentTags.add(tag)) {
             Button tagButton = new Button(tag);
             tagButton.setStyle("-fx-background-color: #274472; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5;");
-            tagButton.setOnAction(e -> {
+            tagButton.setOnAction(_ -> {
                 tagFlowPane.getChildren().remove(tagButton);
                 currentTags.remove(tag);
             });
