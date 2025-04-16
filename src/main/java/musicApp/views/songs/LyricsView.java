@@ -48,21 +48,24 @@ public class LyricsView extends View {
 
     private KaraokeController karaokeController;
 
+    /**
+     * Listener interface for handling events in the LyricsView.
+     * Implement this interface to define behaviors for editing lyrics,
+     * retrieving the current song lyrics, and accessing the currently loaded song property.
+     */
     public interface LyricsViewListener {
         void editLyrics();        
         List<String> getCurrentSongLyrics();
         StringProperty getCurrentlyLoadedSongStringProperty();
-    
-        
     }
 
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(LyricsViewListener listener) {
-        this.listener = listener;
+    public void setListener(LyricsViewListener _listener) {
+        listener = _listener;
     }
 
     /**
@@ -74,6 +77,11 @@ public class LyricsView extends View {
         initButtons();
     }
 
+    /**
+     * Sets the karaoke controller responsible for handling karaoke related actions.
+     *
+     * @param controller The KaraokeController instance.
+     */
     public void setKaraokeController(KaraokeController controller) {
         karaokeController = controller;
     }
@@ -128,6 +136,10 @@ public class LyricsView extends View {
         lyricsTitle.setText(lang.get("lyrics.title"));
     }
 
+    /**
+     * Initializes the button types used in confirmation dialogs.
+     * Sets up the Yes, No, Cancel, and Save button types with localized text.
+     */
     private void initButtonsTypes(){
         LanguageManager lang = LanguageManager.getInstance();
         yesButton = new ButtonType(lang.get("button.yes"), ButtonBar.ButtonData.YES);

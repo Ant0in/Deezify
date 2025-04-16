@@ -42,7 +42,9 @@ public class MediaPlayerView extends View {
     public MediaPlayerView() {
     }
 
-
+    /**
+     * Listener interface for handling user actions from the media player view.
+     */
     public interface MediaPlayerViewListener {
         void handlePauseSong();
         void handleNextSong();
@@ -64,12 +66,15 @@ public class MediaPlayerView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(MediaPlayerViewListener listener) {
-        this.listener = listener;
+    public void setListener(MediaPlayerViewListener _listener) {
+        listener = _listener;
     }
 
+    /**
+     * Initializes the view's logic and bindings.
+     */
     @Override
     public void init() {
         initBindings();
@@ -77,7 +82,9 @@ public class MediaPlayerView extends View {
         setButtonActions();
     }
 
-
+    /**
+     * Sets action handlers for the player buttons and toggles.
+     */
     private void setButtonActions() {
         pauseSongButton.setOnAction(_ -> listener.handlePauseSong());
         nextSongButton.setOnAction(_ -> listener.handleNextSong());
@@ -87,6 +94,9 @@ public class MediaPlayerView extends View {
         miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer() );
     }
 
+    /**
+     * Initializes all UI bindings and listeners.
+     */
     private void initBindings() {
         bindButtons();
         bindSongProgress();
@@ -330,7 +340,9 @@ public class MediaPlayerView extends View {
         }
     }
 
-
+    /**
+     * Enables or disables controls depending on whether a valid song is loaded.
+     */
     private void bindAllControlActivation() {
         List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle);
         updateControlsState(controls, true);
@@ -348,6 +360,12 @@ public class MediaPlayerView extends View {
         });
     }
 
+    /**
+     * Utility method to enable/disable and apply styles to a list of controls.
+     *
+     * @param controls the controls to update
+     * @param disable whether to disable them
+     */
     private void updateControlsState(List<Control> controls, boolean disable) {
         for (Control c : controls) {
             c.setDisable(disable);

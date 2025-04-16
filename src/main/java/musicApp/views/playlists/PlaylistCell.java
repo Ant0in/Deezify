@@ -21,6 +21,10 @@ public class PlaylistCell extends ListCell<Library> {
         listener = _listener;
     }
 
+    /**
+     * The listener interface for handling playlist cell events.
+     * Implement this interface to provide the cell layout and update functionality.
+     */
     public interface PlaylistCellListener {
         Pane getRoot();
         void update(Library library);

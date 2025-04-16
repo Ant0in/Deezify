@@ -17,7 +17,11 @@ public class PlaylistContextMenuView extends View {
     @FXML
     private MenuItem addToQueueItem, replaceQueueItem, editItem, deleteItem;
 
-
+    /**
+     * Listener interface for handling context menu actions related to playlists.
+     * Implement this interface to define behavior for deleting, editing,
+     * appending to, or replacing the queue.
+     */
     public interface PlaylistContextMenuListener {
         void deletePlaylist();
         void editPlaylist();
@@ -28,10 +32,10 @@ public class PlaylistContextMenuView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(PlaylistContextMenuListener listener) {
-        this.listener = listener;
+    public void setListener(PlaylistContextMenuListener _listener) {
+        listener = _listener;
     }
     
 
@@ -70,6 +74,13 @@ public class PlaylistContextMenuView extends View {
         deleteItem.setOnAction(_ -> listener.deletePlaylist());
     }
 
+    /**
+     * Displays the context menu at the specified position relative to the given node.
+     *
+     * @param node The node relative to which the context menu is shown.
+     * @param x    The x-coordinate for the context menu display.
+     * @param y    The y-coordinate for the context menu display.
+     */
     public void show(Node node, double x, double y) {
         contextMenu.show(node, x, y);
     }

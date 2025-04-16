@@ -36,24 +36,26 @@ public class EditPlaylistView extends View {
     @FXML
     private VBox popupLayout;
 
-
+    /**
+     * Listener interface for handling events in the EditPlaylistView.
+     * Implement this interface to manage user actions such as saving a playlist,
+     * checking if the view is in creation mode, retrieving the stage, and closing the view.
+     */
     public interface EditPlaylistViewListener {
-        boolean isCreation();
         void handleSave(String name, Path imagePath);
-        Stage getStage();
         void close();
+        boolean isCreation();
+        Stage getStage();
     }
 
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(EditPlaylistViewListener listener) {
-        this.listener = listener;
+    public void setListener(EditPlaylistViewListener _listener) {
+        listener = _listener;
     }
-
-
 
     /**
      * Initializes the PlaylistEditView.
@@ -65,6 +67,10 @@ public class EditPlaylistView extends View {
         initTranslations();
     }
 
+    /**
+     * Initializes the translations of the view.
+     * Sets the text for the labels and buttons based on the current language.
+     */
     private void initTranslations() {
         nameLabel.setText(LanguageManager.getInstance().get("create_playlist.name"));
         coverLabel.setText(LanguageManager.getInstance().get("create_playlist.image_path"));
@@ -134,6 +140,11 @@ public class EditPlaylistView extends View {
         }
     }
 
+    /**
+     * Returns the scene associated with this view.
+     *
+     * @return The Scene object.
+     */
     public Scene getScene() {
         return scene;
     }

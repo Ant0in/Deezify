@@ -18,7 +18,10 @@ public class PlaylistCellView extends View {
     @FXML
     private Label playlistNameLabel, playlistSizeLabel;
 
-
+    /**
+     * Listener interface for handling events or retrieving data for the PlaylistCellView.
+     * Implement this interface to provide the necessary library information for the cell view.
+     */
     public interface PlaylistCellViewListener {
         Library getLibrary();
         String getLibraryName();
@@ -27,10 +30,10 @@ public class PlaylistCellView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(PlaylistCellViewListener listener) {
-        this.listener = listener;
+    public void setListener(PlaylistCellViewListener _listener) {
+        listener = _listener;
     }
     
     /**

@@ -9,7 +9,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import musicApp.controllers.settings.EqualizerController;
 import musicApp.utils.LanguageManager;
 import musicApp.views.View;
 
@@ -22,12 +21,15 @@ import java.util.List;
 public class EqualizerView extends View {
     private EqualizerViewListener listener;
 
-
     @FXML
     private Button okButton, cancelButton;
     @FXML
     private HBox slidersContainer;
 
+    /**
+     * Listener interface for handling events and retrieving configuration data for the equalizer.
+     * Implement this interface to provide the necessary actions and configuration for each equalizer band.
+     */
     public interface EqualizerViewListener {
         void close() ;
         void handleCancel();
@@ -36,15 +38,20 @@ public class EqualizerView extends View {
         double getMinGainDB();
         double getEqualizerBandGain(int bandIndex);
     }
+
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(EqualizerView.EqualizerViewListener listener) {
-        this.listener = listener;
+    public void setListener(EqualizerView.EqualizerViewListener _listener) {
+        listener = _listener;
     }
 
+    /**
+     * Initializes the equalizer view.
+     * This method sets up the buttons, translations, and sliders for the equalizer bands.
+     */
     @Override
     public void init() {
         initButtons();

@@ -33,6 +33,9 @@ public class LibraryView extends SongContainerView {
     public LibraryView() {
     }
 
+    /**
+     * Listener interface used to delegate actions from the view to the controller logic.
+     */
     public interface LibraryViewListener {
         void handleAddSong();
         void clearQueueSelection();
@@ -43,12 +46,16 @@ public class LibraryView extends SongContainerView {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(LibraryViewListener listener) {
-        this.listener = listener;
+    public void setListener(LibraryViewListener _listener) {
+        listener = _listener;
     }
 
+    /**
+     * Initializes the view and all its components.
+     * This method must be called after FXML loading.
+     */
     @Override
     public void init() {
         initSongInput();
@@ -113,6 +120,9 @@ public class LibraryView extends SongContainerView {
         });
     }
 
+    /**
+     * Refreshes the UI by reloading the song list.
+     */
     @Override
     public void refreshUI() {
         updateListView();

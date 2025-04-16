@@ -39,29 +39,39 @@ public class EditMetadataView extends View {
 
     private final Set<String> currentTags;
 
+    /**
+     * Instantiates a new EditMetadataView.
+     */
     public EditMetadataView() {
         currentTags = new HashSet<>();
     }
 
+    /**
+     * Listener interface for handling events in the EditMetadataView.
+     * Implement this interface to provide auto-completion suggestions and actions for cover selection,
+     * saving metadata, and canceling the edit operation.
+     */
     public interface EditMetadataViewListener {
         Optional<String> getArtistAutoCompletion(String input);
         Optional<String> getTagAutoCompletion(String input);
         void handleChooseCover();
         void handleSaveMetadata(String title, String artist, String genre, Set<String> userTags);
         void handleCancel();
-
-        
     }
 
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(EditMetadataViewListener listener) {
-        this.listener = listener;
+    public void setListener(EditMetadataViewListener _listener) {
+        listener = _listener;
     }
 
+    /**
+     * Initializes the EditMetadataView.
+     * This method initializes the auto-completion fields, translations, button actions, and tag input.
+     */
     @Override
     public void init() {
         initAutoCompletionFields();

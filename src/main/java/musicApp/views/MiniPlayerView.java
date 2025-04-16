@@ -54,10 +54,10 @@ public class MiniPlayerView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(MiniPlayerViewListener listener) {
-        this.listener = listener;
+    public void setListener(MiniPlayerViewListener _listener) {
+        listener = _listener;
     }
 
     @Override

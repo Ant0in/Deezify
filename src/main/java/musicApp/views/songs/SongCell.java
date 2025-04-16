@@ -17,11 +17,23 @@ public class SongCell extends ListCell<Song> {
         listener = _listener;
     }
 
+    /**
+     * Listener interface for handling song cell events.
+     * Implement this interface to define the UI component and update functionality for a song cell.
+     */
     public interface SongCellListener{
-        Pane getRoot();
         void update(Song song);
+        Pane getRoot();
     }
 
+    /**
+     * Updates the cell with the provided song data.
+     * If the cell is empty or the song is null, the cell is cleared.
+     * Otherwise, the cell's graphic is set with the UI obtained from the listener and updated with the song data.
+     *
+     * @param song  The Song object to be displayed in the cell.
+     * @param empty {@code true} if the cell is empty, {@code false} otherwise.
+     */
     @Override
     protected void updateItem(Song song, boolean empty) {
         super.updateItem(song, empty);

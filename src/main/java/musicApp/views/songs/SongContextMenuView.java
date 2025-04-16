@@ -22,6 +22,10 @@ public class SongContextMenuView extends View {
     @FXML
     private MenuItem removeFromPlaylistMenu, editMetadataItem; // Can be Menu or MenuItem
 
+    /**
+     * Interface for the controller/logic layer to respond to user actions triggered
+     * through the context menu.
+     */
     public interface SongContextMenuViewListener {
         void handleEditMetadata();
         boolean isShowingMainLibrary();
@@ -32,18 +36,24 @@ public class SongContextMenuView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(SongContextMenuViewListener listener) {
-        this.listener = listener;
+    public void setListener(SongContextMenuViewListener _listener) {
+        listener = _listener;
     }
 
+    /**
+     * Initialize the view and set up all relevant components.
+     */
     @Override
     public void init() {
         initContextMenu();
         initTranslation();
     }
 
+    /**
+     * Set the translated text for all context menu items based on the current language.
+     */
     private void initTranslation() {
         editMetadataItem.setText(LanguageManager.getInstance().get("button.edit_metadata"));
         addToPlaylistMenu.setText(LanguageManager.getInstance().get("button.add_to_playlist"));
@@ -72,7 +82,9 @@ public class SongContextMenuView extends View {
         contextMenu.setOnShowing(e -> updateMenuItems());
     }
 
-
+    /**
+     * Clears the dynamic playlist items from the submenus.
+     */
     private void clearPlaylistMenuItems() {
         addToPlaylistMenu.getItems().clear();
         if (removeFromPlaylistMenu instanceof Menu) {
@@ -80,6 +92,11 @@ public class SongContextMenuView extends View {
         }
     }
 
+    /**
+     * Checks if the "Add to Playlist" menu currently has no items.
+     *
+     * @return true if empty, false otherwise
+     */
     private boolean addToPlaylistMenuIsEmpty() {
         return addToPlaylistMenu.getItems().isEmpty();
     }

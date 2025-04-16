@@ -24,7 +24,6 @@ import java.nio.file.Paths;
 public class SettingsView extends View {
     private SettingsView.SettingsViewListener listener;
 
-    // private final Scene scene;
     @FXML
     private ComboBox<String> languageComboBox;
     @FXML
@@ -46,6 +45,10 @@ public class SettingsView extends View {
     public SettingsView() {
     }
 
+    /**
+     * The listener interface for receiving settings view events.
+     * Implement this interface to handle user actions in the settings view.
+     */
     public interface SettingsViewListener {
         void handleSave(Language language, double balance, Path musicDirectory);
         Path getMusicDirectory();
@@ -57,10 +60,10 @@ public class SettingsView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(SettingsView.SettingsViewListener listener) {
-        this.listener = listener;
+    public void setListener(SettingsView.SettingsViewListener _listener) {
+        listener = _listener;
     }
 
 

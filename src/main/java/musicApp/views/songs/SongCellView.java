@@ -34,29 +34,36 @@ public class SongCellView extends View {
 
     public SongCellView() {
     }
-    
+
+    /**
+     * Interface defining listener methods for handling user interaction on the SongCellView.
+     */
     public interface SongCellViewListener {        
         void toggleFavorites();
-        StringProperty getCurrentlyLoadedSongStringProperty();
-        BooleanProperty isPlayingProperty();
-        void showContextMenu(double x, double y);
-        boolean isLoaded();
-        boolean isPlaying();
         void handlePause();
         void handleUnpause();
         void handlePlay();
+        void showContextMenu(double x, double y);
+        boolean isLoaded();
+        boolean isPlaying();
         boolean isFavorite();
+        StringProperty getCurrentlyLoadedSongStringProperty();
+        BooleanProperty isPlayingProperty();
     }
 
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(SongCellViewListener listener) {
-        this.listener = listener;
+    public void setListener(SongCellViewListener _listener) {
+        listener = _listener;
     }
 
+    /**
+     * Initializes the view. Called once when the view is created.
+     * Sets up the buttons, icons, and context menu.
+     */
     @Override
     public void init() {
         initComponents();

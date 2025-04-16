@@ -29,7 +29,12 @@ public class PlaylistNavigatorView extends View {
 
     public PlaylistNavigatorView() {
     }
-    
+
+    /**
+     * Listener interface for handling events in the PlaylistNavigatorView.
+     * Implement this interface to define behavior for opening dialogs, setting the selected playlist,
+     * displaying a context menu, and providing the controller.
+     */
     public interface PlaylistNavigatorViewListener {
         void openCreatePlaylistDialog();
         void setSelectedLibrary(Library library);
@@ -40,10 +45,10 @@ public class PlaylistNavigatorView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(PlaylistNavigatorViewListener listener) {
-        this.listener = listener;
+    public void setListener(PlaylistNavigatorViewListener _listener) {
+        listener = _listener;
     }
 
 
@@ -117,6 +122,11 @@ public class PlaylistNavigatorView extends View {
         }
     }
 
+    /**
+     * Retrieves the currently selected playlist from the list view.
+     *
+     * @return The selected Library object or {@code null} if none is selected.
+     */
     public Library getSelectedPlaylist() {
         return listView.getSelectionModel().getSelectedItem();
     }
