@@ -32,7 +32,7 @@ import javafx.scene.control.Alert;
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
  */
-public class PlayerController extends ViewController<PlayerView, PlayerController> {
+public class PlayerController extends BaseViewController<PlayerView> implements PlayerView.PlayerViewListener {
 
     private final MetaController metaController;
     private MediaPlayerController mediaPlayerController;
@@ -50,6 +50,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      */
     public PlayerController(MetaController metaController, Settings settings, Library mainLibrary) throws IOException {
         super(new PlayerView());
+        view.setListener(this);
         this.metaController = metaController;
         initSubControllers();
         initView("/fxml/MainLayout.fxml");

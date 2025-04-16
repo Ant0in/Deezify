@@ -13,6 +13,8 @@ import musicApp.controllers.playlists.EditPlaylistController;
 import musicApp.models.Library;
 import musicApp.utils.AlertService;
 import musicApp.utils.LanguageManager;
+import musicApp.views.BaseView;
+import musicApp.views.ToolBarView;
 import musicApp.views.View;
 
 import java.io.File;
@@ -22,7 +24,9 @@ import java.nio.file.Path;
  * The Playlist edit view.
  * This is a popup window that allows the user to create or edit a playlist.
  */
-public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistController> {
+public class EditPlaylistView extends BaseView {
+
+    private EditPlaylistViewListener listener ;
 
     @FXML
     private Label nameLabel, coverLabel;
@@ -34,6 +38,24 @@ public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistControl
     private ImageView coverImage;
     @FXML
     private VBox popupLayout;
+
+
+    public interface EditPlaylistViewListener {
+        boolean isCreation();
+        void handleSave(String name, Path imagePath);
+        Stage getStage();
+        void close();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(EditPlaylistViewListener listener) {
+        this.listener = listener;
+    }
+
 
 
     /**
@@ -50,7 +72,7 @@ public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistControl
         nameLabel.setText(LanguageManager.getInstance().get("create_playlist.name"));
         coverLabel.setText(LanguageManager.getInstance().get("create_playlist.image_path"));
         chooseCoverButton.setText(LanguageManager.getInstance().get("playlist.select_image"));
-        String actionButtonText = viewController.isCreation()
+        String actionButtonText = listener.isCreation()
                 ? LanguageManager.getInstance().get("button.create")
                 : LanguageManager.getInstance().get("button.save");
         actionButton.setText(actionButtonText);
@@ -64,10 +86,10 @@ public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistControl
     private void initControls() {
         chooseCoverButton.setOnAction(_ -> handleChooseImage());
 
-        actionButton.setOnAction(e -> viewController.handleSave(nameField.getText(),
+        actionButton.setOnAction(e -> listener.handleSave(nameField.getText(),
                 (Path) coverLabel.getUserData()));
 
-        cancelButton.setOnAction(e -> viewController.close());
+        cancelButton.setOnAction(e -> listener.close());
     }
 
     /**
@@ -80,7 +102,7 @@ public class EditPlaylistView extends View<EditPlaylistView, EditPlaylistControl
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
-        File selectedFile = fileChooser.showOpenDialog(viewController.getStage());
+        File selectedFile = fileChooser.showOpenDialog(listener.getStage());
         if (selectedFile != null) {
             coverLabel.setText(selectedFile.getAbsolutePath());
             coverLabel.setUserData(selectedFile.toPath());

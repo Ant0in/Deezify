@@ -6,7 +6,7 @@ import musicApp.views.ToolBarView;
 /**
  * The type Tool bar controller.
  */
-public class ToolBarController extends TestViewController<ToolBarView.ToolBarViewListener, ToolBarView> implements ToolBarView.ToolBarViewListener{
+public class ToolBarController extends BaseViewController<ToolBarView> implements ToolBarView.ToolBarViewListener {
     private final PlayerController playerController;
 
     /**
@@ -16,6 +16,7 @@ public class ToolBarController extends TestViewController<ToolBarView.ToolBarVie
      */
     public ToolBarController(PlayerController _playerController) {
         super(new ToolBarView());
+        view.setListener(this);
         playerController = _playerController;
         initView("/fxml/ToolBar.fxml");
     }
@@ -32,8 +33,4 @@ public class ToolBarController extends TestViewController<ToolBarView.ToolBarVie
     @Override
     public void exitApp() { System.exit(0); }
 
-    @Override
-    protected ToolBarView.ToolBarViewListener getListener() {
-        return this;
-    }
 }

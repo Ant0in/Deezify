@@ -1,5 +1,6 @@
 package musicApp.controllers.playlists;
 
+import musicApp.controllers.BaseViewController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
@@ -8,7 +9,7 @@ import musicApp.views.playlists.PlaylistCellView;
 /**
  * The type Playlist cell controller.
  */
-public class PlaylistCellController extends ViewController<PlaylistCellView, PlaylistCellController> {
+public class PlaylistCellController extends BaseViewController<PlaylistCellView> implements PlaylistCellView.PlaylistCellViewListener {
 
     private final PlaylistNavigatorController navigatorController;
     private Library library;
@@ -20,6 +21,7 @@ public class PlaylistCellController extends ViewController<PlaylistCellView, Pla
      */
     public PlaylistCellController(PlaylistNavigatorController controller) {
         super(new PlaylistCellView());
+        view.setListener(this);
         navigatorController = controller;
         initView("/fxml/PlaylistCell.fxml");
     }

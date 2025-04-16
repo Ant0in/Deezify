@@ -4,15 +4,20 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
+import musicApp.controllers.BaseViewController;
 
 import java.util.Objects;
 
 /**
  * The ToolBar view.
  */
-public class ToolBarView extends TestView<ToolBarView.ToolBarViewListener> {
+public class ToolBarView extends BaseView {
+
+    private ToolBarViewListener listener;
+
     @FXML
     private Button exitButton, btnSettings;
     @FXML
@@ -29,6 +34,16 @@ public class ToolBarView extends TestView<ToolBarView.ToolBarViewListener> {
         void openSettings();
         void exitApp();
     }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(ToolBarViewListener listener) {
+        this.listener = listener;
+    }
+
     /**
      * Initialize the view.
      */

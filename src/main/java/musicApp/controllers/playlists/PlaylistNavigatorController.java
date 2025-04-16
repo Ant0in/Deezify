@@ -1,5 +1,6 @@
 package musicApp.controllers.playlists;
 
+import musicApp.controllers.BaseViewController;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
@@ -15,7 +16,7 @@ import javafx.scene.Node;
 /**
  * The type Playlist navigator controller.
  */
-public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView, PlaylistNavigatorController> {
+public class PlaylistNavigatorController extends BaseViewController<PlaylistNavigatorView> implements PlaylistNavigatorView.PlaylistNavigatorViewListener {
 
     private final PlayerController playerController;
     private List<Library> playlists;
@@ -31,6 +32,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      */
     public PlaylistNavigatorController(PlayerController controller) {
         super(new PlaylistNavigatorView());
+        view.setListener(this);
         playerController = controller;
         playlists = new ArrayList<>();
         playlistContextMenuController = new PlaylistContextMenuController(this);
@@ -216,6 +218,11 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      */
     public void openCreatePlaylistDialog() {
         new EditPlaylistController(this);
+    }
+
+    @Override
+    public PlaylistNavigatorController getController() {
+        return this;
     }
 
     /**

@@ -9,6 +9,7 @@ import musicApp.controllers.playlists.PlaylistCellController;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
+import musicApp.views.BaseView;
 import musicApp.views.View;
 
 import java.util.List;
@@ -17,8 +18,8 @@ import java.util.List;
  * The PlaylistNavigatorView class is responsible for displaying and managing the playlist navigator UI.
  * It allows users to create, edit, and delete playlists, as well as manage their contents.
  */
-public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistNavigatorController> {
-
+public class PlaylistNavigatorView extends BaseView {
+    private PlaylistNavigatorViewListener listener;
     @FXML
     private ListView<Library> listView;
 
@@ -29,6 +30,23 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
 
     public PlaylistNavigatorView() {
     }
+    
+    public interface PlaylistNavigatorViewListener {
+        void openCreatePlaylistDialog();
+        void setSelectedLibrary(Library library);
+        void showContextMenu(double x, double y, Library library);
+        PlaylistNavigatorController getController();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(PlaylistNavigatorViewListener listener) {
+        this.listener = listener;
+    }
+
 
     /**
      * Initializes the PlaylistNavigatorView.
@@ -47,7 +65,7 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
      * This method sets the cell factory for the list view to use a custom PlaylistCell.
      */
     private void initListView() {
-        listView.setCellFactory(_ -> new PlaylistCell(new PlaylistCellController(viewController)));
+        listView.setCellFactory(_ -> new PlaylistCell(new PlaylistCellController(listener.getController())));
     }
 
     /**
@@ -55,7 +73,7 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
      * This method binds the button action to open a dialog for creating a new playlist.
      */
     private void setButtonActions() {
-        createPlaylist.setOnAction(_ -> viewController.openCreatePlaylistDialog());
+        createPlaylist.setOnAction(_ -> listener.openCreatePlaylistDialog());
     }
 
     /**
@@ -81,10 +99,10 @@ public class PlaylistNavigatorView extends View<PlaylistNavigatorView, PlaylistN
         listView.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 if (getSelectedPlaylist() == null) return;
-                viewController.setSelectedLibrary(listView.getSelectionModel().getSelectedItem());
+                listener.setSelectedLibrary(listView.getSelectionModel().getSelectedItem());
             } else if (e.getButton() == MouseButton.SECONDARY) {
                 System.out.println("Right click on playlist");
-                viewController.showContextMenu(e.getScreenX(), e.getScreenY(), getSelectedPlaylist());
+                listener.showContextMenu(e.getScreenX(), e.getScreenY(), getSelectedPlaylist());
             }
         });
     }

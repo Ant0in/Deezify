@@ -1,5 +1,8 @@
 package musicApp.views;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -9,14 +12,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 import musicApp.controllers.MiniPlayerController;
+import musicApp.models.Song;
 
 import java.util.List;
 
 /**
  * View component used to render the audio spectrum visualizer in a separate window (popup)
  */
-public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
+public class MiniPlayerView extends BaseView{
+    private MiniPlayerViewListener listener;
     /**
      * The Song title label.
      */
@@ -45,6 +51,19 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
         super();
         isClipped = true;
         isBasicMode = false;
+    }
+
+    public interface MiniPlayerViewListener {
+        int getBandsNumber();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(MiniPlayerViewListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -118,7 +137,7 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
      * Draw a frame for the audio spectrum visualizer.
      */
     private void drawFrame( List<Float> values) {
-        int numBars = viewController.getBandsNumber();
+        int numBars = listener.getBandsNumber();
         double barWidth = canvas.getWidth() / numBars; // Width of each bar
         double canvasHeight = canvas.getHeight();
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -143,7 +162,7 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
      * Draw a circular frame for the audio spectrum visualizer.
      */
     private void drawCircularFrame(List<Float> values) {
-        int numBars = viewController.getBandsNumber();
+        int numBars = listener.getBandsNumber();
         double radius = Math.min(canvas.getWidth(), canvas.getHeight()) / 3; // Radius for the circle
         double centerX = canvas.getWidth() / 2;
         double centerY = canvas.getHeight() / 2;

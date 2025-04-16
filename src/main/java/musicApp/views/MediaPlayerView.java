@@ -1,6 +1,9 @@
 package musicApp.views;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -16,7 +19,8 @@ import java.util.Objects;
 /**
  * The MediaPlayer view.
  */
-public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController> {
+public class MediaPlayerView extends BaseView {
+    private MediaPlayerViewListener listener;
 
     @FXML
     private Button pauseSongButton, nextSongButton, previousSongButton;
@@ -39,6 +43,34 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     public MediaPlayerView() {
     }
 
+
+    public interface MediaPlayerViewListener {
+        void handlePauseSong();
+        void handleNextSong();
+        void handlePreviousSong();
+        void toggleShuffle();
+        void toggleMiniPlayer();
+        void seek(double duration);
+        void changeSpeed(double speed);
+        void toggleLyrics(boolean show);
+        BooleanProperty isPlaying();
+        DoubleProperty progressProperty();
+        Duration getCurrentTime();
+        Duration getTotalDuration();
+        DoubleProperty volumeProperty();
+        Song getLoadedSong();
+        StringProperty currentSongProperty();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(MediaPlayerViewListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void init() {
         initBindings();
@@ -48,12 +80,12 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
 
 
     private void setButtonActions() {
-        pauseSongButton.setOnAction(_ -> viewController.handlePauseSong());
-        nextSongButton.setOnAction(_ -> viewController.handleNextSong());
-        previousSongButton.setOnAction(_ -> viewController.handlePreviousSong());
-        shuffleToggle.setOnAction(_ -> viewController.toggleShuffle());
-        lyricsToggle.setOnAction(_ -> viewController.toggleLyrics(lyricsToggle.isSelected()));
-        miniPlayerToggle.setOnAction(_ -> viewController.toggleMiniPlayer() );
+        pauseSongButton.setOnAction(_ -> listener.handlePauseSong());
+        nextSongButton.setOnAction(_ -> listener.handleNextSong());
+        previousSongButton.setOnAction(_ -> listener.handlePreviousSong());
+        shuffleToggle.setOnAction(_ -> listener.toggleShuffle());
+        lyricsToggle.setOnAction(_ -> listener.toggleLyrics(lyricsToggle.isSelected()));
+        miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer() );
     }
 
     private void initBindings() {
@@ -78,7 +110,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         pauseIcon.setFitWidth(20);
         pauseIcon.setFitHeight(20);
 
-        viewController.isPlaying().addListener((_, _, isPlaying) -> {
+        listener.isPlaying().addListener((_, _, isPlaying) -> {
             if (isPlaying) {
                 pauseSongButton.setGraphic(pauseIcon);
                 currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");
@@ -94,16 +126,16 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
      * Bind the song progress bar and label.
      */
     private void bindSongProgress() {
-        songProgressBar.progressProperty().bind(viewController.progressProperty());
+        songProgressBar.progressProperty().bind(listener.progressProperty());
         songProgressTimeLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         this::getFormattedSongProgress,  // Extracted method
-                        viewController.progressProperty()
+                        listener.progressProperty()
                 )
         );
         songProgressBar.setOnMouseClicked(e -> {
             double progress = e.getX() / songProgressBar.getWidth();
-            viewController.seek(progress);
+            listener.seek(progress);
         });
     }
 
@@ -113,8 +145,8 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
      * @return The formatted song progress.
      */
     private String getFormattedSongProgress() {
-        Duration currentTime = viewController.getCurrentTime();
-        Duration totalDuration = viewController.getTotalDuration();
+        Duration currentTime = listener.getCurrentTime();
+        Duration totalDuration = listener.getTotalDuration();
         if (totalDuration == null || totalDuration.isUnknown() || totalDuration == Duration.ZERO) {
             return formatDuration(currentTime) + " / --:--";
         }
@@ -144,7 +176,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         speedBox.setOnAction(_ -> {
             String speed = speedBox.getValue();
             double rate = getSpeedValue(speed);
-            viewController.changeSpeed(rate);
+            listener.changeSpeed(rate);
         });
     }
 
@@ -175,7 +207,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         volumeLabel.textProperty().bind(
                 volumeSlider.valueProperty().asString("%.0f")
         );
-        viewController.volumeProperty().bind(
+        listener.volumeProperty().bind(
                 volumeSlider.valueProperty().divide(100)
         );
 
@@ -200,20 +232,20 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         currentSongLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         () -> {
-                            Song currentSong = viewController.getLoadedSong();
+                            Song currentSong = listener.getLoadedSong();
                             return currentSong == null ? "" : currentSong.getTitle();
                         },
-                        viewController.currentSongProperty()
+                        listener.currentSongProperty()
                 )
         );
 
         currentArtistLabel.textProperty().bind(
                 Bindings.createStringBinding(
                         () -> {
-                            Song currentSong = viewController.getLoadedSong();
+                            Song currentSong = listener.getLoadedSong();
                             return currentSong == null ? "" : currentSong.getArtist();
                         },
-                        viewController.currentSongProperty()
+                        listener.currentSongProperty()
                 )
         );
     }
@@ -226,7 +258,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         imageCover.imageProperty().bind(
                 Bindings.createObjectBinding(
                         () -> {
-                            Song currentSong = viewController.getLoadedSong();
+                            Song currentSong = listener.getLoadedSong();
                             if (currentSong == null || currentSong.getCover() == null) {
                                 return defaultCoverImage;
                             }
@@ -238,7 +270,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
                                 return defaultCoverImage;
                             }
                         },
-                        viewController.currentSongProperty()
+                        listener.currentSongProperty()
                 )
         );
     }
@@ -303,14 +335,14 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     private void bindAllControlActivation() {
         List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle);
         updateControlsState(controls, true);
-        viewController.currentSongProperty().addListener((_, _, newVal) -> {
+        listener.currentSongProperty().addListener((_, _, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
             updateControlsState(controls, !songIsPlaying);
 
-            if (!viewController.getLoadedSong().isSong()) {
+            if (!listener.getLoadedSong().isSong()) {
                 speedBox.setValue("1x");
                 speedBox.setDisable(true);
-                viewController.changeSpeed(1.0);
+                listener.changeSpeed(1.0);
             } else {
                 speedBox.setDisable(false);
             }

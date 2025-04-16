@@ -4,17 +4,39 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
 import musicApp.controllers.playlists.PlaylistContextMenuController;
+import musicApp.views.BaseView;
 import musicApp.views.View;
 import javafx.scene.Node;
 
-public class PlaylistContextMenuView extends View<PlaylistContextMenuView, PlaylistContextMenuController> {
+public class PlaylistContextMenuView extends BaseView {
+    private PlaylistContextMenuListener listener;
+    
     @FXML
     private ContextMenu contextMenu;
 
     @FXML
     private MenuItem addToQueueItem, replaceQueueItem, editItem, deleteItem;
+
+
+    public interface PlaylistContextMenuListener {
+        void deletePlaylist();
+        void editPlaylist();
+        void appendToQueue();
+        void replaceQueue();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(PlaylistContextMenuListener listener) {
+        this.listener = listener;
+    }
+    
 
     /**
      * Initialize the view.
@@ -45,10 +67,10 @@ public class PlaylistContextMenuView extends View<PlaylistContextMenuView, Playl
      * Initializes the actions for the context menu items.
      */
     private void initActions() {
-        addToQueueItem.setOnAction(_ -> viewController.appendToQueue());
-        replaceQueueItem.setOnAction(_ -> viewController.replaceQueue());
-        editItem.setOnAction(_ -> viewController.editPlaylist());
-        deleteItem.setOnAction(_ -> viewController.deletePlaylist());
+        addToQueueItem.setOnAction(_ -> listener.appendToQueue());
+        replaceQueueItem.setOnAction(_ -> listener.replaceQueue());
+        editItem.setOnAction(_ -> listener.editPlaylist());
+        deleteItem.setOnAction(_ -> listener.deletePlaylist());
     }
 
     public void show(Node node, double x, double y) {
