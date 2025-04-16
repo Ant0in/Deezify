@@ -35,7 +35,6 @@ public class EqualizerView extends View {
         double getMaxGainDB();
         double getMinGainDB();
         double getEqualizerBandGain(int bandIndex);
-        EqualizerController getController();
     }
     /**
      * Sets listener.

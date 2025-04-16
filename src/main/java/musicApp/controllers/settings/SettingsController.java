@@ -156,9 +156,4 @@ public class SettingsController extends ViewController<SettingsView> implements 
     public Path getMusicDirectory() {
         return settings.getMusicFolder();
     }
-
-    @Override
-    public SettingsController getController() {
-        return this;
-    }
 }

@@ -1,7 +1,7 @@
 package musicApp.views.playlists;
 
 import javafx.scene.control.ListCell;
-import musicApp.controllers.playlists.PlaylistCellController;
+import javafx.scene.layout.Pane;
 import musicApp.models.Library;
 
 /**
@@ -10,15 +10,20 @@ import musicApp.models.Library;
  */
 public class PlaylistCell extends ListCell<Library> {
 
-    private final PlaylistCellController playlistCellController;
+    private final PlaylistCellListener listener;
 
     /**
      * Instantiates a new Playlist cell.
      *
-     * @param controller the controller
+     * @param _listener the controller
      */
-    public PlaylistCell(PlaylistCellController controller) {
-        playlistCellController = controller;
+    public PlaylistCell(PlaylistCellListener _listener) {
+        listener = _listener;
+    }
+
+    public interface PlaylistCellListener {
+        Pane getRoot();
+        void update(Library library);
     }
 
     /**
@@ -34,8 +39,8 @@ public class PlaylistCell extends ListCell<Library> {
             setGraphic(null);
             setText(null);
         } else {
-            setGraphic(playlistCellController.getRoot());
-            playlistCellController.update(library);
+            setGraphic(listener.getRoot());
+            listener.update(library);
         }
     }
 }

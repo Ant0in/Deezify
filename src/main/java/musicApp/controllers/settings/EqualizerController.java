@@ -109,10 +109,4 @@ public class EqualizerController extends ViewController<EqualizerView> implement
     public void handleCancel() {
         view.updateSlidersValues();
     }
-
-    @Override
-    public EqualizerController getController() {
-        return this;
-    }
-
 }

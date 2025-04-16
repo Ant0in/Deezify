@@ -52,7 +52,6 @@ public class SettingsView extends View {
         double getBalance();
         void openEqualizer();
         void handleCancel();
-        SettingsController getController();
     }
 
     /**

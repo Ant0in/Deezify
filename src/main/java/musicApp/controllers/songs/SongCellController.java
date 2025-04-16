@@ -9,6 +9,7 @@ import musicApp.models.Library;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.utils.MetadataUtils;
+import musicApp.views.songs.SongCell;
 import musicApp.views.songs.SongCellView;
 import musicApp.views.songs.SongCellView.SongCellViewListener;
 
@@ -19,7 +20,7 @@ import java.util.Optional;
 /**
  * The type Song cell controller.
  */
-public class SongCellController extends ViewController<SongCellView> implements SongCellViewListener{
+public class SongCellController extends ViewController<SongCellView> implements SongCellViewListener, SongCell.SongCellListener {
 
     private final LibraryController LibraryController;
     private Song song;
@@ -37,7 +38,6 @@ public class SongCellController extends ViewController<SongCellView> implements 
         LibraryController = controller;
         contextMenuController = new SongContextMenuController(this);
         initView("/fxml/SongCell.fxml");
-
     }
 
     /**

@@ -34,9 +34,9 @@ public class LibraryView extends SongContainerView {
     }
 
     public interface LibraryViewListener {
-        List<Song> searchLibrary(String query);
         void handleAddSong();
         void clearQueueSelection();
+        List<Song> searchLibrary(String query);
         LibraryController getController();
     }
 
@@ -97,6 +97,7 @@ public class LibraryView extends SongContainerView {
      * Initialize the playlist view.
      */
     private void initPlayListView() {
+
         listView.setCellFactory(_ -> new SongCell(new SongCellController(listener.getController())));
         updateListView();
     }
