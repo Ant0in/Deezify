@@ -20,29 +20,12 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class QueueView extends SongContainerView {
+
     private QueueViewListener listener;
 
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
 
-
-    public interface QueueViewListener {
-        BooleanBinding isPlaylistItemSelected();
-        void reorderQueue(int fromIndex, int toIndex);
-        void clearPlayListViewSelection();
-        void handleAddSong();
-        void handleDeleteSong();
-        void handleClearQueue();
-    }
-
-    /**
-     * Sets listener.
-     *
-     * @param listener the listener
-     */
-    public void setListener(QueueViewListener listener) {
-        this.listener = listener;
-    }
 
     /**
      * Instantiates a new Queue view.
@@ -50,6 +33,26 @@ public class QueueView extends SongContainerView {
     public QueueView() {
     }
 
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface QueueViewListener {
+        void handleAddSong();
+        void handleDeleteSong();
+        void handleClearQueue();
+        void clearPlayListViewSelection();
+        void reorderQueue(int fromIndex, int toIndex);
+        BooleanBinding isPlaylistItemSelected();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param _listener the listener
+     */
+    public void setListener(QueueViewListener _listener) {
+        listener = _listener;
+    }
 
     @Override
     public void init() {

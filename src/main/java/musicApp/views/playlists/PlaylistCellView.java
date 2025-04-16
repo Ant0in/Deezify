@@ -11,6 +11,7 @@ import musicApp.views.View;
  * It extends the View class and uses FXML to define its layout.
  */
 public class PlaylistCellView extends View {
+
     private PlaylistCellViewListener listener;
     
     @FXML

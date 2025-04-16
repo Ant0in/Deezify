@@ -13,6 +13,7 @@ import musicApp.views.View;
  * View for the context menu that appears when right-clicking a song in the library.
  */
 public class SongContextMenuView extends View {
+
     private SongContextMenuViewListener listener;
 
     @FXML

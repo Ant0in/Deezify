@@ -9,6 +9,7 @@ import musicApp.views.View;
 import javafx.scene.Node;
 
 public class PlaylistContextMenuView extends View {
+
     private PlaylistContextMenuListener listener;
     
     @FXML

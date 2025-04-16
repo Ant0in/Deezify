@@ -17,6 +17,7 @@ import java.util.Objects;
  * It contains the play button, like button, and other song information.
  */
 public class SongCellView extends View {
+
     private SongCellViewListener listener;
 
     @FXML

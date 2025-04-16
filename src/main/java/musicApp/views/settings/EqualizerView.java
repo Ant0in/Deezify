@@ -19,6 +19,7 @@ import java.util.List;
  * It contains sliders for each band of the equalizer.
  */
 public class EqualizerView extends View {
+
     private EqualizerViewListener listener;
 
     @FXML

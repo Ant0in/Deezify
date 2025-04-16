@@ -11,25 +11,30 @@ import java.util.List;
  * The  PlayList view.
  */
 public abstract class SongContainerView extends View {
+
     private SongContainerViewListener listener;
+
     /**
      * The List view.
      */
     @FXML
     protected ListView<Song> listView;
 
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
     public interface SongContainerViewListener {
-        List<Song> toList();
         void handlePlaySong();
+        List<Song> toList();
     }
 
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(SongContainerViewListener listener) {
-        this.listener = listener;
+    public void setListener(SongContainerViewListener _listener) {
+        listener = _listener;
     }
 
     /**

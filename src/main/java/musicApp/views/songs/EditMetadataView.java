@@ -21,7 +21,9 @@ import java.util.function.Function;
  * It allows users to edit the title, artist, genre, and tags of a song, as well as choose a cover image.
  */
 public class EditMetadataView extends View {
+
     private EditMetadataViewListener listener;
+
     @FXML
     StackPane artistStackPane, tagStackPane;
     @FXML

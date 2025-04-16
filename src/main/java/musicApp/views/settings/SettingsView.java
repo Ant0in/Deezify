@@ -22,6 +22,7 @@ import java.nio.file.Paths;
  * The view for the settings window.
  */
 public class SettingsView extends View {
+
     private SettingsView.SettingsViewListener listener;
 
     @FXML

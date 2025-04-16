@@ -19,6 +19,7 @@ import java.util.Objects;
  * The MediaPlayer view.
  */
 public class MediaPlayerView extends View {
+
     private MediaPlayerViewListener listener;
 
     @FXML

@@ -28,6 +28,9 @@ public class ToolBarView extends View {
 
     }
 
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
     public interface ToolBarViewListener {
         void openSettings();
         void exitApp();
@@ -36,10 +39,10 @@ public class ToolBarView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(ToolBarViewListener listener) {
-        this.listener = listener;
+    public void setListener(ToolBarViewListener _listener) {
+        listener = _listener;
     }
 
     /**

@@ -16,7 +16,9 @@ import java.util.List;
  * View component used to render the audio spectrum visualizer in a separate window (popup)
  */
 public class MiniPlayerView extends View {
+
     private MiniPlayerViewListener listener;
+
     /**
      * The Song title label.
      */
@@ -47,6 +49,9 @@ public class MiniPlayerView extends View {
         isBasicMode = false;
     }
 
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
     public interface MiniPlayerViewListener {
         int getBandsNumber();
     }

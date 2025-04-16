@@ -18,6 +18,7 @@ import java.util.List;
  * It allows users to create, edit, and delete playlists, as well as manage their contents.
  */
 public class PlaylistNavigatorView extends View {
+
     private PlaylistNavigatorViewListener listener;
     @FXML
     private ListView<Library> listView;

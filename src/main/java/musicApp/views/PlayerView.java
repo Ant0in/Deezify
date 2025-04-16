@@ -16,7 +16,9 @@ import javafx.scene.layout.Priority;
  * Class that represents the view of the music player.
  */
 public class PlayerView extends View {
+
     private PlayerViewListener listener;
+
     @FXML
     private Pane controls;
     @FXML
@@ -36,6 +38,9 @@ public class PlayerView extends View {
         yOffset = 0;
     }
 
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
     public interface PlayerViewListener {
         void close();
         Pane getControlPanelRoot();
@@ -49,10 +54,10 @@ public class PlayerView extends View {
     /**
      * Sets listener.
      *
-     * @param listener the listener
+     * @param _listener the listener
      */
-    public void setListener(PlayerViewListener listener) {
-        this.listener = listener;
+    public void setListener(PlayerViewListener _listener) {
+        listener = _listener;
     }
 
 
