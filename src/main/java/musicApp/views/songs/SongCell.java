@@ -2,7 +2,6 @@ package musicApp.views.songs;
 
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Pane;
-import musicApp.controllers.songs.SongCellController;
 import musicApp.models.Song;
 
 /**
@@ -21,8 +20,9 @@ public class SongCell extends ListCell<Song> {
      * Listener interface for handling song cell events.
      * Implement this interface to define the UI component and update functionality for a song cell.
      */
-    public interface SongCellListener{
+    public interface SongCellListener {
         void update(Song song);
+
         Pane getRoot();
     }
 

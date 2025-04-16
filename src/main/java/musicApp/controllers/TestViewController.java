@@ -5,7 +5,6 @@ import musicApp.utils.AlertService;
 import musicApp.views.TestView;
 
 
-
 public abstract class TestViewController<L, V extends TestView<L>> {
     /**
      * The View.

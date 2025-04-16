@@ -63,6 +63,7 @@
     -fx-border-width: 2px;
     -fx-text-fill: white;
 }
+
 .queueButton:disabled {
     -fx-opacity: 0.5;
     -fx-background-color: #555;
@@ -107,7 +108,7 @@
     -fx-background-color: #2f508e;
 }
 
-.pausebtn, .previousbtn, .nextbtn, .settingsbtn ,.shuffle-btn{
+.pausebtn, .previousbtn, .nextbtn, .settingsbtn, .shuffle-btn {
     -fx-background-color: transparent;
 }
 
@@ -122,7 +123,7 @@
 
 .volume {
     -default-track-color: grey;
-    -track-color: -default-track-color ;
+    -track-color: -default-track-color;
 }
 
 .volume .track {

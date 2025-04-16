@@ -1,20 +1,20 @@
 package musicApp.controllers.songs;
 
-import java.util.List;
-import java.util.Optional;
-
 import javafx.beans.property.StringProperty;
-import musicApp.controllers.ViewController;
 import musicApp.controllers.PlayerController;
+import musicApp.controllers.ViewController;
 import musicApp.models.Song;
 import musicApp.utils.lyrics.LyricsService;
 import musicApp.views.songs.LyricsView;
 import musicApp.views.songs.LyricsView.LyricsViewListener;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * The type Lyrics controller.
  */
-public class LyricsController extends ViewController<LyricsView> implements LyricsViewListener{
+public class LyricsController extends ViewController<LyricsView> implements LyricsViewListener {
 
     private final PlayerController playerController;
     private final LyricsService lyricsManager;
@@ -39,7 +39,7 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
      *
      * @return the string property
      */
-    public StringProperty getCurrentlyLoadedSongStringProperty(){
+    public StringProperty getCurrentlyLoadedSongStringProperty() {
         return playerController.getCurrentlyLoadedSongStringProperty();
     }
 
@@ -52,7 +52,7 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
     public List<String> getCurrentSongLyrics() {
         Song song = playerController.getCurrentlyLoadedSong();
         if (song == null) {
-            return List.of("No song loaded."); 
+            return List.of("No song loaded.");
         }
         return song.getLyrics();
     }
@@ -76,7 +76,7 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
             e.printStackTrace();
         }
         view.updateLyrics();
-}
+    }
 
     /**
      * Edit lyrics.
@@ -87,10 +87,10 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
         if (currentLyricsList != null && !currentLyricsList.isEmpty()) {
             initialText = String.join("\n", currentLyricsList);
         }
-        
+
         Optional<String> result = view.showEditLyricsDialog(initialText);
         result.ifPresent(newLyrics -> {
-            updateCurrentSongLyrics(newLyrics); 
+            updateCurrentSongLyrics(newLyrics);
             view.updateLyrics();
         });
     }

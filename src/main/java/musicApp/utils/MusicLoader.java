@@ -1,17 +1,18 @@
 package musicApp.utils;
 
+import musicApp.enums.SupportedFileType;
+import musicApp.exceptions.BadM3URadioException;
+import musicApp.models.Radio;
+import musicApp.models.Song;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import musicApp.exceptions.BadM3URadioException;
-import musicApp.enums.SupportedFileType;
-import musicApp.models.Radio;
-import java.util.ArrayList;
-import musicApp.models.Song;
 
 public class MusicLoader {
     /**
@@ -45,6 +46,7 @@ public class MusicLoader {
         }
         return songList;
     }
+
     /**
      * Retrieves all valid song file paths from the specified folder.
      *

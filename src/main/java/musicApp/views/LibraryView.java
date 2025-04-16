@@ -2,11 +2,10 @@ package musicApp.views;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.songs.SongCellController;
-import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.utils.LanguageManager;
 import musicApp.views.songs.SongCell;
@@ -20,7 +19,7 @@ import java.util.List;
 public class LibraryView extends SongContainerView {
 
     private LibraryViewListener listener;
-    
+
     @FXML
     private TextField songInput;
 
@@ -38,8 +37,11 @@ public class LibraryView extends SongContainerView {
      */
     public interface LibraryViewListener {
         void handleAddSong();
+
         void clearQueueSelection();
+
         List<Song> searchLibrary(String query);
+
         LibraryController getController();
     }
 
@@ -79,7 +81,6 @@ public class LibraryView extends SongContainerView {
             }
         });
     }
-
 
 
     /**

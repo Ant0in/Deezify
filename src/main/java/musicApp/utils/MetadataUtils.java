@@ -13,7 +13,6 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -103,11 +102,10 @@ public class MetadataUtils {
      * {@link Tag} and assigns them to the {@link Metadata} object. It also attempts to retrieve the cover artwork. If an error
      * occurs while retrieving user tags, an empty list is assigned instead.</p>
      *
-     * @param file The {@link AudioFile} associated with the tag, used to extract the duration.
+     * @param file     The {@link AudioFile} associated with the tag, used to extract the duration.
      * @param metadata The {@link Metadata} object that will be populated with the extracted tag values.
-     * @param tag The {@link Tag} containing the metadata values to be loaded.
+     * @param tag      The {@link Tag} containing the metadata values to be loaded.
      * @return The populated {@link Metadata} object with the extracted tag values.
-     *
      * @throws IllegalArgumentException if the file or metadata is {@code null}.
      */
     private Metadata loadTagValues(AudioFile file, Metadata metadata, Tag tag) {
@@ -129,6 +127,7 @@ public class MetadataUtils {
 
     /**
      * This method assigns default metadata to a radio file
+     *
      * @param fd : the File on which to read the metadata
      * @return : A metadata object loaded with the info from the m3u file
      */
@@ -138,7 +137,7 @@ public class MetadataUtils {
         metadata.setArtist("N/A");
         metadata.setGenre("Radio");
         metadata.setDuration(Duration.ZERO);
-    
+
         try (InputStream is = getClass().getResourceAsStream("/images/radio.png")) {
             if (is != null) {
                 metadata.setCoverFromBytes(is.readAllBytes());
@@ -148,9 +147,9 @@ public class MetadataUtils {
         } catch (IOException e) {
             System.err.println("Error while reading the image from radio cover : " + e.getMessage());
         }
-    
+
         return metadata;
-    }    
+    }
 
     /**
      * This method writes the passed metadata to the file at the given path
@@ -178,7 +177,7 @@ public class MetadataUtils {
      * artificially triggered during the normal operation of this method.</p>
      *
      * @param audioFile The {@link AudioFile} to which the tag will be created or updated.
-     * @param metadata The {@link Metadata} object containing the values to be written to the tag.
+     * @param metadata  The {@link Metadata} object containing the values to be written to the tag.
      * @return The updated {@link Tag} containing the metadata fields.
      * @throws FieldDataInvalidException If the tag data is invalid or inconsistent with expected field types.
      */

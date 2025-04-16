@@ -2,16 +2,16 @@ package musicApp.views.playlists;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import musicApp.utils.LanguageManager;
 import musicApp.views.View;
-import javafx.scene.Node;
 
 public class PlaylistContextMenuView extends View {
 
     private PlaylistContextMenuListener listener;
-    
+
     @FXML
     private ContextMenu contextMenu;
 
@@ -25,8 +25,11 @@ public class PlaylistContextMenuView extends View {
      */
     public interface PlaylistContextMenuListener {
         void deletePlaylist();
+
         void editPlaylist();
+
         void appendToQueue();
+
         void replaceQueue();
     }
 
@@ -38,7 +41,7 @@ public class PlaylistContextMenuView extends View {
     public void setListener(PlaylistContextMenuListener _listener) {
         listener = _listener;
     }
-    
+
 
     /**
      * Initialize the view.

@@ -24,12 +24,16 @@ public class ToolBarController extends ViewController<ToolBarView> implements To
      * Open settings.
      */
     @Override
-    public void openSettings(){ playerController.openSettings(); }
+    public void openSettings() {
+        playerController.openSettings();
+    }
 
     /**
      * Exit app properly.
      */
     @Override
-    public void exitApp() { System.exit(0); }
+    public void exitApp() {
+        System.exit(0);
+    }
 
 }

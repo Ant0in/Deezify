@@ -13,7 +13,10 @@ import javafx.scene.layout.StackPane;
 import musicApp.utils.LanguageManager;
 import musicApp.views.View;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -55,9 +58,13 @@ public class EditMetadataView extends View {
      */
     public interface EditMetadataViewListener {
         Optional<String> getArtistAutoCompletion(String input);
+
         Optional<String> getTagAutoCompletion(String input);
+
         void handleChooseCover();
+
         void handleSaveMetadata(String title, String artist, String genre, Set<String> userTags);
+
         void handleCancel();
     }
 
@@ -94,7 +101,7 @@ public class EditMetadataView extends View {
     /**
      * Initializes the auto-completion fields for artist and tag input.
      */
-    private void initAutoCompletionFields(){
+    private void initAutoCompletionFields() {
         initArtistAutoCompletion();
         initTagAutoCompletion();
     }
@@ -102,8 +109,8 @@ public class EditMetadataView extends View {
     /**
      * Initializes the auto-completion functionality for a given text field.
      *
-     * @param input              The text field to which auto-completion is applied.
-     * @param autoCompletion     The text field that displays the suggested completion.
+     * @param input                  The text field to which auto-completion is applied.
+     * @param autoCompletion         The text field that displays the suggested completion.
      * @param getSuggestedCompletion A function that provides the suggested completion based on the current input.
      */
     private void initAutoCompletion(TextField input, TextField autoCompletion, Function<String, Optional<String>> getSuggestedCompletion) {

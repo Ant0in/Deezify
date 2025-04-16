@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.VBox?>
-
-<ContextMenu       xmlns="http://javafx.com/javafx/23.0.1"
-                   xmlns:fx="http://javafx.com/fxml/1"
-                   fx:id="contextMenu" >
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<ContextMenu xmlns="http://javafx.com/javafx/23.0.1"
+             xmlns:fx="http://javafx.com/fxml/1"
+             fx:id="contextMenu">
     <items>
-        <MenuItem fx:id="editMetadataItem" />
-        <Menu fx:id="addToPlaylistMenu" />
-        <MenuItem fx:id="removeFromPlaylistMenu" />
+        <MenuItem fx:id="editMetadataItem"/>
+        <Menu fx:id="addToPlaylistMenu"/>
+        <MenuItem fx:id="removeFromPlaylistMenu"/>
     </items>
 </ContextMenu>

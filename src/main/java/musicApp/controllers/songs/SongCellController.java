@@ -3,8 +3,8 @@ package musicApp.controllers.songs;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import musicApp.controllers.ViewController;
 import musicApp.controllers.LibraryController;
+import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
@@ -24,7 +24,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
 
     private final LibraryController libraryController;
     private Song song;
-    private SongContextMenuController contextMenuController;
+    private final SongContextMenuController contextMenuController;
 
 
     /**
@@ -62,7 +62,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
     }
 
     public void showContextMenu(double x, double y) {
-        contextMenuController.showAt(x,y);
+        contextMenuController.showAt(x, y);
     }
 
     /**

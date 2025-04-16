@@ -5,8 +5,8 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.LyricsNotFoundException;
-import musicApp.utils.lyrics.LyricsService;
 import musicApp.utils.MetadataUtils;
+import musicApp.utils.lyrics.LyricsService;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class Song {
-    
+
     @Expose
     private final Path filePath;
     private Metadata metadata;
@@ -54,6 +54,7 @@ public class Song {
 
     /**
      * Get the path to the song as a string.
+     *
      * @return The path to the song as a string.
      */
     public String getSource() throws BadSongException {
@@ -98,6 +99,7 @@ public class Song {
 
     /**
      * Get the genre of the song.
+     *
      * @return The genre of the song.
      */
     public String getGenre() {
@@ -115,6 +117,7 @@ public class Song {
 
     /**
      * Get the duration of the song.
+     *
      * @return The duration of the song.
      */
     public Duration getDuration() {
@@ -132,6 +135,7 @@ public class Song {
 
     /**
      * Get the cover image of the song.
+     *
      * @return The cover image of the song in bytes.
      */
     public byte[] getCover() {
@@ -149,6 +153,7 @@ public class Song {
 
     /**
      * Get the user tags of the song.
+     *
      * @return The user tags of the song.
      */
     public ArrayList<String> getUserTags() {
@@ -166,6 +171,7 @@ public class Song {
 
     /**
      * Get the Cover image of the song.
+     *
      * @return The cover image of the song.
      */
     public Image getCoverImage() {
@@ -182,6 +188,7 @@ public class Song {
 
     /**
      * Get the metadata of the song.
+     *
      * @return The metadata of the song.
      */
     public Metadata getMetadata() {
@@ -198,6 +205,7 @@ public class Song {
 
     /**
      * Set the lyrics entry for this song.
+     *
      * @param entry The lyrics entry.
      */
     public void setLyricsEntry(SongLyrics entry) {
@@ -206,15 +214,17 @@ public class Song {
 
     /**
      * Get the plain text lyrics for this song.
+     *
      * @return The lyrics of the song.
      */
     public List<String> getLyrics() {
         return lyricsEntry.map(SongLyrics::getLyrics)
                 .orElseGet(ArrayList::new);
     }
-    
+
     /**
      * Get the karaoke lines for this song.
+     *
      * @return List of KaraokeLine objects or empty list if no karaoke lyrics available.
      */
     public List<KaraokeLine> getKaraokeLines() throws LyricsNotFoundException {
@@ -223,6 +233,7 @@ public class Song {
 
     /**
      * Get the title and artist of the song.
+     *
      * @return The title and artist of the song.
      */
     @Override
@@ -232,6 +243,7 @@ public class Song {
 
     /**
      * Checks if the song is equal to another song by comparing their file paths.
+     *
      * @param obj The object to compare with.
      */
     @Override
@@ -244,6 +256,7 @@ public class Song {
 
     /**
      * Search for text in the lyrics.
+     *
      * @param text The text to search for.
      * @return True if the text is found in the lyrics, false otherwise.
      */
@@ -253,11 +266,12 @@ public class Song {
         }
         String lowerText = text.toLowerCase();
         return getLyrics().stream()
-            .anyMatch(line -> line.toLowerCase().contains(lowerText));
+                .anyMatch(line -> line.toLowerCase().contains(lowerText));
     }
 
     /**
      * Check if the song contains a specific text in its metadata or lyrics.
+     *
      * @param text The text to search for.
      * @return True if the text is found in the metadata or lyrics, false otherwise.
      */

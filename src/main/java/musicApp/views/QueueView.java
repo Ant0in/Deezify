@@ -3,17 +3,12 @@ package musicApp.views;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.input.*;
-import musicApp.controllers.QueueController;
-import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.utils.LanguageManager;
-
-import java.util.List;
 
 /**
  * The Queue view.
@@ -38,10 +33,15 @@ public class QueueView extends SongContainerView {
      */
     public interface QueueViewListener {
         void handleAddSong();
+
         void handleDeleteSong();
+
         void handleClearQueue();
+
         void clearPlayListViewSelection();
+
         void reorderQueue(int fromIndex, int toIndex);
+
         BooleanBinding isPlaylistItemSelected();
     }
 

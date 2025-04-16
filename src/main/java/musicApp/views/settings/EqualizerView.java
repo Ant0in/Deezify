@@ -32,11 +32,16 @@ public class EqualizerView extends View {
      * Implement this interface to provide the necessary actions and configuration for each equalizer band.
      */
     public interface EqualizerViewListener {
-        void close() ;
+        void close();
+
         void handleCancel();
+
         int getBandFrequency(int bandIndex);
+
         double getMaxGainDB();
+
         double getMinGainDB();
+
         double getEqualizerBandGain(int bandIndex);
     }
 

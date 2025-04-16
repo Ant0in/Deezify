@@ -93,7 +93,9 @@ public class MiniPlayerView extends View {
      *
      * @return the scene
      */
-    public Scene getScene() { return scene; }
+    public Scene getScene() {
+        return scene;
+    }
 
     /**
      * Update song properties.
@@ -135,7 +137,7 @@ public class MiniPlayerView extends View {
     /**
      * Draw a frame for the audio spectrum visualizer.
      */
-    private void drawFrame( List<Float> values) {
+    private void drawFrame(List<Float> values) {
         int numBars = listener.getBandsNumber();
         double barWidth = canvas.getWidth() / numBars; // Width of each bar
         double canvasHeight = canvas.getHeight();
@@ -194,8 +196,6 @@ public class MiniPlayerView extends View {
             gc.strokeLine(xStart, yStart, xEnd, yEnd); // Draw a line from the center to the outer edge (the bar)
         }
     }
-
-
 
 
 }

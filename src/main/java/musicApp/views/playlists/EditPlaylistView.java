@@ -23,7 +23,7 @@ import java.nio.file.Path;
  */
 public class EditPlaylistView extends View {
 
-    private EditPlaylistViewListener listener ;
+    private EditPlaylistViewListener listener;
 
     @FXML
     private Label nameLabel, coverLabel;
@@ -43,8 +43,11 @@ public class EditPlaylistView extends View {
      */
     public interface EditPlaylistViewListener {
         void handleSave(String name, Path imagePath);
+
         void close();
+
         boolean isCreation();
+
         Stage getStage();
     }
 

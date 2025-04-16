@@ -4,12 +4,12 @@ import musicApp.exceptions.BadM3URadioException;
 import musicApp.exceptions.BadSongException;
 import musicApp.models.AudioPlayer;
 import musicApp.models.Radio;
-import musicApp.models.Song;
 import org.junit.Test;
 
 import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestAudioPlayer {
     @Test

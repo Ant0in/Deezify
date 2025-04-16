@@ -1,23 +1,24 @@
 package musicApp.views.songs;
 
+import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.geometry.Pos;
-import java.util.List;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import java.io.File;
-import java.nio.file.Path;
-import java.util.Optional;
-import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
-import musicApp.views.View;
+import musicApp.controllers.songs.KaraokeController;
 import musicApp.models.KaraokeLine;
 import musicApp.utils.LanguageManager;
-import musicApp.controllers.songs.KaraokeController;
+import musicApp.views.View;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The LyricsView class is responsible for displaying and updating
@@ -25,7 +26,7 @@ import musicApp.controllers.songs.KaraokeController;
  * actions to the LyricsController.
  */
 public class LyricsView extends View {
-    
+
     private LyricsViewListener listener;
 
     @FXML
@@ -41,7 +42,7 @@ public class LyricsView extends View {
     private Button simpleLyricsButton, karaokeLyricsButton, karaokeAddLyricsButton, karaokeEditButton;
 
     @FXML
-    private ButtonType yesButton, noButton, cancelButton,saveButton;
+    private ButtonType yesButton, noButton, cancelButton, saveButton;
 
     @FXML
     private ScrollPane scrollPane, karaokeScrollPane;
@@ -54,8 +55,10 @@ public class LyricsView extends View {
      * retrieving the current song lyrics, and accessing the currently loaded song property.
      */
     public interface LyricsViewListener {
-        void editLyrics();        
+        void editLyrics();
+
         List<String> getCurrentSongLyrics();
+
         StringProperty getCurrentlyLoadedSongStringProperty();
     }
 
@@ -140,7 +143,7 @@ public class LyricsView extends View {
      * Initializes the button types used in confirmation dialogs.
      * Sets up the Yes, No, Cancel, and Save button types with localized text.
      */
-    private void initButtonsTypes(){
+    private void initButtonsTypes() {
         LanguageManager lang = LanguageManager.getInstance();
         yesButton = new ButtonType(lang.get("button.yes"), ButtonBar.ButtonData.YES);
         noButton = new ButtonType(lang.get("button.no"), ButtonBar.ButtonData.NO);
@@ -210,7 +213,6 @@ public class LyricsView extends View {
 
     /**
      * Displays the lyrics along with an edit header.
-
      */
     private void displayLyricsWithHeader(List<String> lyrics) {
         HBox header = new HBox();

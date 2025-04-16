@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
-
-<HBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS"  stylesheets="@../css/style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS" stylesheets="@../css/style2.css"
+      xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <ImageView fx:id="imageCover" fitHeight="57.0" fitWidth="60.0" preserveRatio="true">
         <clip>
-            <Rectangle arcHeight="10" arcWidth="10" height="${imageCover.fitHeight}" width="${imageCover.fitWidth}" />
+            <Rectangle arcHeight="10" arcWidth="10" height="${imageCover.fitHeight}" width="${imageCover.fitWidth}"/>
         </clip>
     </ImageView>
     <VBox alignment="CENTER_LEFT">
-        <Label fx:id="playlistNameLabel" styleClass="currentSong" text="None" />
-        <Label fx:id="playlistSizeLabel" styleClass="currentArtist" />
+        <Label fx:id="playlistNameLabel" styleClass="currentSong" text="None"/>
+        <Label fx:id="playlistSizeLabel" styleClass="currentArtist"/>
     </VBox>
 </HBox>

@@ -57,6 +57,7 @@ public class DataProvider {
         settingsFile = settingFolder.resolve("settings.json");
         playlistsFile = settingFolder.resolve("playlists.json");
     }
+
     /**
      * Creates a folder at the specified path if it does not already exist.
      *
@@ -142,6 +143,7 @@ public class DataProvider {
         }
         return getSettings(settingsFile);
     }
+
     /**
      * Retrieves the settings from a JSON file located at the specified path.
      *
@@ -189,7 +191,7 @@ public class DataProvider {
      * @param musicDirectory The directory from which to load the songs. This is usually the user's default
      *                       music folder.
      * @return A {@link Library} containing all songs from the specified directory, or an empty library
-     *         if loading fails due to an IOException.
+     * if loading fails due to an IOException.
      */
     public Library loadMainLibrary(Path musicDirectory) {
         try {
@@ -209,9 +211,9 @@ public class DataProvider {
      * <p>Then, it loads the playlists from the playlists file, if available, and combines both the main library and the playlists into a single list.</p>
      *
      * @return A list containing the main library followed by the playlists.
-     *         The main library is loaded first, followed by any existing playlists.
+     * The main library is loaded first, followed by any existing playlists.
      */
-    public List<Library> loadAllLibraries(){
+    public List<Library> loadAllLibraries() {
         Library mainLibrary = loadMainLibrary(readSettings().getMusicFolder());
         List<Library> playlists = readPlaylists();
         List<Library> libraries = new ArrayList<>();

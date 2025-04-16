@@ -5,13 +5,14 @@ import musicApp.exceptions.LyricsOperationException;
 import musicApp.models.Song;
 import musicApp.utils.lyrics.LyricsRepository;
 import musicApp.utils.lyrics.LyricsService;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -33,7 +34,7 @@ public class TestLyricsService {
         dataProvider = new DataProvider();
         lyricsDataAccess = new LyricsRepository(new DataProvider());
         lyricsManager = new LyricsService();
-        lyricsDir = lyricsDataAccess.getLyricsDir(); 
+        lyricsDir = lyricsDataAccess.getLyricsDir();
 
         Files.createDirectories(lyricsDir);
 

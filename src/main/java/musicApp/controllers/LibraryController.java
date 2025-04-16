@@ -280,5 +280,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         return library.getTagAutoCompletion(input);
     }
 
-    public LibraryController getController() {return this;}
+    public LibraryController getController() {
+        return this;
+    }
 }

@@ -2,9 +2,6 @@ package musicApp.utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
 public class AlertService {
     private final LanguageManager languageManager = LanguageManager.getInstance();
@@ -26,7 +23,7 @@ public class AlertService {
     /**
      * Displays an alert dialog to show information about an exception.
      *
-     * @param ex The exception to display. If {@code null}, the alert will display a default message indicating no exception is available.
+     * @param ex        The exception to display. If {@code null}, the alert will display a default message indicating no exception is available.
      * @param alertType The type of alert to show (e.g., ERROR, WARNING, INFO).
      */
     public void showExceptionAlert(Exception ex, AlertType alertType) {
@@ -39,6 +36,7 @@ public class AlertService {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
     /**
      * Retrieves the title for the alert based on the specified alert type.
      *
@@ -54,6 +52,7 @@ public class AlertService {
             default -> languageManager.get("alert.title.default");
         };
     }
+
     /**
      * Retrieves the header text for the alert based on the specified alert type.
      *

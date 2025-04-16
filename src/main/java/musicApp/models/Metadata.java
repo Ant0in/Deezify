@@ -138,7 +138,7 @@ public class Metadata {
 
     /**
      * Sets the cover image from a byte array.
-     * 
+     *
      * @param bytes The byte array representing the cover image.
      */
     public void setCoverFromBytes(byte[] bytes) {
@@ -162,7 +162,7 @@ public class Metadata {
 
     /**
      * Get the user tags.
-     * 
+     *
      * @return The user tags associated with the song.
      */
     public ArrayList<String> getUserTags() {
@@ -171,6 +171,7 @@ public class Metadata {
 
     /**
      * Sets the user tags.
+     *
      * @param _userTags The new user tags to set.
      */
     public void setUserTags(ArrayList<String> _userTags) {

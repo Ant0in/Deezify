@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * The type Edit metadata controller.
  */
-public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataViewListener{
+public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataViewListener {
     private File selectedFile;
     private final Song song;
     private final Stage editStage;
@@ -151,7 +151,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      * @param input the input
      * @return the optional
      */
-    public Optional<String> getArtistAutoCompletion(String input){
+    public Optional<String> getArtistAutoCompletion(String input) {
         return songCellController.getArtistAutoCompletion(input);
     }
 
@@ -161,7 +161,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      * @param input the input
      * @return the optional
      */
-    public Optional<String> getTagAutoCompletion(String input){
+    public Optional<String> getTagAutoCompletion(String input) {
         return songCellController.getTagAutoCompletion(input);
     }
 

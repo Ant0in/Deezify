@@ -33,6 +33,7 @@ public class ToolBarView extends View {
      */
     public interface ToolBarViewListener {
         void openSettings();
+
         void exitApp();
     }
 

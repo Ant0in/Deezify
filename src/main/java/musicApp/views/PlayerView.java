@@ -5,11 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import musicApp.utils.LanguageManager;
-import javafx.scene.layout.Priority;
 
 /**
  * PlayerView
@@ -43,11 +43,17 @@ public class PlayerView extends View {
      */
     public interface PlayerViewListener {
         void close();
+
         Pane getControlPanelRoot();
+
         Pane getToolBarRoot();
+
         Pane getMainLibraryRoot();
+
         Pane getPlaylistNavigatorRoot();
+
         Pane getQueueRoot();
+
         Pane getLyricsRoot();
     }
 

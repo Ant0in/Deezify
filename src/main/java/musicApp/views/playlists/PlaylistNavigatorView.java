@@ -27,7 +27,6 @@ public class PlaylistNavigatorView extends View {
     private Button createPlaylist;
 
 
-
     public PlaylistNavigatorView() {
     }
 
@@ -38,8 +37,11 @@ public class PlaylistNavigatorView extends View {
      */
     public interface PlaylistNavigatorViewListener {
         void openCreatePlaylistDialog();
+
         void setSelectedLibrary(Library library);
+
         void showContextMenu(double x, double y, Library library);
+
         PlaylistNavigatorController getController();
     }
 

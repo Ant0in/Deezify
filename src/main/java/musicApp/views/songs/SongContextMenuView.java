@@ -29,8 +29,11 @@ public class SongContextMenuView extends View {
      */
     public interface SongContextMenuViewListener {
         void handleEditMetadata();
+
         boolean isShowingMainLibrary();
+
         void handleRemoveFromPlaylist();
+
         void populatePlaylistMenuItems(Menu addToMenu, Menu removeFromMenu);
     }
 
@@ -59,7 +62,7 @@ public class SongContextMenuView extends View {
         editMetadataItem.setText(LanguageManager.getInstance().get("button.edit_metadata"));
         addToPlaylistMenu.setText(LanguageManager.getInstance().get("button.add_to_playlist"));
         if (removeFromPlaylistMenu instanceof Menu) {
-            ((Menu) removeFromPlaylistMenu).setText(LanguageManager.getInstance().get("button.remove_from_playlist"));
+            removeFromPlaylistMenu.setText(LanguageManager.getInstance().get("button.remove_from_playlist"));
         } else {
             removeFromPlaylistMenu.setText(LanguageManager.getInstance().get("button.remove_from_playlist"));
         }
@@ -78,7 +81,7 @@ public class SongContextMenuView extends View {
             contextMenu.getItems().add(removeFromPlaylistMenu);
 
         } else {
-            ((MenuItem) removeFromPlaylistMenu).setOnAction(_ -> listener.handleRemoveFromPlaylist());
+            removeFromPlaylistMenu.setOnAction(_ -> listener.handleRemoveFromPlaylist());
         }
         contextMenu.setOnShowing(e -> updateMenuItems());
     }

@@ -25,6 +25,7 @@ public abstract class SongContainerView extends View {
      */
     public interface SongContainerViewListener {
         void handlePlaySong();
+
         List<Song> toList();
     }
 

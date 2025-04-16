@@ -4,7 +4,6 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.scene.control.Alert;
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.views.LibraryView;
 import musicApp.views.QueueView;
 
 /**

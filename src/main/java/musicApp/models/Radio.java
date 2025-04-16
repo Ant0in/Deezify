@@ -1,17 +1,15 @@
 package musicApp.models;
 
-import musicApp.exceptions.BadM3URadioException;
 import javafx.scene.image.Image;
+import musicApp.exceptions.BadM3URadioException;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Objects;
-import java.util.List;
-import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
 
 
 public class Radio extends Song {
@@ -20,6 +18,7 @@ public class Radio extends Song {
 
     /**
      * Constructor for radio.
+     *
      * @param filePath, the path to the radio file
      * @throws BadM3URadioException Thrown if the M3U file is not valid.
      */
@@ -30,6 +29,7 @@ public class Radio extends Song {
 
     /**
      * Checks if the line looks like a URL.
+     *
      * @param line the line to check
      * @return true if the line looks like a URL, false otherwise
      */
@@ -46,6 +46,7 @@ public class Radio extends Song {
 
     /**
      * Reads an M3U file and extract the web url to the radio from it.
+     *
      * @param m3uFile the path to the M3U file
      * @return the url as a string.
      * @throws BadM3URadioException Thrown if the M3U file is not valid.
@@ -68,14 +69,16 @@ public class Radio extends Song {
 
     /**
      * Sets the radio web url.
+     *
      * @param _webUrl the new web url to set
      */
     public void setWebUrl(String _webUrl) {
         webUrl = _webUrl;
     }
-    
+
     /**
      * Returns the radio web url.
+     *
      * @return the web url as a string.
      */
     @Override
@@ -84,19 +87,21 @@ public class Radio extends Song {
             throw new BadM3URadioException("The M3U file is empty or does not contain a valid URL.");
         }
         return webUrl;
-    } 
+    }
 
     /**
      * Returns the radio cover image.
+     *
      * @return the cover image as an Image object.
      */
     @Override
     public Image getCoverImage() {
         return new Image(Objects.requireNonNull(getClass().getResource("/images/radio.png")).toExternalForm());
     }
-    
+
     /**
      * Returns the radio type.
+     *
      * @return false, as this is not a song.
      */
     @Override

@@ -24,8 +24,8 @@ public class LanguageManager {
 
     public LanguageManager() {
         // Initialize non-static variables in the constructor
-       prefs = Preferences.userNodeForPackage(LanguageManager.class);
-       BUNDLE_NAMES = new String[]{
+        prefs = Preferences.userNodeForPackage(LanguageManager.class);
+        BUNDLE_NAMES = new String[]{
                 "lang.messages",
                 "lang.general",
                 "lang.buttons",
@@ -33,8 +33,8 @@ public class LanguageManager {
                 "lang.default_values",
                 "lang.create_playlist"
         };
-       bundles = new ResourceBundle[BUNDLE_NAMES.length];
-       languageProperty = new SimpleStringProperty();
+        bundles = new ResourceBundle[BUNDLE_NAMES.length];
+        languageProperty = new SimpleStringProperty();
 
         // Initialize language settings based on saved preferences
         String savedLanguageString = prefs.get("language", Locale.getDefault().getLanguage());
@@ -105,7 +105,9 @@ public class LanguageManager {
         return Language.getSupportedLanguages().contains(language);
     }
 
-    public StringProperty getLanguageProperty() {return languageProperty;}
+    public StringProperty getLanguageProperty() {
+        return languageProperty;
+    }
 }
 
 

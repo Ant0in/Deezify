@@ -194,7 +194,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView> imple
      * Load and Play the currently selected song.
      *
      * @param song the song
-     * @throws EqualizerGainException 
+     * @throws EqualizerGainException
      */
     public void playCurrent(Song song) throws BadSongException {
         audioPlayer.loadSong(song);
@@ -219,7 +219,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView> imple
      * Set the equalizer bands.
      *
      * @param equalizerBandsGain The gain of the equalizer bands.
-     * @throws EqualizerGainException 
+     * @throws EqualizerGainException
      */
     public void setEqualizerBands(List<Double> equalizerBandsGain) throws EqualizerGainException {
         audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);

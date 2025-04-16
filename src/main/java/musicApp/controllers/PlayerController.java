@@ -1,29 +1,27 @@
 package musicApp.controllers;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
-import musicApp.utils.FileDialogHelper;
-import musicApp.utils.FileManager;
-import musicApp.views.PlayerView;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
+import musicApp.utils.FileDialogHelper;
+import musicApp.utils.FileManager;
+import musicApp.views.PlayerView;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
-
-import javafx.scene.control.Alert;
 
 /**
  * Controller class for the music player.

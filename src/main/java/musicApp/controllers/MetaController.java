@@ -1,14 +1,11 @@
 package musicApp.controllers;
 
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Library;
 import musicApp.models.Settings;
-import musicApp.models.Song;
 import musicApp.utils.AlertService;
 import musicApp.utils.DataProvider;
-import musicApp.utils.MusicLoader;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -25,6 +22,7 @@ public class MetaController {
     private final PlayerController playerController;
     private final SettingsController settingsController;
     private final List<Library> playlists;
+
     /**
      * Instantiates a new Meta controller.
      *
@@ -87,6 +85,7 @@ public class MetaController {
 
     /**
      * Get the main library.
+     *
      * @return the main library
      */
     public Library getMainLibrary() {

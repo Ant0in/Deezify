@@ -8,10 +8,11 @@ import musicApp.views.MiniPlayerView;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 /**
  * Controller managing the MiniPlayerView and processing audio spectrum data received on `spectrumDataUpdate`
  */
-public class MiniPlayerController extends ViewController<MiniPlayerView> implements MiniPlayerView.MiniPlayerViewListener,AudioSpectrumListener {
+public class MiniPlayerController extends ViewController<MiniPlayerView> implements MiniPlayerView.MiniPlayerViewListener, AudioSpectrumListener {
 
     private static final int DEFAULT_BANDS_NUMBER = 128;
     private static final float MIN_DECIBEL_LEVEL = -60f;

@@ -7,7 +7,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.stage.Stage;
-import musicApp.controllers.settings.SettingsController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.utils.FileDialogHelper;
@@ -52,9 +51,13 @@ public class SettingsView extends View {
      */
     public interface SettingsViewListener {
         void handleSave(Language language, double balance, Path musicDirectory);
+
         Path getMusicDirectory();
+
         double getBalance();
+
         void openEqualizer();
+
         void handleCancel();
     }
 
@@ -122,7 +125,7 @@ public class SettingsView extends View {
      */
     private void initSlider() {
         balanceSlider.setValue(listener.getBalance());
-        balanceLabel.setText(String.format("%.2f",listener.getBalance()));
+        balanceLabel.setText(String.format("%.2f", listener.getBalance()));
         balanceSlider.valueProperty().addListener((_, _, newVal)
                 -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
     }

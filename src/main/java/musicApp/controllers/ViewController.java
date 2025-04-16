@@ -54,7 +54,6 @@ public abstract class ViewController<V extends View> {
     }
 
 
-
     /**
      * Gets root.
      *

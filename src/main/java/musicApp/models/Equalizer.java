@@ -1,7 +1,6 @@
 package musicApp.models;
 
 import com.google.gson.annotations.Expose;
-
 import javafx.scene.media.EqualizerBand;
 
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ public class Equalizer {
 
     /**
      * Constructor for Equalizer with specified bands gain.
+     *
      * @param bandsGain
      */
     public Equalizer(List<Double> bandsGain) {
@@ -37,6 +37,7 @@ public class Equalizer {
 
     /**
      * Get the number of bands in the equalizer.
+     *
      * @return the number of bands
      */
     private int getBandsSize() {
@@ -45,8 +46,9 @@ public class Equalizer {
 
     /**
      * Check if the band index and gain are valid.
+     *
      * @param bandIndex Index of the band to check
-     * @param gain Gain value to check
+     * @param gain      Gain value to check
      */
     private void checkBand(int bandIndex, double gain) {
         checkBandIndex(bandIndex);
@@ -57,6 +59,7 @@ public class Equalizer {
 
     /**
      * Check if the band index is valid.
+     *
      * @param bandIndex Index of the band to check
      */
     private void checkBandIndex(int bandIndex) {
@@ -67,6 +70,7 @@ public class Equalizer {
 
     /**
      * Check if the bands gain list is valid.
+     *
      * @param bandsGain List of bands gain to check
      */
     private void checkBandsGain(List<Double> bandsGain) {
@@ -77,9 +81,10 @@ public class Equalizer {
             checkBand(i, bandsGain.get(i));
         }
     }
-    
+
     /**
      * Get the gain of a specific band.
+     *
      * @param bandIndex Index of the band to get the gain for
      * @return The gain of the band at the specified index
      */
@@ -89,8 +94,9 @@ public class Equalizer {
 
     /**
      * Set the gain of a specific band.
+     *
      * @param bandIndex Index of the band to set the gain for
-     * @param gain The gain value to set for the band at the specified index
+     * @param gain      The gain value to set for the band at the specified index
      */
     public void setBandGain(int bandIndex, double gain) {
         checkBand(bandIndex, gain);
@@ -99,6 +105,7 @@ public class Equalizer {
 
     /**
      * Get the list of bands gain.
+     *
      * @return the list of bands gain
      */
     public List<Double> getBandsGain() {
@@ -107,6 +114,7 @@ public class Equalizer {
 
     /**
      * Set the list of bands gain.
+     *
      * @param _bandsGain the new list of bands gain
      */
     private void setBandsGain(List<Double> _bandsGain) {
@@ -115,6 +123,7 @@ public class Equalizer {
 
     /**
      * Get the maximum gain in decibels.
+     *
      * @return the maximum gain in decibels
      */
     public double getMaxGainDB() {
@@ -123,14 +132,16 @@ public class Equalizer {
 
     /**
      * Get the minimum gain in decibels.
+     *
      * @return the minimum gain in decibels
      */
     public double getMinGainDB() {
         return MIN_GAIN_DB;
     }
-    
+
     /**
      * Get the frequency of a specific band.
+     *
      * @param bandIndex Index of the band to get the frequency for
      * @return the frequency of the band at the specified index
      */
@@ -140,6 +151,7 @@ public class Equalizer {
 
     /**
      * Get the list of bands frequency.
+     *
      * @return the list of bands frequency
      */
     @Override

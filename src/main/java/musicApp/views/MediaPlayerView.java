@@ -48,19 +48,33 @@ public class MediaPlayerView extends View {
      */
     public interface MediaPlayerViewListener {
         void handlePauseSong();
+
         void handleNextSong();
+
         void handlePreviousSong();
+
         void toggleShuffle();
+
         void toggleMiniPlayer();
+
         void seek(double duration);
+
         void changeSpeed(double speed);
+
         void toggleLyrics(boolean show);
+
         BooleanProperty isPlaying();
+
         DoubleProperty progressProperty();
+
         Duration getCurrentTime();
+
         Duration getTotalDuration();
+
         DoubleProperty volumeProperty();
+
         Song getLoadedSong();
+
         StringProperty currentSongProperty();
     }
 
@@ -92,7 +106,7 @@ public class MediaPlayerView extends View {
         previousSongButton.setOnAction(_ -> listener.handlePreviousSong());
         shuffleToggle.setOnAction(_ -> listener.toggleShuffle());
         lyricsToggle.setOnAction(_ -> listener.toggleLyrics(lyricsToggle.isSelected()));
-        miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer() );
+        miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer());
     }
 
     /**
@@ -345,7 +359,7 @@ public class MediaPlayerView extends View {
      * Enables or disables controls depending on whether a valid song is loaded.
      */
     private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle);
+        List<Control> controls = Arrays.asList(pauseSongButton, nextSongButton, previousSongButton, shuffleToggle, speedBox, volumeSlider, lyricsToggle);
         updateControlsState(controls, true);
         listener.currentSongProperty().addListener((_, _, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
@@ -365,7 +379,7 @@ public class MediaPlayerView extends View {
      * Utility method to enable/disable and apply styles to a list of controls.
      *
      * @param controls the controls to update
-     * @param disable whether to disable them
+     * @param disable  whether to disable them
      */
     private void updateControlsState(List<Control> controls, boolean disable) {
         for (Control c : controls) {

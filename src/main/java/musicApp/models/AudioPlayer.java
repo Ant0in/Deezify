@@ -1,17 +1,16 @@
 package musicApp.models;
 
 import javafx.beans.property.*;
+import javafx.scene.control.Alert;
 import javafx.scene.media.*;
 import javafx.util.Duration;
+import musicApp.exceptions.BadSongException;
+import musicApp.exceptions.EqualizerGainException;
+import musicApp.utils.AlertService;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import musicApp.exceptions.BadSongException;
-import musicApp.exceptions.EqualizerGainException;
-import musicApp.utils.AlertService;
-import javafx.scene.control.Alert;
 
 /**
  * AudioPlayer
@@ -96,7 +95,7 @@ public class AudioPlayer {
     /**
      * Apply the equalizer bands gain to the media player.
      */
-    private void applyEqualizerBandsGain() throws EqualizerGainException {      
+    private void applyEqualizerBandsGain() throws EqualizerGainException {
         AudioEqualizer audioEqualizer = mediaPlayer.getAudioEqualizer();
         if (audioEqualizer == null) {
             throw new EqualizerGainException("No audio equalizer available");
@@ -110,6 +109,7 @@ public class AudioPlayer {
 
     /**
      * Update the equalizer bands gain.
+     *
      * @param _equalizerBandsGain The new equalizer bands gain.
      */
     public void updateEqualizerBandsGain(List<Double> _equalizerBandsGain) throws EqualizerGainException {
@@ -154,7 +154,9 @@ public class AudioPlayer {
      *
      * @return The current time of the song.
      */
-    public Duration getCurrentTime() { return (mediaPlayer != null) ? mediaPlayer.getCurrentTime() : Duration.ZERO; }
+    public Duration getCurrentTime() {
+        return (mediaPlayer != null) ? mediaPlayer.getCurrentTime() : Duration.ZERO;
+    }
 
     /**
      * Get the total duration of the song.

@@ -27,6 +27,7 @@ public class PlaylistCell extends ListCell<Library> {
      */
     public interface PlaylistCellListener {
         Pane getRoot();
+
         void update(Library library);
     }
 

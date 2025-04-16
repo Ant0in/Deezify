@@ -3,21 +3,17 @@ package musicApp.controllers.songs;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
-
 import musicApp.controllers.PlayerController;
 import musicApp.exceptions.LyricsNotFoundException;
-import musicApp.exceptions.LyricsOperationException;
-import musicApp.models.Song;
 import musicApp.models.KaraokeLine;
+import musicApp.models.Song;
 import musicApp.utils.AlertService;
 import musicApp.utils.lyrics.LyricsService;
 import musicApp.views.songs.LyricsView;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This controller handles the synchronization of karaoke lines
@@ -98,7 +94,7 @@ public class KaraokeController {
         boolean overwriteTxt;
 
         if (txtExists) {
-            Optional<Boolean> userChoice =view.showOverwriteTxtConfirmation();
+            Optional<Boolean> userChoice = view.showOverwriteTxtConfirmation();
             if (userChoice.isEmpty()) return Optional.empty();
             overwriteTxt = userChoice.get();
         } else {

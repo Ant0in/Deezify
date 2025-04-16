@@ -13,7 +13,7 @@ import musicApp.views.View;
 public class PlaylistCellView extends View {
 
     private PlaylistCellViewListener listener;
-    
+
     @FXML
     private ImageView imageCover;
     @FXML
@@ -25,6 +25,7 @@ public class PlaylistCellView extends View {
      */
     public interface PlaylistCellViewListener {
         Library getLibrary();
+
         String getLibraryName();
     }
 
@@ -36,7 +37,7 @@ public class PlaylistCellView extends View {
     public void setListener(PlaylistCellViewListener _listener) {
         listener = _listener;
     }
-    
+
     /**
      * Initializes the PlaylistCellView.
      * This method is called to set up the view when it is created.
