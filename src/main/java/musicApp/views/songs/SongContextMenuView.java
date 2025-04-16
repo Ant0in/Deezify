@@ -8,12 +8,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.utils.LanguageManager;
+import musicApp.views.BaseView;
 import musicApp.views.View;
+import musicApp.views.songs.SongCellView.SongCellViewListener;
 
 /**
  * View for the context menu that appears when right-clicking a song in the library.
  */
-public class SongContextMenuView extends View<SongContextMenuView, SongContextMenuController> {
+public class SongContextMenuView extends BaseView {
+    private SongContextMenuViewListener listener;
 
     @FXML
     private ContextMenu contextMenu;
@@ -21,6 +24,22 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
     private Menu addToPlaylistMenu;
     @FXML
     private MenuItem removeFromPlaylistMenu, editMetadataItem; // Can be Menu or MenuItem
+
+    public interface SongContextMenuViewListener {
+        void handleEditMetadata();
+        boolean isShowingMainLibrary();
+        void handleRemoveFromPlaylist();
+        void populatePlaylistMenuItems(Menu addToMenu, Menu removeFromMenu);
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(SongContextMenuViewListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void init() {
@@ -42,16 +61,16 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
      * initContextMenu initializes the actions for the context menu items.
      */
     private void initContextMenu() {
-        editMetadataItem.setOnAction(_ -> viewController.handleEditMetadata());
+        editMetadataItem.setOnAction(_ -> listener.handleEditMetadata());
 
-        if (viewController.isShowingMainLibrary()) {
+        if (listener.isShowingMainLibrary()) {
             removeFromPlaylistMenu = new Menu();
             updateMenuItems();
             contextMenu.getItems().remove(2);
             contextMenu.getItems().add(removeFromPlaylistMenu);
 
         } else {
-            ((MenuItem) removeFromPlaylistMenu).setOnAction(_ -> viewController.handleRemoveFromPlaylist());
+            ((MenuItem) removeFromPlaylistMenu).setOnAction(_ -> listener.handleRemoveFromPlaylist());
         }
         contextMenu.setOnShowing(e -> updateMenuItems());
     }
@@ -74,7 +93,7 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
      */
     private void updateMenuItems() {
         clearPlaylistMenuItems();
-        viewController.populatePlaylistMenuItems(
+        listener.populatePlaylistMenuItems(
                 addToPlaylistMenu,
                 removeFromPlaylistMenu instanceof Menu ? (Menu) removeFromPlaylistMenu : null
         );

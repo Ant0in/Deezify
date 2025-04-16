@@ -1,5 +1,7 @@
 package musicApp.views.songs;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,7 +9,9 @@ import javafx.scene.image.ImageView;
 import musicApp.controllers.songs.SongCellController;
 import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.models.Song;
+import musicApp.views.BaseView;
 import musicApp.views.View;
+import musicApp.views.songs.EditMetadataView.EditMetadataViewListener;
 
 import java.util.Objects;
 
@@ -16,7 +20,8 @@ import java.util.Objects;
  * This class is responsible for displaying a song in the library.
  * It contains the play button, like button, and other song information.
  */
-public class SongCellView extends View<SongCellView, SongCellController> {
+public class SongCellView extends BaseView {
+    private SongCellViewListener listener;
 
     @FXML
     private Button playButton, likeButton;
@@ -32,6 +37,28 @@ public class SongCellView extends View<SongCellView, SongCellController> {
     private static final String EDIT_ICON = "/images/edit.png";
 
     public SongCellView() {
+    }
+    
+    public interface SongCellViewListener {        
+        void toggleFavorites();
+        StringProperty getCurrentlyLoadedSongStringProperty();
+        BooleanProperty isPlayingProperty();
+        void showContextMenu(double x, double y);
+        boolean isLoaded();
+        boolean isPlaying();
+        void handlePause();
+        void handleUnpause();
+        void handlePlay();
+        boolean isFavorite();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(SongCellViewListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -50,16 +77,16 @@ public class SongCellView extends View<SongCellView, SongCellController> {
 
         playButton.setGraphic(playIcon);
         likeButton.setOnAction(event -> {
-            viewController.toggleFavorites();
+            listener.toggleFavorites();
         });
         editButton.setImage(editIcon.getImage());
         editButton.setPickOnBounds(true);
 
 
-        viewController.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
+        listener.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
             updatePlayButtonIcon();
         });
-        viewController.isPlayingProperty().addListener((_, _, _) -> {
+        listener.isPlayingProperty().addListener((_, _, _) -> {
             updatePlayButtonIcon();
         });
     }
@@ -70,7 +97,7 @@ public class SongCellView extends View<SongCellView, SongCellController> {
     private void setupContextMenu() {
         // Show context menu on click
         editButton.setOnMouseClicked(e -> {
-            viewController.showContextMenu(e.getScreenX(), e.getScreenY());
+            listener.showContextMenu(e.getScreenX(), e.getScreenY());
         });
     }
 
@@ -80,18 +107,18 @@ public class SongCellView extends View<SongCellView, SongCellController> {
     private void updatePlayButtonIcon() {
         getRoot().getStyleClass().remove("song-playing");
         ImageView icon;
-        if (viewController.isLoaded()) {
+        if (listener.isLoaded()) {
             getRoot().getStyleClass().add("song-playing");
-            if (viewController.isPlaying()) {
+            if (listener.isPlaying()) {
                 icon = new ImageView(Objects.requireNonNull(getClass().getResource(PAUSE_ICON)).toExternalForm());
-                playButton.setOnAction(_ -> viewController.handlePause());
+                playButton.setOnAction(_ -> listener.handlePause());
             } else {
                 icon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
-                playButton.setOnAction(_ -> viewController.handleUnpause());
+                playButton.setOnAction(_ -> listener.handleUnpause());
             }
         } else {
             icon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
-            playButton.setOnAction(_ -> viewController.handlePlay());
+            playButton.setOnAction(_ -> listener.handlePlay());
         }
         icon.setFitWidth(20);
         icon.setFitHeight(20);
@@ -102,7 +129,7 @@ public class SongCellView extends View<SongCellView, SongCellController> {
      * Update the like button.
      */
     private void updateLikeButton() {
-        if (!viewController.isFavorite()) {
+        if (!listener.isFavorite()) {
             likeButton.setText("❤");
         } else {
             likeButton.setText("X");
@@ -131,7 +158,7 @@ public class SongCellView extends View<SongCellView, SongCellController> {
      * Set the actions for the buttons.
      */
     private void setButtonActions() {
-        playButton.setOnAction(_ -> viewController.handlePlay());
+        playButton.setOnAction(_ -> listener.handlePlay());
     }
 
 }

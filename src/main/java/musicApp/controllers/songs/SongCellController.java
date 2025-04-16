@@ -3,6 +3,7 @@ package musicApp.controllers.songs;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import musicApp.controllers.BaseViewController;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
@@ -10,6 +11,7 @@ import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.utils.MetadataUtils;
 import musicApp.views.songs.SongCellView;
+import musicApp.views.songs.SongCellView.SongCellViewListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.Optional;
 /**
  * The type Song cell controller.
  */
-public class SongCellController extends ViewController<SongCellView, SongCellController> {
+public class SongCellController extends BaseViewController<SongCellView> implements SongCellViewListener{
 
     private final LibraryController LibraryController;
     private Song song;
@@ -32,6 +34,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      */
     public SongCellController(LibraryController controller) {
         super(new SongCellView());
+        view.setListener(this);
         LibraryController = controller;
         contextMenuController = new SongContextMenuController(this);
         initView("/fxml/SongCell.fxml");
