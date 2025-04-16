@@ -4,18 +4,19 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.beans.property.StringProperty;
-
+import musicApp.controllers.BaseViewController;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Song;
 import musicApp.utils.lyrics.LyricsService;
 import musicApp.utils.DataProvider;
 import musicApp.views.songs.LyricsView;
+import musicApp.views.songs.LyricsView.LyricsViewListener;
 
 /**
  * The type Lyrics controller.
  */
-public class LyricsController extends ViewController<LyricsView, LyricsController> {
+public class LyricsController extends BaseViewController<LyricsView> implements LyricsViewListener{
 
     private final PlayerController playerController;
     private final LyricsService lyricsManager;
@@ -27,6 +28,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
      */
     public LyricsController(PlayerController _controller) {
         super(new LyricsView());
+        view.setListener(this);
         playerController = _controller;
         lyricsManager = new LyricsService();
         initView("/fxml/Lyrics.fxml");
