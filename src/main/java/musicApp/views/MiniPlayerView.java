@@ -1,8 +1,5 @@
 package musicApp.views;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -12,16 +9,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.util.Duration;
-import musicApp.controllers.MiniPlayerController;
-import musicApp.models.Song;
 
 import java.util.List;
 
 /**
  * View component used to render the audio spectrum visualizer in a separate window (popup)
  */
-public class MiniPlayerView extends BaseView{
+public class MiniPlayerView extends View {
     private MiniPlayerViewListener listener;
     /**
      * The Song title label.

@@ -4,40 +4,25 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.PopupWindow;
-import musicApp.controllers.ViewController;
 
 import java.io.IOException;
 import java.net.URL;
 
 /**
  * View class for the application.
- *
- * @param <V> the View class that gets extended
- * @param <C> the Controller class that gets extended
  */
-public abstract class View<V extends View<V, C>, C extends ViewController<V, C>> {
+public abstract class View {
     /**
      * The Scene.
      */
     protected Scene scene;
-    /**
-     * The View controller.
-     */
-    protected C viewController;
+
     /**
      * The Root pane.
      */
     protected Pane rootPane;
     protected PopupWindow rootWindow;
 
-    /**
-     * Sets view controller.
-     *
-     * @param viewController the view controller
-     */
-    public void setViewController(C viewController) {
-        this.viewController = viewController;
-    }
 
     /**
      * Initialize scene.

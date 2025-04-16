@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.utils.LanguageManager;
-import musicApp.views.BaseView;
+import musicApp.views.View;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * This is the view for the Equalizer settings.
  * It contains sliders for each band of the equalizer.
  */
-public class EqualizerView extends BaseView {
+public class EqualizerView extends View {
     private EqualizerViewListener listener;
 
 

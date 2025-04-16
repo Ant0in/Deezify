@@ -1,8 +1,7 @@
 package musicApp.controllers.playlists;
 
-import musicApp.controllers.BaseViewController;
-import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
+import musicApp.controllers.PlayerController;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.utils.DataProvider;
@@ -11,12 +10,11 @@ import musicApp.views.playlists.PlaylistNavigatorView;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.Node;
 
 /**
  * The type Playlist navigator controller.
  */
-public class PlaylistNavigatorController extends BaseViewController<PlaylistNavigatorView> implements PlaylistNavigatorView.PlaylistNavigatorViewListener {
+public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView> implements PlaylistNavigatorView.PlaylistNavigatorViewListener {
 
     private final PlayerController playerController;
     private List<Library> playlists;

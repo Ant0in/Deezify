@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-import musicApp.controllers.MediaPlayerController;
 import musicApp.models.Song;
 
 import java.util.Arrays;
@@ -19,7 +18,7 @@ import java.util.Objects;
 /**
  * The MediaPlayer view.
  */
-public class MediaPlayerView extends BaseView {
+public class MediaPlayerView extends View {
     private MediaPlayerViewListener listener;
 
     @FXML

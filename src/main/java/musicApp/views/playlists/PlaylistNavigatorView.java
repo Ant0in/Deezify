@@ -9,7 +9,6 @@ import musicApp.controllers.playlists.PlaylistCellController;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
-import musicApp.views.BaseView;
 import musicApp.views.View;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
  * The PlaylistNavigatorView class is responsible for displaying and managing the playlist navigator UI.
  * It allows users to create, edit, and delete playlists, as well as manage their contents.
  */
-public class PlaylistNavigatorView extends BaseView {
+public class PlaylistNavigatorView extends View {
     private PlaylistNavigatorViewListener listener;
     @FXML
     private ListView<Library> listView;

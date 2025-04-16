@@ -4,13 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import musicApp.models.Library;
-import musicApp.views.BaseView;
+import musicApp.views.View;
 
 /**
  * The PlaylistCellView class is responsible for displaying a cell of a playlist.
  * It extends the View class and uses FXML to define its layout.
  */
-public class PlaylistCellView extends BaseView {
+public class PlaylistCellView extends View {
     private PlaylistCellViewListener listener;
     
     @FXML

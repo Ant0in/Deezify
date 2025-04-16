@@ -9,12 +9,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import musicApp.controllers.playlists.EditPlaylistController;
 import musicApp.models.Library;
 import musicApp.utils.AlertService;
 import musicApp.utils.LanguageManager;
-import musicApp.views.BaseView;
-import musicApp.views.ToolBarView;
 import musicApp.views.View;
 
 import java.io.File;
@@ -24,7 +21,7 @@ import java.nio.file.Path;
  * The Playlist edit view.
  * This is a popup window that allows the user to create or edit a playlist.
  */
-public class EditPlaylistView extends BaseView {
+public class EditPlaylistView extends View {
 
     private EditPlaylistViewListener listener ;
 

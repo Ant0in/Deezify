@@ -4,11 +4,9 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import musicApp.controllers.BaseViewController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
-import musicApp.views.BaseView;
 import musicApp.views.songs.SongContextMenuView;
 import musicApp.views.songs.SongContextMenuView.SongContextMenuViewListener;
 
@@ -17,7 +15,7 @@ import java.util.List;
 /**
  * The type Song context menu controller.
  */
-public class SongContextMenuController extends BaseViewController<SongContextMenuView> implements SongContextMenuViewListener {
+public class SongContextMenuController extends ViewController<SongContextMenuView> implements SongContextMenuViewListener {
 
     /**
      * The Song cell controller.

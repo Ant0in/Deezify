@@ -1,18 +1,14 @@
 package musicApp.controllers;
 
 import javafx.scene.layout.Pane;
-import javafx.stage.PopupWindow;
 import musicApp.utils.AlertService;
 import musicApp.views.View;
 
 
 /**
  * The type View controller.
- *
- * @param <V> the type parameter
- * @param <C> the type parameter
  */
-public abstract class ViewController<V extends View<V, C>, C extends ViewController<V, C>> {
+public abstract class ViewController<V extends View> {
     /**
      * The View.
      */
@@ -27,7 +23,7 @@ public abstract class ViewController<V extends View<V, C>, C extends ViewControl
     public ViewController(V view) {
         this.view = view;
         alertService = new AlertService();
-        view.setViewController((C) this);
+//        view.setListener(this);
     }
 
     /**

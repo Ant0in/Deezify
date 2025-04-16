@@ -1,16 +1,15 @@
 package musicApp.controllers.settings;
 
 import javafx.stage.Stage;
-import musicApp.controllers.ViewController;
 import musicApp.models.Equalizer;
 import musicApp.views.settings.EqualizerView;
-import musicApp.controllers.BaseViewController;
+import musicApp.controllers.ViewController;
 import java.util.List;
 
 /**
  * The type Equalizer controller.
  */
-public class EqualizerController extends BaseViewController<EqualizerView> implements EqualizerView.EqualizerViewListener {
+public class EqualizerController extends ViewController<EqualizerView> implements EqualizerView.EqualizerViewListener {
     private final SettingsController settingsController;
     private final Stage stage;
     private final Equalizer equalizer;

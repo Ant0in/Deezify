@@ -6,16 +6,13 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.utils.LanguageManager;
-import musicApp.views.BaseView;
 import musicApp.views.View;
-import musicApp.views.songs.SongCellView.SongCellViewListener;
 
 /**
  * View for the context menu that appears when right-clicking a song in the library.
  */
-public class SongContextMenuView extends BaseView {
+public class SongContextMenuView extends View {
     private SongContextMenuViewListener listener;
 
     @FXML

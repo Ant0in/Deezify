@@ -14,11 +14,8 @@ import java.nio.file.Path;
 import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
-import musicApp.views.BaseView;
-import musicApp.views.SongContainerView.SongContainerViewListener;
 import musicApp.views.View;
 import musicApp.models.KaraokeLine;
-import musicApp.controllers.songs.LyricsController;
 import musicApp.utils.LanguageManager;
 import musicApp.controllers.songs.KaraokeController;
 
@@ -27,7 +24,7 @@ import musicApp.controllers.songs.KaraokeController;
  * the lyrics of a song. It handles the user interactions and delegates
  * actions to the LyricsController.
  */
-public class LyricsView extends BaseView {
+public class LyricsView extends View {
     
     private LyricsViewListener listener;
 

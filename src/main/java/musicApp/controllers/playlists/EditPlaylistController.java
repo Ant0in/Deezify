@@ -1,11 +1,9 @@
 package musicApp.controllers.playlists;
 
 import javafx.stage.Stage;
-import musicApp.controllers.BaseViewController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.utils.LanguageManager;
-import musicApp.views.BaseView;
 import musicApp.views.playlists.EditPlaylistView;
 
 import java.nio.file.Path;
@@ -13,7 +11,7 @@ import java.nio.file.Path;
 /**
  * The type Playlist edit controller.
  */
-public class EditPlaylistController extends BaseViewController<EditPlaylistView> implements EditPlaylistView.EditPlaylistViewListener {
+public class EditPlaylistController extends ViewController<EditPlaylistView> implements EditPlaylistView.EditPlaylistViewListener {
 
     private final PlaylistNavigatorController navigatorController;
     private final Library playlistToEdit;

@@ -1,10 +1,8 @@
 package musicApp.controllers;
 
 import musicApp.exceptions.BadSongException;
-import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.utils.AlertService;
 import musicApp.views.SongContainerView;
 
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import javafx.scene.control.Alert;
  * Abstract container class for all classes that will contain Songs.
  */
 public abstract class SongContainerController<V extends SongContainerView, M extends Library>
-        extends BaseViewController<V>
+        extends ViewController<V>
         implements SongContainerView.SongContainerViewListener {
 
     /**

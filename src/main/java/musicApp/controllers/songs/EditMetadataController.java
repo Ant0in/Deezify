@@ -3,7 +3,7 @@ package musicApp.controllers.songs;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import musicApp.controllers.BaseViewController;
+import musicApp.controllers.ViewController;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.utils.LanguageManager;
@@ -13,14 +13,13 @@ import musicApp.views.songs.EditMetadataView.EditMetadataViewListener;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 /**
  * The type Edit metadata controller.
  */
-public class EditMetadataController extends BaseViewController<EditMetadataView> implements EditMetadataViewListener{
+public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataViewListener{
     private File selectedFile;
     private final Song song;
     private final Stage editStage;

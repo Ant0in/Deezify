@@ -6,12 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import musicApp.controllers.songs.SongCellController;
-import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.models.Song;
-import musicApp.views.BaseView;
 import musicApp.views.View;
-import musicApp.views.songs.EditMetadataView.EditMetadataViewListener;
 
 import java.util.Objects;
 
@@ -20,7 +16,7 @@ import java.util.Objects;
  * This class is responsible for displaying a song in the library.
  * It contains the play button, like button, and other song information.
  */
-public class SongCellView extends BaseView {
+public class SongCellView extends View {
     private SongCellViewListener listener;
 
     @FXML

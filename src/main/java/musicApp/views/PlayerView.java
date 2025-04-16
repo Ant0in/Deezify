@@ -8,17 +8,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import musicApp.controllers.PlayerController;
 import musicApp.utils.LanguageManager;
-import javafx.stage.StageStyle;
-import javafx.scene.paint.Color;
 import javafx.scene.layout.Priority;
 
 /**
  * PlayerView
  * Class that represents the view of the music player.
  */
-public class PlayerView extends BaseView {
+public class PlayerView extends View {
     private PlayerViewListener listener;
     @FXML
     private Pane controls;

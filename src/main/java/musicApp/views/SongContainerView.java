@@ -3,17 +3,14 @@ package musicApp.views;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import musicApp.controllers.SongContainerController;
-import musicApp.models.Library;
 import musicApp.models.Song;
-import musicApp.views.playlists.PlaylistContextMenuView;
 
 import java.util.List;
 
 /**
  * The  PlayList view.
  */
-public abstract class SongContainerView extends BaseView {
+public abstract class SongContainerView extends View {
     private SongContainerViewListener listener;
     /**
      * The List view.

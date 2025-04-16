@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The  MediaPlayer controller.
  */
-public class MediaPlayerController extends BaseViewController<MediaPlayerView> implements MediaPlayerView.MediaPlayerViewListener {
+public class MediaPlayerController extends ViewController<MediaPlayerView> implements MediaPlayerView.MediaPlayerViewListener {
     private final PlayerController playerController;
     private final MiniPlayerController miniPlayerController;
     private final AudioPlayer audioPlayer;

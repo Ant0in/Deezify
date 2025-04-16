@@ -12,7 +12,7 @@ import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.LanguageManager;
-import musicApp.views.BaseView;
+import musicApp.views.View;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 /**
  * The view for the settings window.
  */
-public class SettingsView extends BaseView {
+public class SettingsView extends View {
     private SettingsView.SettingsViewListener listener;
 
     // private final Scene scene;

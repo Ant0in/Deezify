@@ -4,17 +4,15 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
-import musicApp.controllers.BaseViewController;
 
 import java.util.Objects;
 
 /**
  * The ToolBar view.
  */
-public class ToolBarView extends BaseView {
+public class ToolBarView extends View {
 
     private ToolBarViewListener listener;
 

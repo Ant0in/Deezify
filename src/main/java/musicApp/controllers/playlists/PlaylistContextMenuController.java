@@ -1,12 +1,10 @@
 package musicApp.controllers.playlists;
 
-import musicApp.controllers.BaseViewController;
 import musicApp.controllers.ViewController;
-import javafx.scene.Node;
 import musicApp.models.Library;
 import musicApp.views.playlists.PlaylistContextMenuView;
 
-public class PlaylistContextMenuController extends BaseViewController<PlaylistContextMenuView> implements PlaylistContextMenuView.PlaylistContextMenuListener {
+public class PlaylistContextMenuController extends ViewController<PlaylistContextMenuView> implements PlaylistContextMenuView.PlaylistContextMenuListener {
     private final PlaylistNavigatorController playlistNavigatorController;
     private Library selectedLibrary;
 

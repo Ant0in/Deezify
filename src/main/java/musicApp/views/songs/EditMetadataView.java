@@ -10,9 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
-import musicApp.controllers.songs.EditMetadataController;
 import musicApp.utils.LanguageManager;
-import musicApp.views.BaseView;
 import musicApp.views.View;
 
 import java.util.*;
@@ -22,7 +20,7 @@ import java.util.function.Function;
  * The EditMetadataView class is responsible for displaying the metadata editing interface for a song.
  * It allows users to edit the title, artist, genre, and tags of a song, as well as choose a cover image.
  */
-public class EditMetadataView extends BaseView {
+public class EditMetadataView extends View {
     private EditMetadataViewListener listener;
     @FXML
     StackPane artistStackPane, tagStackPane;

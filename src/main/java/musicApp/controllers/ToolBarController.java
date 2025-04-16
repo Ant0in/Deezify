@@ -1,12 +1,11 @@
 package musicApp.controllers;
 
-import javafx.fxml.Initializable;
 import musicApp.views.ToolBarView;
 
 /**
  * The type Tool bar controller.
  */
-public class ToolBarController extends BaseViewController<ToolBarView> implements ToolBarView.ToolBarViewListener {
+public class ToolBarController extends ViewController<ToolBarView> implements ToolBarView.ToolBarViewListener {
     private final PlayerController playerController;
 
     /**
