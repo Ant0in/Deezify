@@ -1,7 +1,6 @@
 package musicApp.models;
 
 import com.google.gson.annotations.Expose;
-import musicApp.utils.DataProvider;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -43,10 +42,10 @@ public class Settings {
     /**
      * Set the balance of the settings.
      *
-     * @param newBalance The balance.
+     * @param _balance The balance.
      */
-    public void setBalance(double newBalance) {
-        balance = newBalance;
+    public void setBalance(double _balance) {
+        balance = _balance;
     }
 
     /**
@@ -61,10 +60,10 @@ public class Settings {
     /**
      * Set the music folder of the settings.
      *
-     * @param newMusicFolder The music folder.
+     * @param _musicFolder The music folder.
      */
-    public void setMusicFolder(Path newMusicFolder) {
-        musicFolder = newMusicFolder;
+    public void setMusicFolder(Path _musicFolder) {
+        musicFolder = _musicFolder;
         musicFolderChanged = true;
     }
 

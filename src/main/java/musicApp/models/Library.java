@@ -169,10 +169,10 @@ public class Library {
     /**
      * Set the name of the library.
      *
-     * @param newName the new name
+     * @param _name the new name
      */
-    public void setName(String newName) {
-        name = newName;
+    public void setName(String _name) {
+        name = _name;
     }
 
     /**

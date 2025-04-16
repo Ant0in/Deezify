@@ -47,11 +47,11 @@ public class Metadata {
     /**
      * Sets the title of the song.
      *
-     * @param newTitle The title of the song.
+     * @param _title The title of the song.
      */
-    public void setTitle(String newTitle) {
-        if (newTitle != null && !newTitle.isEmpty()) {
-            title = newTitle;
+    public void setTitle(String _title) {
+        if (_title != null && !_title.isEmpty()) {
+            title = _title;
         }
     }
 
@@ -68,11 +68,11 @@ public class Metadata {
     /**
      * Sets the artist of the song.
      *
-     * @param newArtist The artist of the song.
+     * @param _artist The artist of the song.
      */
-    public void setArtist(String newArtist) {
-        if (newArtist != null && !newArtist.isEmpty()) {
-            artist = newArtist;
+    public void setArtist(String _artist) {
+        if (_artist != null && !_artist.isEmpty()) {
+            artist = _artist;
         }
     }
 
@@ -89,11 +89,11 @@ public class Metadata {
     /**
      * Sets the genre of the song.
      *
-     * @param newGenre The genre of the song.
+     * @param _genre The genre of the song.
      */
-    public void setGenre(String newGenre) {
-        if (newGenre != null && !newGenre.isEmpty()) {
-            genre = newGenre;
+    public void setGenre(String _genre) {
+        if (_genre != null && !_genre.isEmpty()) {
+            genre = _genre;
         }
     }
 
@@ -110,11 +110,11 @@ public class Metadata {
     /**
      * Sets the duration of the song.
      *
-     * @param newDuration The duration of the song.
+     * @param _duration The duration of the song.
      */
-    public void setDuration(Duration newDuration) {
-        if (newDuration != null && newDuration.greaterThan(Duration.ZERO)) {
-            duration = newDuration;
+    public void setDuration(Duration _duration) {
+        if (_duration != null && _duration.greaterThan(Duration.ZERO)) {
+            duration = _duration;
         }
     }
 
@@ -130,10 +130,10 @@ public class Metadata {
     /**
      * Sets the cover image
      *
-     * @param newCover The cover image.
+     * @param _cover The cover image.
      */
-    public void setCover(Artwork newCover) {
-        cover = newCover;
+    public void setCover(Artwork _cover) {
+        cover = _cover;
     }
 
     /**
@@ -171,11 +171,11 @@ public class Metadata {
 
     /**
      * Sets the user tags.
-     * @param newUserTags The new user tags to set.
+     * @param _userTags The new user tags to set.
      */
-    public void setUserTags(ArrayList<String> newUserTags) {
-        if (newUserTags != null) {
-            userTags = newUserTags;
+    public void setUserTags(ArrayList<String> _userTags) {
+        if (_userTags != null) {
+            userTags = _userTags;
         }
     }
 

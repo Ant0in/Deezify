@@ -107,10 +107,10 @@ public class Equalizer {
 
     /**
      * Set the list of bands gain.
-     * @param newBandsGain the new list of bands gain
+     * @param _bandsGain the new list of bands gain
      */
-    private void setBandsGain(List<Double> newBandsGain) {
-        bandsGain = newBandsGain;
+    private void setBandsGain(List<Double> _bandsGain) {
+        bandsGain = _bandsGain;
     }
 
     /**

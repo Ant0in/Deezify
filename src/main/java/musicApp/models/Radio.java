@@ -68,10 +68,10 @@ public class Radio extends Song {
 
     /**
      * Sets the radio web url.
-     * @param newWebUrl the new web url to set
+     * @param _webUrl the new web url to set
      */
-    public void setWebUrl(String newWebUrl) {
-        webUrl = newWebUrl;
+    public void setWebUrl(String _webUrl) {
+        webUrl = _webUrl;
     }
     
     /**

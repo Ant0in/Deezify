@@ -110,10 +110,10 @@ public class AudioPlayer {
 
     /**
      * Update the equalizer bands gain.
-     * @param newEqualizerBandsGain The new equalizer bands gain.
+     * @param _equalizerBandsGain The new equalizer bands gain.
      */
-    public void updateEqualizerBandsGain(List<Double> newEqualizerBandsGain) throws EqualizerGainException {
-        equalizerBandsGain = newEqualizerBandsGain;
+    public void updateEqualizerBandsGain(List<Double> _equalizerBandsGain) throws EqualizerGainException {
+        equalizerBandsGain = _equalizerBandsGain;
         if (mediaPlayer != null) {
             applyEqualizerBandsGain();
         }
@@ -142,8 +142,8 @@ public class AudioPlayer {
     /**
      * Change speed of the loaded song.
      */
-    public void changeSpeed(double newSpeed) {
-        speed = newSpeed;
+    public void changeSpeed(double _speed) {
+        speed = _speed;
         if (mediaPlayer != null) {
             mediaPlayer.setRate(speed);
         }
@@ -286,10 +286,10 @@ public class AudioPlayer {
     /**
      * Set the balance of the AudioPlayer.
      *
-     * @param newBalance The balance of the AudioPlayer.
+     * @param _balance The balance of the AudioPlayer.
      */
-    public void setBalance(double newBalance) {
-        balance = newBalance;
+    public void setBalance(double _balance) {
+        balance = _balance;
         if (mediaPlayer != null) {
             mediaPlayer.setBalance(balance);
         }
