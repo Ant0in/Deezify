@@ -4,13 +4,13 @@ import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
 import musicApp.models.Equalizer;
 import musicApp.views.settings.EqualizerView;
-
+import musicApp.controllers.BaseViewController;
 import java.util.List;
 
 /**
  * The type Equalizer controller.
  */
-public class EqualizerController extends ViewController<EqualizerView, EqualizerController> {
+public class EqualizerController extends BaseViewController<EqualizerView> implements EqualizerView.EqualizerViewListener {
     private final SettingsController settingsController;
     private final Stage stage;
     private final Equalizer equalizer;
@@ -23,6 +23,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      */
     public EqualizerController(SettingsController _controller, Equalizer _equalizer) {
         super(new EqualizerView());
+        view.setListener(this);
         settingsController = _controller;
         stage = new Stage();
         equalizer = _equalizer;
@@ -108,6 +109,11 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      */
     public void handleCancel() {
         view.updateSlidersValues();
+    }
+
+    @Override
+    public EqualizerController getController() {
+        return this;
     }
 
 }

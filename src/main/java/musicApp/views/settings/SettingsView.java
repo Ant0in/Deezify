@@ -12,7 +12,7 @@ import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.utils.FileDialogHelper;
 import musicApp.utils.LanguageManager;
-import musicApp.views.View;
+import musicApp.views.BaseView;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -21,7 +21,9 @@ import java.nio.file.Paths;
 /**
  * The view for the settings window.
  */
-public class SettingsView extends View<SettingsView, SettingsController> {
+public class SettingsView extends BaseView {
+    private SettingsView.SettingsViewListener listener;
+
     // private final Scene scene;
     @FXML
     private ComboBox<String> languageComboBox;
@@ -43,6 +45,25 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     public SettingsView() {
     }
+
+    public interface SettingsViewListener {
+        void handleSave(Language language, double balance, Path musicDirectory);
+        Path getMusicDirectory();
+        double getBalance();
+        void openEqualizer();
+        void handleCancel();
+        SettingsController getController();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(SettingsView.SettingsViewListener listener) {
+        this.listener = listener;
+    }
+
 
     /**
      * Show the settings view.
@@ -71,7 +92,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Initialize the directory label to display the current music directory.
      */
     private void initDirectoryLabel() {
-        directoryLabel.setText(viewController.getMusicDirectory().toString());
+        directoryLabel.setText(listener.getMusicDirectory().toString());
     }
 
     /**
@@ -97,8 +118,8 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      * Initialize the balance slider.
      */
     private void initSlider() {
-        balanceSlider.setValue(viewController.getBalance());
-        balanceLabel.setText(String.format("%.2f",viewController.getBalance()));
+        balanceSlider.setValue(listener.getBalance());
+        balanceLabel.setText(String.format("%.2f",listener.getBalance()));
         balanceSlider.valueProperty().addListener((_, _, newVal)
                 -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
     }
@@ -133,9 +154,9 @@ public class SettingsView extends View<SettingsView, SettingsController> {
      */
     private void initButtons() {
         saveButton.setOnMouseClicked(_ -> handleSave());
-        cancelButton.setOnMouseClicked(_ -> viewController.handleCancel());
+        cancelButton.setOnMouseClicked(_ -> listener.handleCancel());
         browseButton.setOnMouseClicked(_ -> handleBrowseDirectory());
-        equalizerButton.setOnMouseClicked(_ -> viewController.openEqualizer());
+        equalizerButton.setOnMouseClicked(_ -> listener.openEqualizer());
     }
 
     /**
@@ -183,7 +204,7 @@ public class SettingsView extends View<SettingsView, SettingsController> {
         Language selectedLanguage = getSelectedLanguage();
         double balance = balanceSlider.getValue();
         Path musicDirectory = Paths.get(directoryLabel.getText());
-        viewController.handleSave(selectedLanguage, balance, musicDirectory);
+        listener.handleSave(selectedLanguage, balance, musicDirectory);
     }
 
     /**

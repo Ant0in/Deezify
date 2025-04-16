@@ -7,7 +7,9 @@ import musicApp.controllers.ViewController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.utils.LanguageManager;
+import musicApp.views.settings.EqualizerView;
 import musicApp.views.settings.SettingsView;
+import musicApp.controllers.BaseViewController;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -15,7 +17,7 @@ import java.nio.file.Path;
 /**
  * The type Settings controller.
  */
-public class SettingsController extends ViewController<SettingsView, SettingsController> {
+public class SettingsController extends BaseViewController<SettingsView> implements SettingsView.SettingsViewListener {
     private final Stage settingsStage;
     private final MetaController metaController;
     private final EqualizerController equalizerController;
@@ -30,6 +32,7 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      */
     public SettingsController(MetaController _controller, Settings _settings) throws IOException {
         super(new SettingsView());
+        view.setListener(this);
         settings = _settings;
         metaController = _controller;
         equalizerController = new EqualizerController(this, _settings.getEqualizer());
@@ -154,5 +157,10 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      */
     public Path getMusicDirectory() {
         return settings.getMusicFolder();
+    }
+
+    @Override
+    public SettingsController getController() {
+        return this;
     }
 }
