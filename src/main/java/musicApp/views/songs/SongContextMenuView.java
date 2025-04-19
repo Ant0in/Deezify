@@ -122,13 +122,6 @@ public class SongContextMenuView extends View {
     }
 
     /**
-     * Get the context menu.
-     */
-    public ContextMenu getContextMenu() {
-        return contextMenu;
-    }
-
-    /**
      * Show the context menu at the specified coordinates.
      *
      * @param node The node to show the context menu for.

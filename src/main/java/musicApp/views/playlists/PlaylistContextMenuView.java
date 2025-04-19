@@ -89,7 +89,4 @@ public class PlaylistContextMenuView extends View {
         contextMenu.show(node, x, y);
     }
 
-    public void refreshTranslations() {
-        initTranslations();
-    }
 }

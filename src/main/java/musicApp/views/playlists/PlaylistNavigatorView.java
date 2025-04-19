@@ -115,17 +115,6 @@ public class PlaylistNavigatorView extends View {
     }
 
     /**
-     * Sets the currently selected playlist in the list view
-     *
-     * @param playlist The playlist to select
-     */
-    public void setSelectedPlaylist(Library playlist) {
-        if (playlist != null) {
-            listView.getSelectionModel().select(playlist);
-        }
-    }
-
-    /**
      * Retrieves the currently selected playlist from the list view.
      *
      * @return The selected Library object or {@code null} if none is selected.

@@ -62,7 +62,7 @@ public class LibraryView extends SongContainerView {
     public void init() {
         initSongInput();
         initButtons();
-        initPlayListView();
+        initPlaylistView();
         updateListView();
         initTranslation();
         setupListSelectionListeners();
@@ -104,7 +104,7 @@ public class LibraryView extends SongContainerView {
     /**
      * Initialize the playlist view.
      */
-    private void initPlayListView() {
+    private void initPlaylistView() {
 
         listView.setCellFactory(_ -> new SongCell(new SongCellController(listener.getController())));
         updateListView();
