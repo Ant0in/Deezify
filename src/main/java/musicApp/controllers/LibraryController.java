@@ -15,7 +15,8 @@ import java.util.Random;
 /**
  * The controller for the Main Library view.
  */
-public class LibraryController extends SongContainerController<LibraryView, LibraryController, Library> {
+public class LibraryController extends SongContainerController<LibraryView, Library>
+    implements LibraryView.LibraryViewListener {
     private int currentIndex;
     private Boolean shuffle;
 
@@ -26,6 +27,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      */
     public LibraryController(PlayerController controller) {
         super(new LibraryView(), controller);
+        view.setListener((LibraryView.LibraryViewListener) this);
         shuffle = false;
         initView("/fxml/MainLibrary.fxml");
     }
@@ -287,5 +289,10 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      */
     public Optional<String> getTagAutoCompletion(String input) {
         return library.getTagAutoCompletion(input);
+    }
+
+    @Override
+    public LibraryController getController() {
+        return this;
     }
 }

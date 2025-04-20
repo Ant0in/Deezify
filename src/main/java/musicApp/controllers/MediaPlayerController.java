@@ -15,7 +15,7 @@ import musicApp.views.MediaPlayerView;
 /**
  * The  MediaPlayer controller.
  */
-public class MediaPlayerController extends ViewController<MediaPlayerView, MediaPlayerController> {
+public class MediaPlayerController extends ViewController<MediaPlayerView> implements MediaPlayerView.MediaPlayerViewListener {
     private final PlayerController playerController;
     private final MiniPlayerController miniPlayerController;
     private final AudioPlayer audioPlayer;
@@ -27,6 +27,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView, Media
      */
     public MediaPlayerController(PlayerController controller) {
         super(new MediaPlayerView());
+        view.setListener(this);
         playerController = controller;
         miniPlayerController = new MiniPlayerController();
         audioPlayer = new AudioPlayer(miniPlayerController);

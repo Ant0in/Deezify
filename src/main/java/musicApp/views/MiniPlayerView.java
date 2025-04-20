@@ -16,7 +16,10 @@ import java.util.List;
 /**
  * View component used to render the audio spectrum visualizer in a separate window (popup)
  */
-public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
+public class MiniPlayerView extends View{
+
+    private MiniPlayerViewListener listener;
+
     /**
      * The Song title label.
      */
@@ -46,6 +49,23 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
         isClipped = true;
         isBasicMode = false;
     }
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface MiniPlayerViewListener {
+        int getBandsNumber();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(MiniPlayerViewListener newListener) {
+        listener = newListener;
+    }
+
 
     @Override
     public void init() {
@@ -118,7 +138,7 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
      * Draw a frame for the audio spectrum visualizer.
      */
     private void drawFrame( List<Float> values) {
-        int numBars = viewController.getBandsNumber();
+        int numBars = listener.getBandsNumber();
         double barWidth = canvas.getWidth() / numBars; // Width of each bar
         double canvasHeight = canvas.getHeight();
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -143,7 +163,7 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
      * Draw a circular frame for the audio spectrum visualizer.
      */
     private void drawCircularFrame(List<Float> values) {
-        int numBars = viewController.getBandsNumber();
+        int numBars = listener.getBandsNumber();
         double radius = Math.min(canvas.getWidth(), canvas.getHeight()) / 3; // Radius for the circle
         double centerX = canvas.getWidth() / 2;
         double centerY = canvas.getHeight() / 2;

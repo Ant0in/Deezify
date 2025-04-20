@@ -11,7 +11,7 @@ import musicApp.models.Equalizer;
 /**
  * The type Equalizer controller.
  */
-public class EqualizerController extends ViewController<EqualizerView, EqualizerController> {
+public class EqualizerController extends ViewController<EqualizerView> implements EqualizerView.EqualizerViewListener {
     
     private final SettingsController settingsController;
     private final Stage stage;
@@ -25,6 +25,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      */
     public EqualizerController(SettingsController _controller, Equalizer _equalizer) {
         super(new EqualizerView());
+        view.setListener(this);
         settingsController = _controller;
         stage = new Stage();
         equalizer = _equalizer;

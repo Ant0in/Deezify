@@ -1,6 +1,7 @@
 package musicApp.views.songs;
 
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -10,7 +11,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import musicApp.controllers.songs.KaraokeController;
-import musicApp.controllers.songs.LyricsController;
 import musicApp.models.KaraokeLine;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
@@ -26,7 +26,10 @@ import java.util.Optional;
  * the lyrics of a song. It handles the user interactions and delegates
  * actions to the LyricsController.
  */
-public class LyricsView extends View<LyricsView, LyricsController> {
+public class LyricsView extends View {
+    
+    private LyricsViewListener listener;
+    
     @FXML
     private HBox karaokeHeader;
 
@@ -46,6 +49,28 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     private ScrollPane scrollPane, karaokeScrollPane;
 
     private KaraokeController karaokeController;
+
+    /**
+     * Listener interface for handling events in the LyricsView.
+     * Implement this interface to define behaviors for editing lyrics,
+     * retrieving the current song lyrics, and accessing the currently loaded song property.
+     */
+    public interface LyricsViewListener {
+        void editLyrics();
+
+        List<String> getCurrentSongLyrics();
+
+        StringProperty getCurrentlyLoadedSongStringProperty();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(LyricsViewListener newListener) {
+        listener = newListener;
+    }
 
     /**
      * Initializes the view. Sets up listeners and UI components.
@@ -85,7 +110,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
             karaokeController.startKaraoke();
         });
 
-        viewController.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
+        listener.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
             initButtonsTypes();
             karaokeController.stopKaraoke();
             simpleLyricsButton.fire();
@@ -149,7 +174,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     public void updateLyrics() {
         lyricsContainer.getChildren().clear();
-        List<String> lyrics = viewController.getCurrentSongLyrics();
+        List<String> lyrics = listener.getCurrentSongLyrics();
 
         if (lyrics == null || lyrics.isEmpty()) {
             displayEmptyLyricsPlaceholder();
@@ -169,7 +194,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         noLyricsLabel.getStyleClass().add("no-lyrics-label");
 
         Button addLyricsButton = createEditButton(lang.get("button.addLyrics"));
-        addLyricsButton.setOnAction(_ -> viewController.editLyrics());
+        addLyricsButton.setOnAction(_ -> listener.editLyrics());
 
         VBox placeholder = new VBox(10, noLyricsLabel, addLyricsButton);
         placeholder.setAlignment(Pos.CENTER);
@@ -184,7 +209,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         HBox header = new HBox();
         header.setAlignment(Pos.TOP_RIGHT);
         Button editButton = createEditButton(null);
-        editButton.setOnAction(_ -> viewController.editLyrics());
+        editButton.setOnAction(_ -> listener.editLyrics());
         header.getChildren().add(editButton);
         lyricsContainer.getChildren().add(header);
 

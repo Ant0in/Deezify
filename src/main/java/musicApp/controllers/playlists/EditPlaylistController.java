@@ -11,7 +11,7 @@ import java.nio.file.Path;
 /**
  * The type Playlist edit controller.
  */
-public class EditPlaylistController extends ViewController<EditPlaylistView, EditPlaylistController> {
+public class EditPlaylistController extends ViewController<EditPlaylistView> implements EditPlaylistView.EditPlaylistViewListener {
 
     private final PlaylistNavigatorController navigatorController;
     private final Library playlistToEdit;
@@ -25,6 +25,7 @@ public class EditPlaylistController extends ViewController<EditPlaylistView, Edi
      */
     public EditPlaylistController(PlaylistNavigatorController _controller) {
         super(new EditPlaylistView());
+        view.setListener(this);
         stage = new Stage();
         isCreation = true;
         navigatorController = _controller;

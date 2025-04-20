@@ -6,7 +6,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import musicApp.controllers.songs.SongContextMenuController;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
 import musicApp.exceptions.BadSongException;
@@ -14,7 +13,9 @@ import musicApp.exceptions.BadSongException;
 /**
  * View for the context menu that appears when right-clicking a song in the library.
  */
-public class SongContextMenuView extends View<SongContextMenuView, SongContextMenuController> {
+public class SongContextMenuView extends View {
+
+    private SongContextMenuViewListener listener;
 
     @FXML
     private ContextMenu contextMenu;
@@ -23,6 +24,30 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
     @FXML
     private MenuItem removeFromPlaylistMenu, editMetadataItem; // Can be Menu or MenuItem
 
+    /**
+     * Listener interface used to delegate actions from the view to the controller logic.
+     */
+    public interface SongContextMenuViewListener {
+        void handleEditMetadata();
+
+        void handleRemoveFromPlaylist();
+
+        void launchDjMode() throws BadSongException;
+
+        void populatePlaylistMenuItems(Menu addToMenu, Menu removeFromMenu);
+
+        boolean isShowingMainLibrary();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(SongContextMenuViewListener newListener) {
+        listener = newListener;
+    }
+    
     @Override
     public void init() {
         initContextMenu();
@@ -44,23 +69,23 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
      * initContextMenu initializes the actions for the context menu items.
      */
     private void initContextMenu() {
-        editMetadataItem.setOnAction(_ -> viewController.handleEditMetadata());
+        editMetadataItem.setOnAction(_ -> listener.handleEditMetadata());
 
-        if (viewController.isShowingMainLibrary()) {
+        if (listener.isShowingMainLibrary()) {
             removeFromPlaylistMenu = new Menu();
             updateMenuItems();
             contextMenu.getItems().remove(2);
             contextMenu.getItems().add(removeFromPlaylistMenu);
 
         } else {
-            ((MenuItem) removeFromPlaylistMenu).setOnAction(_ -> viewController.handleRemoveFromPlaylist());
+            ((MenuItem) removeFromPlaylistMenu).setOnAction(_ -> listener.handleRemoveFromPlaylist());
         }
         contextMenu.setOnShowing(e -> updateMenuItems());
 
         MenuItem launchDjMode = new MenuItem("DJ Mode");
         launchDjMode.setOnAction(_ -> {
             try {
-                viewController.launchDjMode();
+                listener.launchDjMode();
             } catch (BadSongException e) {
                 e.printStackTrace(); // Handle the exception appropriately
             }
@@ -87,7 +112,7 @@ public class SongContextMenuView extends View<SongContextMenuView, SongContextMe
      */
     private void updateMenuItems() {
         clearPlaylistMenuItems();
-        viewController.populatePlaylistMenuItems(
+        listener.populatePlaylistMenuItems(
                 addToPlaylistMenu,
                 removeFromPlaylistMenu instanceof Menu ? (Menu) removeFromPlaylistMenu : null
         );

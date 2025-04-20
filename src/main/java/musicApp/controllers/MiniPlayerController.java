@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 /**
  * Controller managing the MiniPlayerView and processing audio spectrum data received on `spectrumDataUpdate`
  */
-public class MiniPlayerController extends ViewController<MiniPlayerView, MiniPlayerController> implements AudioSpectrumListener {
+public class MiniPlayerController extends ViewController<MiniPlayerView> implements AudioSpectrumListener, MiniPlayerView.MiniPlayerViewListener {
 
     private static final int DEFAULT_BANDS_NUMBER = 128;
     private static final float MIN_DECIBEL_LEVEL = -60f;
@@ -26,6 +26,7 @@ public class MiniPlayerController extends ViewController<MiniPlayerView, MiniPla
      */
     public MiniPlayerController() {
         super(new MiniPlayerView());
+        view.setListener(this);
         initView("/fxml/MiniPlayer.fxml");
         stage = new Stage();
         stage.setScene(view.getScene());

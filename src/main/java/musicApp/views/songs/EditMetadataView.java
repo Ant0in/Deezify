@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
-import musicApp.controllers.songs.EditMetadataController;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
 
@@ -23,8 +22,10 @@ import java.util.function.Function;
  * The EditMetadataView class is responsible for displaying the metadata editing interface for a song.
  * It allows users to edit the title, artist, genre, and tags of a song, as well as choose a cover image.
  */
-public class EditMetadataView extends View<EditMetadataView, EditMetadataController> {
+public class EditMetadataView extends View {
 
+    private EditMetadataViewListener listener;
+    
     @FXML
     TextField titleField, artistField, albumField, genreField, artistAutoCompletion, albumAutoCompletion;
     @FXML
@@ -43,6 +44,34 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
     public EditMetadataView() {
         super();
         currentTags = new HashSet<>();
+    }
+
+    /**
+     * Listener interface for handling events in the EditMetadataView.
+     * Implement this interface to provide auto-completion suggestions and actions for cover selection,
+     * saving metadata, and canceling the edit operation.
+     */
+    public interface EditMetadataViewListener {
+        Optional<String> getArtistAutoCompletion(String input);
+
+        Optional<String> getTagAutoCompletion(String input);
+
+        Optional<String> getAlbumAutoCompletion(String input);
+
+        void handleChooseCover();
+
+        void handleSaveMetadata(String title, String artist, String album, String genre, Set<String> userTags);
+
+        void handleCancel();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(EditMetadataViewListener newListener) {
+        listener = newListener;
     }
 
     @Override
@@ -116,21 +145,21 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
      * Initializes the auto-completion for the artist field.
      */
     private void initArtistAutoCompletion() {
-        initAutoCompletion(artistField, artistAutoCompletion, viewController::getArtistAutoCompletion);
+        initAutoCompletion(artistField, artistAutoCompletion, listener::getArtistAutoCompletion);
     }
 
     /**
      * Initializes the auto-completion for the album field.
      */
     private void initAlbumAutoCompletion() {
-        initAutoCompletion(albumField, albumAutoCompletion, viewController::getAlbumAutoCompletion);
+        initAutoCompletion(albumField, albumAutoCompletion, listener::getAlbumAutoCompletion);
     }
 
     /**
      * Initializes the auto-completion for the tag input field.
      */
     private void initTagAutoCompletion() {
-        initAutoCompletion(tagInputField, tagAutoCompletion, viewController::getTagAutoCompletion);
+        initAutoCompletion(tagInputField, tagAutoCompletion, listener::getTagAutoCompletion);
     }
 
     /**
@@ -151,9 +180,9 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
      * Initializes the buttons in the view.
      */
     private void initButtons() {
-        chooseCoverButton.setOnAction(_ -> viewController.handleChooseCover());
+        chooseCoverButton.setOnAction(_ -> listener.handleChooseCover());
 
-        saveButton.setOnAction(_ -> viewController.handleSaveMetadata(
+        saveButton.setOnAction(_ -> listener.handleSaveMetadata(
                 titleField.getText(),
                 artistField.getText(),
                 albumField.getText(),
@@ -161,7 +190,7 @@ public class EditMetadataView extends View<EditMetadataView, EditMetadataControl
                 currentTags
         ));
 
-        cancelButton.setOnAction(_ -> viewController.handleCancel());
+        cancelButton.setOnAction(_ -> listener.handleCancel());
     }
 
     /**

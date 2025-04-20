@@ -14,7 +14,7 @@ import musicApp.models.Song;
 import musicApp.views.DjPlayerView;
 
 
-public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerController> {
+public class DjPlayerController extends ViewController<DjPlayerView> implements DjPlayerView.DjPlayerViewListener {
     
     private final Stage stage = new Stage();
     private final MediaPlayerController mediaPlayerController;
@@ -45,6 +45,7 @@ public class DjPlayerController extends ViewController<DjPlayerView, DjPlayerCon
 
     public DjPlayerController(PlayerController player) {
         super(new DjPlayerView());
+        view.setListener(this);
         this.mediaPlayerController = player.getMediaPlayerController();
         this.bandsGainBackup = mediaPlayerController.getEqualizerBands();
     }

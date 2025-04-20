@@ -1,7 +1,6 @@
 package musicApp.controllers.songs;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,13 +12,14 @@ import musicApp.controllers.ViewController;
 import musicApp.exceptions.BadSongException;
 import musicApp.models.Library;
 import musicApp.models.Song;
+import musicApp.views.songs.SongCell;
 import musicApp.views.songs.SongCellView;
 
 
 /**
  * The type Song cell controller.
  */
-public class SongCellController extends ViewController<SongCellView, SongCellController> {
+public class SongCellController extends ViewController<SongCellView> implements SongCellView.SongCellViewListener, SongCell.SongCellListener {
 
     private final LibraryController LibraryController;
     private Song song;
@@ -33,6 +33,7 @@ public class SongCellController extends ViewController<SongCellView, SongCellCon
      */
     public SongCellController(LibraryController controller) {
         super(new SongCellView());
+        view.setListener(this);
         LibraryController = controller;
         contextMenuController = new SongContextMenuController(this);
         initView("/fxml/SongCell.fxml");

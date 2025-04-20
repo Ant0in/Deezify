@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * The type Playlist navigator controller.
  */
-public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView, PlaylistNavigatorController> {
+public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView> implements PlaylistNavigatorView.PlaylistNavigatorViewListener {
 
     private final PlayerController playerController;
     private List<Library> playlists;
@@ -32,6 +32,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      */
     public PlaylistNavigatorController(PlayerController controller) {
         super(new PlaylistNavigatorView());
+        view.setListener(this);
         playerController = controller;
         playlists = new ArrayList<>();
         playlistContextMenuController = new PlaylistContextMenuController(this);
@@ -224,5 +225,10 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
 
     public void showContextMenu(double x, double y, Library library) {
         playlistContextMenuController.showAt(x, y, library);
+    }
+
+    @Override
+    public PlaylistNavigatorController getController() {
+        return this;
     }
 }

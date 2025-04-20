@@ -13,10 +13,10 @@ import java.util.List;
  * Abstract container class for all classes that will contain Songs.
  *
  * @param <V> the View class
- * @param <C> the Controller class
  */
-public abstract class SongContainerController<V extends SongContainerView<V, C, M>, C extends SongContainerController<V, C, M>, M extends Library>
-        extends ViewController<V, C> {
+public abstract class SongContainerController<V extends SongContainerView, M extends Library>
+        extends ViewController<V>
+        implements SongContainerView.SongContainerViewListener {
 
     /**
      * The Player controller.
@@ -35,6 +35,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
      */
     public SongContainerController(V view, PlayerController playerController) {
         super(view);
+        view.setListener(this);
         library = (M) new Library(new ArrayList<>(), "??library??", null);
         this.playerController = playerController;
     }

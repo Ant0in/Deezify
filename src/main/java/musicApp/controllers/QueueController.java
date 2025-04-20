@@ -10,7 +10,7 @@ import musicApp.views.QueueView;
  * Controller responsible for managing the song queue view and logic.
  * Handles adding, removing, reordering, and playing songs in the queue.
  */
-public class QueueController extends SongContainerController<QueueView, QueueController, Library> {
+public class QueueController extends SongContainerController<QueueView, Library> implements QueueView.QueueViewListener {
 
     /**
      * Instantiates a new Queue controller.
@@ -19,6 +19,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
      */
     public QueueController(PlayerController playerController) {
         super(new QueueView(), playerController);
+        view.setListener((QueueView.QueueViewListener) this);
         initView("/fxml/Queue.fxml");
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * The type Song context menu controller.
  */
-public class SongContextMenuController extends ViewController<SongContextMenuView, SongContextMenuController> {
+public class SongContextMenuController extends ViewController<SongContextMenuView> implements SongContextMenuView.SongContextMenuViewListener {
 
     /**
      * The Song cell controller.
@@ -29,6 +29,7 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
      */
     public SongContextMenuController(SongCellController cellController) {
         super(new SongContextMenuView());
+        view.setListener(this);
         songCellController = cellController;
         isMainLibrary = cellController.isShowingMainLibrary();
         initView("/fxml/SongContextMenu.fxml", true);

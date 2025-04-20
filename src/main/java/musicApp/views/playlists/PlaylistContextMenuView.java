@@ -4,16 +4,43 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import musicApp.controllers.playlists.PlaylistContextMenuController;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
 
-public class PlaylistContextMenuView extends View<PlaylistContextMenuView, PlaylistContextMenuController> {
+public class PlaylistContextMenuView extends View {
+    
+    private PlaylistContextMenuViewListener listener;
+    
     @FXML
     private ContextMenu contextMenu;
 
     @FXML
     private MenuItem addToQueueItem, replaceQueueItem, editItem, deleteItem;
+
+    /**
+     * Listener interface for handling context menu actions related to playlists.
+     * Implement this interface to define behavior for deleting, editing,
+     * appending to, or replacing the queue.
+     */
+    public interface PlaylistContextMenuViewListener {
+        void deletePlaylist();
+
+        void editPlaylist();
+
+        void appendToQueue();
+
+        void replaceQueue();
+    }
+
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(PlaylistContextMenuViewListener newListener) {
+        listener = newListener;
+    }
 
     /**
      * Initialize the view.
@@ -40,10 +67,10 @@ public class PlaylistContextMenuView extends View<PlaylistContextMenuView, Playl
      * Initializes the actions for the context menu items.
      */
     private void initActions() {
-        addToQueueItem.setOnAction(_ -> viewController.appendToQueue());
-        replaceQueueItem.setOnAction(_ -> viewController.replaceQueue());
-        editItem.setOnAction(_ -> viewController.editPlaylist());
-        deleteItem.setOnAction(_ -> viewController.deletePlaylist());
+        addToQueueItem.setOnAction(_ -> listener.appendToQueue());
+        replaceQueueItem.setOnAction(_ -> listener.replaceQueue());
+        editItem.setOnAction(_ -> listener.editPlaylist());
+        deleteItem.setOnAction(_ -> listener.deletePlaylist());
     }
 
     /**

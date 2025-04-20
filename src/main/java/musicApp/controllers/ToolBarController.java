@@ -2,10 +2,12 @@ package musicApp.controllers;
 
 import musicApp.views.ToolBarView;
 
+import java.awt.event.ActionListener;
+
 /**
  * The type Tool bar controller.
  */
-public class ToolBarController extends ViewController<ToolBarView, ToolBarController> {
+public class ToolBarController extends ViewController<ToolBarView> implements ToolBarView.ToolBarViewListener {
     private final PlayerController playerController;
 
     /**
@@ -15,6 +17,7 @@ public class ToolBarController extends ViewController<ToolBarView, ToolBarContro
      */
     public ToolBarController(PlayerController playerController) {
         super(new ToolBarView());
+        view.setListener(this);
         this.playerController = playerController;
         initView("/fxml/ToolBar.fxml");
     }

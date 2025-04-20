@@ -16,7 +16,10 @@ import musicApp.services.LanguageService;
  * PlayerView
  * Class that represents the view of the music player.
  */
-public class PlayerView extends View<PlayerView, PlayerController> {
+public class PlayerView extends View {
+
+    private PlayerViewListener listener;
+
     @FXML
     private Pane controls;
     @FXML
@@ -37,6 +40,35 @@ public class PlayerView extends View<PlayerView, PlayerController> {
         yOffset = 0;
     }
 
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface PlayerViewListener {
+        void close();
+
+        Pane getControlPanelRoot();
+
+        Pane getToolBarRoot();
+
+        Pane getMainLibraryRoot();
+
+        Pane getPlaylistNavigatorRoot();
+
+        Pane getQueueRoot();
+
+        Pane getLyricsRoot();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(PlayerViewListener newListener) {
+        listener = newListener;
+    }
+
+
 
     @Override
     public void init() {
@@ -53,27 +85,27 @@ public class PlayerView extends View<PlayerView, PlayerController> {
     }
 
     private void initControlPanel() {
-        controls = viewController.getControlPanelRoot();
+        controls = listener.getControlPanelRoot();
         labelContainer.setBottom(controls);
     }
 
     private void initToolBar() {
-        Pane toolBarPane = viewController.getToolBarRoot();
+        Pane toolBarPane = listener.getToolBarRoot();
         labelContainer.setTop(toolBarPane);
     }
 
 
     private void initMainLibrary() {
-        playerContainer.getChildren().set(0, viewController.getMainLibraryRoot());
+        playerContainer.getChildren().set(0, listener.getMainLibraryRoot());
     }
 
     private void initPlaylistNavigator() {
-        Pane playListsPane = viewController.getPlaylistNavigatorRoot();
+        Pane playListsPane = listener.getPlaylistNavigatorRoot();
         labelContainer.setLeft(playListsPane);
     }
 
     private void initQueue() {
-        playerContainer.getChildren().set(1, viewController.getQueueRoot());
+        playerContainer.getChildren().set(1, listener.getQueueRoot());
     }
 
 
@@ -113,7 +145,7 @@ public class PlayerView extends View<PlayerView, PlayerController> {
      */
     private void setupWindowCloseHandler(Stage stage) {
         stage.setOnCloseRequest(_ -> {
-            viewController.close();
+            listener.close();
             Platform.exit();
         });
     }
@@ -173,13 +205,13 @@ public class PlayerView extends View<PlayerView, PlayerController> {
      */
     public void toggleLyrics(boolean show) {
         if (show) {
-            Pane lyricsPane = viewController.getLyricsRoot();
+            Pane lyricsPane = listener.getLyricsRoot();
             HBox.setHgrow(lyricsPane, Priority.ALWAYS);
             playerContainer.getChildren().set(0, lyricsPane);
             playerContainer.applyCss();
 
         } else {
-            Pane libraryPane = viewController.getMainLibraryRoot();
+            Pane libraryPane = listener.getMainLibraryRoot();
             HBox.setHgrow(libraryPane, Priority.ALWAYS);
             playerContainer.getChildren().set(0, libraryPane);
         }

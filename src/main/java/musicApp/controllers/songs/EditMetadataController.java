@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * The type Edit metadata controller.
  */
-public class EditMetadataController extends ViewController<EditMetadataView, EditMetadataController> {
+public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataView.EditMetadataViewListener {
     private File selectedFile;
     private final Song song;
     private final Stage editStage;
@@ -32,6 +32,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      */
     public EditMetadataController(SongCellController cellController) {
         super(new EditMetadataView());
+        view.setListener(this);
         editStage = new Stage();
         songCellController = cellController;
         song = songCellController.getSong();

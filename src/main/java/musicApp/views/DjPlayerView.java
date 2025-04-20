@@ -4,11 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import musicApp.controllers.DjPlayerController;
 import musicApp.exceptions.EqualizerGainException;
 
-
-public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
+public class DjPlayerView extends View {
+    
+    private DjPlayerViewListener listener;
 
     @FXML
     private Slider gainSlider, bassBoostSlider, pressureSlider, waveSlider;
@@ -16,6 +16,28 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
     private Label gainLabel, bassBoostLabel, pressureLabel, speedLabel;
 
     public DjPlayerView() {
+    }
+
+    /**
+     * Listener interface used to delegate actions from the view to the controller logic.
+     */
+    public interface DjPlayerViewListener {
+        void changeGainMode (double gain) throws EqualizerGainException;
+
+        void changePressureStrength(double strength) throws EqualizerGainException;
+
+        void changeBassBoostGain(double gain) throws EqualizerGainException;
+
+        void changeWaveSpeed(double speed) throws EqualizerGainException;
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(DjPlayerViewListener newListener) {
+        listener = newListener;
     }
 
     public Scene getScene() {
@@ -80,19 +102,19 @@ public class DjPlayerView extends View<DjPlayerView, DjPlayerController> {
     }
 
     private void toggleBoostGainMode(double value) throws EqualizerGainException {
-        viewController.changeGainMode(value);
+        listener.changeGainMode(value);
     }
 
     private void togglePressureMode(double value) throws EqualizerGainException {
-        viewController.changePressureStrength(value);
+        listener.changePressureStrength(value);
     }
 
     private void toggleBassBoostMode(double value) throws EqualizerGainException {
-        viewController.changeBassBoostGain(value);
+        listener.changeBassBoostGain(value);
     }
 
     private void toggleWaveMode(double value) throws EqualizerGainException {
-        viewController.changeWaveSpeed(value);
+        listener.changeWaveSpeed(value);
     }
 
 }

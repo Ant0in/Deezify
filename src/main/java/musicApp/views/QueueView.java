@@ -1,13 +1,12 @@
 package musicApp.views;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.input.*;
-import musicApp.controllers.QueueController;
-import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.services.LanguageService;
 
@@ -15,10 +14,39 @@ import musicApp.services.LanguageService;
  * The Queue view.
  */
 @SuppressWarnings("unused")
-public class QueueView extends SongContainerView<QueueView, QueueController, Library> {
+public class QueueView extends SongContainerView {
+
+    private QueueViewListener listener;
 
     @FXML
     private Button addSongButton, deleteSongButton, clearQueueButton;
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface QueueViewListener {
+        void handleAddSong();
+
+        void handleDeleteSong();
+
+        void handleClearQueue();
+
+        void clearPlayListViewSelection();
+
+        void reorderQueue(int fromIndex, int toIndex);
+
+        BooleanBinding isPlaylistItemSelected();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(QueueViewListener newListener) {
+        listener = newListener;
+    }
+
 
     @Override
     public void init() {
@@ -32,9 +60,9 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
     }
 
     private void setButtonActions() {
-        addSongButton.setOnAction(_ -> viewController.handleAddSong());
-        deleteSongButton.setOnAction(_ -> viewController.handleDeleteSong());
-        clearQueueButton.setOnAction(_ -> viewController.handleClearQueue());
+        addSongButton.setOnAction(_ -> listener.handleAddSong());
+        deleteSongButton.setOnAction(_ -> listener.handleDeleteSong());
+        clearQueueButton.setOnAction(_ -> listener.handleClearQueue());
     }
 
     private void initBindings() {
@@ -47,14 +75,14 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
      */
     private void bindButtons() {
         deleteSongButton.visibleProperty().bind(isSelected());
-        addSongButton.visibleProperty().bind(viewController.isPlaylistItemSelected());
+        addSongButton.visibleProperty().bind(listener.isPlaylistItemSelected());
     }
 
     /**
      * Bind the queue buttons activation.
      */
     private void bindQueueButtonsActivation() {
-        addSongButton.disableProperty().bind(viewController.isPlaylistItemSelected().not());
+        addSongButton.disableProperty().bind(listener.isPlaylistItemSelected().not());
         deleteSongButton.disableProperty().bind(listView.getSelectionModel().selectedItemProperty().isNull());
         clearQueueButton.disableProperty().bind(Bindings.isEmpty(listView.getItems()));
 
@@ -154,7 +182,7 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
                 int dropIndex = cell.getIndex();
 
                 if (draggedIndex != dropIndex) {
-                    viewController.reorderQueue(draggedIndex, dropIndex);
+                    listener.reorderQueue(draggedIndex, dropIndex);
                     updateListView();
                 }
 
@@ -169,7 +197,7 @@ public class QueueView extends SongContainerView<QueueView, QueueController, Lib
      */
     private void setupListSelectionListeners() {
         listView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
-            if (newVal != null) viewController.clearPlayListViewSelection();
+            if (newVal != null) listener.clearPlayListViewSelection();
         });
     }
 

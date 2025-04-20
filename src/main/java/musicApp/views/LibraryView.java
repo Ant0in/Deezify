@@ -5,21 +5,48 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.songs.SongCellController;
-import musicApp.models.Library;
+import musicApp.models.Song;
 import musicApp.services.LanguageService;
 import musicApp.views.songs.SongCell;
+
+import java.util.List;
 
 /**
  * The MainLibrary view.
  */
 @SuppressWarnings("unused")
-public class LibraryView extends SongContainerView<LibraryView, LibraryController, Library> {
+public class LibraryView extends SongContainerView {
+
+    private LibraryViewListener listener;
 
     @FXML
     private TextField songInput;
 
     @FXML
     private Button addSongButton;
+
+    /**
+     * Listener interface used to delegate actions from the view to the controller logic.
+     */
+    public interface LibraryViewListener {
+        void handleAddSong();
+
+        void clearQueueSelection();
+
+        List<Song> searchLibrary(String query);
+
+        LibraryController getController();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(LibraryViewListener newListener) {
+        listener = newListener;
+    }
+
 
     @Override
     public void init() {
@@ -40,7 +67,7 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
             if (newVal == null || newVal.isEmpty()) {
                 updateListView();
             } else {
-                listView.getItems().setAll(viewController.searchLibrary(newVal));
+                listView.getItems().setAll(listener.searchLibrary(newVal));
             }
         });
     }
@@ -51,7 +78,7 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
      * Initialize the buttons in the view.
      */
     private void initButtons() {
-        addSongButton.setOnAction(event -> viewController.handleAddSong());
+        addSongButton.setOnAction(event -> listener.handleAddSong());
     }
 
     /**
@@ -67,7 +94,7 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
      * Initialize the playlist view.
      */
     private void initPlayListView() {
-        listView.setCellFactory(_ -> new SongCell(new SongCellController(viewController)));
+        listView.setCellFactory(_ -> new SongCell(new SongCellController(listener.getController())));
         updateListView();
     }
 
@@ -77,7 +104,7 @@ public class LibraryView extends SongContainerView<LibraryView, LibraryControlle
     private void setupListSelectionListeners() {
         listView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
             if (newVal != null) {
-                viewController.clearQueueSelection();
+                listener.clearQueueSelection();
             }
         });
     }

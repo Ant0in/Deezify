@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * The type Lyrics controller.
  */
-public class LyricsController extends ViewController<LyricsView, LyricsController> {
+public class LyricsController extends ViewController<LyricsView> implements LyricsView.LyricsViewListener {
 
     private final PlayerController playerController;
     private final LyricsService lyricsManager;
@@ -25,6 +25,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
      */
     public LyricsController(PlayerController _controller) {
         super(new LyricsView());
+        view.setListener(this);
         playerController = _controller;
         lyricsManager = new LyricsService();
         initView("/fxml/Lyrics.fxml");

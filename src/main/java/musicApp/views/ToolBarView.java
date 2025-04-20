@@ -13,11 +13,40 @@ import java.util.Objects;
 /**
  * The ToolBar view.
  */
-public class ToolBarView extends View<ToolBarView, ToolBarController> {
+public class ToolBarView extends View {
+
+    private ToolBarViewListener listener;
+
     @FXML
     private Button exitButton, btnSettings;
     @FXML
     private Region spacer;
+
+    /**
+     * Instantiates a new Tool bar view.
+     */
+    public ToolBarView() {
+
+    }
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface ToolBarViewListener {
+        void openSettings();
+
+        void exitApp();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(ToolBarViewListener newListener) {
+        listener = newListener;
+    }
+
 
     /**
      * Initialize the view.
@@ -56,7 +85,7 @@ public class ToolBarView extends View<ToolBarView, ToolBarController> {
      * @param event The action event.
      */
     private void handleSettings(ActionEvent event) {
-        viewController.openSettings();
+        listener.openSettings();
     }
 
     /**
@@ -64,6 +93,6 @@ public class ToolBarView extends View<ToolBarView, ToolBarController> {
      */
     private void handleExitApp(ActionEvent actionEvent) {
         Platform.exit();
-        viewController.exitApp();
+        listener.exitApp();
     }
 }
