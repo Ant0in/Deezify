@@ -89,7 +89,7 @@ public class ToolBarView extends View {
     /**
      * Handle the exit button
      */
-    private void handleExitApp(ActionEvent actionEvent) {
+    private void handleExitApp(ActionEvent event) {
         Platform.exit();
         listener.exitApp();
     }

@@ -145,21 +145,6 @@ public class Library {
     }
 
     /**
-     * Get a song by its path.
-     *
-     * @param path The path of the song.
-     * @return The song at the path.
-     */
-    public Song getSongByPath(Path path) {
-        for (Song song : songList) {
-            if (song.getFilePath().equals(path)) {
-                return song;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Get the name of the library.
      *
      * @return The name of the library.

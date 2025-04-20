@@ -94,13 +94,6 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     }
 
     /**
-     * Update list view.
-     */
-    public void updateListView() {
-        view.updateListView();
-    }
-
-    /**
      * Retrieves the index of a given song in the music library.
      *
      * @param song The Song object whose index is to be found.

@@ -66,15 +66,6 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     }
 
     /**
-     * Handle select library.
-     *
-     * @param library the library
-     */
-    public void handleSelectLibrary(Library library) {
-        setSelectedLibrary(library);
-    }
-
-    /**
      * Create a new playlist.
      *
      * @param name      the name of the playlist

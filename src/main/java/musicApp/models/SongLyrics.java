@@ -36,13 +36,6 @@ public class SongLyrics {
     }
 
     /**
-     * Set the plain text lyrics
-     */
-    public void setLyrics(List<String> lyrics) {
-        textLyrics = lyrics != null ? lyrics : Collections.emptyList();
-    }
-
-    /**
      * Get the karaoke lyrics
      */
     public List<KaraokeLine> getKaraokeLines() {

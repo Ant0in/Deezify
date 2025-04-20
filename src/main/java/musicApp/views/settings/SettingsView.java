@@ -70,18 +70,6 @@ public class SettingsView extends View {
         listener = _listener;
     }
 
-
-    /**
-     * Show the settings view.
-     *
-     * @param stage The stage to show the view on.
-     */
-    public void show(Stage stage) {
-        stage.setScene(scene);
-        stage.setTitle(getTitle());
-        stage.show();
-    }
-
     /**
      * Initialize the settings view.
      */
@@ -145,14 +133,6 @@ public class SettingsView extends View {
         cancelButton.setText(languageManager.get("button.cancel"));
         browseButton.setText(languageManager.get("settings.select_music_folder"));
         equalizerButton.setText(languageManager.get("settings.manage_audio_equalizer"));
-    }
-
-    /**
-     * Refresh the language of the view.
-     */
-    public void refreshLanguage() {
-        initTranslations();
-        updateLanguageComboBox();
     }
 
     /**

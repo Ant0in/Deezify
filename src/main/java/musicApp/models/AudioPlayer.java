@@ -178,15 +178,6 @@ public class AudioPlayer {
     }
 
     /**
-     * Get the progress of the song.
-     *
-     * @return The progress of the song.
-     */
-    public double getProgress() {
-        return progress.get();
-    }
-
-    /**
      * Set the volume of the song.
      *
      * @param volume The volume to set.
@@ -222,17 +213,6 @@ public class AudioPlayer {
      */
     public Song getLoadedSong() {
         return loadedSong;
-    }
-
-    /**
-     * Stop the song.
-     */
-    public void stop() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-        }
-        mediaPlayer = null;
-        isPlaying.set(false);
     }
 
     /**
@@ -274,15 +254,6 @@ public class AudioPlayer {
      */
     public DoubleProperty getVolumeProperty() {
         return volume;
-    }
-
-    /**
-     * Get the balance of the AudioPlayer.
-     *
-     * @return The balance of the AudioPlayer.
-     */
-    public double getBalance() {
-        return balance;
     }
 
     /**
