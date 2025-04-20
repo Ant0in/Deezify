@@ -48,15 +48,6 @@ public class PlaylistCellController extends ViewController<PlaylistCellView> imp
     }
 
     /**
-     * Is the library selected.
-     *
-     * @return True if the library is selected, false otherwise.
-     */
-    public boolean isSelected() {
-        return navigatorController.getSelectedLibrary().equals(library);
-    }
-
-    /**
      * Get the name of the library.
      *
      * @return the name of the library

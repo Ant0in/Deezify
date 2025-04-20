@@ -68,17 +68,6 @@ public class SettingsView extends View {
     }
 
     /**
-     * Show the settings view.
-     *
-     * @param stage The stage to show the view on.
-     */
-    public void show(Stage stage) {
-        stage.setScene(scene);
-        stage.setTitle(getTitle());
-        stage.show();
-    }
-
-    /**
      * Initialize the settings view.
      */
     @Override
@@ -163,15 +152,6 @@ public class SettingsView extends View {
         if (selectedDirectory != null) {
             this.directoryLabel.setText(selectedDirectory.getAbsolutePath());
         }
-    }
-
-    /**
-     * Get the title of the view.
-     *
-     * @return The title of the view.
-     */
-    public String getTitle() {
-        return title;
     }
 
     /**

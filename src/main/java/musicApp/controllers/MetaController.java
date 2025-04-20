@@ -103,13 +103,4 @@ public class MetaController {
         MAINWINDOW,
         SETTINGS
     }
-
-    /**
-     * Retrieves the current music directory from the settings controller.
-     *
-     * @return The path to the music directory as defined in the settings.
-     */
-    public Path getMusicDirectory() {
-        return settingsController.getMusicDirectory();
-    }
 }

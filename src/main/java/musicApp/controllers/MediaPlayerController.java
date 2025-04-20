@@ -204,16 +204,6 @@ public class MediaPlayerController extends ViewController<MediaPlayerView> imple
     }
 
     /**
-     * !! This method is not used in the current implementation !!
-     * Set the volume of the audio player.
-     *
-     * @param volume The volume level (0.0 to 1.0).
-     */
-    public void setVolume(double volume) {
-        audioPlayer.setVolume(volume);
-    }
-
-    /**
      * Set the equalizer bands.
      *
      * @param equalizerBandsGain The gain of the equalizer bands.
@@ -234,6 +224,4 @@ public class MediaPlayerController extends ViewController<MediaPlayerView> imple
     public void toggleMiniPlayer() {
         miniPlayerController.toggleView();
     }
-
-    public AudioPlayer getAudioPlayer() { return audioPlayer; };
 }

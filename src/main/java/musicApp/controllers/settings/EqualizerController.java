@@ -58,15 +58,6 @@ public class EqualizerController extends ViewController<EqualizerView> implement
     }
 
     /**
-     * * Update a band in the equalizer.
-     *
-     * @param bandsGain The new values of the bands.
-    */
-    public void updateEqualizerBands(List<Double> bandsGain) {
-        equalizer.setBandsGain(bandsGain);
-    }
-
-    /**
      * Get the band frequency.
      *
      * @param bandIndex The index of the band.

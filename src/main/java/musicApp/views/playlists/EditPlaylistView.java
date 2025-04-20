@@ -118,28 +118,6 @@ public class EditPlaylistView extends View {
         }
     }
 
-    /**
-     * Populates the fields of the PlaylistEditView with the given playlist data.
-     * This method is used to pre-fill the fields when editing an existing playlist.
-     *
-     * @param playlist The playlist to populate the fields with.
-     */
-    public void populateFields(Library playlist) {
-        if (playlist != null) {
-            nameField.setText(playlist.getName());
-
-            try {
-                Path imagePath = playlist.getImagePath();
-                if (imagePath != null) {
-                    coverLabel.setText(imagePath.toString());
-                    coverLabel.setUserData(imagePath);
-                }
-            } catch (Exception e) {
-                System.err.println("Error getting image path: " + e.getMessage());
-            }
-        }
-    }
-
     public Scene getScene() {
         return scene;
     }

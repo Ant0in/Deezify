@@ -346,15 +346,6 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     }
 
     /**
-     * Get the main library
-     *
-     * @return The main library
-     */
-    public Library getLibrary() {
-        return libraryController.getLibrary();
-    }
-
-    /**
      * Append a playlist to the queue
      *
      * @param playlist The playlist to append
@@ -420,7 +411,6 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     public void handleAddSongToMainLibrary() {
         File selectedFile = FileDialogService.chooseAudioFile(null, "Select Music File");
         if (selectedFile != null) {
-            Path mainLibraryPath = metaController.getMusicDirectory();
             try {
                 PlaylistService playlistService = new PlaylistService();
                 Path copiedFilePath = playlistService.addSongToMainLibrary(selectedFile);

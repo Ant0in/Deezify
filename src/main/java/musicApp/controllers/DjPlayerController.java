@@ -270,20 +270,6 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     }
 
     /**
-     * Stops the song.
-     */
-    public void pause() {
-        mediaPlayerController.pause();
-    }
-
-    /**
-     * Stops the song.
-     */
-    public void unpause() {
-        mediaPlayerController.unpause();
-    }
-
-    /**
      * On quit called method. Destroy all timelines, restore the old config and close the stage.
      */
     public void onQuit() {

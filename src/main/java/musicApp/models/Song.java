@@ -108,15 +108,6 @@ public class Song {
     }
 
     /**
-     * Set the album of the song.
-     *
-     * @param album The album of the song.
-     */
-    public void setAlbum(String album) {
-        metadata.setAlbum(album);
-    }
-
-    /**
      * Get the genre of the song.
      * @return The genre of the song.
      */
@@ -142,15 +133,6 @@ public class Song {
     }
 
     /**
-     * Set the duration of the song.
-     *
-     * @param duration The duration of the song.
-     */
-    public void setDuration(Duration duration) {
-        metadata.setDuration(duration);
-    }
-
-    /**
      * Get the cover image of the song.
      * @return The cover image of the song in bytes.
      */
@@ -159,29 +141,11 @@ public class Song {
     }
 
     /**
-     * Set the cover of the song.
-     *
-     * @param artwork The cover of the song.
-     */
-    public void setCover(Artwork artwork) {
-        metadata.setCover(artwork);
-    }
-
-    /**
      * Get the user tags of the song.
      * @return The user tags of the song.
      */
     public ArrayList<String> getUserTags() {
         return metadata.getUserTags();
-    }
-
-    /**
-     * Set the user tags of the song.
-     *
-     * @param userTags The user tags of the song.
-     */
-    public void setUserTags(ArrayList<String> userTags) {
-        metadata.setUserTags(userTags);
     }
 
     /**

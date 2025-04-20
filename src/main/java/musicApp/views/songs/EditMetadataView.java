@@ -243,15 +243,6 @@ public class EditMetadataView extends View {
     }
 
     /**
-     * Gets the tags associated with the song.
-     *
-     * @return A set of tags.
-     */
-    public Set<String> getTags() {
-        return currentTags;
-    }
-
-    /**
      * Sets the tags for the song.
      *
      * @param tags A set of tags to be set.
