@@ -28,19 +28,17 @@ public class EditMetadataView extends View {
     private EditMetadataViewListener listener;
 
     @FXML
-    StackPane artistStackPane, tagStackPane;
+    private StackPane artistStackPane, tagStackPane;
     @FXML
-    TextField titleField, artistField, genreField, artistAutoCompletion;
+    private TextField titleField, artistField, genreField, tagInputField, artistAutoCompletion, tagAutoCompletion;
     @FXML
-    TextField tagInputField, tagAutoCompletion;
+    private Label titleLabel, artistLabel, genreLabel;
     @FXML
-    Label titleLabel, artistLabel, genreLabel;
+    private Button chooseCoverButton, saveButton, cancelButton;
     @FXML
-    Button chooseCoverButton, saveButton, cancelButton;
+    private ImageView coverImage;
     @FXML
-    ImageView coverImage;
-    @FXML
-    FlowPane tagFlowPane;
+    private FlowPane tagFlowPane;
 
     private final Set<String> currentTags;
 
