@@ -156,15 +156,6 @@ public class SettingsView extends View {
     }
 
     /**
-     * Get the title of the view.
-     *
-     * @return The title of the view.
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
      * Get the scene of the view.
      *
      * @return The scene of the view.

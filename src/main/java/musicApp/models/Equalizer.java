@@ -30,7 +30,6 @@ public class Equalizer {
      * @param bandsGain
      */
     public Equalizer(List<Double> bandsGain) {
-        bandsGain = new ArrayList<>();
         checkBandsGain(bandsGain);
         setBandsGain(bandsGain);
     }

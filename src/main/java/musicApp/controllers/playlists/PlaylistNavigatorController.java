@@ -47,15 +47,6 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     }
 
     /**
-     * Get the selected library.
-     *
-     * @return the selected library
-     */
-    public Library getSelectedLibrary() {
-        return selectedLibrary;
-    }
-
-    /**
      * Set the selected library.
      *
      * @param library the library

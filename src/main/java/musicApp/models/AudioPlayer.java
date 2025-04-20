@@ -178,17 +178,6 @@ public class AudioPlayer {
     }
 
     /**
-     * Set the volume of the song.
-     *
-     * @param volume The volume to set.
-     */
-    public void setVolume(double volume) {
-        if (mediaPlayer != null) {
-            mediaPlayer.setVolume(volume);
-        }
-    }
-
-    /**
      * Check if the song is playing.
      *
      * @return True if the song is playing, False otherwise.

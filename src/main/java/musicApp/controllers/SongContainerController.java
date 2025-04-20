@@ -144,10 +144,6 @@ public abstract class SongContainerController<V extends SongContainerView, M ext
         view.clearSelection();
     }
 
-    public Library getLibrary() {
-        return library;
-    }
-
     /**
      * Refresh ui.
      */
