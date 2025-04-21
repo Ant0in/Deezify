@@ -163,7 +163,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      *
      * @return the boolean property
      */
-    public BooleanProperty isPlayingProperty() {
+    public BooleanProperty getIsPlayingProperty() {
         return playerController.isPlayingProperty();
     }
 

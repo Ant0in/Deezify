@@ -3,6 +3,8 @@ package musicApp.controllers.songs;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+import javafx.util.Duration;
 import musicApp.controllers.DjPlayerController;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.ViewController;
@@ -21,7 +23,7 @@ import java.util.Optional;
  */
 public class SongCellController extends ViewController<SongCellView> implements SongCellView.SongCellViewListener, SongCell.SongCellListener {
 
-    private final LibraryController LibraryController;
+    private final LibraryController libraryController;
     private Song song;
     private final SongContextMenuController contextMenuController;
 
@@ -34,7 +36,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
     public SongCellController(LibraryController controller) {
         super(new SongCellView());
         view.setListener(this);
-        LibraryController = controller;
+        libraryController = controller;
         contextMenuController = new SongContextMenuController(this);
         initView("/fxml/SongCell.fxml");
 
@@ -46,10 +48,10 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @param newSong the new song
      */
     public void update(Song newSong) {
-        if (!newSong.equals(getSong())) {
+        if (!newSong.equals(song)) {
             song = newSong;
-            view.update(song);
         }
+        view.update();
     }
 
     /**
@@ -71,7 +73,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return True if the song is loaded, false otherwise.
      */
     public boolean isLoaded() {
-        Song playingSong = LibraryController.getCurrentlyLoadedSong();
+        Song playingSong = libraryController.getCurrentlyLoadedSong();
         return playingSong != null && playingSong.equals(song);
     }
 
@@ -81,7 +83,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return True if the song is playing, false otherwise.
      */
     public boolean isPlaying() {
-        return LibraryController.isPlaying();
+        return libraryController.isPlaying();
     }
 
     /**
@@ -92,21 +94,51 @@ public class SongCellController extends ViewController<SongCellView> implements 
             view.displayError("No song to play");
             return;
         }
-        LibraryController.playSong(song);
+        libraryController.playSong(song);
     }
 
     /**
      * Handle when the user wants to pause the song.
      */
     public void handlePause() {
-        LibraryController.pause();
+        libraryController.pause();
     }
 
     /**
      * Handle when the user wants to unpause the song.
      */
     public void handleUnpause() {
-        LibraryController.unpause();
+        libraryController.unpause();
+    }
+
+    public void handleLoadedSongChange(Runnable callback) {
+        libraryController.getCurrentlyLoadedSongStringProperty().
+            addListener((_, _, _) -> callback.run());
+    }
+
+    public void handlePlayingStatusChange(Runnable callback) {
+        libraryController.getIsPlayingProperty().
+            addListener((_, _, _) -> callback.run());
+    }
+
+    public Image getSongCoverImage() {
+        return song.getCoverImage();
+    }
+
+    public String getSongTitle() {
+        return song.getTitle();
+    }
+
+    public String getSongArtist() {
+        return song.getArtist();
+    }
+
+    public String getSongGenre() {
+        return song.getGenre();
+    }
+
+    public Duration getSongDuration() {
+        return song.getDuration();
     }
 
     /**
@@ -115,7 +147,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return The currently loaded song string property.
      */
     public StringProperty getCurrentlyLoadedSongStringProperty() {
-        return LibraryController.getCurrentlyLoadedSongStringProperty();
+        return libraryController.getCurrentlyLoadedSongStringProperty();
     }
 
     /**
@@ -125,15 +157,15 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return The is playing property.
      */
     public BooleanProperty isPlayingProperty() {
-        return LibraryController.isPlayingProperty();
+        return libraryController.getIsPlayingProperty();
     }
 
     /**
      * Toggle favorites.
      */
     public void toggleFavorites() {
-        LibraryController.toggleFavorites(song);
-        view.update(song);
+        libraryController.toggleFavorites(song);
+        view.update();
     }
 
     /**
@@ -142,7 +174,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return the boolean
      */
     public boolean isFavorite() {
-        return LibraryController.isFavorite(song);
+        return libraryController.isFavorite(song);
     }
 
     /**
@@ -151,7 +183,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return List of all playlists
      */
     public List<Library> getPlaylists() {
-        return LibraryController.getPlaylists();
+        return libraryController.getPlaylists();
     }
 
     /**
@@ -164,7 +196,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
             view.displayError("No song to add");
             return;
         }
-        LibraryController.addSongToPlaylist(song, playlist);
+        libraryController.addSongToPlaylist(song, playlist);
     }
 
     /**
@@ -177,7 +209,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
             view.displayError("No song to remove");
             return;
         }
-        LibraryController.removeSongFromPlaylist(song, playlist);
+        libraryController.removeSongFromPlaylist(song, playlist);
     }
 
     /**
@@ -188,7 +220,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
             view.displayError("No song to remove");
             return;
         }
-        LibraryController.removeSongFromPlaylist(song);
+        libraryController.removeSongFromPlaylist(song);
     }
 
     /**
@@ -197,7 +229,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return the boolean
      */
     public boolean isShowingMainLibrary() {
-        return LibraryController.isShowingMainLibrary();
+        return libraryController.isShowingMainLibrary();
     }
 
     /**
@@ -227,7 +259,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
         }
 
         // we get the player controller to initialize the DJ mode view & play
-        DjPlayerController djPlayerController = LibraryController.getPlayerController().getDjPlayerController();
+        DjPlayerController djPlayerController = libraryController.getPlayerController().getDjPlayerController();
         djPlayerController.init();
         djPlayerController.play(song);
 
@@ -237,7 +269,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * Refresh song.
      */
     public void refreshSong() {
-        view.update(song);
+        view.update();
     }
 
     /**
@@ -247,7 +279,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return the artist auto-completion
      */
     public Optional<String> getArtistAutoCompletion(String input) {
-        return LibraryController.getArtistAutoCompletion(input);
+        return libraryController.getArtistAutoCompletion(input);
     }
 
     /**
@@ -257,7 +289,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return the album auto-completion
      */
     public Optional<String> getAlbumAutoCompletion(String input) {
-        return LibraryController.getAlbumAutoCompletion(input);
+        return libraryController.getAlbumAutoCompletion(input);
     }
 
     /**
@@ -267,6 +299,6 @@ public class SongCellController extends ViewController<SongCellView> implements 
      * @return the tag auto completion
      */
     public Optional<String> getTagAutoCompletion(String input) {
-        return LibraryController.getTagAutoCompletion(input);
+        return libraryController.getTagAutoCompletion(input);
     }
 }

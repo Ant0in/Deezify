@@ -5,7 +5,9 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 import musicApp.models.Song;
 import musicApp.views.View;
 
@@ -45,6 +47,10 @@ public class SongCellView extends View {
 
         void handlePlay();
 
+        void handleLoadedSongChange(Runnable callback);
+
+        void handlePlayingStatusChange(Runnable callback);
+
         void showContextMenu(double x, double y);
 
         boolean isLoaded();
@@ -53,9 +59,15 @@ public class SongCellView extends View {
 
         boolean isFavorite();
 
-        StringProperty getCurrentlyLoadedSongStringProperty();
+        Image getSongCoverImage();
 
-        BooleanProperty isPlayingProperty();
+        String getSongTitle();
+
+        String getSongArtist();
+
+        String getSongGenre();
+
+        Duration getSongDuration();
     }
 
 
@@ -88,8 +100,8 @@ public class SongCellView extends View {
         editButton.setPickOnBounds(true);
 
 
-        listener.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> updatePlayButtonIcon());
-        listener.isPlayingProperty().addListener((_, _, _) -> updatePlayButtonIcon());
+        listener.handleLoadedSongChange(this::updatePlayButtonIcon);
+        listener.handlePlayingStatusChange(this::updatePlayButtonIcon);
     }
 
     /**
@@ -135,19 +147,23 @@ public class SongCellView extends View {
         }
     }
 
+    private String getDurationLabelString() {
+        Duration songDuration = listener.getSongDuration();
+        return String.format("%d:%02d", (int) songDuration.toMinutes(), (int) songDuration.toSeconds() % 60);
+    }
+
     /**
      * Update the view with the song's information.
      *
-     * @param song to update the view with
      */
-    public void update(Song song) {
-        coverImage.setImage(song.getCoverImage());
-        titleLabel.setText(song.getTitle());
+    public void update() {
+        coverImage.setImage(listener.getSongCoverImage());
+        titleLabel.setText(listener.getSongTitle());
         titleLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
-        artistLabel.setText(song.getArtist());
-        genreLabel.setText(song.getGenre());
+        artistLabel.setText(listener.getSongArtist());
+        genreLabel.setText(listener.getSongGenre());
         genreLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
-        durationLabel.setText(String.format("%d:%02d", (int) song.getDuration().toMinutes(), (int) song.getDuration().toSeconds() % 60));
+        durationLabel.setText(getDurationLabelString());
         durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
         updatePlayButtonIcon();
         updateLikeButton();

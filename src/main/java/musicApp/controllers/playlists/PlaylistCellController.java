@@ -34,11 +34,11 @@ public class PlaylistCellController extends ViewController<PlaylistCellView> imp
     /**
      * Update the song in the view.
      *
-     * @param _library the new selected library
+     * @param newLibrary the new selected library
      */
-    public void update(Library _library) {
-        if (!_library.equals(library)) {
-            library = _library;
+    public void update(Library newLibrary) {
+        if (!newLibrary.equals(library)) {
+            library = newLibrary;
         }
         view.update();
     }
