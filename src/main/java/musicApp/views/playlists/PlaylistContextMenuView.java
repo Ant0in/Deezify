@@ -23,13 +23,13 @@ public class PlaylistContextMenuView extends View {
      * appending to, or replacing the queue.
      */
     public interface PlaylistContextMenuViewListener {
-        void deletePlaylist();
+        void handleDeletePlaylist();
 
-        void editPlaylist();
+        void handleEditPlaylist();
 
-        void appendToQueue();
+        void handleAppendToQueue();
 
-        void replaceQueue();
+        void handleReplaceQueue();
     }
 
 
@@ -67,10 +67,10 @@ public class PlaylistContextMenuView extends View {
      * Initializes the actions for the context menu items.
      */
     private void initActions() {
-        addToQueueItem.setOnAction(_ -> listener.appendToQueue());
-        replaceQueueItem.setOnAction(_ -> listener.replaceQueue());
-        editItem.setOnAction(_ -> listener.editPlaylist());
-        deleteItem.setOnAction(_ -> listener.deletePlaylist());
+        addToQueueItem.setOnAction(_ -> listener.handleAppendToQueue());
+        replaceQueueItem.setOnAction(_ -> listener.handleReplaceQueue());
+        editItem.setOnAction(_ -> listener.handleEditPlaylist());
+        deleteItem.setOnAction(_ -> listener.handleDeletePlaylist());
     }
 
     /**

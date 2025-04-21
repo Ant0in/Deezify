@@ -20,11 +20,11 @@ public class PlaylistContextMenuController extends ViewController<PlaylistContex
     /**
      * Deletes a playlist.
      */
-    public void deletePlaylist() {
+    public void handleDeletePlaylist() {
         playlistNavigatorController.deletePlaylist(selectedLibrary);
     }
 
-    public void editPlaylist() {
+    public void handleEditPlaylist() {
         if (playlistNavigatorController.isModifiable(selectedLibrary)) {
             playlistNavigatorController.openEditPlaylistDialog(selectedLibrary);
         } else {
@@ -32,16 +32,16 @@ public class PlaylistContextMenuController extends ViewController<PlaylistContex
         }
     }
 
-    public void appendToQueue() {
+    public void handleAppendToQueue() {
         playlistNavigatorController.appendToQueue(selectedLibrary);
     }
 
-    public void replaceQueue() {
+    public void handleReplaceQueue() {
         playlistNavigatorController.replaceQueue(selectedLibrary);
     }
 
-    public void showAt(double x, double y, Library selectedLibrary) {
-        this.selectedLibrary = selectedLibrary;
+    public void showAt(double x, double y, Library newSelectedLibrary) {
+        selectedLibrary = newSelectedLibrary;
         view.show(playlistNavigatorController.getRoot(), x, y);
     }
 }
