@@ -97,8 +97,12 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
         view.show(songCellController.getRoot(), x, y);
     }
 
-    public void launchDjMode() throws BadSongException {
-        songCellController.launchDjMode();
+    public void handleLaunchDjMode() {
+        try{
+            songCellController.launchDjMode();
+        }catch(BadSongException e){
+            alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
     
 }

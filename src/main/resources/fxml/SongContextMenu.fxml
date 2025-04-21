@@ -10,5 +10,6 @@
         <MenuItem fx:id="editMetadataItem" />
         <Menu fx:id="addToPlaylistMenu" />
         <MenuItem fx:id="removeFromPlaylistMenu" />
+        <MenuItem fx:id="djModeItem" />
     </items>
 </ContextMenu>
