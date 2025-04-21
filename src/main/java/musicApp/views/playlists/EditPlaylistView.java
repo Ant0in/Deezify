@@ -35,7 +35,7 @@ public class EditPlaylistView extends View {
     private ImageView coverImage;
     @FXML
     private VBox popupLayout;
-    
+
     /**
      * Listener interface for handling events in the EditPlaylistView.
      * Implement this interface to manage user actions such as saving a playlist,
@@ -76,7 +76,7 @@ public class EditPlaylistView extends View {
         } else {
             stage.setTitle(LanguageService.getInstance().get("edit_playlist.title"));
         }
-        stage.setScene(getScene());
+        stage.setScene(scene);
         stage.show();
     }
 
@@ -130,9 +130,5 @@ public class EditPlaylistView extends View {
                 as.showExceptionAlert(e);
             }
         }
-    }
-
-    public Scene getScene() {
-        return scene;
     }
 }

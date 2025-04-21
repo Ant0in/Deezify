@@ -1,5 +1,6 @@
 package musicApp.controllers.playlists;
 
+import javafx.scene.image.Image;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.services.LanguageService;
@@ -26,16 +27,20 @@ public class PlaylistCellController extends ViewController<PlaylistCellView> imp
         initView("/fxml/PlaylistCell.fxml");
     }
 
+    public boolean isShowingLibrary() {
+        return library != null;
+    }
+
     /**
      * Update the song in the view.
      *
      * @param _library the new selected library
      */
     public void update(Library _library) {
-        if (!_library.equals(getLibrary())) {
+        if (!_library.equals(library)) {
             library = _library;
         }
-        view.update(library);
+        view.update();
     }
 
     /**
@@ -43,8 +48,17 @@ public class PlaylistCellController extends ViewController<PlaylistCellView> imp
      *
      * @return the library
      */
-    public Library getLibrary() {
-        return library;
+    public int getLibrarySize() {
+        return library.size();
+    }
+
+    /**
+     * Get the cover image of the library.
+     *
+     * @return the cover image
+     */
+    public Image getLibraryCoverImage() {
+        return library.getCoverImage();
     }
 
     /**
