@@ -92,7 +92,9 @@ public class Library {
      *
      * @return The size of the library.
      */
-    public int size() { return songList.size(); }
+    public int size() {
+        return songList.size();
+    }
 
     /**
      * Check if the library is empty.
@@ -154,10 +156,10 @@ public class Library {
     /**
      * Set the name of the library.
      *
-     * @param newName the new name
+     * @param _name the new name
      */
-    public void setName(String newName) {
-        name = newName;
+    public void setName(String _name) {
+        name = _name;
     }
 
     /**
@@ -196,10 +198,10 @@ public class Library {
             return new Image(Objects.requireNonNull(defaultCover));
         }
     }
-    
+
     /**
      * Get the auto-completion for a song artist.
-     * 
+     *
      * @param input The input string to complete.
      * @return The auto-completion for the song artist.
      */
@@ -219,7 +221,7 @@ public class Library {
 
     /**
      * Get the auto-completion for a song tag.
-     * 
+     *
      * @param input The input string to complete.
      * @return The auto-completion for the song tag.
      */
@@ -229,8 +231,8 @@ public class Library {
 
     /**
      * Get the auto-completion for a string in a list given as argument.
-     * 
-     * @param input The input string to complete.
+     *
+     * @param input     The input string to complete.
      * @param extractor The function to extract the list of strings for the autocompletion.
      * @return The auto-completion for the input string.
      */

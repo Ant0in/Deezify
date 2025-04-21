@@ -13,7 +13,7 @@
             <Button fx:id="simpleLyricsButton"/>
         </left>
         <center>
-            <Label fx:id="lyricsTitle" styleClass="lyrics-title" />
+            <Label fx:id="lyricsTitle" styleClass="lyrics-title"/>
         </center>
         <right>
             <Button fx:id="karaokeLyricsButton"/>
@@ -24,7 +24,7 @@
         </VBox>
     </ScrollPane>
     <ScrollPane fx:id="karaokeScrollPane" fitToWidth="true" fitToHeight="true">
-        <VBox fx:id="karaokeLyricsContainer" spacing="5" VBox.vgrow="ALWAYS" >
+        <VBox fx:id="karaokeLyricsContainer" spacing="5" VBox.vgrow="ALWAYS">
             <HBox fx:id="karaokeHeader" alignment="TOP_RIGHT" spacing="10">
                 <Button fx:id="karaokeEditButton"/>
             </HBox>

@@ -14,7 +14,7 @@
 
 /* Progress Bar Styling */
 .progress-bar {
-    -fx-accent: #27ae60;               /* The filled part of the bar */
+    -fx-accent: #27ae60; /* The filled part of the bar */
     -fx-control-inner-background: #34495e;
     -fx-background-insets: 0;
     -fx-background-radius: 5;

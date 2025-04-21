@@ -4,15 +4,16 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<HBox stylesheets="@../css/style2.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" spacing="10">
+<HBox stylesheets="@../css/style2.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10">
     <Button fx:id="playButton" style="-fx-background-color: transparent; -fx-border-color: transparent;">
     </Button>
-    <ImageView fx:id="coverImage" fitWidth="25" fitHeight="25" preserveRatio="true" />
-    <Label fx:id="titleLabel" style="-fx-text-fill: rgb(255, 255, 255);" />
-    <Label fx:id="artistLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;" />
-    <Label fx:id="genreLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;" />
-    <Region HBox.hgrow="ALWAYS" />
+    <ImageView fx:id="coverImage" fitWidth="25" fitHeight="25" preserveRatio="true"/>
+    <Label fx:id="titleLabel" style="-fx-text-fill: rgb(255, 255, 255);"/>
+    <Label fx:id="artistLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;"/>
+    <Label fx:id="genreLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;"/>
+    <Region HBox.hgrow="ALWAYS"/>
     <Button fx:id="likeButton" text="❤"></Button>
-    <Label fx:id="durationLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;" />
-    <ImageView fx:id="editButton" fitWidth="20" fitHeight="20" preserveRatio="true" />
+    <Label fx:id="durationLabel" style="-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;"/>
+    <ImageView fx:id="editButton" fitWidth="20" fitHeight="20" preserveRatio="true"/>
 </HBox>

@@ -23,7 +23,7 @@ public class AlertService {
     /**
      * Displays an alert dialog to show information about an exception.
      *
-     * @param ex The exception to display. If {@code null}, the alert will display a default message indicating no exception is available.
+     * @param ex        The exception to display. If {@code null}, the alert will display a default message indicating no exception is available.
      * @param alertType The type of alert to show (e.g., ERROR, WARNING, INFO).
      */
     public void showExceptionAlert(Exception ex, AlertType alertType) {
@@ -36,6 +36,7 @@ public class AlertService {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
     /**
      * Retrieves the title for the alert based on the specified alert type.
      *
@@ -51,6 +52,7 @@ public class AlertService {
             default -> languageService.get("alert.title.default");
         };
     }
+
     /**
      * Retrieves the header text for the alert based on the specified alert type.
      *
