@@ -98,10 +98,10 @@ public class JsonRepository {
     }
 
     /**
-     * Returns the default music directory based on the operating system.
-     * If the default music directory does not exist, it will be created.
+     * Returns the default music folder based on the operating system.
+     * If the default music folder does not exist, it will be created.
      *
-     * @return The default music directory.
+     * @return The default music folder.
      */
     public Path getDefaultMusicFolder() {
         Path musicFolder = getFolderByOS("Music");

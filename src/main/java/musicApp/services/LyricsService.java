@@ -51,7 +51,7 @@ public class LyricsService {
 
     /**
      * Loads text lyrics from a file
-     * @param relativePath Path to the lyrics file, relative to the lyrics directory
+     * @param relativePath Path to the lyrics file, relative to the lyrics folder
      * @return List of lyrics lines, or empty list if file doesn't exist or can't be read
      */
     private List<String> loadTextLyrics(String relativePath) {
@@ -71,7 +71,7 @@ public class LyricsService {
 
     /**
      * Loads karaoke lyrics from an LRC file
-     * @param relativePath Path to the LRC file, relative to the lyrics directory
+     * @param relativePath Path to the LRC file, relative to the lyrics folder
      * @return List of KaraokeLine objects, or empty list if file doesn't exist or can't be parsed
      */
     private List<KaraokeLine> loadKaraokeLyrics(String relativePath) {
@@ -88,7 +88,7 @@ public class LyricsService {
     }
 
     /**
-     * Checks if the given relative path is valid and exists in the lyrics directory
+     * Checks if the given relative path is valid and exists in the lyrics folder
      * @param relativePath The relative path to check
      * @return true if the path is valid and exists, false otherwise
      */

@@ -1,13 +1,13 @@
 package musicApp.views.settings;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import musicApp.enums.Language;
-import musicApp.models.Settings;
 import musicApp.services.FileDialogService;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
@@ -22,22 +22,17 @@ import java.nio.file.Paths;
 public class SettingsView extends View {
     
     private SettingsViewListener listener;
-    
-    // private final Scene scene;
+    private Stage stage;
+
     @FXML
     private ComboBox<String> languageComboBox;
     @FXML
     private Slider balanceSlider;
     @FXML
-    private Label balanceLabel, balanceTitle, languageTitle, languageSelect, left, right;
+    private Label balanceLabel, balanceTitle, languageTitle, languageSelect, left, right, musicFolderLabel;
     @FXML
-    private Button saveButton, cancelButton;
-    @FXML
-    private Button browseButton, equalizerButton;
-    @FXML
-    private Label directoryLabel;
+    private Button saveButton, cancelButton, browseButton, equalizerButton;
 
-    private String title;
 
     
     /**
@@ -45,15 +40,15 @@ public class SettingsView extends View {
      * Implement this interface to handle user actions in the settings view.
      */
     public interface SettingsViewListener {
-        void handleSave(Language language, double balance, Path musicDirectory);
-
-        Path getMusicDirectory();
-
         double getBalance();
 
-        void openEqualizer();
+        void handleOpenEqualizer();
 
         void handleCancel();
+
+        void handleSave(Language language, double balance, Path musicFolder);
+
+        String getMusicFolderString();
     }
 
 
@@ -74,15 +69,34 @@ public class SettingsView extends View {
         initComboBox();
         initSlider();
         initButtons();
-        initDirectoryLabel();
+        initMusicFolderLabel();
+        initStage();
         refreshTranslation();
+    }
+    
+    private void initStage() {
+        stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.setScene(scene);
+        stage.setOnCloseRequest(_ -> {
+            listener.handleCancel();
+        });
+    }
+
+    public void show(){
+        stage.show();
+    }
+
+    public void close(){
+        stage.close();
     }
 
     /**
      * Initialize the directory label to display the current music directory.
      */
-    private void initDirectoryLabel() {
-        directoryLabel.setText(listener.getMusicDirectory().toString());
+    private void initMusicFolderLabel() {
+        musicFolderLabel.setText(listener.getMusicFolderString());
     }
 
     /**
@@ -125,7 +139,7 @@ public class SettingsView extends View {
         left.setText(languageService.get("settings.left"));
         right.setText(languageService.get("settings.right"));
         balanceTitle.setText(languageService.get("settings.balance_title"));
-        title = languageService.get("settings.title");
+        stage.setTitle(languageService.get("settings.title"));
         saveButton.setText(languageService.get("button.save"));
         cancelButton.setText(languageService.get("button.cancel"));
         browseButton.setText(languageService.get("settings.select_music_folder"));
@@ -139,27 +153,20 @@ public class SettingsView extends View {
     private void initButtons() {
         saveButton.setOnMouseClicked(_ -> handleSave());
         cancelButton.setOnMouseClicked(_ -> listener.handleCancel());
-        browseButton.setOnMouseClicked(_ -> handleBrowseDirectory());
-        equalizerButton.setOnMouseClicked(_ -> listener.openEqualizer());
+        browseButton.setOnMouseClicked(_ -> handleBrowseMusicFolder());
+        equalizerButton.setOnMouseClicked(_ -> listener.handleOpenEqualizer());
     }
 
     /**
      * Handle when the browse button is pressed
      */
-    private void handleBrowseDirectory() {
-        File selectedDirectory = FileDialogService.chooseDirectory(null, "Select Music Folder");
+    private void handleBrowseMusicFolder() {
+        LanguageService languageService = LanguageService.getInstance();
+        File selectedDirectory = FileDialogService.chooseDirectory(null,
+                languageService.get("settings.select_music_folder"));
         if (selectedDirectory != null) {
-            this.directoryLabel.setText(selectedDirectory.getAbsolutePath());
+            this.musicFolderLabel.setText(selectedDirectory.getAbsolutePath());
         }
-    }
-
-    /**
-     * Get the scene of the view.
-     *
-     * @return The scene of the view.
-     */
-    public Scene getScene() {
-        return scene;
     }
 
     /**
@@ -178,16 +185,16 @@ public class SettingsView extends View {
     private void handleSave() {
         Language selectedLanguage = getSelectedLanguage();
         double balance = balanceSlider.getValue();
-        Path musicDirectory = Paths.get(directoryLabel.getText());
+        Path musicDirectory = Paths.get(musicFolderLabel.getText());
         listener.handleSave(selectedLanguage, balance, musicDirectory);
     }
 
     /**
      * Update the view with the current settings.
      */
-    public void updateView(Settings settings) {
+    public void updateView(double balance, String musicFolderString) {
         initComboBox();
-        balanceSlider.setValue(settings.getBalance());
-        directoryLabel.setText(settings.getMusicFolder().toString());
+        balanceSlider.setValue(balance);
+        musicFolderLabel.setText(musicFolderString);
     }
 }

@@ -1,7 +1,5 @@
 package musicApp.controllers.settings;
 
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import musicApp.controllers.MetaController;
 import musicApp.controllers.ViewController;
 import musicApp.enums.Language;
@@ -16,7 +14,7 @@ import java.nio.file.Path;
  * The type Settings controller.
  */
 public class SettingsController extends ViewController<SettingsView> implements SettingsView.SettingsViewListener {
-    private final Stage settingsStage;
+
     private final MetaController metaController;
     private final EqualizerController equalizerController;
     private final Settings settings;
@@ -35,36 +33,20 @@ public class SettingsController extends ViewController<SettingsView> implements 
         metaController = _controller;
         equalizerController = new EqualizerController(this, _settings.getEqualizer());
         initView("/fxml/Settings.fxml");
-        settingsStage = new Stage();
-        initSettingsStage();
-    }
-
-    private void initSettingsStage() {
-        settingsStage.initModality(Modality.APPLICATION_MODAL);
-        settingsStage.setResizable(false);
-        settingsStage.setTitle("Settings");
-        settingsStage.setScene(view.getScene());
-        settingsStage.setOnCloseRequest(_ -> {
-            handleCancel();
-        });
     }
 
     /**
      * Show the settings window.
      */
     public void show() {
-        if (settingsStage != null) {
-            settingsStage.show();
-        }
+        view.show();
     }
 
     /**
      * Close the settings window.
      */
     public void close() {
-        if (settingsStage != null) {
-            settingsStage.close();
-        }
+        view.close();
     }
 
     /**
@@ -75,11 +57,11 @@ public class SettingsController extends ViewController<SettingsView> implements 
     }
 
     /**
-     * Set the music directory path .
+     * Set the music folder path .
      *
-     * @param path The path to the music directory.
+     * @param path The path to the music folder.
      */
-    private void setMusicDirectoryPath(Path path) {
+    private void setMusicFolderPath(Path path) {
         settings.setMusicFolder(path);
     }
 
@@ -111,7 +93,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
     /**
      * Open equalizer.
      */
-    public void openEqualizer() {
+    public void handleOpenEqualizer() {
         close();
         equalizerController.show();
     }
@@ -121,13 +103,13 @@ public class SettingsController extends ViewController<SettingsView> implements 
      *
      * @param language       the language
      * @param balance        the balance
-     * @param musicDirectory the music directory
+     * @param musicFolder the music folder
      */
-    public void handleSave(Language language, double balance, Path musicDirectory) {
+    public void handleSave(Language language, double balance, Path musicFolder) {
         LanguageService.getInstance().setLanguage(language);
         refreshLanguage();
         setBalance(balance);
-        setMusicDirectoryPath(musicDirectory);
+        setMusicFolderPath(musicFolder);
         updateEqualizer();
         metaController.notifySettingsChanged(settings);
         updateView();
@@ -135,7 +117,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
     }
 
     private void updateView() {
-        view.updateView(settings);
+        view.updateView(settings.getBalance(), settings.getMusicFolderString());
         refreshLanguage();
     }
 
@@ -149,12 +131,12 @@ public class SettingsController extends ViewController<SettingsView> implements 
     }
 
     /**
-     * Get the path of the music directory
+     * Get the path of the music folder
      *
-     * @return The path of the music directory
+     * @return The path of the music folder
      */
-    public Path getMusicDirectory() {
-        return settings.getMusicFolder();
+    public String getMusicFolderString() {
+        return settings.getMusicFolderString();
     }
 
 }

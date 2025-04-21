@@ -58,6 +58,15 @@ public class Settings {
     }
 
     /**
+     * Get the music folder of the settings as a string.
+     *
+     * @return The music folder as a string.
+     */
+    public String getMusicFolderString() {
+        return musicFolder.toString();
+    }
+
+    /**
      * Set the music folder of the settings.
      *
      * @param newMusicFolder The music folder.

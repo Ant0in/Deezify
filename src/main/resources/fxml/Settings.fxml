@@ -26,7 +26,7 @@
          <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
             <children>
                <Button fx:id="browseButton" mnemonicParsing="false" text="Select Music Folder" />
-               <Label fx:id="directoryLabel" prefHeight="17.0" prefWidth="161.0" text="None" />
+               <Label fx:id="musicFolderLabel" prefHeight="17.0" prefWidth="161.0" text="None" />
             </children>
          </HBox>
          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
