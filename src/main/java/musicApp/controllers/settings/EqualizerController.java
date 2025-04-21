@@ -1,11 +1,11 @@
 package musicApp.controllers.settings;
 
-import java.util.List;
-
 import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
-import musicApp.views.settings.EqualizerView;
 import musicApp.models.Equalizer;
+import musicApp.views.settings.EqualizerView;
+
+import java.util.List;
 
 
 /**

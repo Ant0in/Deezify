@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
-import musicApp.controllers.ToolBarController;
 
 import java.util.Objects;
 

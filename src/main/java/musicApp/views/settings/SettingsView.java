@@ -6,7 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.stage.Stage;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.services.FileDialogService;

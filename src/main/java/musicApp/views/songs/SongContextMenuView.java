@@ -6,9 +6,9 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import musicApp.exceptions.BadSongException;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
-import musicApp.exceptions.BadSongException;
 
 /**
  * View for the context menu that appears when right-clicking a song in the library.

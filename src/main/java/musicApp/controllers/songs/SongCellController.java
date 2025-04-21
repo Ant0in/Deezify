@@ -1,9 +1,6 @@
 package musicApp.controllers.songs;
 
 
-import java.util.List;
-import java.util.Optional;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import musicApp.controllers.DjPlayerController;
@@ -14,6 +11,9 @@ import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.views.songs.SongCell;
 import musicApp.views.songs.SongCellView;
+
+import java.util.List;
+import java.util.Optional;
 
 
 /**

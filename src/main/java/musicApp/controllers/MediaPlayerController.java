@@ -1,7 +1,5 @@
 package musicApp.controllers;
 
-import java.util.List;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
@@ -11,6 +9,8 @@ import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.AudioPlayer;
 import musicApp.models.Song;
 import musicApp.views.MediaPlayerView;
+
+import java.util.List;
 
 /**
  * The  MediaPlayer controller.

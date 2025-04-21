@@ -9,7 +9,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import musicApp.controllers.PlayerController;
 import musicApp.services.LanguageService;
 
 /**

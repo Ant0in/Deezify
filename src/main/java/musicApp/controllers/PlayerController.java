@@ -1,10 +1,5 @@
 package musicApp.controllers;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -13,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
-import musicApp.controllers.settings.EqualizerController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;

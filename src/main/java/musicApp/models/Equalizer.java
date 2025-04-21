@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.annotations.Expose;
-
-import javafx.scene.media.EqualizerBand;
-
 public class Equalizer {
     public final double MAX_GAIN_DB = EqualizerBand.MAX_GAIN;
     public final double MIN_GAIN_DB = EqualizerBand.MIN_GAIN;

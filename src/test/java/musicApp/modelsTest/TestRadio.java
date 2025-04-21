@@ -1,16 +1,13 @@
 package musicApp.modelsTest;
 
-import javafx.scene.media.AudioSpectrumListener;
-import musicApp.controllers.MiniPlayerController;
 import musicApp.exceptions.BadM3URadioException;
-import musicApp.exceptions.BadSongException;
-import musicApp.models.AudioPlayer;
 import musicApp.models.Radio;
 import org.junit.Test;
 
 import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class TestRadio {
 

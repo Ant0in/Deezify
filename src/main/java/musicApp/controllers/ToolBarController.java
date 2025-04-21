@@ -2,8 +2,6 @@ package musicApp.controllers;
 
 import musicApp.views.ToolBarView;
 
-import java.awt.event.ActionListener;
-
 /**
  * The type Tool bar controller.
  */

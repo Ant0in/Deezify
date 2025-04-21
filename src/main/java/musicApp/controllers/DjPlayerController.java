@@ -1,9 +1,5 @@
 package musicApp.controllers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.stage.Stage;
@@ -12,6 +8,10 @@ import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Song;
 import musicApp.views.DjPlayerView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class DjPlayerController extends ViewController<DjPlayerView> implements DjPlayerView.DjPlayerViewListener {

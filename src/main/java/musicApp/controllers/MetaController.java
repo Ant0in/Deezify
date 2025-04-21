@@ -1,9 +1,5 @@
 package musicApp.controllers;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Library;
@@ -11,6 +7,9 @@ import musicApp.models.Settings;
 import musicApp.services.AlertService;
 import musicApp.services.PlaylistService;
 import musicApp.services.SettingsService;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The Meta controller.

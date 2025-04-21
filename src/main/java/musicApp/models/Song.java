@@ -7,7 +7,6 @@ import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.LyricsNotFoundException;
 import musicApp.services.LyricsService;
 import musicApp.services.MetadataService;
-import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;

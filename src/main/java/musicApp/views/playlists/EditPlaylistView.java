@@ -8,11 +8,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import musicApp.models.Library;
+import javafx.stage.Stage;
 import musicApp.services.AlertService;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.nio.file.Path;
