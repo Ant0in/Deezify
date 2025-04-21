@@ -1,12 +1,9 @@
 package musicApp.controllers.songs;
 
 import javafx.scene.image.Image;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
-import musicApp.services.LanguageService;
 import musicApp.services.MetadataService;
 import musicApp.views.songs.EditMetadataView;
 
@@ -19,9 +16,8 @@ import java.util.Set;
  * The type Edit metadata controller.
  */
 public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataView.EditMetadataViewListener {
-    private File selectedFile;
+    private File selectedCoverImageFile;
     private final Song song;
-    private final Stage editStage;
     private final SongCellController songCellController;
 
 
@@ -33,7 +29,6 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
     public EditMetadataController(SongCellController cellController) {
         super(new EditMetadataView());
         view.setListener(this);
-        editStage = new Stage();
         songCellController = cellController;
         song = songCellController.getSong();
         initView("/fxml/EditMetadata.fxml");
@@ -48,37 +43,16 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
             );
             view.setCoverImage(song.getCoverImage());
         }
-
-        editStage.setTitle(LanguageService.getInstance().get("button.edit_metadata"));
-        editStage.setScene(view.getScene());
-        editStage.show();
     }
 
     /**
      * Handles the user action of choosing a cover image.
      * Opens a file chooser, and if a valid image is selected, loads and displays it in the view.
      */
-    public void handleChooseCover() {
-        File file = promptUserForCoverFile();
+    public void handleCoverChanged(File file) {
         if (file != null && file.exists()) {
             loadAndApplyCoverImage(file);
         }
-    }
-
-    /**
-     * Prompts the user with a FileChooser dialog to select an image file.
-     *
-     * @return the selected File if the user chose one, or {@code null} otherwise
-     */
-    private File promptUserForCoverFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose Cover Image");
-
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
-        );
-
-        return fileChooser.showOpenDialog(editStage);
     }
 
     /**
@@ -91,7 +65,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
             Image image = new Image(file.toURI().toString());
             if (!image.isError()) {
                 view.setCoverImage(image);
-                selectedFile = file;
+                selectedCoverImageFile = file;
             } else {
                 System.err.println("Failed to load image: " + file.getName());
             }
@@ -123,8 +97,8 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
             newMetadata.setAlbum(album);
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(new ArrayList<>(userTags));
-            if (selectedFile != null) {
-                newMetadata.loadCoverFromPath(selectedFile.getAbsolutePath());
+            if (selectedCoverImageFile != null) {
+                newMetadata.loadCoverFromPath(selectedCoverImageFile.getAbsolutePath());
             }
             MetadataService util = new MetadataService();
 
@@ -136,7 +110,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
 
         song.reloadMetadata();
         songCellController.refreshSong();
-        editStage.close();
+        view.close();
     }
 
     /**
@@ -144,7 +118,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      */
     public void handleCancel() {
         songCellController.refreshSong();
-        editStage.close();
+        view.close();
     }
 
     /**

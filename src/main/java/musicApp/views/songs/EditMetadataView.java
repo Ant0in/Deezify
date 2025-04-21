@@ -9,9 +9,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
@@ -25,6 +28,7 @@ import java.util.function.Function;
 public class EditMetadataView extends View {
 
     private EditMetadataViewListener listener;
+    private Stage stage;
     
     @FXML
     private TextField titleField, artistField, albumField, genreField, tagInputField,
@@ -51,17 +55,17 @@ public class EditMetadataView extends View {
      * saving metadata, and canceling the edit operation.
      */
     public interface EditMetadataViewListener {
+        void handleCancel();
+
+        void handleCoverChanged(File coverImageFile);
+
+        void handleSaveMetadata(String title, String artist, String album, String genre, Set<String> userTags);
+
         Optional<String> getArtistAutoCompletion(String input);
 
         Optional<String> getTagAutoCompletion(String input);
 
         Optional<String> getAlbumAutoCompletion(String input);
-
-        void handleChooseCover();
-
-        void handleSaveMetadata(String title, String artist, String album, String genre, Set<String> userTags);
-
-        void handleCancel();
     }
 
     /**
@@ -79,15 +83,18 @@ public class EditMetadataView extends View {
         refreshTranslation();
         initButtons();
         initTagInput();
+        initStage();
     }
 
-    /**
-     * Gets the scene associated with this view.
-     *
-     * @return the scene
-     */
-    public Scene getScene() {
-        return scene;
+    private void initStage(){
+        stage = new Stage();
+        stage.setTitle(LanguageService.getInstance().get("button.edit_metadata"));
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void close(){
+        stage.close();
     }
 
     /**
@@ -166,20 +173,21 @@ public class EditMetadataView extends View {
      */
     @Override
     protected void refreshTranslation() {
-        titleLabel.setText(LanguageService.getInstance().get("song.title"));
-        artistLabel.setText(LanguageService.getInstance().get("song.artist"));
-        genreLabel.setText(LanguageService.getInstance().get("song.genre"));
-        chooseCoverButton.setText(LanguageService.getInstance().get("button.choose_file"));
-        saveButton.setText(LanguageService.getInstance().get("button.save"));
-        cancelButton.setText(LanguageService.getInstance().get("button.cancel"));
-        tagInputField.setPromptText(LanguageService.getInstance().get("prompt.add_tag"));
+        LanguageService languageService = LanguageService.getInstance();
+        titleLabel.setText(languageService.get("song.title"));
+        artistLabel.setText(languageService.get("song.artist"));
+        genreLabel.setText(languageService.get("song.genre"));
+        chooseCoverButton.setText(languageService.get("button.choose_file"));
+        saveButton.setText(languageService.get("button.save"));
+        cancelButton.setText(languageService.get("button.cancel"));
+        tagInputField.setPromptText(languageService.get("prompt.add_tag"));
     }
 
     /**
      * Initializes the buttons in the view.
      */
     private void initButtons() {
-        chooseCoverButton.setOnAction(_ -> listener.handleChooseCover());
+        chooseCoverButton.setOnAction(_ -> handleChooseCover());
 
         saveButton.setOnAction(_ -> listener.handleSaveMetadata(
                 titleField.getText(),
@@ -253,5 +261,30 @@ public class EditMetadataView extends View {
             tagInputField.setText(tag);
             handleAddTag();
         }
+    }
+
+    /**
+     * Prompts the user with a FileChooser dialog to select an image file.
+     *
+     * @return the selected File if the user chose one, or {@code null} otherwise
+     */
+    private File promptUserForCoverFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Cover Image");
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        return fileChooser.showOpenDialog(stage);
+    }
+
+    /**
+     * Handles the user action of choosing a cover image.
+     * Opens a file chooser, and if a valid image is selected, loads and displays it in the view.
+     */
+    private void handleChooseCover() {
+        File file = promptUserForCoverFile();
+        listener.handleCoverChanged(file);
     }
 }
