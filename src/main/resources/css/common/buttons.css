@@ -7,7 +7,7 @@
 .button:hover {
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
-    -fx-background-color: #2f508e; /*#00ACC1;*/
+    -fx-background-color: #2f508e;/*#00ACC1;*/
 }
 
 .disabled-btn {

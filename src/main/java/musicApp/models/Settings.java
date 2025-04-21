@@ -15,20 +15,20 @@ public class Settings {
     private Path musicFolder;
     private final Equalizer equalizer;
     private boolean musicFolderChanged;
-
+    
     /**
      * Constructor for Settings.
      *
-     * @param _balance     The balance of the settings.
-     * @param _musicFolder The music folder of the settings.
-     * @param _equalizer   The equalizer of the settings.
+     * @param _balance      The balance of the settings.
+     * @param _musicFolder  The music folder of the settings.
+     * @param _equalizer    The equalizer of the settings.
      */
     public Settings(double _balance, Path _musicFolder, Equalizer _equalizer) {
         equalizer = _equalizer;
         musicFolderChanged = false;
         balance = _balance;
         musicFolder = _musicFolder;
-    }
+    }  
 
     /**
      * Get the balance of the settings.
@@ -42,10 +42,10 @@ public class Settings {
     /**
      * Set the balance of the settings.
      *
-     * @param _balance The balance.
+     * @param newBalance The balance.
      */
-    public void setBalance(double _balance) {
-        balance = _balance;
+    public void setBalance(double newBalance) {
+        balance = newBalance;
     }
 
     /**
@@ -60,16 +60,15 @@ public class Settings {
     /**
      * Set the music folder of the settings.
      *
-     * @param _musicFolder The music folder.
+     * @param newMusicFolder The music folder.
      */
-    public void setMusicFolder(Path _musicFolder) {
-        musicFolder = _musicFolder;
+    public void setMusicFolder(Path newMusicFolder) {
+        musicFolder = newMusicFolder;
         musicFolderChanged = true;
     }
 
     /**
      * Get the equalizer of the settings.
-     *
      * @return The equalizer.
      */
     public Equalizer getEqualizer() {
@@ -78,7 +77,6 @@ public class Settings {
 
     /**
      * Get the equalizer bands of the settings.
-     *
      * @return The equalizer bands.
      */
     public List<Double> getEqualizerBands() {
@@ -87,7 +85,6 @@ public class Settings {
 
     /**
      * Checks if the music folder has changed.
-     *
      * @return True if the music folder has changed, false otherwise.
      */
     public boolean isMusicFolderChanged() {
@@ -96,7 +93,6 @@ public class Settings {
 
     /**
      * Checks if the settings object is equal to another settings object.
-     *
      * @param obj The object to compare with.
      * @return True if the objects are equal, false otherwise.
      */
@@ -115,7 +111,6 @@ public class Settings {
 
     /**
      * Returns a string representation of the settings object.
-     *
      * @return A string representation of the settings object.
      */
     @Override

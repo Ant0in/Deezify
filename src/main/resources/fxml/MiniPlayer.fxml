@@ -6,13 +6,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-<VBox alignment="CENTER" spacing="5" prefWidth="550" prefHeight="500" xmlns="http://javafx.com/javafx/23.0.1"
-      xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/style2.css">
+<VBox alignment="CENTER" spacing="5" prefWidth="550" prefHeight="500" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/style2.css">
     <StackPane>
 
-        <ImageView fx:id="coverImage" fitWidth="250" fitHeight="250">
+        <ImageView fx:id="coverImage" fitWidth="250" fitHeight="250" >
             <clip>
-                <Circle centerX="125" centerY="125" radius="125"/>
+                <Circle centerX="125" centerY="125" radius="125" />
             </clip>
         </ImageView>
 

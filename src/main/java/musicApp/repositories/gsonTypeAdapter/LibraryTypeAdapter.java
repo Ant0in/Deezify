@@ -15,7 +15,7 @@ public class LibraryTypeAdapter extends TypeAdapter<Library> {
     /**
      * Writes the Library object to JSON format.
      *
-     * @param out      The JsonWriter to write to.
+     * @param out The JsonWriter to write to.
      * @param playlist The Library object to write.
      * @throws IOException If writing fails.
      */
