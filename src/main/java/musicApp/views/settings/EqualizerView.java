@@ -8,6 +8,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import musicApp.enums.EqualizerBandFrequency;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class EqualizerView extends View {
 
     private EqualizerViewListener listener;
+    private Stage stage;
     
     @FXML
     private Button okButton, cancelButton;
@@ -31,17 +33,15 @@ public class EqualizerView extends View {
      * Implement this interface to provide the necessary actions and configuration for each equalizer band.
      */
     public interface EqualizerViewListener {
-        void close();
+        void handleClose();
 
         void handleCancel();
-
-        int getBandFrequency(int bandIndex);
 
         double getMaxGainDB();
 
         double getMinGainDB();
 
-        double getEqualizerBandGain(int bandIndex);
+        double getEqualizerBandGain(EqualizerBandFrequency frequency);
     }
 
 
@@ -60,18 +60,25 @@ public class EqualizerView extends View {
         initButtons();
         refreshTranslation();
         initSliders();
+        initStage();
+    }
+
+    private void initStage() {
+        stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Equalizer");
+        stage.setOnCloseRequest(_ -> listener.handleClose());
     }
 
     /**
      * Show the equalizer view.
-     *
-     * @param stage The stage to show the view on.
      */
-    public void show(Stage stage) {
-        stage.setScene(scene);
-        stage.setTitle("Equalizer");
+    public void show() {
         stage.show();
-        stage.setOnCloseRequest(_ -> listener.close());
+    }
+
+    public void close(){
+        stage.close();
     }
 
     /**
@@ -111,7 +118,7 @@ public class EqualizerView extends View {
      * @return A Slider object for the equalizer band.
      */
     private Slider Slider(int sliderIndex) {
-        double initGainValue = listener.getEqualizerBandGain(sliderIndex);
+        double initGainValue = listener.getEqualizerBandGain(EqualizerBandFrequency.fromIndex(sliderIndex));
         Slider slider = new Slider(listener.getMinGainDB(), listener.getMaxGainDB(), initGainValue);
         slider.setOrientation(javafx.geometry.Orientation.VERTICAL);
         slider.setBlockIncrement(1);
@@ -144,8 +151,8 @@ public class EqualizerView extends View {
      */
     private Label bandFrequenciesLabel(int bandIndex) {
         Label label = new Label();
-        int frequency = listener.getBandFrequency(bandIndex);
-        String freqLabelString = getFreqLabelString(frequency);
+        EqualizerBandFrequency equalizerBandFrequency = EqualizerBandFrequency.fromIndex(bandIndex);
+        String freqLabelString = getFreqLabelString(equalizerBandFrequency.getFrequencyHz());
         label.setText(freqLabelString);
         return label;
     }
@@ -179,7 +186,7 @@ public class EqualizerView extends View {
      * Initialize the buttons in the view.
      */
     private void initButtons() {
-        okButton.setOnMouseClicked(_ -> listener.close());
+        okButton.setOnMouseClicked(_ -> listener.handleClose());
         cancelButton.setOnMouseClicked(_ -> listener.handleCancel());
     }
 
@@ -211,7 +218,7 @@ public class EqualizerView extends View {
             if (node instanceof VBox vBox) {
                 for (javafx.scene.Node child : vBox.getChildren()) {
                     if (child instanceof Slider slider) {
-                        double initGainValue = listener.getEqualizerBandGain(sliderIndex);
+                        double initGainValue = listener.getEqualizerBandGain(EqualizerBandFrequency.fromIndex(sliderIndex));
                         slider.setValue(initGainValue);
                         sliderIndex++;
                         break;

@@ -1,7 +1,6 @@
 package musicApp.views.playlists;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -44,7 +43,7 @@ public class EditPlaylistView extends View {
     public interface EditPlaylistViewListener {
         void handleSave(String playlistName, Path imagePath);
 
-        void close();
+        void handleClose();
 
         boolean isCreation();
     }
@@ -106,7 +105,7 @@ public class EditPlaylistView extends View {
         actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(),
                 (Path) coverLabel.getUserData()));
 
-        cancelButton.setOnAction(_ -> listener.close());
+        cancelButton.setOnAction(_ -> listener.handleClose());
     }
 
     /**

@@ -2,6 +2,7 @@ package musicApp.models;
 
 import com.google.gson.annotations.Expose;
 import javafx.scene.media.EqualizerBand;
+import musicApp.enums.EqualizerBandFrequency;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,8 +11,6 @@ import java.util.List;
 public class Equalizer {
     public final double MAX_GAIN_DB = EqualizerBand.MAX_GAIN;
     public final double MIN_GAIN_DB = EqualizerBand.MIN_GAIN;
-    // default javafx frequencies
-    private final ArrayList<Integer> BANDS_FREQUENCY = new ArrayList<>(Arrays.asList(32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000));
     @Expose
     private List<Double> bandsGain;
 
@@ -26,7 +25,7 @@ public class Equalizer {
 
     /**
      * Constructor for Equalizer with specified bands gain.
-     * @param bandsGain
+     * @param bandsGain bandsGains
      */
     public Equalizer(List<Double> bandsGain) {
         checkBandsGain(bandsGain);
@@ -38,7 +37,7 @@ public class Equalizer {
      * @return the number of bands
      */
     private int getBandsSize() {
-        return BANDS_FREQUENCY.size();
+        return EqualizerBandFrequency.getBandsSize();
     }
 
     /**
@@ -125,15 +124,6 @@ public class Equalizer {
      */
     public double getMinGainDB() {
         return MIN_GAIN_DB;
-    }
-    
-    /**
-     * Get the frequency of a specific band.
-     * @param bandIndex Index of the band to get the frequency for
-     * @return the frequency of the band at the specified index
-     */
-    public int getBandFrequency(int bandIndex) {
-        return BANDS_FREQUENCY.get(bandIndex);
     }
 
     /**

@@ -1,7 +1,7 @@
 package musicApp.controllers.settings;
 
-import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
+import musicApp.enums.EqualizerBandFrequency;
 import musicApp.models.Equalizer;
 import musicApp.views.settings.EqualizerView;
 
@@ -14,7 +14,6 @@ import java.util.List;
 public class EqualizerController extends ViewController<EqualizerView> implements EqualizerView.EqualizerViewListener {
     
     private final SettingsController settingsController;
-    private final Stage stage;
     private final Equalizer equalizer;
 
     /**
@@ -27,7 +26,6 @@ public class EqualizerController extends ViewController<EqualizerView> implement
         super(new EqualizerView());
         view.setListener(this);
         settingsController = _controller;
-        stage = new Stage();
         equalizer = _equalizer;
         initView("/fxml/Equalizer.fxml");
     }
@@ -36,14 +34,14 @@ public class EqualizerController extends ViewController<EqualizerView> implement
      * Show the equalizer.
      */
     public void show() {
-        view.show(stage);
+        view.show();
     }
 
     /**
      * Close the equalizer.
      */
-    public void close() {
-        stage.close();
+    public void handleClose() {
+        view.close();
         settingsController.show();
     }
 
@@ -58,23 +56,13 @@ public class EqualizerController extends ViewController<EqualizerView> implement
     }
 
     /**
-     * Get the band frequency.
-     *
-     * @param bandIndex The index of the band.
-     * @return the band frequency
-     */
-    public int getBandFrequency(int bandIndex) {
-        return equalizer.getBandFrequency(bandIndex);
-    }
-
-    /**
      * Get the band gain.
      *
-     * @param bandIndex The index of the band.
+     * @param frequency The frequency of the band.
      * @return the equalizer band gain
      */
-    public double getEqualizerBandGain(int bandIndex) {
-        return equalizer.getBandGain(bandIndex);
+    public double getEqualizerBandGain(EqualizerBandFrequency frequency) {
+        return equalizer.getBandGain(EqualizerBandFrequency.getIndex(frequency));
     }
 
     /**

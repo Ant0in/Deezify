@@ -1,9 +1,7 @@
 package musicApp.controllers.playlists;
 
-import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.services.LanguageService;
 import musicApp.views.playlists.EditPlaylistView;
 
 import java.nio.file.Path;
@@ -70,10 +68,10 @@ public class EditPlaylistController extends ViewController<EditPlaylistView> imp
         } else {
             navigatorController.updatePlaylist(playlistToEdit, playlistName, imagePath);
         }
-        close();
+        handleClose();
     }
 
-    public void close() {
+    public void handleClose() {
         view.close();
     }
 }
