@@ -23,6 +23,7 @@ import java.nio.file.Path;
 public class EditPlaylistView extends View {
     
     private EditPlaylistViewListener listener;
+    private Stage stage;
 
     @FXML
     private Label nameLabel, coverLabel;
@@ -34,20 +35,18 @@ public class EditPlaylistView extends View {
     private ImageView coverImage;
     @FXML
     private VBox popupLayout;
-
+    
     /**
      * Listener interface for handling events in the EditPlaylistView.
      * Implement this interface to manage user actions such as saving a playlist,
      * checking if the view is in creation mode, retrieving the stage, and closing the view.
      */
     public interface EditPlaylistViewListener {
-        void handleSave(String name, Path imagePath);
+        void handleSave(String playlistName, Path imagePath);
 
         void close();
 
         boolean isCreation();
-
-        Stage getStage();
     }
 
     /**
@@ -67,6 +66,18 @@ public class EditPlaylistView extends View {
     public void init() {
         initControls();
         refreshTranslation();
+        initStage();
+    }
+
+    private void initStage() {
+        stage = new Stage();
+        if (listener.isCreation()) {
+            stage.setTitle(LanguageService.getInstance().get("create_playlist.title"));
+        } else {
+            stage.setTitle(LanguageService.getInstance().get("edit_playlist.title"));
+        }
+        stage.setScene(getScene());
+        stage.show();
     }
 
     @Override
@@ -81,6 +92,10 @@ public class EditPlaylistView extends View {
         cancelButton.setText(LanguageService.getInstance().get("button.cancel"));
     }
 
+    public void close() {
+        stage.close();
+    }
+
     /**
      * Sets up the controls for the PlaylistEditView.
      * This method creates the text field, buttons, and labels used in the view.
@@ -88,10 +103,10 @@ public class EditPlaylistView extends View {
     private void initControls() {
         chooseCoverButton.setOnAction(_ -> handleChooseImage());
 
-        actionButton.setOnAction(e -> listener.handleSave(nameField.getText(),
+        actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(),
                 (Path) coverLabel.getUserData()));
 
-        cancelButton.setOnAction(e -> listener.close());
+        cancelButton.setOnAction(_ -> listener.close());
     }
 
     /**
@@ -104,7 +119,7 @@ public class EditPlaylistView extends View {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
-        File selectedFile = fileChooser.showOpenDialog(listener.getStage());
+        File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             coverLabel.setText(selectedFile.getAbsolutePath());
             coverLabel.setUserData(selectedFile.toPath());
