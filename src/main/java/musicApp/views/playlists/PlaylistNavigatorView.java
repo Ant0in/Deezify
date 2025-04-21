@@ -106,14 +106,14 @@ public class PlaylistNavigatorView extends View {
         listView.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 if (getSelectedPlaylist() == null) return;
-                listener.setSelectedLibrary(listView.getSelectionModel().getSelectedItem());
+                listener.setSelectedLibrary(getSelectedPlaylist());
             } else if (e.getButton() == MouseButton.SECONDARY) {
                 listener.showContextMenu(e.getScreenX(), e.getScreenY(), getSelectedPlaylist());
             }
         });
     }
 
-    public Library getSelectedPlaylist() {
+    private Library getSelectedPlaylist() {
         return listView.getSelectionModel().getSelectedItem();
     }
 }
