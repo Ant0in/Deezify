@@ -115,14 +115,9 @@ public class LyricsView extends View {
     public void initButtons() {
         karaokeAddLyricsButton.setOnAction(_ -> karaokeListener.handleImportKaraokeLyrics());
         karaokeEditButton.setOnAction(_ -> karaokeListener.handleImportKaraokeLyrics());
+        simpleLyricsButton.setOnAction(_ -> lyricsListener.handleShowLyrics());
+        karaokeLyricsButton.setOnAction(_ -> karaokeListener.handleShowKaraoke());
 
-        simpleLyricsButton.setOnAction(_ -> {
-            lyricsListener.handleShowLyrics();
-        });
-
-        karaokeLyricsButton.setOnAction(_ -> {
-            karaokeListener.handleShowKaraoke();
-        });
 
         lyricsListener.handleLoadedSongChange(this::handleLoadedSongChange);
     }

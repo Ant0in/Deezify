@@ -61,7 +61,6 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
             lyricsManager.saveLyrics(currentSong, newLyrics);
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
-            e.printStackTrace();
         }
         view.updateLyrics();
 }
