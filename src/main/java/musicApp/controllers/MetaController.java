@@ -36,8 +36,9 @@ public class MetaController {
         settingsService = new SettingsService();
         playlistService = new PlaylistService();
         playlists = playlistService.loadAllLibraries();
-        playerController = new PlayerController(this, settingsService.readSettings(), getMainLibrary());
-        settingsController = new SettingsController(this, settingsService.readSettings());
+        Settings settings = settingsService.readSettings();
+        playerController = new PlayerController(this, settings, getMainLibrary());
+        settingsController = new SettingsController(this, settings);
         djPlayerController = new DjPlayerController(this.playerController);
     }
 

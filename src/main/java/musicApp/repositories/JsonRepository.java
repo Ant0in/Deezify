@@ -35,7 +35,6 @@ import java.util.List;
  * If the settings file does not exist, it will be created with the default settings.
  */
 public class JsonRepository {
-    private final Path settingFolder;
     private final Path settingsFile;
     private final Path playlistsFile;
     private final Path lyricsDir;
@@ -47,6 +46,7 @@ public class JsonRepository {
     public JsonRepository() {
         String os = System.getProperty("os.name").toLowerCase();
         String configFolder = "Deezify";
+        Path settingFolder;
         if (os.contains("win")) {
             settingFolder = Path.of(System.getenv("APPDATA"), configFolder);
         } else if (os.contains("mac")) {
@@ -58,6 +58,7 @@ public class JsonRepository {
         settingsFile = settingFolder.resolve("settings.json");
         playlistsFile = settingFolder.resolve("playlists.json");
         lyricsDir = settingFolder.resolve("lyrics");
+        createFolderIfNotExists(lyricsDir);
         lyricsFile = lyricsDir.resolve("lyrics.json");
     }
 
@@ -297,7 +298,7 @@ public class JsonRepository {
      * @return The path to the lyrics directory.
      */
     public Path getLyricsDir() {
-        return settingFolder.resolve("lyrics");
+        return lyricsDir;
     }
 
 }
