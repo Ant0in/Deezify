@@ -19,7 +19,7 @@
             <Button fx:id="karaokeLyricsButton"/>
         </right>
     </BorderPane>
-    <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true">
+    <ScrollPane fx:id="lyricsScrollPane" fitToWidth="true" fitToHeight="true">
         <VBox fx:id="lyricsContainer" spacing="5" VBox.vgrow="ALWAYS" styleClass="lyrics-container">
         </VBox>
     </ScrollPane>

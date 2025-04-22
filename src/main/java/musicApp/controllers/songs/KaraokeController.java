@@ -22,7 +22,6 @@ public class KaraokeController extends ViewController<LyricsView> implements Lyr
 
     private final PlayerController playerController;
     private final LyricsService lyricsManager;
-
     private List<KaraokeLine> lyricsToDisplay;
 
     /**
@@ -60,11 +59,11 @@ public class KaraokeController extends ViewController<LyricsView> implements Lyr
      * Imports karaoke lyrics from a .lrc file and updates the song's lyrics.
      * If a .txt file already exists, prompts the user for confirmation to overwrite it.
      */
-    public void importKaraokeLyrics() {
+    public void handleImportKaraokeLyrics() {
         Song currentSong = playerController.getCurrentlyLoadedSong();
         if (currentSong == null) return;
 
-        Optional<Path> selectedFile = view.showLrcFileChooser();
+        Optional<Path> selectedFile = view.getLrcFile();
         if (selectedFile.isEmpty()) return;
 
         Optional<Boolean> evaluation = evaluateOverwriteTxt(currentSong);
@@ -77,7 +76,7 @@ public class KaraokeController extends ViewController<LyricsView> implements Lyr
             as.showExceptionAlert(e);
         }
         view.updateKaraokeLyrics();
-        startKaraoke();
+        handleShowKaraoke();
     }
 
     /**
@@ -105,7 +104,7 @@ public class KaraokeController extends ViewController<LyricsView> implements Lyr
      * Starts the karaoke feature by creating a timeline that updates the lyrics
      * based on the current playback time of the song.
      */
-    public void startKaraoke() {
+    public void handleShowKaraoke() {
         Song currentSong = playerController.getCurrentlyLoadedSong();
 
         if (currentSong == null) return;
@@ -119,6 +118,7 @@ public class KaraokeController extends ViewController<LyricsView> implements Lyr
         handleStopKaraoke();
         view.updateKaraokeLyricsHighlight(lyricsToDisplay, null);
         view.updateTimeLine();
+        view.showKaraoke();
     }
 
     /**
@@ -131,7 +131,7 @@ public class KaraokeController extends ViewController<LyricsView> implements Lyr
     /**
      * Called periodically by the timeline to highlight the correct line.
      */
-    public void syncLyrics() {
+    public void handleSyncLyrics() {
         if (lyricsToDisplay.isEmpty()) return;
 
         Duration currentTime = playerController.getCurrentSongTime();

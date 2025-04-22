@@ -1,6 +1,5 @@
 package musicApp.controllers.songs;
 
-import javafx.beans.property.StringProperty;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.models.Song;
@@ -25,21 +24,11 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
      */
     public LyricsController(PlayerController _controller) {
         super(new LyricsView());
-        view.setListener(this);
+        view.setLyricsListener(this);
         playerController = _controller;
         lyricsManager = new LyricsService();
         initView("/fxml/Lyrics.fxml");
         new KaraokeController(playerController, lyricsManager, view);
-    }
-
-
-    /**
-     * Get currently loaded song string property.
-     *
-     * @return the string property
-     */
-    public StringProperty getCurrentlyLoadedSongStringProperty(){
-        return playerController.getCurrentlyLoadedSongStringProperty();
     }
 
     /**
@@ -77,17 +66,27 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
         view.updateLyrics();
 }
 
+    public void handleLoadedSongChange(Runnable callback){
+        playerController.getCurrentlyLoadedSongStringProperty().
+                addListener((_, _, _) -> callback.run());
+    }
+
+    public void handleShowLyrics(){
+        view.updateLyrics();
+        view.showLyrics();
+    }
+
     /**
      * Edit lyrics.
      */
-    public void editLyrics() {
+    public void handleEditLyrics() {
         List<String> currentLyricsList = getCurrentSongLyrics();
         String initialText = "";
         if (currentLyricsList != null && !currentLyricsList.isEmpty()) {
             initialText = String.join("\n", currentLyricsList);
         }
         
-        Optional<String> result = view.showEditLyricsDialog(initialText);
+        Optional<String> result = view.getEditedLyrics(initialText);
         result.ifPresent(newLyrics -> {
             updateCurrentSongLyrics(newLyrics); 
             view.updateLyrics();
