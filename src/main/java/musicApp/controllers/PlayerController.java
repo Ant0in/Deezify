@@ -392,20 +392,8 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         return playlistNavigatorController.isFavorite(song);
     }
 
-    /**
-     * Handle add song to main library.
-     * This method opens a file dialog to select an audio file and adds it to the main library.
-     */
-    public void handleAddSongToMainLibrary() {
-        File selectedFile = FileDialogService.chooseAudioFile(null, "Select Music File");
-        if (selectedFile != null) {
-            try {
-                PlaylistService playlistService = new PlaylistService();
-                Path copiedFilePath = playlistService.addSongToMainLibrary(selectedFile);
-                libraryController.addSong(copiedFilePath);
-            } catch (IOException e) {
-                alertService.showExceptionAlert(e);
-            }
-        }
+    public boolean isMainLibrary(Library library) {
+        return metaController.isMainLibrary(library);
     }
+
 }

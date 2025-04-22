@@ -101,4 +101,8 @@ public class MetaController {
         MAINWINDOW,
         SETTINGS
     }
+
+    public boolean isMainLibrary(Library library) {
+        return getMainLibrary().equals(library);
+    }
 }

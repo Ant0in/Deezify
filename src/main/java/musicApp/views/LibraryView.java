@@ -6,9 +6,11 @@ import javafx.scene.control.TextField;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.songs.SongCellController;
 import musicApp.models.Song;
+import musicApp.services.FileDialogService;
 import musicApp.services.LanguageService;
 import musicApp.views.songs.SongCell;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -31,11 +33,12 @@ public class LibraryView extends SongContainerView {
     public interface LibraryViewListener {
         void handleAddSong();
 
-        void clearQueueSelection();
+        void handleSelectionChange();
 
         List<Song> searchLibrary(String query);
 
         LibraryController getController();
+
     }
 
     /**
@@ -104,9 +107,13 @@ public class LibraryView extends SongContainerView {
     private void setupListSelectionListeners() {
         listView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
             if (newVal != null) {
-                listener.clearQueueSelection();
+                listener.handleSelectionChange();
             }
         });
+    }
+
+    public File getAudioFile() {
+        return FileDialogService.chooseAudioFile(null, LanguageService.getInstance().get("dialog.select_audio_file"));
     }
 
     @Override

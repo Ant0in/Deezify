@@ -3,10 +3,14 @@ package musicApp.controllers;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Alert;
 import musicApp.models.Library;
 import musicApp.models.Song;
+import musicApp.services.PlaylistService;
 import musicApp.views.LibraryView;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +77,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      * @return A list of song names that match the query.
      */
     public List<Song> searchLibrary(String query) {
-        return library.search(query.toLowerCase());
+        return library.search(query);
     }
 
     /**
@@ -129,7 +133,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     /**
      * Clear queue selection.
      */
-    public void clearQueueSelection() {
+    public void handleSelectionChange() {
         playerController.clearQueueSelection();
     }
 
@@ -232,7 +236,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      * Checks if the main library is currently being shown
      */
     public boolean isShowingMainLibrary() {
-        return playerController.getPlaylists().getFirst().equals(library);
+        return playerController.isMainLibrary(library);
     }
 
 
@@ -240,7 +244,18 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      * Handle add song.
      */
     public void handleAddSong() {
-        playerController.handleAddSongToMainLibrary();
+        File audioFile = view.getAudioFile();
+        if (audioFile == null) {
+            alertService.showAlert("Could not read audio file", Alert.AlertType.WARNING);
+            return;
+        }
+        try {
+            PlaylistService playlistService = new PlaylistService();
+            Path copiedFilePath = playlistService.addSongToMainLibrary(audioFile);
+            addSong(copiedFilePath);
+        } catch (IOException e) {
+            alertService.showAlert("Could not add song to main library : " + audioFile, Alert.AlertType.ERROR);
+        }
     }
 
     /**
@@ -284,7 +299,6 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         return library.getTagAutoCompletion(input);
     }
 
-    @Override
     public LibraryController getController() {
         return this;
     }
