@@ -1,5 +1,7 @@
 package musicApp.views.songs;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -10,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import musicApp.controllers.songs.KaraokeController;
+import javafx.util.Duration;
 import musicApp.models.KaraokeLine;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
@@ -29,7 +31,10 @@ import java.util.Optional;
 public class LyricsView extends View {
     
     private LyricsViewListener listener;
-    
+    private KaraokeListener karaokeListener;
+    private Timeline syncTimeline;
+
+
     @FXML
     private HBox karaokeHeader;
 
@@ -48,7 +53,12 @@ public class LyricsView extends View {
     @FXML
     private ScrollPane scrollPane, karaokeScrollPane;
 
-    private KaraokeController karaokeController;
+    public void stopKaraoke() {
+        if (syncTimeline != null) {
+            syncTimeline.stop();
+            syncTimeline = null;
+        }
+    }
 
     /**
      * Listener interface for handling events in the LyricsView.
@@ -61,6 +71,18 @@ public class LyricsView extends View {
         List<String> getCurrentSongLyrics();
 
         StringProperty getCurrentlyLoadedSongStringProperty();
+    }
+
+    public interface KaraokeListener {
+        void importKaraokeLyrics();
+
+        void startKaraoke();
+
+        void handleStopKaraoke();
+
+        List<KaraokeLine> getKaraokeLines();
+
+        void syncLyrics();
     }
 
     /**
@@ -82,8 +104,8 @@ public class LyricsView extends View {
         refreshTranslation();
     }
 
-    public void setKaraokeController(KaraokeController controller) {
-        karaokeController = controller;
+    public void setKaraokeListener(KaraokeListener listener) {
+        karaokeListener = listener;
     }
 
     /**
@@ -91,8 +113,8 @@ public class LyricsView extends View {
      * When the song changes, the lyrics are updated.
      */
     public void initButtons() {
-        karaokeAddLyricsButton.setOnAction(_ -> karaokeController.importKaraokeLyrics());
-        karaokeEditButton.setOnAction(_ -> karaokeController.importKaraokeLyrics());
+        karaokeAddLyricsButton.setOnAction(_ -> karaokeListener.importKaraokeLyrics());
+        karaokeEditButton.setOnAction(_ -> karaokeListener.importKaraokeLyrics());
 
         simpleLyricsButton.setOnAction(_ -> {
             scrollPane.setVisible(true);
@@ -107,12 +129,12 @@ public class LyricsView extends View {
             scrollPane.setManaged(false);
             karaokeScrollPane.setVisible(true);
             karaokeScrollPane.setManaged(true);
-            karaokeController.startKaraoke();
+            karaokeListener.startKaraoke();
         });
 
         listener.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
             initButtonsTypes();
-            karaokeController.stopKaraoke();
+            karaokeListener.handleStopKaraoke();
             simpleLyricsButton.fire();
         });
     }
@@ -182,6 +204,12 @@ public class LyricsView extends View {
             displayLyricsWithHeader(lyrics);
         }
         lyricsContainer.requestLayout();
+    }
+
+    public void updateTimeLine() {
+        syncTimeline = new Timeline(new KeyFrame(Duration.millis(200), _ -> karaokeListener.syncLyrics()));
+        syncTimeline.setCycleCount(Timeline.INDEFINITE);
+        syncTimeline.play();
     }
 
     /**
@@ -307,10 +335,11 @@ public class LyricsView extends View {
      * It retrieves the karaoke lines from the karaoke controller and renders them.
      */
     public void updateKaraokeLyrics() {
-        List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLines();
+        List<KaraokeLine> karaokeLines = karaokeListener.getKaraokeLines();
         renderKaraokeLines(karaokeLines, null);
     }
-
+    
+    
     /**
      * Updates the karaoke lyrics highlight based on the active line.
      * It retrieves the karaoke lines from the karaoke controller and renders them with highlighting.
@@ -360,5 +389,4 @@ public class LyricsView extends View {
         updateLyrics();
         updateKaraokeLyrics();
     }
-
 }

@@ -29,7 +29,7 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
         playerController = _controller;
         lyricsManager = new LyricsService();
         initView("/fxml/Lyrics.fxml");
-        view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));
+        new KaraokeController(playerController, lyricsManager, view);
     }
 
 
