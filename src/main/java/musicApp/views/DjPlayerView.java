@@ -4,11 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.stage.Stage;
 import musicApp.exceptions.EqualizerGainException;
 
 public class DjPlayerView extends View {
     
     private DjPlayerViewListener listener;
+    private Stage stage;
 
     @FXML
     private Slider gainSlider, bassBoostSlider, pressureSlider, waveSlider;
@@ -22,6 +24,8 @@ public class DjPlayerView extends View {
      * Listener interface used to delegate actions from the view to the controller logic.
      */
     public interface DjPlayerViewListener {
+        void handleClose();
+
         void changeGainMode (double gain) throws EqualizerGainException;
 
         void changePressureStrength(double strength) throws EqualizerGainException;
@@ -47,6 +51,23 @@ public class DjPlayerView extends View {
     @Override
     public void init() {
         addListeners();
+        initStage();
+    }
+
+    private void initStage() {
+        stage = new Stage();
+        stage.setScene(scene);
+        stage.setOnCloseRequest(_ -> listener.handleClose());
+        stage.setTitle("DJ Player");
+        stage.setResizable(false);
+    }
+
+    public void show(){
+        stage.show();
+    }
+
+    public void close(){
+        stage.close();
     }
 
     public void addListeners() {

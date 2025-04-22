@@ -15,8 +15,7 @@ import java.util.List;
 
 
 public class DjPlayerController extends ViewController<DjPlayerView> implements DjPlayerView.DjPlayerViewListener {
-    
-    private final Stage stage = new Stage();
+
     private final MediaPlayerController mediaPlayerController;
     private List<Double> bandsGainBackup;
     private Timeline timeline;
@@ -49,20 +48,8 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
         mediaPlayerController = _mediaPlayerController;
         initView("/fxml/DjPlayer.fxml");
         bandsGainBackup = mediaPlayerController.getEqualizerBands();
-        initStage();
     }
 
-
-
-    /**
-     * Initializes the stage.
-     */
-    public void initStage() {
-        stage.setScene(view.getScene());
-        stage.setOnCloseRequest(_ -> onQuit());
-        stage.setTitle("DJ Player");
-        stage.setResizable(false);
-    }
 
     /**
      * Toggles the bass boost mode.
@@ -259,20 +246,20 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      */
     public void play(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);
-        stage.show();
+        view.show();
     }
 
     /**
      * On quit called method. Destroy all timelines, restore the old config and close the stage.
      */
-    public void onQuit() {
+    public void handleClose() {
         if (timeline != null) { timeline.stop(); }
         try {
             mediaPlayerController.setEqualizerBands(bandsGainBackup);
         } catch (EqualizerGainException e) {
             e.printStackTrace();
         }
-        stage.close();
+        view.close();
     }
 
 }
