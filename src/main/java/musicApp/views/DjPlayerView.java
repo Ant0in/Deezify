@@ -54,6 +54,13 @@ public class DjPlayerView extends View {
         initStage();
     }
 
+    public void resetEffects() {
+        gainSlider.setValue(0);
+        bassBoostSlider.setValue(0);
+        pressureSlider.setValue(0);
+        waveSlider.setValue(0);
+    }
+
     private void initStage() {
         stage = new Stage();
         stage.setScene(scene);

@@ -246,6 +246,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      */
     public void play(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);
+        view.resetEffects();
         view.show();
     }
 
