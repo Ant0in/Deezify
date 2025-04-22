@@ -2,10 +2,14 @@ package musicApp.controllers;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.control.Alert;
+import javafx.scene.media.EqualizerBand;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import musicApp.enums.EqualizerBandFrequency;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
+import musicApp.models.Equalizer;
 import musicApp.models.Song;
 import musicApp.views.DjPlayerView;
 
@@ -17,7 +21,7 @@ import java.util.List;
 public class DjPlayerController extends ViewController<DjPlayerView> implements DjPlayerView.DjPlayerViewListener {
 
     private final MediaPlayerController mediaPlayerController;
-    private List<Double> bandsGainBackup;
+    private final Equalizer equalizerBackup;
     private Timeline timeline;
     
     // parameters for the effects
@@ -25,9 +29,9 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     private double bassBoostGain;
     private double gainValue;
     private double pressureStrength;
-    List<Double> gainModeBands = new ArrayList<>(Collections.nCopies(10, 0.0));
-    List<Double> bassBoostModeBands = new ArrayList<>(Collections.nCopies(10, 0.0));
-    List<Double> pressureModeBands = new ArrayList<>(Collections.nCopies(10, 0.0));
+    Equalizer equalizerGainMode;
+    Equalizer equalizerBassBoostMode;
+    Equalizer equalizerPressureMode;
 
     // Effects ON/OFF
     private boolean gainModeOn = false;
@@ -35,9 +39,9 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     private boolean pressureModeOn = false;
 
     // Range of values
-    private static final double MAX_DB = 12.0;
-    private static final double MIN_DB = -24.0;
-    private static final double NUM_BANDS = 10;
+    private static final double MAX_DB =  EqualizerBand.MAX_GAIN;
+    private static final double MIN_DB = EqualizerBand.MIN_GAIN;
+    private static final double NUM_BANDS = EqualizerBandFrequency.getBandsSize();
     private static final double MAX_STRENGTH = 18.0;
     private static final double MIN_BASS_BOOST = 6.0;
 
@@ -47,7 +51,10 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
         view.setListener(this);
         mediaPlayerController = _mediaPlayerController;
         initView("/fxml/DjPlayer.fxml");
-        bandsGainBackup = mediaPlayerController.getEqualizerBands();
+        equalizerBackup = new Equalizer(mediaPlayerController.getEqualizerBands());
+        equalizerGainMode = new Equalizer();
+        equalizerBassBoostMode = new Equalizer();
+        equalizerPressureMode = new Equalizer();
     }
 
 
@@ -55,37 +62,31 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Toggles the bass boost mode.
      */
     public void toggleBassBoostMode() {
-
         double low = -3.0;
-        bassBoostModeBands = List.of(bassBoostGain, bassBoostGain, bassBoostGain, low, low, low, low, low, low, low);
-
+        List<Double> bassBoostModeBands = List.of(bassBoostGain, bassBoostGain, bassBoostGain, low, low, low, low, low, low, low);
+        equalizerBassBoostMode.setBandsGain(bassBoostModeBands);
     }
 
     /**
      * Toggles the gain mode.
      */
     public void toggleBoostGainMode() {
-
-        gainModeBands = List.of(
-            gainValue, gainValue, gainValue, gainValue, gainValue,
-            gainValue, gainValue, gainValue, gainValue, gainValue
-        );
-
+        List<Double> gainModeBands = Collections.nCopies((int) NUM_BANDS, gainValue);
+        equalizerGainMode.setBandsGain(gainModeBands);
     }
 
     /**
      * Toggles the pressure mode.
      */
     public void togglePressureMode() {
-
         double abs = Math.abs(MIN_DB) + Math.abs(MAX_DB);
         double middleFrequency = MAX_DB - (abs / 2.0);
 
         double low = middleFrequency - pressureStrength;
         double high = middleFrequency + pressureStrength;
 
-        pressureModeBands = List.of(low, low, low, low, low, high, high, high, high, high);
-
+        List<Double> pressureModeBands = List.of(low, low, low, low, low, high, high, high, high, high);
+        equalizerPressureMode.setBandsGain(pressureModeBands);
     }
 
     /**
@@ -118,7 +119,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
             try {
                 mediaPlayerController.setEqualizerBands(bandsGain);
             } catch (EqualizerGainException e) {
-                // cannot happen
+                alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
             }
         }));
 
@@ -130,49 +131,53 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     /**
      * Applies the mixed effects to the media player.
      */
-    public void applyMixedEffects() throws EqualizerGainException {
+    public void applyMixedEffects() {
 
         if (timeline != null) { timeline.stop(); }
 
-        List<Double> mixedBands = new ArrayList<>(Collections.nCopies(10, 0.0));
+        Equalizer equalizerMixed = new Equalizer();
 
         for (int band = 0; band < NUM_BANDS; band++) {
             double sum = 0.0;
             int count = 0;
 
             if (gainModeOn) {
-                double value = gainModeBands.get(band);
+                double value = equalizerGainMode.getBandGain(band);
                 if (value != 0) {
                     sum += value;
                     count++;
                 }
             }
             if (bassBoostModeOn) {
-                double value = bassBoostModeBands.get(band);
+                double value = equalizerBassBoostMode.getBandGain(band);
                 if (value != 0) {
                     sum += value;
                     count++;
                 }
             }
             if (pressureModeOn) {
-                double value = pressureModeBands.get(band);
+                double value = equalizerPressureMode.getBandGain(band);
                 if (value != 0) {
                     sum += value;
                     count++;
                 }
             }
-            if (count != 0) { mixedBands.set(band, sum / count); }
-            else { mixedBands.set(band, sum); }
+            if (count != 0) { equalizerMixed.setBandGain(band, sum / count); }
+            else { equalizerMixed.setBandGain(band, sum); }
         }
 
-        mediaPlayerController.setEqualizerBands(mixedBands);
+        try{
+            mediaPlayerController.setEqualizerBands(equalizerMixed.getBandsGain());
+        } catch (EqualizerGainException e) {
+            alertService.showAlert("Failed to update equalizer (from dj mode) : "+e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     /**
      * Changes the wave speed.
      * @param speed the speed of the wave (0 to 100)
      */
-    public void changeWaveSpeed(double speed) throws EqualizerGainException {
+    public void changeWaveSpeed(double speed) {
         // From 1 to 10 wave speed
         if (speed == 0.0) {
             if (timeline != null) {
@@ -192,7 +197,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Changes the bass boost gain.
      * @param gain the gain of the bass boost (0 to 100)
      */
-    public void changeBassBoostGain(double gain) throws EqualizerGainException {
+    public void changeBassBoostGain(double gain) {
         // From 6 to 12 db
         if (gain > 0.0) {
             bassBoostModeOn = true;
@@ -209,7 +214,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Changes the gain mode.
      * @param gain the gain of the gain mode (0 to 100)
      */
-    public void changeGainMode (double gain) throws EqualizerGainException {
+    public void changeGainMode (double gain) {
         // From -24 to 12 db
         if (gain > 0.0) {
             gainModeOn = true;
@@ -226,7 +231,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Changes the pressure strength.
      * @param strength the strength of the pressure (0 to 100)
      */
-    public void changePressureStrength(double strength) throws EqualizerGainException {
+    public void changePressureStrength(double strength) {
         // strength must be bewteen 0 and abs(MAX_LOW) + abs(MAX_HIGH) / 2
         // From 0 to 18
         if (strength > 0.0) {
@@ -256,9 +261,9 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     public void handleClose() {
         if (timeline != null) { timeline.stop(); }
         try {
-            mediaPlayerController.setEqualizerBands(bandsGainBackup);
+            mediaPlayerController.setEqualizerBands(equalizerBackup.getBandsGain());
         } catch (EqualizerGainException e) {
-            e.printStackTrace();
+            alertService.showAlert("Failed to reset equalizer (from dj mode) : "+e.getMessage(), Alert.AlertType.ERROR);
         }
         view.close();
     }

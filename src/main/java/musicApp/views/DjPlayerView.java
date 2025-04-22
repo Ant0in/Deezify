@@ -26,13 +26,13 @@ public class DjPlayerView extends View {
     public interface DjPlayerViewListener {
         void handleClose();
 
-        void changeGainMode (double gain) throws EqualizerGainException;
+        void changeGainMode (double gain);
 
-        void changePressureStrength(double strength) throws EqualizerGainException;
+        void changePressureStrength(double strength);
 
-        void changeBassBoostGain(double gain) throws EqualizerGainException;
+        void changeBassBoostGain(double gain);
 
-        void changeWaveSpeed(double speed) throws EqualizerGainException;
+        void changeWaveSpeed(double speed);
     }
 
     /**
@@ -42,10 +42,6 @@ public class DjPlayerView extends View {
      */
     public void setListener(DjPlayerViewListener newListener) {
         listener = newListener;
-    }
-
-    public Scene getScene() {
-        return scene;
     }
 
     @Override
@@ -85,64 +81,27 @@ public class DjPlayerView extends View {
         pressureLabel.setText("\ud83d\udca7");
 
 
-        gainSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                toggleBoostGainMode(newVal.doubleValue());
-            } catch (EqualizerGainException e) {
-                e.printStackTrace();
-            }
-        });
+        gainSlider.valueProperty().addListener((_, _, newVal) -> listener.changeGainMode(newVal.doubleValue()));
 
-        pressureSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                togglePressureMode(newVal.doubleValue());
-            } catch (EqualizerGainException e) {
-                e.printStackTrace();
-            }
-        });
+        pressureSlider.valueProperty().addListener((_, _, newVal) -> listener.changePressureStrength(newVal.doubleValue()));
 
-        bassBoostSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                toggleBassBoostMode(newVal.doubleValue());
-            } catch (EqualizerGainException e) {
-                e.printStackTrace();
-            }
-        });
+        bassBoostSlider.valueProperty().addListener((_, _, newVal) -> listener.changeBassBoostGain(newVal.doubleValue()));
 
-        waveSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                toggleWaveMode(newVal.doubleValue());
-            } catch (EqualizerGainException e) {
-                e.printStackTrace();
-            }
-            double value = newVal.doubleValue();
-            speedLabel.setText("x0");
-            if (value >= 33) {
-                speedLabel.setText("x1");
-            }
-            if (value >= 66) {
-                speedLabel.setText("x2");
-            }
-            if (value >= 99) {
-                speedLabel.setText("x3");
-            }
-        });
+        waveSlider.valueProperty().addListener((_, _, newVal) -> updateWaveSpeed(newVal.doubleValue()));
     }
 
-    private void toggleBoostGainMode(double value) throws EqualizerGainException {
-        listener.changeGainMode(value);
-    }
-
-    private void togglePressureMode(double value) throws EqualizerGainException {
-        listener.changePressureStrength(value);
-    }
-
-    private void toggleBassBoostMode(double value) throws EqualizerGainException {
-        listener.changeBassBoostGain(value);
-    }
-
-    private void toggleWaveMode(double value) throws EqualizerGainException {
+    private void updateWaveSpeed(double value) {
         listener.changeWaveSpeed(value);
+        speedLabel.setText("x0");
+        if (value >= 33) {
+            speedLabel.setText("x1");
+        }
+        if (value >= 66) {
+            speedLabel.setText("x2");
+        }
+        if (value >= 99) {
+            speedLabel.setText("x3");
+        }
     }
 
 }
