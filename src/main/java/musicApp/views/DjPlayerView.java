@@ -1,11 +1,9 @@
 package musicApp.views;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.stage.Stage;
-import musicApp.exceptions.EqualizerGainException;
 
 public class DjPlayerView extends View {
     
@@ -26,13 +24,13 @@ public class DjPlayerView extends View {
     public interface DjPlayerViewListener {
         void handleClose();
 
-        void changeGainMode (double gain);
+        void handleChangeGainMode (double gain);
 
-        void changePressureStrength(double strength);
+        void handleChangePressureStrength(double strength);
 
-        void changeBassBoostGain(double gain);
+        void handleChangeBassBoostGain(double gain);
 
-        void changeWaveSpeed(double speed);
+        void handleChangeWaveSpeed(double speed);
     }
 
     /**
@@ -75,23 +73,17 @@ public class DjPlayerView extends View {
 
     public void addListeners() {
 
-        gainLabel.setText("\ud83c\udf9b");
-        bassBoostLabel.setText("\ud83d\udcc8");
-        speedLabel.setText("x0");
-        pressureLabel.setText("\ud83d\udca7");
+        gainSlider.valueProperty().addListener((_, _, newVal) -> listener.handleChangeGainMode(newVal.doubleValue()));
 
+        pressureSlider.valueProperty().addListener((_, _, newVal) -> listener.handleChangePressureStrength(newVal.doubleValue()));
 
-        gainSlider.valueProperty().addListener((_, _, newVal) -> listener.changeGainMode(newVal.doubleValue()));
-
-        pressureSlider.valueProperty().addListener((_, _, newVal) -> listener.changePressureStrength(newVal.doubleValue()));
-
-        bassBoostSlider.valueProperty().addListener((_, _, newVal) -> listener.changeBassBoostGain(newVal.doubleValue()));
+        bassBoostSlider.valueProperty().addListener((_, _, newVal) -> listener.handleChangeBassBoostGain(newVal.doubleValue()));
 
         waveSlider.valueProperty().addListener((_, _, newVal) -> updateWaveSpeed(newVal.doubleValue()));
     }
 
     private void updateWaveSpeed(double value) {
-        listener.changeWaveSpeed(value);
+        listener.handleChangeWaveSpeed(value);
         speedLabel.setText("x0");
         if (value >= 33) {
             speedLabel.setText("x1");

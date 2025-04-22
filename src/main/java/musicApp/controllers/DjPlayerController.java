@@ -177,7 +177,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Changes the wave speed.
      * @param speed the speed of the wave (0 to 100)
      */
-    public void changeWaveSpeed(double speed) {
+    public void handleChangeWaveSpeed(double speed) {
         // From 1 to 10 wave speed
         if (speed == 0.0) {
             if (timeline != null) {
@@ -197,7 +197,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Changes the bass boost gain.
      * @param gain the gain of the bass boost (0 to 100)
      */
-    public void changeBassBoostGain(double gain) {
+    public void handleChangeBassBoostGain(double gain) {
         // From 6 to 12 db
         if (gain > 0.0) {
             bassBoostModeOn = true;
@@ -214,7 +214,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Changes the gain mode.
      * @param gain the gain of the gain mode (0 to 100)
      */
-    public void changeGainMode (double gain) {
+    public void handleChangeGainMode (double gain) {
         // From -24 to 12 db
         if (gain > 0.0) {
             gainModeOn = true;
@@ -231,7 +231,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Changes the pressure strength.
      * @param strength the strength of the pressure (0 to 100)
      */
-    public void changePressureStrength(double strength) {
+    public void handleChangePressureStrength(double strength) {
         // strength must be bewteen 0 and abs(MAX_LOW) + abs(MAX_HIGH) / 2
         // From 0 to 18
         if (strength > 0.0) {
