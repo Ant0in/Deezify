@@ -3,6 +3,7 @@ package musicApp.controllers;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
@@ -18,6 +19,7 @@ import java.util.List;
 public class MediaPlayerController extends ViewController<MediaPlayerView> implements MediaPlayerView.MediaPlayerViewListener {
     private final PlayerController playerController;
     private final MiniPlayerController miniPlayerController;
+    private final DjPlayerController djPlayerController;
     private final AudioPlayer audioPlayer;
 
     /**
@@ -31,6 +33,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView> imple
         playerController = controller;
         miniPlayerController = new MiniPlayerController();
         audioPlayer = new AudioPlayer(miniPlayerController);
+        djPlayerController = new DjPlayerController(this);
 
         initView("/fxml/MediaPlayer.fxml");
     }
@@ -223,5 +226,13 @@ public class MediaPlayerController extends ViewController<MediaPlayerView> imple
 
     public void toggleMiniPlayer() {
         miniPlayerController.toggleView();
+    }
+
+    public void handleLaunchDjMode() {
+        try {
+            djPlayerController.play(getLoadedSong());
+        }catch(BadSongException e){
+            alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }

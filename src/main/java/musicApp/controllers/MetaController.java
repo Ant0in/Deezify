@@ -23,7 +23,6 @@ public class MetaController {
     private final PlayerController playerController;
     private final SettingsController settingsController;
     private final List<Library> playlists;
-    private final DjPlayerController djPlayerController;
     /**
      * Instantiates a new Meta controller.
      *
@@ -39,7 +38,6 @@ public class MetaController {
         Settings settings = settingsService.readSettings();
         playerController = new PlayerController(this, settings, getMainLibrary());
         settingsController = new SettingsController(this, settings);
-        djPlayerController = new DjPlayerController(this.playerController);
     }
 
 

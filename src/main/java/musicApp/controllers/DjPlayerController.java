@@ -39,37 +39,29 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     private static final double MAX_DB = 12.0;
     private static final double MIN_DB = -24.0;
     private static final double NUM_BANDS = 10;
-    private static final double MAX_STRENGHT = 18.0;
+    private static final double MAX_STRENGTH = 18.0;
     private static final double MIN_BASS_BOOST = 6.0;
 
 
-    public DjPlayerController(PlayerController player) {
+    public DjPlayerController(MediaPlayerController _mediaPlayerController) {
         super(new DjPlayerView());
         view.setListener(this);
-        this.mediaPlayerController = player.getMediaPlayerController();
-        this.bandsGainBackup = mediaPlayerController.getEqualizerBands();
-    }
-
-    /**
-     * Initalizes the view and stores the previous settings.
-     */
-    public void init() {
-
-        init_view();
-        bandsGainBackup = mediaPlayerController.getEqualizerBands();
-    }
-
-    /**
-     * Initializes the view.
-     */
-    public void init_view() {
-
+        mediaPlayerController = _mediaPlayerController;
         initView("/fxml/DjPlayer.fxml");
+        bandsGainBackup = mediaPlayerController.getEqualizerBands();
+        initStage();
+    }
+
+
+
+    /**
+     * Initializes the stage.
+     */
+    public void initStage() {
         stage.setScene(view.getScene());
         stage.setOnCloseRequest(_ -> onQuit());
         stage.setTitle("DJ Player");
         stage.setResizable(false);
-        stage.show();
     }
 
     /**
@@ -252,7 +244,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
         // From 0 to 18
         if (strength > 0.0) {
             pressureModeOn = true;
-            double newStrength = (strength / 100) * MAX_STRENGHT;
+            double newStrength = (strength / 100) * MAX_STRENGTH;
             pressureStrength = newStrength;
         } else {
             pressureModeOn = false;
@@ -267,6 +259,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      */
     public void play(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);
+        stage.show();
     }
 
     /**

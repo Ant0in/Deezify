@@ -21,7 +21,7 @@ public class SongContextMenuView extends View {
     @FXML
     private Menu addToPlaylistMenu;
     @FXML
-    private MenuItem removeFromPlaylistMenu, editMetadataItem, djModeItem; // Can be Menu or MenuItem
+    private MenuItem removeFromPlaylistMenu, editMetadataItem; // Can be Menu or MenuItem
 
     /**
      * Listener interface used to delegate actions from the view to the controller logic.
@@ -30,8 +30,6 @@ public class SongContextMenuView extends View {
         void handleEditMetadata();
 
         void handleRemoveFromPlaylist();
-
-        void handleLaunchDjMode();
 
         void populatePlaylistMenuItems(Menu addToMenu, Menu removeFromMenu);
 
@@ -58,7 +56,6 @@ public class SongContextMenuView extends View {
         editMetadataItem.setText(LanguageService.getInstance().get("button.edit_metadata"));
         addToPlaylistMenu.setText(LanguageService.getInstance().get("button.add_to_playlist"));
         removeFromPlaylistMenu.setText(LanguageService.getInstance().get("button.remove_from_playlist"));
-        djModeItem.setText(LanguageService.getInstance().get("button.dj_mode"));
     }
 
     /**
@@ -75,8 +72,6 @@ public class SongContextMenuView extends View {
             removeFromPlaylistMenu.setOnAction(_ -> listener.handleRemoveFromPlaylist());
         }
         contextMenu.setOnShowing(e -> updateMenuItems());
-
-        djModeItem.setOnAction(_ -> {listener.handleLaunchDjMode();});
     }
 
 

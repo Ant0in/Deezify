@@ -96,13 +96,4 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
     public void showAt(double x, double y) {
         view.show(songCellController.getRoot(), x, y);
     }
-
-    public void handleLaunchDjMode() {
-        try{
-            songCellController.launchDjMode();
-        }catch(BadSongException e){
-            alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
-    
 }

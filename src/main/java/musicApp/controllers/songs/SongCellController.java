@@ -5,10 +5,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
-import musicApp.controllers.DjPlayerController;
 import musicApp.controllers.LibraryController;
 import musicApp.controllers.ViewController;
-import musicApp.exceptions.BadSongException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.views.songs.SongCell;
@@ -247,22 +245,6 @@ public class SongCellController extends ViewController<SongCellView> implements 
      */
     public void openMetadataEditor() {
         new EditMetadataController(this);
-    }
-
-    /**
-     * Launch DJ mode.
-     */
-    public void launchDjMode() throws BadSongException {
-
-        if (song == null) {
-            view.displayError("No song to play");
-        }
-
-        // we get the player controller to initialize the DJ mode view & play
-        DjPlayerController djPlayerController = libraryController.getPlayerController().getDjPlayerController();
-        djPlayerController.init();
-        djPlayerController.play(song);
-
     }
 
     /**

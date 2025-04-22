@@ -23,7 +23,7 @@ public class MediaPlayerView extends View {
     private MediaPlayerViewListener listener;
 
     @FXML
-    private Button pauseSongButton, nextSongButton, previousSongButton;
+    private Button pauseSongButton, nextSongButton, previousSongButton, djButton;
     @FXML
     private ComboBox<String> speedBox;
     @FXML
@@ -51,6 +51,8 @@ public class MediaPlayerView extends View {
         void toggleShuffle();
 
         void toggleMiniPlayer();
+
+        void handleLaunchDjMode();
 
         void seek(double duration);
 
@@ -94,6 +96,7 @@ public class MediaPlayerView extends View {
     private void setButtonActions() {
         pauseSongButton.setOnAction(_ -> listener.handlePauseSong());
         nextSongButton.setOnAction(_ -> listener.handleNextSong());
+        djButton.setOnAction(_ -> listener.handleLaunchDjMode());
         previousSongButton.setOnAction(_ -> listener.handlePreviousSong());
         shuffleToggle.setOnAction(_ -> listener.toggleShuffle());
         lyricsToggle.setOnAction(_ -> listener.toggleLyrics(lyricsToggle.isSelected()));
@@ -345,7 +348,7 @@ public class MediaPlayerView extends View {
 
 
     private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle);
+        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle, djButton);
         updateControlsState(controls, true);
         listener.currentSongProperty().addListener((_, _, newVal) -> {
             boolean songIsPlaying = (newVal != null && !newVal.equals("None"));

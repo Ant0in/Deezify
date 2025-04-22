@@ -39,7 +39,6 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     private QueueController queueController;
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
-    private DjPlayerController djPlayerController;
 
     /**
      * Constructor
@@ -74,7 +73,6 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         toolBarController = new ToolBarController(this);
         lyricsController = new LyricsController(this);
         playlistNavigatorController = new PlaylistNavigatorController(this);
-        this.djPlayerController = new DjPlayerController(this);
     }
 
     /**
@@ -121,10 +119,6 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         } else {
             queueController.playSong(0);
         }
-    }
-
-    public MediaPlayerController getMediaPlayerController() {
-        return mediaPlayerController;
     }
 
     /**
@@ -414,11 +408,4 @@ public class PlayerController extends ViewController<PlayerView> implements Play
             }
         }
     }
-
-    /**
-     * Handle add song to queue.
-     * This method opens a file dialog to select an audio file and adds it to the queue.
-     */
-    public DjPlayerController getDjPlayerController() { return djPlayerController; }
-
 }
