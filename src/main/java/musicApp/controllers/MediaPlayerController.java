@@ -120,6 +120,11 @@ public class MediaPlayerController extends ViewController<MediaPlayerView> imple
         return audioPlayer.getCurrentSongStringProperty();
     }
 
+
+    public void handleNotFoundImage(String errorMessage) {
+        alertService.showAlert(errorMessage, Alert.AlertType.ERROR);
+    }
+
     /**
      * Get the isPlaying property.
      *

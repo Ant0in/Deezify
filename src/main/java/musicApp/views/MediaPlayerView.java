@@ -60,6 +60,8 @@ public class MediaPlayerView extends View {
 
         void toggleLyrics(boolean show);
 
+        void handleNotFoundImage(String errorMessage);
+
         BooleanProperty isPlaying();
 
         DoubleProperty progressProperty();
@@ -117,13 +119,9 @@ public class MediaPlayerView extends View {
      * Bind buttons.
      */
     public void bindButtons() {
-        ImageView playIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/play_white.png")).toExternalForm()));
-        playIcon.setFitWidth(20);
-        playIcon.setFitHeight(20);
 
-        ImageView pauseIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/pause_white.png")).toExternalForm()));
-        pauseIcon.setFitWidth(20);
-        pauseIcon.setFitHeight(20);
+        ImageView playIcon = createIcon("/images/play_white.png");
+        ImageView pauseIcon = createIcon("/images/pause_white.png");
 
         listener.isPlaying().addListener((_, _, isPlaying) -> {
             if (isPlaying) {
@@ -311,39 +309,40 @@ public class MediaPlayerView extends View {
      * Bind the images of the buttons.
      */
     private void bindButtonsImages() {
+        setButtonIcon(pauseSongButton, "/images/play_white.png");
+        setButtonIcon(nextSongButton, "/images/next_white.png");
+        setButtonIcon(previousSongButton, "/images/previous_white.png");
+        setButtonIcon(shuffleToggle, "/images/shuffle.png");
+        setButtonIcon(lyricsToggle, "/images/lyrics.png");
+        setButtonIcon(djButton, "/images/dj.png");
+    }
 
-        ImageView playIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play_white.png")).toExternalForm());
-        playIcon.setFitWidth(20);
-        playIcon.setFitHeight(20);
-        pauseSongButton.setGraphic(playIcon);
-
-        ImageView nextIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/next_white.png")).toExternalForm());
-        nextIcon.setFitWidth(20);
-        nextIcon.setFitHeight(20);
-        nextSongButton.setGraphic(nextIcon);
-
-        ImageView previousIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/previous_white.png")).toExternalForm());
-        previousIcon.setFitWidth(20);
-        previousIcon.setFitHeight(20);
-        previousSongButton.setGraphic(previousIcon);
-
-        try {
-            ImageView shuffleIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/shuffle.png")).toExternalForm());
-            shuffleIcon.setFitWidth(20);
-            shuffleIcon.setFitHeight(20);
-            shuffleToggle.setGraphic(shuffleIcon);
-        } catch (NullPointerException e) {
-            System.err.println("Failed to load shuffle icon");
+    /**
+     * Sets the graphic icon for a button.
+     *
+     * @param button The button to set the icon for.
+     * @param imagePath The path to the image resource.
+     */
+    private void setButtonIcon(ButtonBase button, String imagePath) {
+        try{
+            ImageView icon = createIcon(imagePath);
+            button.setGraphic(icon);
+        }catch (NullPointerException _) {
+            listener.handleNotFoundImage("Could not load icon : "+ imagePath);
         }
+    }
 
-        try {
-            ImageView lyricsIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/lyrics.png")).toExternalForm());
-            lyricsIcon.setFitWidth(20);
-            lyricsIcon.setFitHeight(20);
-            lyricsToggle.setGraphic(lyricsIcon);
-        } catch (NullPointerException e) {
-            System.err.println("Failed to load lyrics icon");
-        }
+    /**
+     * Creates an ImageView from a resource path with predefined dimensions.
+     *
+     * @param path The path to the image resource.
+     * @return The ImageView, or null if loading fails.
+     */
+    private ImageView createIcon(String path) throws NullPointerException {
+        ImageView icon = new ImageView(Objects.requireNonNull(getClass().getResource(path)).toExternalForm());
+        icon.setFitWidth(20);
+        icon.setFitHeight(20);
+        return icon;
     }
 
 
