@@ -21,18 +21,15 @@ import static org.junit.Assert.*;
 public class TestLyricsService {
 
     private LyricsService lyricsManager;
-    private JsonRepository jsonRepository;
     private LyricsRepository lyricsDataAccess;
     private Path lyricsDir;
     private Path lyricsFile;
     private Path jsonFile;
-    private final String songFileName = "TestSong.mp3";
     private final String lyricsContent = "Line 1\nLine 2\nLine 3";
     private Song testSong;
 
     @Before
     public void setUp() throws IOException {
-        jsonRepository = new JsonRepository();
         lyricsDataAccess = new LyricsRepository(new JsonRepository());
         lyricsManager = new LyricsService();
         lyricsDir = lyricsDataAccess.getLyricsDir(); 
@@ -45,6 +42,7 @@ public class TestLyricsService {
         Files.deleteIfExists(lyricsFile);
         Files.deleteIfExists(jsonFile);
 
+        String songFileName = "TestSong.mp3";
         Path dummySongPath = Paths.get("/tmp", songFileName);
         testSong = new Song(dummySongPath);
     }

@@ -12,18 +12,15 @@ import musicApp.views.playlists.PlaylistCellView;
  */
 public class PlaylistCellController extends ViewController<PlaylistCellView> implements PlaylistCellView.PlaylistCellViewListener, PlaylistCell.PlaylistCellListener {
 
-    private final PlaylistNavigatorController navigatorController;
     private Library library;
 
     /**
      * Instantiates a new Playlist cell controller.
      *
-     * @param controller the controller
      */
-    public PlaylistCellController(PlaylistNavigatorController controller) {
+    public PlaylistCellController() {
         super(new PlaylistCellView());
         view.setListener(this);
-        navigatorController = controller;
         initView("/fxml/PlaylistCell.fxml");
     }
 

@@ -68,7 +68,7 @@ public class PlaylistNavigatorView extends View {
      * This method sets the cell factory for the list view to use a custom PlaylistCell.
      */
     private void initListView() {
-        listView.setCellFactory(_ -> new PlaylistCell(new PlaylistCellController(listener.getController())));
+        listView.setCellFactory(_ -> new PlaylistCell(new PlaylistCellController()));
     }
 
     /**
