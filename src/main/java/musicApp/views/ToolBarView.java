@@ -1,11 +1,11 @@
 package musicApp.views;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
+import musicApp.services.ViewService;
 
 import java.util.Objects;
 
@@ -17,24 +17,17 @@ public class ToolBarView extends View {
     private ToolBarViewListener listener;
 
     @FXML
-    private Button exitButton, btnSettings;
+    private Button exitButton, settingsButton;
     @FXML
     private Region spacer;
 
     /**
-     * Instantiates a new Tool bar view.
-     */
-    public ToolBarView() {
-
-    }
-
-    /**
      * Listener interface for handling user actions from the controller.
      */
-    public interface ToolBarViewListener {
-        void openSettings();
+    public interface ToolBarViewListener extends ViewService.ViewServiceListener {
+        void handleOpenSettings();
 
-        void exitApp();
+        void handleExitApp();
     }
 
     /**
@@ -59,15 +52,9 @@ public class ToolBarView extends View {
      * Bind the images of the buttons.
      */
     private void bindButtonsImages() {
-        ImageView exitIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/cross.png")).toExternalForm());
-        exitIcon.setFitWidth(20);
-        exitIcon.setFitHeight(20);
-        exitButton.setGraphic(exitIcon);
-
-        ImageView settingsIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/settings.png")).toExternalForm());
-        settingsIcon.setFitWidth(20);
-        settingsIcon.setFitHeight(20);
-        btnSettings.setGraphic(settingsIcon);
+        ViewService viewService = new ViewService();
+        viewService.setButtonIcon(exitButton, "/images/cross.png", listener);
+        viewService.setButtonIcon(settingsButton, "/images/settings.png", listener);
     }
 
     /**
@@ -75,7 +62,7 @@ public class ToolBarView extends View {
      */
     private void setButtonActions() {
         exitButton.setOnAction(this::handleExitApp);
-        btnSettings.setOnAction(this::handleSettings);
+        settingsButton.setOnAction(this::handleSettings);
     }
 
     /**
@@ -84,14 +71,13 @@ public class ToolBarView extends View {
      * @param event The action event.
      */
     private void handleSettings(ActionEvent event) {
-        listener.openSettings();
+        listener.handleOpenSettings();
     }
 
     /**
      * Handle the exit button
      */
-    private void handleExitApp(ActionEvent actionEvent) {
-        Platform.exit();
-        listener.exitApp();
+    private void handleExitApp(ActionEvent event) {
+        listener.handleExitApp();
     }
 }

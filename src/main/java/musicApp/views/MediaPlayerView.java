@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import musicApp.models.Song;
+import musicApp.services.ViewService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +42,7 @@ public class MediaPlayerView extends View {
     /**
      * Listener interface for handling user actions from the media player view.
      */
-    public interface MediaPlayerViewListener {
+    public interface MediaPlayerViewListener extends ViewService.ViewServiceListener{
         void handlePauseSong();
 
         void handleNextSong();
@@ -59,8 +60,6 @@ public class MediaPlayerView extends View {
         void changeSpeed(double speed);
 
         void toggleLyrics(boolean show);
-
-        void handleNotFoundImage(String errorMessage);
 
         BooleanProperty isPlaying();
 
@@ -119,9 +118,9 @@ public class MediaPlayerView extends View {
      * Bind buttons.
      */
     public void bindButtons() {
-
-        ImageView playIcon = createIcon("/images/play_white.png");
-        ImageView pauseIcon = createIcon("/images/pause_white.png");
+        ViewService viewService = new ViewService();
+        ImageView playIcon = viewService.createIcon("/images/play_white.png");
+        ImageView pauseIcon = viewService.createIcon("/images/pause_white.png");
 
         listener.isPlaying().addListener((_, _, isPlaying) -> {
             if (isPlaying) {
@@ -309,42 +308,14 @@ public class MediaPlayerView extends View {
      * Bind the images of the buttons.
      */
     private void bindButtonsImages() {
-        setButtonIcon(pauseSongButton, "/images/play_white.png");
-        setButtonIcon(nextSongButton, "/images/next_white.png");
-        setButtonIcon(previousSongButton, "/images/previous_white.png");
-        setButtonIcon(shuffleToggle, "/images/shuffle.png");
-        setButtonIcon(lyricsToggle, "/images/lyrics.png");
-        setButtonIcon(djButton, "/images/dj.png");
+        ViewService viewService = new ViewService();
+        viewService.setButtonIcon(pauseSongButton, "/images/play_white.png", listener);
+        viewService.setButtonIcon(nextSongButton, "/images/next_white.png", listener);
+        viewService.setButtonIcon(previousSongButton, "/images/previous_white.png", listener);
+        viewService.setButtonIcon(shuffleToggle, "/images/shuffle.png", listener);
+        viewService.setButtonIcon(lyricsToggle, "/images/lyrics.png", listener);
+        viewService.setButtonIcon(djButton, "/images/dj.png", listener);
     }
-
-    /**
-     * Sets the graphic icon for a button.
-     *
-     * @param button The button to set the icon for.
-     * @param imagePath The path to the image resource.
-     */
-    private void setButtonIcon(ButtonBase button, String imagePath) {
-        try{
-            ImageView icon = createIcon(imagePath);
-            button.setGraphic(icon);
-        }catch (NullPointerException _) {
-            listener.handleNotFoundImage("Could not load icon : "+ imagePath);
-        }
-    }
-
-    /**
-     * Creates an ImageView from a resource path with predefined dimensions.
-     *
-     * @param path The path to the image resource.
-     * @return The ImageView, or null if loading fails.
-     */
-    private ImageView createIcon(String path) throws NullPointerException {
-        ImageView icon = new ImageView(Objects.requireNonNull(getClass().getResource(path)).toExternalForm());
-        icon.setFitWidth(20);
-        icon.setFitHeight(20);
-        return icon;
-    }
-
 
     private void bindAllControlActivation() {
         List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle, djButton);

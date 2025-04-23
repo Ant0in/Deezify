@@ -1,5 +1,6 @@
 package musicApp.controllers;
 
+import javafx.scene.control.Alert;
 import musicApp.views.ToolBarView;
 
 /**
@@ -23,10 +24,17 @@ public class ToolBarController extends ViewController<ToolBarView> implements To
     /**
      * Open settings.
      */
-    public void openSettings(){ playerController.openSettings(); }
+    public void handleOpenSettings(){ playerController.openSettings(); }
 
     /**
      * Exit app properly.
      */
-    public void exitApp() { System.exit(0); }
+    public void handleExitApp() {
+        playerController.close();
+    }
+
+
+    public void handleNotFoundImage(String errorMessage) {
+        alertService.showAlert("ToolBarController : " + errorMessage, Alert.AlertType.ERROR);
+    }
 }

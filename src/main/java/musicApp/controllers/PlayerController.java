@@ -1,5 +1,6 @@
 package musicApp.controllers;
 
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -143,6 +144,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      */
     public void close() {
         mediaPlayerController.close();
+        view.close();
     }
 
     /**

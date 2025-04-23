@@ -9,6 +9,7 @@ import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.AudioPlayer;
 import musicApp.models.Song;
+import musicApp.services.ViewService;
 import musicApp.views.MediaPlayerView;
 
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.List;
 /**
  * The  MediaPlayer controller.
  */
-public class MediaPlayerController extends ViewController<MediaPlayerView> implements MediaPlayerView.MediaPlayerViewListener {
+public class MediaPlayerController extends ViewController<MediaPlayerView>
+        implements MediaPlayerView.MediaPlayerViewListener, ViewService.ViewServiceListener {
     private final PlayerController playerController;
     private final MiniPlayerController miniPlayerController;
     private final DjPlayerController djPlayerController;
@@ -122,7 +124,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView> imple
 
 
     public void handleNotFoundImage(String errorMessage) {
-        alertService.showAlert(errorMessage, Alert.AlertType.ERROR);
+        alertService.showAlert("MediaPlayerController : " +errorMessage, Alert.AlertType.ERROR);
     }
 
     /**
