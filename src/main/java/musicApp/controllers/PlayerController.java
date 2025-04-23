@@ -43,21 +43,23 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     /**
      * Constructor
      *
-     * @param metaController the meta controller
+     * @param _metaController the meta controller
+     * @param primaryStage   the primary stage
+     * @param settings      the settings
+     * @param mainLibrary  the main library
      * @throws IOException the io exception
      */
-    public PlayerController(MetaController metaController, Settings settings, Library mainLibrary) throws IOException {
-
-        super(new PlayerView());
+    public PlayerController(MetaController _metaController, Stage primaryStage, Settings settings, Library mainLibrary) throws IOException {
+        super(new PlayerView(primaryStage));
         view.setListener(this);
-        this.metaController = metaController;
+        metaController = _metaController;
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
 
         libraryController.loadPlaylist(mainLibrary);
         mediaPlayerController.setBalance(settings.getBalance());
         try {
-            this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
+            mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
         } catch (EqualizerGainException e) {
             alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
         }
@@ -78,10 +80,9 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     /**
      * Show the player view.
      *
-     * @param stage The stage to show the view on.
      */
-    public void show(Stage stage) {
-        view.show(stage);
+    public void show() {
+        view.show();
     }
 
     /**

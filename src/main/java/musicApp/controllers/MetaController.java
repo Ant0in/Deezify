@@ -17,7 +17,6 @@ import java.util.List;
 public class MetaController {
 
     private final AlertService alertService;
-    private final Stage stage;
     private final SettingsService settingsService;
     private final PlaylistService playlistService;
     private final PlayerController playerController;
@@ -26,17 +25,15 @@ public class MetaController {
     /**
      * Instantiates a new Meta controller.
      *
-     * @param stage the stage
      * @throws IOException the io exception
      */
-    public MetaController(Stage stage) throws IOException {
-        this.stage = stage;
+    public MetaController(Stage primaryStage) throws IOException {
         alertService = new AlertService();
         settingsService = new SettingsService();
         playlistService = new PlaylistService();
         playlists = playlistService.loadAllLibraries();
         Settings settings = settingsService.readSettings();
-        playerController = new PlayerController(this, settings, getMainLibrary());
+        playerController = new PlayerController(this, primaryStage, settings, getMainLibrary());
         settingsController = new SettingsController(this, settings);
     }
 
@@ -48,7 +45,7 @@ public class MetaController {
      */
     public final void switchScene(Scenes scene) {
         switch (scene) {
-            case MAINWINDOW -> playerController.show(stage);
+            case MAINWINDOW -> playerController.show();
             case SETTINGS -> settingsController.show();
         }
     }

@@ -18,6 +18,7 @@ import musicApp.services.LanguageService;
 public class PlayerView extends View {
 
     private PlayerViewListener listener;
+    private final Stage primaryStage;
 
     @FXML
     private Pane controls;
@@ -33,8 +34,9 @@ public class PlayerView extends View {
     /**
      * Instantiates a new Player view.
      */
-    public PlayerView() {
+    public PlayerView(Stage _primaryStage) {
         super();
+        primaryStage = _primaryStage;
         xOffset = 0;
         yOffset = 0;
     }
@@ -127,12 +129,11 @@ public class PlayerView extends View {
     /**
      * Enable double click to grow (fullscreen)
      *
-     * @param stage the stage
      */
-    public void enableDoubleClickToGrow(Stage stage) {
+    public void enableDoubleClickToGrow() {
         labelContainer.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                stage.setFullScreen(true);
+                primaryStage.setFullScreen(true);
             }
         });
     }
@@ -140,27 +141,25 @@ public class PlayerView extends View {
     /**
      * Setup the window close handler.
      *
-     * @param stage The stage to setup the handler for.
      */
-    private void setupWindowCloseHandler(Stage stage) {
-        stage.setOnCloseRequest(_ -> {
+    private void setupWindowCloseHandler() {
+        primaryStage.setOnCloseRequest(_ -> {
             listener.close();
-            Platform.exit();
         });
     }
 
     /**
      * Enable drag of the window.
      */
-    private void enableDrag(Stage stage) {
+    private void enableDrag() {
         labelContainer.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
         });
 
         labelContainer.setOnMouseDragged(event -> {
-            stage.setX(event.getScreenX() - xOffset);
-            stage.setY(event.getScreenY() - yOffset);
+            primaryStage.setX(event.getScreenX() - xOffset);
+            primaryStage.setY(event.getScreenY() - yOffset);
         });
     }
 
@@ -176,17 +175,16 @@ public class PlayerView extends View {
     /**
      * Show the stage.
      *
-     * @param stage The stage to show.
      */
-    public void show(Stage stage) {
-        stage.initStyle(StageStyle.TRANSPARENT);
+    public void show() {
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
-        stage.setScene(scene);
-        stage.setTitle(getTitle());
-        enableDrag(stage);
-        enableDoubleClickToGrow(stage);
-        setupWindowCloseHandler(stage);
-        stage.show();
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(getTitle());
+        enableDrag();
+        enableDoubleClickToGrow();
+        setupWindowCloseHandler();
+        primaryStage.show();
     }
 
     /**
