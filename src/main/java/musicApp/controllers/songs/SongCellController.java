@@ -140,25 +140,6 @@ public class SongCellController extends ViewController<SongCellView> implements 
     }
 
     /**
-     * Get the currently loaded song string property.
-     *
-     * @return The currently loaded song string property.
-     */
-    public StringProperty getCurrentlyLoadedSongStringProperty() {
-        return libraryController.getCurrentlyLoadedSongStringProperty();
-    }
-
-    /**
-     * Get the isPlaying property.
-     * True if unpaused, false if paused.
-     *
-     * @return The is playing property.
-     */
-    public BooleanProperty isPlayingProperty() {
-        return libraryController.getIsPlayingProperty();
-    }
-
-    /**
      * Toggle favorites.
      */
     public void toggleFavorites() {
