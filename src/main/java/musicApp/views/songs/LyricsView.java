@@ -14,6 +14,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import musicApp.models.KaraokeLine;
 import musicApp.services.LanguageService;
+import musicApp.services.ViewService;
 import musicApp.views.View;
 
 import java.io.File;
@@ -258,9 +259,8 @@ public class LyricsView extends View {
         if (text != null) {
             button.setText(text);
         }
-        ImageView pencilIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/edit.png")).toExternalForm()));
-        pencilIcon.setFitWidth(16);
-        pencilIcon.setFitHeight(16);
+        ViewService viewService = new ViewService();
+        ImageView pencilIcon = viewService.createIcon("/images/edit.png");
         button.setGraphic(pencilIcon);
         return button;
     }

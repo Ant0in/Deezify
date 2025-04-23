@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import musicApp.models.Song;
+import musicApp.services.ViewService;
 import musicApp.views.View;
 
 import java.util.Objects;
@@ -91,8 +92,9 @@ public class SongCellView extends View {
      * Initialize the components.
      */
     private void initComponents() {
-        ImageView playIcon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
-        ImageView editIcon = new ImageView(Objects.requireNonNull(getClass().getResource(EDIT_ICON)).toExternalForm());
+        ViewService viewService = new ViewService();
+        ImageView playIcon = viewService.createIcon(PLAY_ICON);
+        ImageView editIcon = viewService.createIcon(EDIT_ICON);
 
         playButton.setGraphic(playIcon);
         likeButton.setOnAction(_ -> listener.toggleFavorites());
@@ -118,21 +120,20 @@ public class SongCellView extends View {
     private void updatePlayButtonIcon() {
         getRoot().getStyleClass().remove("song-playing");
         ImageView icon;
+        ViewService viewService = new ViewService();
         if (listener.isLoaded()) {
             getRoot().getStyleClass().add("song-playing");
             if (listener.isPlaying()) {
-                icon = new ImageView(Objects.requireNonNull(getClass().getResource(PAUSE_ICON)).toExternalForm());
+                icon = viewService.createIcon(PAUSE_ICON);
                 playButton.setOnAction(_ -> listener.handlePause());
             } else {
-                icon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
+                icon = viewService.createIcon(PLAY_ICON);
                 playButton.setOnAction(_ -> listener.handleUnpause());
             }
         } else {
-            icon = new ImageView(Objects.requireNonNull(getClass().getResource(PLAY_ICON)).toExternalForm());
+            icon = viewService.createIcon(PLAY_ICON);
             playButton.setOnAction(_ -> listener.handlePlay());
         }
-        icon.setFitWidth(20);
-        icon.setFitHeight(20);
         playButton.setGraphic(icon);
     }
 
