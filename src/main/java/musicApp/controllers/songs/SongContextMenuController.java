@@ -4,7 +4,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import musicApp.controllers.ViewController;
-import musicApp.exceptions.BadSongException;
 import musicApp.models.Library;
 import musicApp.services.LanguageService;
 import musicApp.views.songs.SongContextMenuView;

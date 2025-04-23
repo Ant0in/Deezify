@@ -1,18 +1,13 @@
 package musicApp.views.songs;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-import musicApp.models.Song;
 import musicApp.services.ViewService;
 import musicApp.views.View;
-
-import java.util.Objects;
 
 /**
  * The type Song cell view.

@@ -4,7 +4,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Alert;
 import javafx.scene.media.EqualizerBand;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.enums.EqualizerBandFrequency;
 import musicApp.exceptions.BadSongException;

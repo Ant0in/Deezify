@@ -1,8 +1,6 @@
 package musicApp.controllers.songs;
 
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.controllers.LibraryController;

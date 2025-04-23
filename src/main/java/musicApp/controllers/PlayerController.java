@@ -1,6 +1,5 @@
 package musicApp.controllers;
 
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -13,16 +12,12 @@ import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
-import musicApp.models.Settings;
 import musicApp.models.Song;
 import musicApp.models.dtos.SettingsDTO;
-import musicApp.services.FileDialogService;
 import musicApp.services.PlaylistService;
 import musicApp.views.PlayerView;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
