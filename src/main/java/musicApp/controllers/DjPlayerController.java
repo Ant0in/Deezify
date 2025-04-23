@@ -186,7 +186,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
                 applyMixedEffects();
             }
         } else {
-            timelineSpeed = speed / (100/3);
+            timelineSpeed = speed / ((double) 100 /3);
             if (timeline == null) {
                 toggleWaveGainMode();
             }

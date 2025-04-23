@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class SongLyrics {
     
-    private List<String> textLyrics;
-    private List<KaraokeLine> karaokeLyrics;
+    private final List<String> textLyrics;
+    private final List<KaraokeLine> karaokeLyrics;
     
     /**
      * Default constructor

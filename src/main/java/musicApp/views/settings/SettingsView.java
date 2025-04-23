@@ -79,9 +79,7 @@ public class SettingsView extends View {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
         stage.setScene(scene);
-        stage.setOnCloseRequest(_ -> {
-            listener.handleCancel();
-        });
+        stage.setOnCloseRequest(_ -> listener.handleCancel());
     }
 
     public void show(){

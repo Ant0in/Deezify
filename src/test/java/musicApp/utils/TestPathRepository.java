@@ -16,9 +16,7 @@ public class TestPathRepository extends PathRepository {
     @Test
     public void testNonExistentFolder() {
         Path nonExistentFolder = Paths.get("fdsf");
-        assertThrows(IOException.class, () -> {
-            getAllSongPaths(nonExistentFolder);
-        });
+        assertThrows(IOException.class, () -> getAllSongPaths(nonExistentFolder));
     }
 
     @Test

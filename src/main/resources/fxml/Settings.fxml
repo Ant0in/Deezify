@@ -18,7 +18,7 @@
                 <Label fx:id="balanceTitle" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Audio Balance" />
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <Label fx:id="left" text="L" />
-                    <Slider fx:id="balanceSlider" max="1.0" min="-1.0" prefWidth="200" value="0.0" />
+                    <Slider fx:id="balanceSlider" max="1.0" min="-1.0" prefWidth="200"/>
                     <Label fx:id="right" text="R" />
                     <Label fx:id="balanceLabel" text="0" />
                 </HBox>

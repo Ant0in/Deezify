@@ -19,7 +19,7 @@
             </ImageView>
             <VBox alignment="CENTER_LEFT">
                 <Label fx:id="currentSongLabel" styleClass="currentSong" text="None" />
-                <Label fx:id="currentArtistLabel" styleClass="currentArtist" text="" />
+                <Label fx:id="currentArtistLabel" styleClass="currentArtist"/>
             </VBox>
         </HBox>
         <HBox alignment="CENTER" spacing="10">

@@ -148,9 +148,7 @@ public class PlayerView extends View {
      *
      */
     private void setupWindowCloseHandler() {
-        primaryStage.setOnCloseRequest(_ -> {
-            listener.close();
-        });
+        primaryStage.setOnCloseRequest(_ -> listener.close());
     }
 
     /**
