@@ -1,40 +1,37 @@
 package musicApp.models.dtos;
 
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class SettingsDTO {
-    private double balance;
-    private List<Double> equalizerBands;
-    private Path musicFolder;
+    private final double balance;
+    private final List<Double> equalizerBands;
+    private final Path musicFolder;
+    private final boolean isMusicFolderChanged;
     
-    public SettingsDTO(double _balance, List<Double> _equalizerBands, Path _musicFolder) {
+    public SettingsDTO(double _balance, List<Double> _equalizerBands, Path _musicFolder, boolean _isMusicFolderChanged) {
         balance = _balance;
-        equalizerBands = _equalizerBands;
+        equalizerBands = Collections.unmodifiableList(_equalizerBands);
         musicFolder = _musicFolder;
+        isMusicFolderChanged = _isMusicFolderChanged;
     }
 
     public double getBalance() {
         return balance;
     }
 
-    public void setBalance(double newBalance) {
-        balance = newBalance;
-    }
-
     public List<Double> getEqualizerBands() {
         return equalizerBands;
-    }
-
-    public void setEqualizerBands(List<Double> newEqualizerBands) {
-        equalizerBands = newEqualizerBands;
     }
 
     public Path getMusicFolder() {
         return musicFolder;
     }
 
-    public void setMusicFolder(Path newMusicFolder) {
-        musicFolder = newMusicFolder;
+    public boolean isMusicFolderChanged() {
+        return isMusicFolderChanged;
     }
+
 }

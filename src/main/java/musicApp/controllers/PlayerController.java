@@ -175,15 +175,15 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     /**
      * Actions to do when the settings are changed
      *
-     * @param newSettings The new settings.
+     * @param newSettingsDTO The new settings.
      * @throws EqualizerGainException
      */
-    public void onSettingsChanged(Settings newSettings) throws EqualizerGainException {
-        mediaPlayerController.setBalance(newSettings.getBalance());
-        mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
+    public void onSettingsChanged(SettingsDTO newSettingsDTO) throws EqualizerGainException {
+        mediaPlayerController.setBalance(newSettingsDTO.getBalance());
+        mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());
         // Update the music folder in case it changed
-        if (newSettings.isMusicFolderChanged()) {
-            Library mainLibrary = playlistService.loadMainLibrary(newSettings.getMusicFolder());
+        if (newSettingsDTO.isMusicFolderChanged()) {
+            Library mainLibrary = playlistService.loadMainLibrary(newSettingsDTO.getMusicFolder());
             playlists.set(0, mainLibrary);
             libraryController.loadPlaylist(getMainLibrary());
         }

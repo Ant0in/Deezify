@@ -39,8 +39,7 @@ public class MetaController {
         alertService = new AlertService();
         settingsService = new SettingsService();
         Settings settings = settingsService.readSettings();
-        SettingsDTO settingsDTO = new SettingsDTO(settings.getBalance(), settings.getEqualizerBands(), settings.getMusicFolder());
-        playerController = new PlayerController(this, primaryStage, settingsDTO);
+        playerController = new PlayerController(this, primaryStage, settings.toDTO());
         settingsController = new SettingsController(this, settings);
     }
 
@@ -72,7 +71,7 @@ public class MetaController {
     public void notifySettingsChanged(Settings newSettings) {
         try {
             settingsService.writeSettings(newSettings);
-            playerController.onSettingsChanged(newSettings);
+            playerController.onSettingsChanged(newSettings.toDTO());
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
         }

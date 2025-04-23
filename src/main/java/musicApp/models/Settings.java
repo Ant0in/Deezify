@@ -1,6 +1,7 @@
 package musicApp.models;
 
 import com.google.gson.annotations.Expose;
+import musicApp.models.dtos.SettingsDTO;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -28,7 +29,11 @@ public class Settings {
         musicFolderChanged = false;
         balance = _balance;
         musicFolder = _musicFolder;
-    }  
+    }
+
+    public SettingsDTO toDTO() {
+        return new SettingsDTO(balance, equalizer.getBandsGain(), musicFolder, musicFolderChanged);
+    }
 
     /**
      * Get the balance of the settings.
@@ -94,14 +99,6 @@ public class Settings {
      */
     public List<Double> getEqualizerBands() {
         return equalizer.getBandsGain();
-    }
-
-    /**
-     * Checks if the music folder has changed.
-     * @return True if the music folder has changed, false otherwise.
-     */
-    public boolean isMusicFolderChanged() {
-        return musicFolderChanged;
     }
 
     /**
