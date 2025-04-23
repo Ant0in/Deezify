@@ -14,6 +14,7 @@ import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.Song;
+import musicApp.models.dtos.SettingsDTO;
 import musicApp.services.FileDialogService;
 import musicApp.services.PlaylistService;
 import musicApp.views.PlayerView;
@@ -49,24 +50,24 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      *
      * @param _metaController the meta controller
      * @param primaryStage   the primary stage
-     * @param settings      the settings
+     * @param settingsDTO      the settings
      * @throws IOException the io exception
      */
 
     // TODO: Change Settings to DTO
-    public PlayerController(MetaController _metaController, Stage primaryStage, Settings settings) throws IOException {
+    public PlayerController(MetaController _metaController, Stage primaryStage, SettingsDTO settingsDTO) throws IOException {
         super(new PlayerView(primaryStage));
         view.setListener(this);
         metaController = _metaController;
         playlistService = new PlaylistService();
-        playlists = playlistService.loadAllLibraries();
+        playlists = playlistService.loadAllLibraries(settingsDTO.getMusicFolder());
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
 
         libraryController.loadPlaylist(getMainLibrary());
-        mediaPlayerController.setBalance(settings.getBalance());
+        mediaPlayerController.setBalance(settingsDTO.getBalance());
         try {
-            mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
+            mediaPlayerController.setEqualizerBands(settingsDTO.getEqualizerBands());
         } catch (EqualizerGainException e) {
             alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
         }

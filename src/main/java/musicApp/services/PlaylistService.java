@@ -39,9 +39,8 @@ public class PlaylistService {
      * @return A list containing the main library followed by the playlists.
      *         The main library is loaded first, followed by any existing playlists.
      */
-    public List<Library> loadAllLibraries(){
-        SettingsService settingsService = new SettingsService();
-        Library mainLibrary = loadMainLibrary(settingsService.readSettings().getMusicFolder());
+    public List<Library> loadAllLibraries(Path musicFolder){
+        Library mainLibrary = loadMainLibrary(musicFolder);
         List<Library> playlists = readPlaylists();
         List<Library> libraries = new ArrayList<>();
         libraries.add(mainLibrary);

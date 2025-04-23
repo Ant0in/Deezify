@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Library;
 import musicApp.models.Settings;
+import musicApp.models.dtos.SettingsDTO;
 import musicApp.services.AlertService;
 import musicApp.services.PlaylistService;
 import musicApp.services.SettingsService;
@@ -15,11 +16,20 @@ import java.util.List;
  * The Meta controller.
  */
 public class MetaController {
-
     private final AlertService alertService;
     private final SettingsService settingsService;
     private final PlayerController playerController;
     private final SettingsController settingsController;
+
+    /**
+     * Enum for the different scenes in the application.
+     * NOTE: settings is not a scene but a pop-up window.
+     */
+    public enum Scenes {
+        MAINWINDOW,
+        SETTINGS
+    }
+
     /**
      * Instantiates a new Meta controller.
      *
@@ -29,7 +39,8 @@ public class MetaController {
         alertService = new AlertService();
         settingsService = new SettingsService();
         Settings settings = settingsService.readSettings();
-        playerController = new PlayerController(this, primaryStage, settings);
+        SettingsDTO settingsDTO = new SettingsDTO(settings.getBalance(), settings.getEqualizerBands(), settings.getMusicFolder());
+        playerController = new PlayerController(this, primaryStage, settingsDTO);
         settingsController = new SettingsController(this, settings);
     }
 
@@ -65,15 +76,6 @@ public class MetaController {
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
         }
-    }
-
-    /**
-     * Enum for the different scenes in the application.
-     * NOTE: settings is not a scene but a pop-up window.
-     */
-    public enum Scenes {
-        MAINWINDOW,
-        SETTINGS
     }
 
 }

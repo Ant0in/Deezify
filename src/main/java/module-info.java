@@ -6,6 +6,7 @@ module ulb.musicApp {
     exports musicApp.controllers.playlists;
     exports musicApp.exceptions;
     exports musicApp.models;
+    exports  musicApp.models.dtos;
     exports musicApp.services;
     exports musicApp.repositories;
     exports musicApp.repositories.gsonTypeAdapter;
