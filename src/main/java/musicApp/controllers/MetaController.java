@@ -18,10 +18,8 @@ public class MetaController {
 
     private final AlertService alertService;
     private final SettingsService settingsService;
-    private final PlaylistService playlistService;
     private final PlayerController playerController;
     private final SettingsController settingsController;
-    private final List<Library> playlists;
     /**
      * Instantiates a new Meta controller.
      *
@@ -30,10 +28,8 @@ public class MetaController {
     public MetaController(Stage primaryStage) throws IOException {
         alertService = new AlertService();
         settingsService = new SettingsService();
-        playlistService = new PlaylistService();
-        playlists = playlistService.loadAllLibraries();
         Settings settings = settingsService.readSettings();
-        playerController = new PlayerController(this, primaryStage, settings, getMainLibrary());
+        playerController = new PlayerController(this, primaryStage, settings);
         settingsController = new SettingsController(this, settings);
     }
 
@@ -65,29 +61,10 @@ public class MetaController {
     public void notifySettingsChanged(Settings newSettings) {
         try {
             settingsService.writeSettings(newSettings);
-            Library mainLibrary = playlistService.loadMainLibrary(newSettings.getMusicFolder());
-            playlists.set(0, mainLibrary);
             playerController.onSettingsChanged(newSettings);
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
         }
-    }
-
-    /**
-     * Get the playlists.
-     *
-     * @return the playlists
-     */
-    public List<Library> getPlaylists() {
-        return playlists;
-    }
-
-    /**
-     * Get the main library.
-     * @return the main library
-     */
-    public Library getMainLibrary() {
-        return playlists.getFirst();
     }
 
     /**
@@ -99,7 +76,4 @@ public class MetaController {
         SETTINGS
     }
 
-    public boolean isMainLibrary(Library library) {
-        return getMainLibrary().equals(library);
-    }
 }

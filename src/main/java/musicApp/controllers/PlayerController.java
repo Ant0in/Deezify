@@ -40,23 +40,30 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
 
+    private final PlaylistService playlistService;
+    private final List<Library> playlists;
+
+
     /**
      * Constructor
      *
      * @param _metaController the meta controller
      * @param primaryStage   the primary stage
      * @param settings      the settings
-     * @param mainLibrary  the main library
      * @throws IOException the io exception
      */
-    public PlayerController(MetaController _metaController, Stage primaryStage, Settings settings, Library mainLibrary) throws IOException {
+
+    // TODO: Change Settings to DTO
+    public PlayerController(MetaController _metaController, Stage primaryStage, Settings settings) throws IOException {
         super(new PlayerView(primaryStage));
         view.setListener(this);
         metaController = _metaController;
+        playlistService = new PlaylistService();
+        playlists = playlistService.loadAllLibraries();
         initSubControllers();
         initView("/fxml/MainLayout.fxml");
 
-        libraryController.loadPlaylist(mainLibrary);
+        libraryController.loadPlaylist(getMainLibrary());
         mediaPlayerController.setBalance(settings.getBalance());
         try {
             mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
@@ -89,7 +96,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * Play song.
      *
      * @param song the song
-     * @throws EqualizerGainException
+     * @throws BadSongException
      */
     public void playSong(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);
@@ -171,8 +178,12 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     public void onSettingsChanged(Settings newSettings) throws EqualizerGainException {
         mediaPlayerController.setBalance(newSettings.getBalance());
         mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
-        if (newSettings.isMusicFolderChanged())
-            libraryController.loadPlaylist(metaController.getMainLibrary());
+        // Update the music folder in case it changed
+        if (newSettings.isMusicFolderChanged()) {
+            Library mainLibrary = playlistService.loadMainLibrary(newSettings.getMusicFolder());
+            playlists.set(0, mainLibrary);
+            libraryController.loadPlaylist(getMainLibrary());
+        }
     }
 
     /**
@@ -319,12 +330,20 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     }
 
     /**
+     * Get the main library.
+     * @return the main library
+     */
+    public Library getMainLibrary() {
+        return playlists.getFirst();
+    }
+
+    /**
      * Get all the playlists of the user
      *
      * @return The list of playlists
      */
     public List<Library> getPlaylists() {
-        return metaController.getPlaylists();
+        return playlists;
     }
 
     /**
@@ -394,7 +413,8 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     }
 
     public boolean isMainLibrary(Library library) {
-        return metaController.isMainLibrary(library);
+        return getMainLibrary().equals(library);
     }
+
 
 }

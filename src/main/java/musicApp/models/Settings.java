@@ -72,8 +72,12 @@ public class Settings {
      * @param newMusicFolder The music folder.
      */
     public void setMusicFolder(Path newMusicFolder) {
-        musicFolder = newMusicFolder;
-        musicFolderChanged = true;
+        if (musicFolder != newMusicFolder){
+            musicFolder = newMusicFolder;
+            musicFolderChanged = true;
+        } else {
+            musicFolderChanged = false;
+        }
     }
 
     /**
