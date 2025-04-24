@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import musicApp.controllers.playlists.PlaylistCellController;
-import musicApp.controllers.playlists.PlaylistNavigatorController;
 import musicApp.models.Library;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
@@ -32,11 +31,11 @@ public class PlaylistNavigatorView extends View {
      * displaying a context menu, and providing the controller.
      */
     public interface PlaylistNavigatorViewListener {
-        void openCreatePlaylistDialog();
+        void handleCreatePlaylist();
 
         void setSelectedLibrary(Library library);
 
-        void showContextMenu(double x, double y, Library library);
+        void handleShowContextMenu(double x, double y, Library library);
     }
     
     /**
@@ -74,7 +73,7 @@ public class PlaylistNavigatorView extends View {
      * This method binds the button action to open a dialog for creating a new playlist.
      */
     private void setButtonActions() {
-        createPlaylist.setOnAction(_ -> listener.openCreatePlaylistDialog());
+        createPlaylist.setOnAction(_ -> listener.handleCreatePlaylist());
     }
 
     /**
@@ -106,7 +105,7 @@ public class PlaylistNavigatorView extends View {
                 if (getSelectedPlaylist() == null) return;
                 listener.setSelectedLibrary(getSelectedPlaylist());
             } else if (e.getButton() == MouseButton.SECONDARY) {
-                listener.showContextMenu(e.getScreenX(), e.getScreenY(), getSelectedPlaylist());
+                listener.handleShowContextMenu(e.getScreenX(), e.getScreenY(), getSelectedPlaylist());
             }
         });
     }

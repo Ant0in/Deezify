@@ -181,7 +181,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     /**
      * Open dialog for creating a new playlist.
      */
-    public void openCreatePlaylistDialog() {
+    public void handleCreatePlaylist() {
         new EditPlaylistController(this);
     }
 
@@ -194,7 +194,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         new EditPlaylistController(this, playlist);
     }
 
-    public void showContextMenu(double x, double y, Library library) {
+    public void handleShowContextMenu(double x, double y, Library library) {
         playlistContextMenuController.showAt(x, y, library);
     }
 
