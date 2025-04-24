@@ -198,7 +198,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * Load and Play the currently selected song.
      *
      * @param song the song
-     * @throws EqualizerGainException 
+     * @throws BadSongException the bad song exception
      */
     public void playCurrent(Song song) throws BadSongException {
         audioPlayer.loadSong(song);
@@ -225,8 +225,8 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
         playerController.toggleLyrics(show);
     }
 
-    public void toggleMiniPlayer() {
-        miniPlayerController.toggleView();
+    public void toggleMiniPlayer(boolean show) {
+        miniPlayerController.toggleView(show);
     }
 
     public void handleLaunchDjMode() {

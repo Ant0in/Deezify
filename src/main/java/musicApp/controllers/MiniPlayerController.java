@@ -19,8 +19,6 @@ public class MiniPlayerController extends ViewController<MiniPlayerView> impleme
     private static final float LOG_SCALE_OFFSET = 1.1f;
     private static final float VISUAL_INTENSITY_MULTIPLIER = 1.5f;
 
-    private final Stage stage;
-
     /**
      * Instantiates the MiniPlayerController and initializes the MiniPlayer view.
      */
@@ -28,19 +26,16 @@ public class MiniPlayerController extends ViewController<MiniPlayerView> impleme
         super(new MiniPlayerView());
         view.setListener(this);
         initView("/fxml/MiniPlayer.fxml");
-        stage = new Stage();
-        stage.setScene(view.getScene());
-        stage.setTitle("MiniPlayer");
     }
 
     /**
      * Toggle the visibility of the mini player window.
      */
-    public void toggleView() {
-        if (stage.isShowing()) {
-            stage.close();
+    public void toggleView(boolean show) {
+        if (show) {
+            view.show();
         } else {
-            stage.show();
+            view.close();
         }
     }
 

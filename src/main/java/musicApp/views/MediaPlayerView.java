@@ -47,8 +47,6 @@ public class MediaPlayerView extends View {
 
         void handlePreviousSong();
 
-        void toggleMiniPlayer();
-
         void handleLaunchDjMode();
 
         void seek(double duration);
@@ -58,6 +56,8 @@ public class MediaPlayerView extends View {
         void toggleLyrics(boolean show);
 
         void toggleShuffle(boolean isShuffle);
+
+        void toggleMiniPlayer(boolean show);
 
         void handlePlayingStatusChange(Consumer<Boolean> callback);
 
@@ -106,7 +106,7 @@ public class MediaPlayerView extends View {
         previousSongButton.setOnAction(_ -> listener.handlePreviousSong());
         shuffleToggle.setOnAction(_ -> listener.toggleShuffle(shuffleToggle.isSelected()));
         lyricsToggle.setOnAction(_ -> listener.toggleLyrics(lyricsToggle.isSelected()));
-        miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer() );
+        miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer(miniPlayerToggle.isSelected()) );
     }
 
     private void initBindings() {

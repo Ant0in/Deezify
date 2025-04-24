@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 
 import java.util.List;
 
@@ -18,29 +19,19 @@ import java.util.List;
 public class MiniPlayerView extends View{
 
     private MiniPlayerViewListener listener;
+    private Stage stage;
 
-    /**
-     * The Song title label.
-     */
     @FXML
     private Label songTitleLabel;
 
-    /**
-     * The Cover image.
-     */
     @FXML
     private ImageView coverImage;
-    /**
-     * The Canvas.
-     */
+
     @FXML
     private Canvas canvas;
     // Flag to track whether the image is clipped or not
     private boolean isClipped;
 
-    /**
-     * The Is basic mode.
-     */
     Boolean isBasicMode;
 
     public MiniPlayerView() {
@@ -56,6 +47,26 @@ public class MiniPlayerView extends View{
         int getBandsNumber();
     }
 
+    @Override
+    public void init() {
+        scene.setOnMouseClicked(_ -> changeVisualizerMode());
+        initStage();
+    }
+
+    private void initStage() {
+        stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("MiniPlayer");
+    }
+
+    public void close() {
+        stage.close();
+    }
+
+    public void show() {
+        stage.show();
+    }
+
     /**
      * Sets listener.
      *
@@ -63,12 +74,6 @@ public class MiniPlayerView extends View{
      */
     public void setListener(MiniPlayerViewListener newListener) {
         listener = newListener;
-    }
-
-
-    @Override
-    public void init() {
-        scene.setOnMouseClicked(_ -> changeVisualizerMode());
     }
 
     private void changeVisualizerMode() {
@@ -90,31 +95,16 @@ public class MiniPlayerView extends View{
     }
 
     /**
-     * Gets scene.
-     *
-     * @return the scene
-     */
-    public Scene getScene() { return scene; }
-
-    /**
      * Update song properties.
      *
      * @param title      the title
-     * @param coverImage the cover image
+     * @param newCoverImage the cover image
      */
-    public void updateSongProperties(String title, Image coverImage) {
+    public void updateSongProperties(String title, Image newCoverImage) {
         songTitleLabel.setText(title);
-        setCoverImage(coverImage);
+        coverImage.setImage(newCoverImage);
     }
 
-    /**
-     * Sets cover image.
-     *
-     * @param image the image
-     */
-    public void setCoverImage(Image image) {
-        coverImage.setImage(image);
-    }
 
 
     /**
@@ -195,8 +185,5 @@ public class MiniPlayerView extends View{
             gc.strokeLine(xStart, yStart, xEnd, yEnd); // Draw a line from the center to the outer edge (the bar)
         }
     }
-
-
-
 
 }
