@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
+import musicApp.controllers.playlists.PlaylistsController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
@@ -18,6 +19,7 @@ import musicApp.services.PlaylistService;
 import musicApp.views.PlayerView;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -37,8 +39,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
 
-    private final PlaylistService playlistService;
-    private final List<Library> playlists;
+
 
 
     /**
@@ -50,14 +51,11 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * @throws IOException the io exception
      */
 
-    // TODO: Change Settings to DTO
     public PlayerController(MetaController _metaController, Stage primaryStage, SettingsDTO settingsDTO) throws IOException {
         super(new PlayerView(primaryStage));
         view.setListener(this);
         metaController = _metaController;
-        playlistService = new PlaylistService();
-        playlists = playlistService.loadAllLibraries(settingsDTO.getMusicFolder());
-        initSubControllers();
+        initSubControllers(settingsDTO.getMusicFolder());
         initView("/fxml/MainLayout.fxml");
 
         libraryController.loadPlaylist(getMainLibrary());
@@ -72,13 +70,13 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     /**
      * Initializes all sub-controllers that are part of the player controller.
      */
-    private void initSubControllers() {
+    private void initSubControllers(Path musicFolder) {
         libraryController = new LibraryController(this);
         queueController = new QueueController(this);
         mediaPlayerController = new MediaPlayerController(this);
         toolBarController = new ToolBarController(this);
         lyricsController = new LyricsController(this);
-        playlistNavigatorController = new PlaylistNavigatorController(this);
+        playlistNavigatorController = new PlaylistNavigatorController(this, musicFolder);
     }
 
     /**
@@ -178,8 +176,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());
         // Update the music folder in case it changed
         if (newSettingsDTO.isMusicFolderChanged()) {
-            Library mainLibrary = playlistService.loadMainLibrary(newSettingsDTO.getMusicFolder());
-            playlists.set(0, mainLibrary);
+            playlistNavigatorController.updateMainLibrary(newSettingsDTO.getMusicFolder());
             libraryController.loadPlaylist(getMainLibrary());
         }
     }
@@ -332,7 +329,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * @return the main library
      */
     public Library getMainLibrary() {
-        return playlists.getFirst();
+        return playlistNavigatorController.getMainLibrary();
     }
 
     /**
@@ -341,7 +338,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * @return The list of playlists
      */
     public List<Library> getPlaylists() {
-        return playlists;
+        return playlistNavigatorController.getPlaylists();
     }
 
     /**
@@ -413,6 +410,5 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     public boolean isMainLibrary(Library library) {
         return getMainLibrary().equals(library);
     }
-
 
 }

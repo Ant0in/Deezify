@@ -50,7 +50,7 @@ public class Library {
      * @param song The song to add.
      */
     public void add(Song song) throws IllegalArgumentException {
-        if (songList.contains(song)) {
+        if (contains(song)) {
             throw new IllegalArgumentException(
                     LanguageService.getInstance().get("error.media_already_in_library")
                             + " " + song.toString()
@@ -66,7 +66,7 @@ public class Library {
      * @param song  The media to add.
      */
     public void add(int index, Song song) throws IllegalArgumentException {
-        if (songList.contains(song)) {
+        if (contains(song)) {
             throw new IllegalArgumentException(
                     LanguageService.getInstance().get("error.media_already_in_library")
                             + " " + song.toString()
@@ -81,7 +81,7 @@ public class Library {
      * @param song The song to remove.
      */
     public void remove(Song song) {
-        if (!songList.contains(song)) {
+        if (!contains(song)) {
             throw new IllegalArgumentException("Media not in library");
         }
         songList.remove(song);
@@ -101,6 +101,10 @@ public class Library {
      */
     public Boolean isEmpty() {
         return songList.isEmpty();
+    }
+
+    public Boolean contains(Song song) {
+        return songList.contains(song);
     }
 
     /**

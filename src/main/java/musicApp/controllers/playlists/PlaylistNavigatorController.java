@@ -3,6 +3,7 @@ package musicApp.controllers.playlists;
 import javafx.scene.control.Alert;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
+import musicApp.exceptions.DeletePlaylistException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.services.LanguageService;
@@ -19,22 +20,21 @@ import java.util.List;
 public class PlaylistNavigatorController extends ViewController<PlaylistNavigatorView> implements PlaylistNavigatorView.PlaylistNavigatorViewListener {
 
     private final PlayerController playerController;
-    private List<Library> playlists;
+    private final PlaylistsController playlistsController;
     private Library selectedLibrary;
     private final PlaylistContextMenuController playlistContextMenuController;
 
-    private static final int FAVORITES_INDEX = 1;
 
     /**
      * Instantiates a new View controller.
      *
      * @param controller the player controller
      */
-    public PlaylistNavigatorController(PlayerController controller) {
+    public PlaylistNavigatorController(PlayerController controller, Path musicFolder) {
         super(new PlaylistNavigatorView());
         view.setListener(this);
         playerController = controller;
-        playlists = new ArrayList<>();
+        playlistsController = new PlaylistsController(musicFolder);
         playlistContextMenuController = new PlaylistContextMenuController(this);
         initView("/fxml/PlaylistNavigator.fxml");
         loadPlaylists();
@@ -44,8 +44,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * Load playlists.
      */
     public void loadPlaylists() {
-        playlists = playerController.getPlaylists();
-        view.update(playlists);
+        view.update(playlistsController.getPlaylists());
     }
 
     /**
@@ -66,10 +65,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param imagePath the path to the image of the playlist
      */
     public void createPlaylist(String name, Path imagePath) {
-        Library playlist = new Library(new ArrayList<>(), name, imagePath);
-        playlists.add(playlist);
-        PlaylistService playlistService = new PlaylistService();
-        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        playlistsController.createPlaylist(name, imagePath);
         refreshUI();
     }
 
@@ -81,7 +77,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @return true if the playlist is deletable
      */
     public boolean isModifiable(Library library) {
-        return !(playlists.getFirst().equals(library) || playlists.get(FAVORITES_INDEX).equals(library));
+        return playlistsController.isLibraryModifiable(library);
     }
 
     /**
@@ -90,12 +86,10 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param library the playlist
      */
     public void deletePlaylist(Library library) {
-        if (isModifiable(library)) {
-            playlists.remove(library);
-            PlaylistService playlistService = new PlaylistService();
-            playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        try{
+            playlistsController.deletePlaylist(library);
             refreshUI();
-        } else {
+        } catch (DeletePlaylistException e){
             alertService.showAlert(LanguageService.getInstance().get("error.delete_playlist"), Alert.AlertType.WARNING);
         }
     }
@@ -122,7 +116,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * Refresh the UI.
      */
     public void refreshUI() {
-        view.update(playlists);
+        view.update(playlistsController.getPlaylists());
     }
 
     /**
@@ -132,17 +126,11 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param song to add
      */
     public void toggleFavorites(Song song) {
-        Library favorites = playlists.get(FAVORITES_INDEX);
-        if (favorites.toList().contains(song)) {
-            favorites.remove(song);
-        } else {
-            favorites.add(song);
-        }
+        playlistsController.toggleFavorites(song);
+        Library favorites = playlistsController.getFavoritesPlaylist();
         if (selectedLibrary == favorites) {
             playerController.updateShownPlaylist(favorites);
         }
-        PlaylistService playlistService = new PlaylistService();
-        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
         refreshUI();
     }
 
@@ -153,9 +141,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param playlist to add the song to
      */
     public void addSongToPlaylist(Song song, Library playlist) {
-        playlist.add(song);
-        PlaylistService playlistService = new PlaylistService();
-        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        playlistsController.addSongToPlaylist(song, playlist);
         refreshUI();
     }
 
@@ -166,9 +152,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param playlist to remove the song from
      */
     public void removeSongFromPlaylist(Song song, Library playlist) {
-        playlist.remove(song);
-        PlaylistService playlistService = new PlaylistService();
-        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        playlistsController.removeSongFromPlaylist(song, playlist);
         refreshUI();
     }
 
@@ -179,8 +163,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @return true if the song is in the favorites
      */
     public boolean isFavorite(Song song) {
-        Library favorites = playlists.get(FAVORITES_INDEX);
-        return favorites.toList().contains(song);
+        return playlistsController.isFavorite(song);
     }
 
     /**
@@ -191,10 +174,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param imagePath the new image path
      */
     public void updatePlaylist(Library playlist, String name, Path imagePath) {
-        playlist.setName(name);
-        playlist.setImagePath(imagePath);
-        PlaylistService playlistService = new PlaylistService();
-        playlistService.writePlaylists(playlists.subList(FAVORITES_INDEX, playlists.size()));
+        playlistsController.updatePlaylist(playlist, name, imagePath);
         refreshUI();
     }
 
@@ -216,5 +196,17 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
 
     public void showContextMenu(double x, double y, Library library) {
         playlistContextMenuController.showAt(x, y, library);
+    }
+
+    public void updateMainLibrary(Path newMusicFolder) {
+        playlistsController.updateMainLibrary(newMusicFolder);
+    }
+
+    public Library getMainLibrary() {
+        return playlistsController.getMainLibrary();
+    }
+
+    public List<Library> getPlaylists() {
+        return playlistsController.getPlaylists();
     }
 }
