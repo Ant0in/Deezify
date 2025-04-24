@@ -29,11 +29,12 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      *
      * @param controller the controller
      */
-    public LibraryController(PlayerController controller) {
+    public LibraryController(PlayerController controller, Library mainLibrary) {
         super(new LibraryView(), controller);
         view.setListener((LibraryView.LibraryViewListener) this);
         shuffle = false;
         initView("/fxml/MainLibrary.fxml");
+        loadPlaylist(mainLibrary);
     }
 
     /**
@@ -168,7 +169,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      * @return the boolean property
      */
     public BooleanProperty getIsPlayingProperty() {
-        return playerController.isPlayingProperty();
+        return playerController.getIsPlayingProperty();
     }
 
     /**

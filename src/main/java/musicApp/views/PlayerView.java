@@ -74,12 +74,21 @@ public class PlayerView extends View {
         listener = newListener;
     }
 
-
-
     @Override
     public void init() {
+        initStage();
         initPanes();
         initBindings();
+    }
+
+    private void initStage() {
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(getTitle());
+        enableDrag();
+        enableDoubleClickToGrow();
+        setupWindowCloseHandler();
     }
 
     private void initPanes() {
@@ -180,13 +189,6 @@ public class PlayerView extends View {
      *
      */
     public void show() {
-        primaryStage.initStyle(StageStyle.TRANSPARENT);
-        scene.setFill(Color.TRANSPARENT);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle(getTitle());
-        enableDrag();
-        enableDoubleClickToGrow();
-        setupWindowCloseHandler();
         primaryStage.show();
     }
 

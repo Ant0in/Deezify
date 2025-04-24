@@ -37,9 +37,6 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
 
-
-
-
     /**
      * Constructor
      *
@@ -53,28 +50,20 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         super(new PlayerView(primaryStage));
         view.setListener(this);
         metaController = _metaController;
-        initSubControllers(settingsDTO.getMusicFolder());
+        initSubControllers(settingsDTO);
         initView("/fxml/MainLayout.fxml");
-
-        libraryController.loadPlaylist(getMainLibrary());
-        mediaPlayerController.setBalance(settingsDTO.getBalance());
-        try {
-            mediaPlayerController.setEqualizerBands(settingsDTO.getEqualizerBands());
-        } catch (EqualizerGainException e) {
-            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
-        }
     }
 
     /**
      * Initializes all sub-controllers that are part of the player controller.
      */
-    private void initSubControllers(Path musicFolder) {
-        libraryController = new LibraryController(this);
+    private void initSubControllers(SettingsDTO settingsDTO) {
+        playlistNavigatorController = new PlaylistNavigatorController(this, settingsDTO.getMusicFolder());
+        libraryController = new LibraryController(this, getMainLibrary());
         queueController = new QueueController(this);
-        mediaPlayerController = new MediaPlayerController(this);
+        mediaPlayerController = new MediaPlayerController(this, settingsDTO.getBalance(), settingsDTO.getEqualizerBands());
         toolBarController = new ToolBarController(this);
         lyricsController = new LyricsController(this);
-        playlistNavigatorController = new PlaylistNavigatorController(this, musicFolder);
     }
 
     /**
@@ -290,7 +279,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      *
      * @return A BooleanProperty that is true if the music is playing, BooleanProperty false if paused.
      */
-    public BooleanProperty isPlayingProperty() {
+    public BooleanProperty getIsPlayingProperty() {
         return mediaPlayerController.getIsPlayingProperty();
     }
 

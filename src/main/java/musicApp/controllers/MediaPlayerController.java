@@ -32,7 +32,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      *
      * @param controller the player controller
      */
-    public MediaPlayerController(PlayerController controller) {
+    public MediaPlayerController(PlayerController controller, double balance, List<Double> equalizerBands) {
         super(new MediaPlayerView());
         view.setListener(this);
         playerController = controller;
@@ -41,6 +41,12 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
         djPlayerController = new DjPlayerController(this);
 
         initView("/fxml/MediaPlayer.fxml");
+        setBalance(balance);
+        try {
+            setEqualizerBands(equalizerBands);
+        } catch (EqualizerGainException e) {
+            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+        }
     }
 
 
