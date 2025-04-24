@@ -1,7 +1,6 @@
 package musicApp.controllers.playlists;
 
 
-import javafx.scene.control.Alert;
 import musicApp.exceptions.DeletePlaylistException;
 import musicApp.models.Library;
 import musicApp.models.Song;

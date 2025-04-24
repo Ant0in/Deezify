@@ -1,7 +1,6 @@
 package musicApp.controllers;
 
 import javafx.scene.media.AudioSpectrumListener;
-import javafx.stage.Stage;
 import musicApp.models.Song;
 import musicApp.views.MiniPlayerView;
 

@@ -7,11 +7,9 @@ import musicApp.exceptions.DeletePlaylistException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.services.LanguageService;
-import musicApp.services.PlaylistService;
 import musicApp.views.playlists.PlaylistNavigatorView;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

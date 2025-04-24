@@ -3,7 +3,6 @@ package musicApp.controllers;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -17,7 +16,6 @@ import musicApp.models.dtos.SettingsDTO;
 import musicApp.views.PlayerView;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
