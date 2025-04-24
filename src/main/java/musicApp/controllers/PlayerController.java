@@ -139,7 +139,6 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      */
     public void refreshUI() {
         view.refreshUI();
-        queueController.refreshUI();
         lyricsController.refreshUI();
         playlistNavigatorController.refreshUI();
         libraryController.refreshUI();

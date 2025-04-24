@@ -13,7 +13,6 @@ import musicApp.services.LanguageService;
 /**
  * The Queue view.
  */
-@SuppressWarnings("unused")
 public class QueueView extends SongContainerView {
 
     private QueueViewListener listener;

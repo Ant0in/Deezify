@@ -18,13 +18,9 @@ public abstract class SongContainerController<V extends SongContainerView, M ext
         extends ViewController<V>
         implements SongContainerView.SongContainerViewListener {
 
-    /**
-     * The Player controller.
-     */
+    
     protected PlayerController playerController;
-    /**
-     * The Library.
-     */
+    
     protected M library;
 
     /**
@@ -146,10 +142,4 @@ public abstract class SongContainerController<V extends SongContainerView, M ext
         view.clearSelection();
     }
 
-    /**
-     * Refresh ui.
-     */
-    public void refreshUI() {
-        view.refreshUI();
-    }
 }

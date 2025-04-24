@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * The MainLibrary view.
  */
-@SuppressWarnings("unused")
 public class LibraryView extends SongContainerView {
 
     private LibraryViewListener listener;
@@ -116,7 +115,6 @@ public class LibraryView extends SongContainerView {
         return FileDialogService.chooseAudioFile(null, LanguageService.getInstance().get("dialog.select_audio_file"));
     }
 
-    @Override
     public void refreshUI() {
         updateListView();
     }

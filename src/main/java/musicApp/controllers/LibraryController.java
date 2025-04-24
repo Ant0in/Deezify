@@ -233,6 +233,10 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         refreshUI();
     }
 
+    public void refreshUI() {
+        view.refreshUI();
+    }
+
     /**
      * Checks if the main library is currently being shown
      */

@@ -13,10 +13,7 @@ import java.util.List;
 public abstract class SongContainerView extends View{
 
     private SongContainerViewListener listener;
-
-    /**
-     * The List view.
-     */
+    
     @FXML
     protected ListView<Song> listView;
 
@@ -83,10 +80,5 @@ public abstract class SongContainerView extends View{
         return listView.getSelectionModel().selectedItemProperty().isNotNull();
     }
 
-    /**
-     * Refresh ui.
-     */
-    public void refreshUI() {
-    }
 
 }
