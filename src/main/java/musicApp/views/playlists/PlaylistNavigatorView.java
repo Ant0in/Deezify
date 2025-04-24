@@ -37,8 +37,6 @@ public class PlaylistNavigatorView extends View {
         void setSelectedLibrary(Library library);
 
         void showContextMenu(double x, double y, Library library);
-
-        PlaylistNavigatorController getController();
     }
     
     /**

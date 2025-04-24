@@ -217,9 +217,4 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     public void showContextMenu(double x, double y, Library library) {
         playlistContextMenuController.showAt(x, y, library);
     }
-
-    @Override
-    public PlaylistNavigatorController getController() {
-        return this;
-    }
 }
