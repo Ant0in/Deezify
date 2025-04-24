@@ -1,6 +1,8 @@
 package musicApp.controllers;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.Alert;
 import musicApp.models.Library;
 import musicApp.models.Song;
@@ -32,6 +34,19 @@ public class QueueController extends SongContainerController<QueueView, Library>
         return playerController.isPlaylistItemSelected();
     }
 
+    public void bindClearSelection(ReadOnlyObjectProperty<Song> songReadOnlyObjectProperty) {
+        songReadOnlyObjectProperty.addListener((_, _, newValue) -> {
+            if (newValue != null) {
+                clearPlayListViewSelection();
+            }
+        });
+    }
+
+    public void bindIsPlaylistItemSelected(BooleanProperty booleanProperty) {
+        booleanProperty.bind(isPlaylistItemSelected());
+    }
+
+
 
     /**
      * Reorganize the queue by moving a song from one index to another.
@@ -50,7 +65,7 @@ public class QueueController extends SongContainerController<QueueView, Library>
     /**
      * Clear play list view selection.
      */
-    public void clearPlayListViewSelection() {
+    private void clearPlayListViewSelection() {
         playerController.clearPlayListViewSelection();
     }
 

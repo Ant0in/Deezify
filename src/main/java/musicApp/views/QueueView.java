@@ -2,6 +2,8 @@ package musicApp.views;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
@@ -30,11 +32,12 @@ public class QueueView extends SongContainerView {
 
         void handleClearQueue();
 
-        void clearPlayListViewSelection();
-
         void reorderQueue(int fromIndex, int toIndex);
 
-        BooleanBinding isPlaylistItemSelected();
+        void bindClearSelection(ReadOnlyObjectProperty<Song> songReadOnlyObjectProperty);
+
+        void bindIsPlaylistItemSelected(BooleanProperty booleanProperty);
+
     }
 
     /**
@@ -74,15 +77,13 @@ public class QueueView extends SongContainerView {
      */
     private void bindButtons() {
         deleteSongButton.visibleProperty().bind(isSelected());
-        addSongButton.visibleProperty().bind(listener.isPlaylistItemSelected());
+        listener.bindIsPlaylistItemSelected(addSongButton.visibleProperty());
     }
 
     /**
      * Bind the queue buttons activation.
      */
     private void bindQueueButtonsActivation() {
-        addSongButton.disableProperty().bind(listener.isPlaylistItemSelected().not());
-        deleteSongButton.disableProperty().bind(listView.getSelectionModel().selectedItemProperty().isNull());
         clearQueueButton.disableProperty().bind(Bindings.isEmpty(listView.getItems()));
 
         applyDisableStyleListener(addSongButton);
@@ -195,9 +196,7 @@ public class QueueView extends SongContainerView {
      * Setup the list selection listeners.
      */
     private void setupListSelectionListeners() {
-        listView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
-            if (newVal != null) listener.clearPlayListViewSelection();
-        });
+        listener.bindClearSelection(listView.getSelectionModel().selectedItemProperty());
     }
 
     @Override
