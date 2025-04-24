@@ -140,8 +140,8 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     /**
      * Toggle shuffle.
      */
-    public void toggleShuffle() {
-        shuffle = !shuffle;
+    public void toggleShuffle(boolean isShuffle) {
+        shuffle = isShuffle;
     }
 
     /**

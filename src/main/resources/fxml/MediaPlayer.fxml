@@ -18,7 +18,7 @@
                 </clip>
             </ImageView>
             <VBox alignment="CENTER_LEFT">
-                <Label fx:id="currentSongLabel" styleClass="currentSong" text="None" />
+                <Label fx:id="currentSongLabel" styleClass="currentSong"/>
                 <Label fx:id="currentArtistLabel" styleClass="currentArtist"/>
             </VBox>
         </HBox>

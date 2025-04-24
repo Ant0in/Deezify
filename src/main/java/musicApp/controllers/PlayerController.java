@@ -8,14 +8,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
-import musicApp.controllers.playlists.PlaylistsController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.models.dtos.SettingsDTO;
-import musicApp.services.PlaylistService;
 import musicApp.views.PlayerView;
 
 import java.io.IOException;
@@ -161,8 +159,8 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     /**
      * Toggle the shuffle mode.
      */
-    public void toggleShuffle() {
-        libraryController.toggleShuffle();
+    public void toggleShuffle(boolean isShuffle) {
+        libraryController.toggleShuffle(isShuffle);
     }
 
     /**
@@ -274,7 +272,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * @return True if the player is playing a song, false if its paused.
      */
     public boolean isPlaying() {
-        return mediaPlayerController.isPlaying().get();
+        return mediaPlayerController.getIsPlayingProperty().get();
     }
 
     /**
@@ -283,7 +281,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * @return The currently loaded song string property.
      */
     public StringProperty getCurrentlyLoadedSongStringProperty() {
-        return mediaPlayerController.currentSongProperty();
+        return mediaPlayerController.getCurrentSongProperty();
     }
 
     /**
@@ -293,7 +291,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * @return A BooleanProperty that is true if the music is playing, BooleanProperty false if paused.
      */
     public BooleanProperty isPlayingProperty() {
-        return mediaPlayerController.isPlayingProperty();
+        return mediaPlayerController.getIsPlayingProperty();
     }
 
     /**

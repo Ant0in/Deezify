@@ -1,9 +1,11 @@
 package musicApp.controllers;
 
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
@@ -13,6 +15,7 @@ import musicApp.services.ViewService;
 import musicApp.views.MediaPlayerView;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * The  MediaPlayer controller.
@@ -46,8 +49,8 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      *
      * @return Whether the song is playing.
      */
-    public BooleanProperty isPlaying() {
-        return audioPlayer.isPlaying();
+    public BooleanProperty getIsPlayingProperty() {
+        return audioPlayer.getIsPlayingProperty();
     }
 
     /**
@@ -65,7 +68,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The current time of the song.
      */
     public Duration getCurrentTime() {
-        return audioPlayer.getCurrentTime();
+        return new Duration(audioPlayer.getCurrentTime().toMillis()) ;
     }
 
     /**
@@ -74,7 +77,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The total duration of the song.
      */
     public Duration getTotalDuration() {
-        return audioPlayer.getTotalDuration();
+        return new Duration(audioPlayer.getTotalDuration().toMillis()) ;
     }
 
     /**
@@ -100,7 +103,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      *
      * @return The volume property.
      */
-    public DoubleProperty volumeProperty() {
+    public DoubleProperty getVolumeProperty() {
         return audioPlayer.getVolumeProperty();
     }
 
@@ -118,7 +121,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      *
      * @return The current song property.
      */
-    public StringProperty currentSongProperty() {
+    public StringProperty getCurrentSongProperty() {
         return audioPlayer.getCurrentSongStringProperty();
     }
 
@@ -128,19 +131,10 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     }
 
     /**
-     * Get the isPlaying property.
-     *
-     * @return The isPlaying property.
-     */
-    public BooleanProperty isPlayingProperty() {
-        return audioPlayer.isPlaying();
-    }
-
-    /**
      * Toggle shuffle.
      */
-    public void toggleShuffle() {
-        playerController.toggleShuffle();
+    public void toggleShuffle(boolean isShuffle) {
+        playerController.toggleShuffle(isShuffle);
     }
 
     /**
@@ -154,7 +148,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * Methode that handles the pause song button.
      */
     public void handlePauseSong() {
-        if (isPlaying().get()) {
+        if (getIsPlayingProperty().get()) {
             pause();
         } else {
             unpause();
@@ -241,5 +235,46 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
         }catch(BadSongException e){
             alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    public void handlePlayingStatusChange(Consumer<Boolean> callback) {
+        getIsPlayingProperty().addListener((obs, oldVal, newVal) -> {
+            callback.accept(newVal);
+        });
+    }
+
+    public void bindProgressProperty(DoubleProperty property) {
+        property.bind(progressProperty());
+    }
+
+    public void handleProgressChange(Runnable callback) {
+        progressProperty().
+                addListener((_, _, _) -> callback.run());
+    }
+
+
+    public void bindVolumeProperty(DoubleBinding divide) {
+        getVolumeProperty().bind(divide);
+    }
+
+    public void handleCurrentSongTitleChange(Consumer<String> callback) {
+        getCurrentSongProperty().addListener((_, _, _) ->
+                callback.accept(getLoadedSong().getTitle()));
+    }
+
+    public void handleCurrentSongArtistChange(Consumer<String> callback) {
+        getCurrentSongProperty().addListener((_, _, _) ->
+                callback.accept(getLoadedSong().getArtist()));
+    }
+
+    public void handleCurrentImageCoverChange(Consumer<Image> callback) {
+        getCurrentSongProperty().addListener((_, _, _) ->
+                callback.accept(getLoadedSong().getCoverImage()));
+    }
+
+    public void handleLoadedSongStatusChange(Consumer<Boolean> callback) {
+        getCurrentSongProperty().addListener((_, _, _) -> {
+            callback.accept(getLoadedSong()!=null);
+        });
     }
 }

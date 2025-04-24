@@ -183,7 +183,7 @@ public class AudioPlayer {
      *
      * @return True if the song is playing, False otherwise.
      */
-    public BooleanProperty isPlaying() {
+    public BooleanProperty getIsPlayingProperty() {
         return isPlaying;
     }
 
