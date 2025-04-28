@@ -33,6 +33,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         MetaController meta = new MetaController(primaryStage);
-        meta.switchScene(MetaController.Scenes.MAINWINDOW);
+        meta.switchScene(MetaController.Scenes.USERSWINDOW);
     }
 }

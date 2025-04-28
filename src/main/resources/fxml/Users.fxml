@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+            styleClass="background" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/style2.css">
+    
+    <top>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" left="40" right="40" />
+            </padding>
+            
+            <HBox alignment="CENTER_LEFT">
+                <ImageView fitWidth="120" preserveRatio="true">
+                    <Image url="@netflix-logo.png" />
+                </ImageView>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox alignment="CENTER" spacing="40">
+            <Label text="Who's watching?" styleClass="title-text" />
+            
+            <FlowPane alignment="CENTER" hgap="40" vgap="40">
+                <!-- Account 1 -->
+                <VBox alignment="CENTER" styleClass="profile-box">
+                    <StackPane styleClass="profile-image-container">
+                        <ImageView fitWidth="150" fitHeight="150" preserveRatio="true" styleClass="profile-image">
+                            <Image url="@profile1.png" />
+                        </ImageView>
+                    </StackPane>
+                    <Label text="John" styleClass="profile-name" />
+                </VBox>
+                
+                <!-- Account 2 -->
+                <VBox alignment="CENTER" styleClass="profile-box">
+                    <StackPane styleClass="profile-image-container">
+                        <ImageView fitWidth="150" fitHeight="150" preserveRatio="true" styleClass="profile-image">
+                            <Image url="@profile2.png" />
+                        </ImageView>
+                    </StackPane>
+                    <Label text="Emma" styleClass="profile-name" />
+                </VBox>
+                
+                <!-- Account 3 -->
+                <VBox alignment="CENTER" styleClass="profile-box">
+                    <StackPane styleClass="profile-image-container">
+                        <ImageView fitWidth="150" fitHeight="150" preserveRatio="true" styleClass="profile-image">
+                            <Image url="@profile3.png" />
+                        </ImageView>
+                    </StackPane>
+                    <Label text="Kids" styleClass="profile-name" />
+                </VBox>
+                
+                <!-- Add Profile -->
+                <VBox alignment="CENTER" styleClass="profile-box, add-profile">
+                    <StackPane styleClass="profile-image-container, add-profile-container">
+                        <Label text="+" styleClass="add-profile-plus" />
+                    </StackPane>
+                    <Label text="Add Profile" styleClass="profile-name" />
+                    <Button fx:id="addProfileButton" text="Add Profile" styleClass="add-profile-button" />
+                </VBox>
+            </FlowPane>
+        </VBox>
+    </center>
+    
+    <bottom>
+        <HBox alignment="CENTER" spacing="20">
+            <padding>
+                <Insets bottom="40" />
+            </padding>
+            <Button text="Manage Profiles" styleClass="manage-profiles-button" />
+        </HBox>
+    </bottom>
+</BorderPane>

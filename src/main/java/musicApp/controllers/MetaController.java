@@ -16,6 +16,7 @@ public class MetaController {
     private final SettingsService settingsService;
     private final PlayerController playerController;
     private final SettingsController settingsController;
+    private final UsersController usersController;
 
     /**
      * Enum for the different scenes in the application.
@@ -23,7 +24,8 @@ public class MetaController {
      */
     public enum Scenes {
         MAINWINDOW,
-        SETTINGS
+        SETTINGS,
+        USERSWINDOW
     }
 
     /**
@@ -37,6 +39,7 @@ public class MetaController {
         Settings settings = settingsService.readSettings();
         playerController = new PlayerController(this, primaryStage, settings.toDTO());
         settingsController = new SettingsController(this, settings);
+        usersController = new UsersController(primaryStage);
     }
 
 
@@ -49,6 +52,7 @@ public class MetaController {
         switch (scene) {
             case MAINWINDOW -> playerController.show();
             case SETTINGS -> settingsController.show();
+            case USERSWINDOW -> usersController.show();
         }
     }
 
