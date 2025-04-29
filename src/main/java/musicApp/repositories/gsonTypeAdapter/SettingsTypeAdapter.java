@@ -25,20 +25,8 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
     @Override
     public void write(JsonWriter out, Settings settings) throws IOException {
         out.beginObject();
-
-        out.name("balance");
-        out.value(settings.getBalance());
-
         out.name("musicFolder");
         out.value(settings.getMusicFolderString());
-
-        out.name("equalizerBands");
-        out.beginArray();
-        for (Double band : settings.getEqualizerBands()) {
-            out.value(band);
-        }
-        out.endArray();
-
         out.endObject();
     }
 
@@ -51,35 +39,19 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
      */
     @Override
     public Settings read(JsonReader in) throws IOException {
-        double balance = 0.0;
         Path musicFolder = null;
-        Equalizer equalizer = new Equalizer();
 
         in.beginObject();
         while (in.hasNext()) {
             String fieldName = in.nextName();
-            switch (fieldName) {
-                case "balance":
-                    balance = in.nextDouble();
-                    break;
-                case "musicFolder":
-                    musicFolder = Paths.get(in.nextString());
-                    break;
-                case "equalizerBands":
-                    in.beginArray();
-                    int bandIndex = 0;
-                    while (in.hasNext()) {
-                        equalizer.setBandGain(bandIndex++, in.nextDouble());
-                    }
-                    in.endArray();
-                    break;
-                default:
-                    in.skipValue();
-                    break;
+            if (fieldName.equals("musicFolder")) {
+                musicFolder = Paths.get(in.nextString());
+            } else {
+                in.skipValue();
             }
         }
         in.endObject();
 
-        return new Settings(balance, musicFolder, equalizer);
+        return new Settings(musicFolder);
     }
 }

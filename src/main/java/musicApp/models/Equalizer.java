@@ -9,8 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Equalizer {
-    public final double MAX_GAIN_DB = EqualizerBand.MAX_GAIN;
-    public final double MIN_GAIN_DB = EqualizerBand.MIN_GAIN;
+    public static final double MAX_GAIN_DB = EqualizerBand.MAX_GAIN;
+    public static final double MIN_GAIN_DB = EqualizerBand.MIN_GAIN;
+    public static final int DEFAULT_BANDS_SIZE = 10;
     @Expose
     private List<Double> bandsGain;
 
@@ -19,7 +20,7 @@ public class Equalizer {
      */
     public Equalizer() {
         bandsGain = new ArrayList<>();
-        List<Double> defaultBandsGain = Arrays.asList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        List<Double> defaultBandsGain = new ArrayList<>(java.util.Collections.nCopies(DEFAULT_BANDS_SIZE, 0.0));
         setBandsGain(defaultBandsGain);
     }
 
@@ -107,9 +108,9 @@ public class Equalizer {
      * @param newBandsGain the new list of bands gain
      */
     public void setBandsGain(List<Double> newBandsGain) {
+        checkBandsGain(newBandsGain);
         bandsGain = newBandsGain;
     }
-
     /**
      * Get the maximum gain in decibels.
      * @return the maximum gain in decibels
@@ -132,10 +133,8 @@ public class Equalizer {
      */
     @Override
     public String toString() {
-        return String.join(",",
-                getBandsGain().stream()
-                        .map(String::valueOf)
-                        .toArray(String[]::new)
-        );
+        return bandsGain.stream()
+                .map(String::valueOf)
+                .collect(java.util.stream.Collectors.joining(","));
     }
 }

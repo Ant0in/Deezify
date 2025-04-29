@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import musicApp.models.dtos.SettingsDTO;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,28 +12,33 @@ import java.util.List;
  */
 public class Settings {
     @Expose
-    private double balance;
-    @Expose
     private Path musicFolder;
-    private final Equalizer equalizer;
+    private User currentUser;
     private boolean musicFolderChanged;
     
     /**
      * Constructor for Settings.
      *
-     * @param _balance      The balance of the settings.
      * @param _musicFolder  The music folder of the settings.
-     * @param _equalizer    The equalizer of the settings.
      */
-    public Settings(double _balance, Path _musicFolder, Equalizer _equalizer) {
-        equalizer = _equalizer;
+    public Settings(Path _musicFolder) {
         musicFolderChanged = false;
-        balance = _balance;
         musicFolder = _musicFolder;
+        currentUser = null;
+    }
+
+    public Settings(Path _musicFolder, User _currentUser) {
+        musicFolderChanged = false;
+        musicFolder = _musicFolder;
+        currentUser = _currentUser;
     }
 
     public SettingsDTO toDTO() {
-        return new SettingsDTO(balance, equalizer.getBandsGain(), musicFolder, musicFolderChanged);
+        if (currentUser == null) {
+            return new SettingsDTO(musicFolder, musicFolderChanged);
+        } else {
+            return new SettingsDTO(currentUser.getBalance(), currentUser.getEqualizerBands(), musicFolder, musicFolderChanged);
+        }
     }
 
     /**
@@ -41,7 +47,11 @@ public class Settings {
      * @return The balance.
      */
     public double getBalance() {
-        return balance;
+        if (currentUser == null) {
+            return 0;
+        } else {
+            return currentUser.getBalance();
+        }
     }
 
     /**
@@ -50,7 +60,11 @@ public class Settings {
      * @param newBalance The balance.
      */
     public void setBalance(double newBalance) {
-        balance = newBalance;
+        if (currentUser != null) {
+            currentUser.setBalance(newBalance);
+        } else {
+            throw new IllegalStateException("Cannot set balance when currentUser is null.");
+        }
     }
 
     /**
@@ -85,20 +99,16 @@ public class Settings {
         }
     }
 
-    /**
-     * Get the equalizer of the settings.
-     * @return The equalizer.
-     */
-    public Equalizer getEqualizer() {
-        return equalizer;
+    public User getCurrentUser() {
+        return currentUser;
     }
 
-    /**
-     * Get the equalizer bands of the settings.
-     * @return The equalizer bands.
-     */
-    public List<Double> getEqualizerBands() {
-        return equalizer.getBandsGain();
+    public void setCurrentUser(User newCurrentUser) {
+        currentUser = newCurrentUser;
+    }
+
+    public void removeCurrentUser() {
+        currentUser = null;
     }
 
     /**
@@ -111,12 +121,20 @@ public class Settings {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof Settings settings)) {
+        if (!(obj instanceof Settings otherSettings)) {
             return false;
         }
-        return Double.compare(settings.getBalance(), getBalance()) == 0 &&
-                settings.getMusicFolder().equals(getMusicFolder()) &&
-                settings.getEqualizerBands().equals(getEqualizerBands());
+        return Double.compare(otherSettings.getBalance(), getBalance()) == 0 &&
+                otherSettings.getMusicFolder().equals(getMusicFolder()) &&
+                otherSettings.getEqualizerBands().equals(getEqualizerBands());
+    }
+
+    public List<Double> getEqualizerBands() {
+        if (currentUser == null) {
+            return new ArrayList<>(java.util.Collections.nCopies(Equalizer.DEFAULT_BANDS_SIZE, 0.0));
+        } else {
+            return currentUser.getEqualizerBands();
+        }
     }
 
     /**
@@ -125,8 +143,7 @@ public class Settings {
      */
     @Override
     public String toString() {
-        return "balance=" + balance + "\n" +
-                "musicFolder=" + musicFolder.toString() + "\n" +
-                "equalizerBands=" + equalizer.toString();
+        return "Settings{musicFolder=" + musicFolder.toString() +
+                "currentUser=" + currentUser + "}\n";
     }
 }

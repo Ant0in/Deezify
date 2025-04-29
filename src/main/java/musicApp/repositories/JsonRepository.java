@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
+import musicApp.models.User;
 import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
 
@@ -39,6 +40,7 @@ public class JsonRepository {
     private final Path playlistsFile;
     private final Path lyricsDir;
     private final Path lyricsFile;
+    private final Path usersFile;
 
     /**
      * Constructor
@@ -60,6 +62,7 @@ public class JsonRepository {
         lyricsDir = settingFolder.resolve("lyrics");
         createFolderIfNotExists(lyricsDir);
         lyricsFile = lyricsDir.resolve("lyrics.json");
+        usersFile = settingFolder.resolve("users.json");
     }
 
     /**
@@ -141,7 +144,7 @@ public class JsonRepository {
      */
     public Settings readSettings() {
         if (!Files.exists(settingsFile)) {
-            Settings defaultSettings = new Settings(0, getDefaultMusicFolder(), new Equalizer());
+            Settings defaultSettings = new Settings(getDefaultMusicFolder());
             writeSettings(defaultSettings);
             return defaultSettings;
         }
@@ -166,7 +169,7 @@ public class JsonRepository {
             return gson.fromJson(reader, Settings.class);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
             System.err.println("An error occurred while reading the settings file: " + e.getMessage());
-            return new Settings(0, getDefaultMusicFolder(), new Equalizer());
+            return new Settings(getDefaultMusicFolder());
         }
     }
 
@@ -301,4 +304,23 @@ public class JsonRepository {
         return lyricsDir;
     }
 
+    public List<User> readUsers() throws IllegalArgumentException {
+    Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .create();
+        if (!Files.exists(usersFile)) return new ArrayList<>();
+        try (var reader = Files.newBufferedReader(usersFile)) {
+            var type = new TypeToken<List<User>>() {}.getType();
+            return gson.fromJson(reader, type);
+        } catch (IOException e) {
+            System.err.println("An error occurred while reading the users file: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public void writeUsers(List<User> user) {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+    }
 }

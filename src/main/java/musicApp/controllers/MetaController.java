@@ -14,7 +14,7 @@ import java.io.IOException;
 public class MetaController {
     private final AlertService alertService;
     private final SettingsService settingsService;
-    private final PlayerController playerController;
+    private PlayerController playerController;
     private final SettingsController settingsController;
     private final UsersController usersController;
 
@@ -36,10 +36,11 @@ public class MetaController {
     public MetaController(Stage primaryStage) throws IOException {
         alertService = new AlertService();
         settingsService = new SettingsService();
-        Settings settings = settingsService.readSettings();
-        playerController = new PlayerController(this, primaryStage, settings.toDTO());
-        settingsController = new SettingsController(this, settings);
         usersController = new UsersController(primaryStage);
+
+        Settings settings = settingsService.readSettings();
+//        playerController = new PlayerController(this, primaryStage, settings.toDTO());
+        settingsController = new SettingsController(this, settings);
     }
 
 
