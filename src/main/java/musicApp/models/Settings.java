@@ -129,6 +129,14 @@ public class Settings {
                 otherSettings.getEqualizerBands().equals(getEqualizerBands());
     }
 
+    public Equalizer getEqualizer() {
+        if (currentUser == null) {
+            return new Equalizer();
+        } else {
+            return currentUser.getEqualizer();
+        }
+    }
+
     public List<Double> getEqualizerBands() {
         if (currentUser == null) {
             return new ArrayList<>(java.util.Collections.nCopies(Equalizer.DEFAULT_BANDS_SIZE, 0.0));

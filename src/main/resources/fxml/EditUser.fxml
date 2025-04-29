@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="popupLayout"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      prefWidth="400" prefHeight="600"
+      spacing="20" alignment="TOP_CENTER"
+      style="-fx-background-color: linear-gradient(to bottom, #0d1b2a, #000000); -fx-padding: 30;"
+      stylesheets="@../css/style2.css">
+
+    <VBox spacing="10">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="nameLabel" textFill="white"/>
+            <TextField fx:id="nameField" promptText="Name"
+                       HBox.hgrow="ALWAYS"
+                       style="-fx-background-color: #1e2a38; -fx-text-fill: white; -fx-font-family: MonoSpaced"/>
+        </HBox>
+    </VBox>
+
+    <VBox spacing="10">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="musicFolderLabel" textFill="white"/>
+            <Label fx:id="chosenMusicFolderLabel" textFill="white"/>
+        </HBox>
+        <Button fx:id="chooseMusicFolderButton" text="??musicFolder??"
+                style="-fx-background-color: #274472; -fx-text-fill: white;"/>
+    </VBox>
+
+    <!-- user Image + Button -->
+    <HBox spacing="10" alignment="CENTER">
+        <Label fx:id="userImageLabel" textFill="white"/>
+        <Button fx:id="chooseUserImageButton" text="??userImage??"
+                style="-fx-background-color: #274472; -fx-text-fill: white;"/>
+        <ImageView fx:id="userImage" fitHeight="200" fitWidth="200"
+                   style="-fx-effect: dropshadow(gaussian, #000000, 10, 0.5, 0, 0);"/>
+    </HBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="actionButton" text="??action??"
+                style="-fx-background-color: #41729f; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button fx:id="cancelButton" text="Cancel"
+                style="-fx-background-color: #1b1b1b; -fx-text-fill: white;"/>
+    </HBox>
+
+</VBox>

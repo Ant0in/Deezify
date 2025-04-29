@@ -304,7 +304,7 @@ public class JsonRepository {
         return lyricsDir;
     }
 
-    public List<User> readUsers() throws IllegalArgumentException {
+    protected List<User> getUsers() throws IllegalArgumentException {
     Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .create();
@@ -318,9 +318,23 @@ public class JsonRepository {
         }
     }
 
+    public List<User> readUsers() {
+        if (!Files.exists(usersFile)) {
+            writeUsers(List.of());
+        }
+        return getUsers();
+    }
+
     public void writeUsers(List<User> user) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        try (java.io.FileWriter writer = new java.io.FileWriter(usersFile.toString())) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Library.class, new LibraryTypeAdapter())
+                    .serializeNulls()
+                    .create();
+            gson.toJson(user, writer);
+        } catch (IOException e) {
+            System.err.println("An error occurred while writing the playlists file");
+        }
+
     }
 }

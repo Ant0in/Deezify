@@ -18,6 +18,14 @@ public class User {
     private Equalizer equalizer;
     private List<Library> playlists;
 
+    public User(String _username, Path _userPicturePath,Path _userMusicPath) {
+        username = _username;
+        userPicturePath = _userPicturePath;
+        balance = 0;
+        userMusicPath = _userMusicPath;
+        equalizer = new Equalizer();
+    }
+
     public User(String _username, Path _userPicturePath, double _balance, Path _userMusicPath, Equalizer _equalizer) {
         username = _username;
         userPicturePath = _userPicturePath;
@@ -58,7 +66,7 @@ public class User {
         balance = newBalance;
     }
 
-    public String getUserMusicString() {
+    public String getUserMusicPathToString() {
         return userMusicPath.toString();
     }
 
@@ -98,4 +106,7 @@ public class User {
                 '}';
     }
 
+    public String getProfilePicturePathToString() {
+        return userPicturePath != null ? userPicturePath.toString() : null;
+    }
 }

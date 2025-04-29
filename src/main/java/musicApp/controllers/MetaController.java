@@ -5,6 +5,7 @@ import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Settings;
 import musicApp.services.AlertService;
 import musicApp.services.SettingsService;
+import musicApp.services.UserService;
 
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 public class MetaController {
     private final AlertService alertService;
     private final SettingsService settingsService;
+    private final UserService userService;
     private PlayerController playerController;
     private final SettingsController settingsController;
     private final UsersController usersController;
@@ -36,7 +38,8 @@ public class MetaController {
     public MetaController(Stage primaryStage) throws IOException {
         alertService = new AlertService();
         settingsService = new SettingsService();
-        usersController = new UsersController(primaryStage);
+        userService = new UserService();
+        usersController = new UsersController(primaryStage, userService.readUsers());
 
         Settings settings = settingsService.readSettings();
 //        playerController = new PlayerController(this, primaryStage, settings.toDTO());

@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.stage.Stage;
 import musicApp.models.User;
@@ -9,30 +10,30 @@ import musicApp.views.UsersView;
 
 public class UsersController extends ViewController<UsersView> implements UsersView.UsersViewListener {
 
-    private ArrayList<User> usersList;
+    private List<User> usersList;
+    private EditUserController editController;
 
-    public UsersController(Stage primaryStage) {
+    public UsersController(Stage primaryStage, List<User> _usersList) {
         super(new UsersView(primaryStage));
-        usersList = new ArrayList<>();
+        usersList = _usersList;
         view.setListener(this);
         initView("/fxml/Users.fxml");
-        
+        editController = new EditUserController();
     }
 
     public void onAddProfileClicked(){
-
+        editController.show();
     }
 
-    public void show() {
-        view.show();
-    }
-
-    public ArrayList<UserDTO> getUsersList() {
-        ArrayList<UserDTO> usersDTOList = new ArrayList<>();
+    public List<UserDTO> getUsersList() {
+        List<UserDTO> usersDTOList = new ArrayList<>();
         for (User user : usersList) {
             usersDTOList.add(user.toDTO());
         }
         return usersDTOList;
     }
-    
+
+    public void show() {
+        view.show();
+    }
 }

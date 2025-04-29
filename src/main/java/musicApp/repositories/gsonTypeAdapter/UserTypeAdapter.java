@@ -13,6 +13,7 @@ import musicApp.models.Settings;
 import musicApp.models.User;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class UserTypeAdapter extends TypeAdapter<User> {
     /**
@@ -90,6 +91,7 @@ public class UserTypeAdapter extends TypeAdapter<User> {
                     in.skipValue();
             }
         }
+        return new User(username, Path.of(Objects.requireNonNull(userPicturePath)), balance, Path.of(Objects.requireNonNull(userMusicPath)), equalizer);
     }
 
 }
