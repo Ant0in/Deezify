@@ -12,15 +12,13 @@ import musicApp.views.LibraryView;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 /**
  * The controller for the Main Library view.
  */
 public class LibraryController extends SongContainerController<LibraryView, Library>
-    implements LibraryView.LibraryViewListener {
+        implements LibraryView.LibraryViewListener {
     private int currentIndex;
     private Boolean shuffle;
 
@@ -203,6 +201,16 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     }
 
     /**
+     * Adds a song to the current playlist and refreshes the UI.
+     *
+     * @param song The song to be added.
+     */
+    public void addSongToPlaylist(Song song) {
+        playerController.addSongToPlaylist(song, library);
+        refreshUI();
+    }
+
+    /**
      * Add a song to a playlist
      *
      * @param song     the song
@@ -210,6 +218,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      */
     public void addSongToPlaylist(Song song, Library playlist) {
         playerController.addSongToPlaylist(song, playlist);
+        refreshUI();
     }
 
     /**
@@ -233,12 +242,17 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         refreshUI();
     }
 
+    /**
+     * Refreshes the user interface of the library view.
+     */
     public void refreshUI() {
         view.refreshUI();
     }
 
     /**
-     * Checks if the main library is currently being shown
+     * Checks if the currently displayed library is the main library.
+     *
+     * @return true if showing main library, false otherwise.
      */
     public boolean isShowingMainLibrary() {
         return playerController.isMainLibrary(library);
@@ -304,7 +318,57 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         return library.getTagAutoCompletion(input);
     }
 
+    /**
+     * Gets the controller instance.
+     *
+     * @return the LibraryController instance
+     */
     public LibraryController getController() {
         return this;
+    }
+
+    /**
+     * Checks if the library is modifiable.
+     *
+     * @return true if the library can be modified, false otherwise.
+     */
+    public boolean isModifiable(){
+        return playerController.isModifiable(library);
+    }
+
+    /**
+     * Checks if the library contains a given song.
+     *
+     * @param song The song to check for.
+     * @return true if the song exists in the library, false otherwise.
+     */
+    public boolean containsSong(Song song) {
+        return library.contains(song);
+    }
+
+    /**
+     * Converts the library and suggestions into a list of songs.
+     *
+     * @return a list containing songs from the library and suggestions (if modifiable).
+     */
+    @Override
+    public List<Song> toList() {
+        List<Song> songs = new ArrayList<>(super.toList());
+        if (isModifiable()) {
+            songs.addAll(getSuggestions(""));
+        }
+        return songs;
+    }
+
+
+    //ToDo
+    private List<Song> getSuggestions(String query) {
+        List<Song> suggestions = new ArrayList<>();
+        //!! JUST FOR TESTING !!//
+        Song song = new Song(Path.of(""));
+        if (!library.contains(song)) {
+            suggestions.add(song);
+        }
+        return suggestions;
     }
 }

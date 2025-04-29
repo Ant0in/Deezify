@@ -391,8 +391,25 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         return playlistNavigatorController.isFavorite(song);
     }
 
+    /**
+     * Returns whether the given library is the main library.
+     *
+     * @param library The library to check.
+     * @return true if the given library is the main library, false otherwise.
+     */
     public boolean isMainLibrary(Library library) {
         return getMainLibrary().equals(library);
+    }
+
+    /**
+     * Checks whether the given library is modifiable.
+     * A modifiable library can have songs added or removed.
+     *
+     * @param library The library to check.
+     * @return true if the library is modifiable, false otherwise.
+     */
+    public boolean isModifiable(Library library) {
+        return playlistNavigatorController.isModifiable(library);
     }
 
 }

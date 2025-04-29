@@ -15,11 +15,11 @@ import musicApp.views.View;
  * It contains the play button, like button, and other song information.
  */
 public class SongCellView extends View {
-    
+
     private SongCellViewListener listener;
 
     @FXML
-    private Button playButton, likeButton;
+    private Button playButton, likeButton, addButton;
     @FXML
     private Label titleLabel, artistLabel, genreLabel, durationLabel;
     @FXML
@@ -30,6 +30,7 @@ public class SongCellView extends View {
     private static final String PLAY_ICON = "/images/play2.png";
     private static final String PAUSE_ICON = "/images/pause.png";
     private static final String EDIT_ICON = "/images/edit.png";
+    private static final String ADD_ICON = "/images/add.png";
 
     /**
      * Interface defining listener methods for handling user interaction on the SongCellView.
@@ -42,6 +43,8 @@ public class SongCellView extends View {
         void handleUnpause();
 
         void handlePlay();
+
+        void handleAdd();
 
         void handleLoadedSongChange(Runnable callback);
 
@@ -75,7 +78,7 @@ public class SongCellView extends View {
     public void setListener(SongCellViewListener newListener) {
         listener = newListener;
     }
-    
+
     @Override
     public void init() {
         initComponents();
@@ -87,15 +90,20 @@ public class SongCellView extends View {
      * Initialize the components.
      */
     private void initComponents() {
+        addButton = new Button();
         ViewService viewService = new ViewService();
         ImageView playIcon = viewService.createIcon(PLAY_ICON);
         ImageView editIcon = viewService.createIcon(EDIT_ICON);
+        ImageView addIcon = viewService.createIcon(ADD_ICON);
 
         playButton.setGraphic(playIcon);
         likeButton.setOnAction(_ -> listener.toggleFavorites());
         editButton.setImage(editIcon.getImage());
         editButton.setPickOnBounds(true);
 
+        addButton.setGraphic(addIcon);
+        addButton.setStyle(playButton.getStyle());
+        addButton.setOnAction(e -> listener.handleAdd());
 
         listener.handleLoadedSongChange(this::updatePlayButtonIcon);
         listener.handlePlayingStatusChange(this::updatePlayButtonIcon);
@@ -150,9 +158,32 @@ public class SongCellView extends View {
 
     /**
      * Update the view with the song's information.
-     *
      */
     public void update() {
+        rootPane.setOpacity(1);
+        updateCommonFields();
+        updatePlayButtonIcon();
+        updateLikeButton();
+        rootPane.getChildren().set(0, playButton);
+        likeButton.setVisible(true);
+        editButton.setVisible(true);
+    }
+
+    /**
+     * Update the view with the song's information as a suggestion.
+     */
+    public void updateSuggestion() {
+        rootPane.setOpacity(0.5);
+        updateCommonFields();
+        rootPane.getChildren().set(0, addButton);
+        likeButton.setVisible(false);
+        editButton.setVisible(false);
+    }
+
+    /**
+     * Shared logic for updating UI elements with song info.
+     */
+    private void updateCommonFields() {
         coverImage.setImage(listener.getSongCoverImage());
         titleLabel.setText(listener.getSongTitle());
         titleLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
@@ -161,8 +192,6 @@ public class SongCellView extends View {
         genreLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
         durationLabel.setText(getDurationLabelString());
         durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
-        updatePlayButtonIcon();
-        updateLikeButton();
     }
 
     /**
