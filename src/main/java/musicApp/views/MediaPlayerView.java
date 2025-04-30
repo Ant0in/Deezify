@@ -302,10 +302,11 @@ public class MediaPlayerView extends View {
         viewService.setButtonIcon(shuffleToggle, "/images/shuffle.png", listener);
         viewService.setButtonIcon(lyricsToggle, "/images/lyrics.png", listener);
         viewService.setButtonIcon(djButton, "/images/dj.png", listener);
+        viewService.setButtonIcon(miniPlayerToggle, "/images/mini.png", listener);
     }
 
     private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle, djButton);
+        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle, djButton, miniPlayerToggle);
         updateControlsState(controls, true);
         listener.handleLoadedSongStatusChange(isLoaded ->
                 updateLoadedSongChange(controls, isLoaded)
