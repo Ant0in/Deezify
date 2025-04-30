@@ -361,14 +361,43 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     }
 
 
-    //ToDo
+    /**
+     * Provides song suggestions based on the current library.
+     *
+     * @return A list of suggested songs based on the query.
+     */
     private List<Song> getSuggestions(String query) {
-        List<Song> suggestions = new ArrayList<>();
-        //!! JUST FOR TESTING !!//
-        Song song = new Song(Path.of(""));
-        if (!library.contains(song)) {
-            suggestions.add(song);
+        Set<String> artists = new HashSet<>(), albums = new HashSet<>(), tags = new HashSet<>(), genres = new HashSet<>();
+        for (Song p : library.toList()) {
+            artists.add(p.getArtist());
+            albums.add(p.getAlbum());
+            String g = p.getGenre();
+            if (g != null && !g.isBlank()) genres.add(g);
+            for (String t : p.getUserTags()) if (t != null && !t.isBlank()) tags.add(t);
         }
+        List<Song> candidates = new ArrayList<>(playerController.getMainLibrary().toList());
+        candidates.removeAll(library.toList()); // remove already added songs
+        candidates.sort((a, b) -> score(b, artists, albums, tags, genres) - score(a, artists, albums, tags, genres));
+
+        List<Song> suggestions = new ArrayList<>();
+        for (Song s : candidates) if (score(s, artists, albums, tags, genres) > 0) suggestions.add(s);
         return suggestions;
     }
+
+    /**
+     * Scores a song based on its attributes and the user's library.
+     * @return The score of the song based on its attributes and the user's library.
+     */
+    private int score(Song s, Set<String> artists, Set<String> albums, Set<String> tags, Set<String> genres) {
+        int sc = 0;
+        // simple content based scoring
+        if (artists.contains(s.getArtist())) sc++;
+        if (albums.contains(s.getAlbum())) sc++;
+        if (genres.contains(s.getGenre())) sc++;
+        for (String t : s.getUserTags()) if (tags.contains(t)) sc++;
+        return sc;
+    }
+
+
+
 }
