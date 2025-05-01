@@ -209,6 +209,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     public void playCurrent(Song song) throws BadSongException {
         audioPlayer.loadSong(song);
         audioPlayer.setOnEndOfMedia(playerController::skip);
+        audioPlayer.setNextSongSupplier(playerController.getNextSongSupplier());
         audioPlayer.unpause();
         miniPlayerController.loadSong(song);
     }

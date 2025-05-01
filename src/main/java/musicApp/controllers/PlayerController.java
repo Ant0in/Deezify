@@ -17,6 +17,7 @@ import musicApp.views.PlayerView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Controller class for the music player.
@@ -393,6 +394,14 @@ public class PlayerController extends ViewController<PlayerView> implements Play
 
     public boolean isMainLibrary(Library library) {
         return getMainLibrary().equals(library);
+    }
+
+    public Supplier<Song> getNextSongSupplier() {
+        if (queueController.queueIsEmpty()) {
+            return libraryController::getNextSong;
+        } else {
+            return queueController::getNextSong;
+        }
     }
 
 }

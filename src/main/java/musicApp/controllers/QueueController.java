@@ -146,4 +146,8 @@ public class QueueController extends SongContainerController<QueueView, Library>
         library.clear();
         appendPlaylistToQueue(playlist);
     }
+
+    public Song getNextSong() {
+        return library.get(0);
+    }
 }

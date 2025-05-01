@@ -11,6 +11,7 @@ import musicApp.services.AlertService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * AudioPlayer
@@ -31,6 +32,14 @@ public class AudioPlayer {
     private final AudioSpectrumListener audioSpectrumListener;
     private final Double audioSpectrumInterval;
 
+    private static final double DEFAULT_TRANSITION_DURATION = 5;
+
+    private Supplier<Song> nextSongSupplier;
+
+    private AudioClip transitionClip;
+    private Boolean isTransitioning;
+
+
     public AudioPlayer(AudioSpectrumListener _audioSpectrumListener) {
         // Initialize properties in the constructor
         progress = new SimpleDoubleProperty(0.0);
@@ -41,6 +50,7 @@ public class AudioPlayer {
         equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
         mediaPlayer = null;
         loadedSong = null;
+        isTransitioning = false;
         balance = 0.0;
         speed = 1.0;
         audioSpectrumListener = _audioSpectrumListener;
@@ -75,8 +85,44 @@ public class AudioPlayer {
                 alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
             }
         });
+        if (isTransitioning) {
+            mediaPlayer.setOnReady(() -> {
+                mediaPlayer.seek(Duration.seconds(DEFAULT_TRANSITION_DURATION));
+                isTransitioning = false;
+                transitionClip.stop();
+                transitionClip = null;
+            });
+        }
         // Update the progression property while playing
         setupProgressListener();
+        setTransition();
+    }
+
+    private void setTransition() {
+        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+            Duration totalDuration = mediaPlayer.getTotalDuration();
+            if (totalDuration != null) {
+                double remainingTime = totalDuration.toSeconds() - newValue.toSeconds();
+                if (remainingTime <= DEFAULT_TRANSITION_DURATION && Boolean.FALSE.equals(isTransitioning)) {
+                    isTransitioning = true;
+                    if (transitionClip == null) {
+                        System.out.println(nextSongSupplier.get());
+                        transitionClip = new AudioClip(nextSongSupplier.get().getFilePath().toUri().toString());
+                    }
+                    transitionClip.play();
+                }
+                if (Boolean.TRUE.equals(isTransitioning)) {
+                    //volume.set(volume.get() * (remainingTime / (DEFAULT_TRANSITION_DURATION)));
+                    double volumeValue = volume.get() * ((DEFAULT_TRANSITION_DURATION - remainingTime) / DEFAULT_TRANSITION_DURATION);
+                    System.out.println(volumeValue);
+                    transitionClip.setVolume(volumeValue);
+                }
+            }
+        });
+    }
+
+    public void setNextSongSupplier(Supplier<Song> _nextSongSupplier)  {
+        nextSongSupplier = _nextSongSupplier;
     }
 
     /**

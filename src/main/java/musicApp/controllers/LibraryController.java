@@ -24,6 +24,8 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
     private int currentIndex;
     private Boolean shuffle;
 
+    private Optional<Song> nextSong;
+
     /**
      * Instantiates a new Main library controller.
      *
@@ -33,6 +35,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         super(new LibraryView(), controller);
         view.setListener((LibraryView.LibraryViewListener) this);
         shuffle = false;
+        nextSong = Optional.empty();
         initView("/fxml/MainLibrary.fxml");
         loadPlaylist(mainLibrary);
     }
@@ -51,15 +54,8 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      * Skip to the next song in the library.
      */
     public void skip() {
-        if (shuffle) {
-            Random random = new Random();
-            playSong(random.nextInt(library.size()));
-        } else {
-            if (currentIndex < library.size() - 1) {
-                currentIndex++;
-                playSong(currentIndex);
-            }
-        }
+        playSong(getNextSong());
+        nextSong = Optional.empty();
     }
 
     /**
@@ -306,5 +302,22 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
 
     public LibraryController getController() {
         return this;
+    }
+
+    public Song getNextSong() {
+        if (nextSong.isPresent()) {
+            return nextSong.get();
+        }
+        if (shuffle) {
+            Random random = new Random();
+            int randomIndex = random.nextInt(library.size());
+            nextSong = Optional.of(library.get(randomIndex));
+        } else {
+            if (currentIndex < library.size() - 1) {
+                currentIndex++;
+                nextSong = Optional.of(library.get(currentIndex));
+            }
+        }
+        return nextSong.orElse(null);
     }
 }
