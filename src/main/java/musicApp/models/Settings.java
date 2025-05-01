@@ -15,6 +15,9 @@ public class Settings {
     @Expose
     private Path musicFolder;
     private final Equalizer equalizer;
+    @Expose
+    private double crossfadeDuration;
+
     private boolean musicFolderChanged;
     
     /**
@@ -24,15 +27,16 @@ public class Settings {
      * @param _musicFolder  The music folder of the settings.
      * @param _equalizer    The equalizer of the settings.
      */
-    public Settings(double _balance, Path _musicFolder, Equalizer _equalizer) {
+    public Settings(double _balance, Path _musicFolder, Equalizer _equalizer, double _crossfadeDuration) {
         equalizer = _equalizer;
         musicFolderChanged = false;
         balance = _balance;
         musicFolder = _musicFolder;
+        crossfadeDuration = _crossfadeDuration;
     }
 
     public SettingsDTO toDTO() {
-        return new SettingsDTO(balance, equalizer.getBandsGain(), musicFolder, musicFolderChanged);
+        return new SettingsDTO(balance, equalizer.getBandsGain(), musicFolder, crossfadeDuration, musicFolderChanged);
     }
 
     /**
@@ -128,5 +132,13 @@ public class Settings {
         return "balance=" + balance + "\n" +
                 "musicFolder=" + musicFolder.toString() + "\n" +
                 "equalizerBands=" + equalizer.toString();
+    }
+
+    public double getCrossfadeDuration() {
+        return crossfadeDuration;
+    }
+
+    public void setCrossfadeDuration(double _crossfadeDuration) {
+        crossfadeDuration = _crossfadeDuration;
     }
 }

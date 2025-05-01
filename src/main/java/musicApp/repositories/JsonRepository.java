@@ -141,7 +141,7 @@ public class JsonRepository {
      */
     public Settings readSettings() {
         if (!Files.exists(settingsFile)) {
-            Settings defaultSettings = new Settings(0, getDefaultMusicFolder(), new Equalizer());
+            Settings defaultSettings = new Settings(0, getDefaultMusicFolder(), new Equalizer(), 0);
             writeSettings(defaultSettings);
             return defaultSettings;
         }
@@ -166,7 +166,7 @@ public class JsonRepository {
             return gson.fromJson(reader, Settings.class);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
             System.err.println("An error occurred while reading the settings file: " + e.getMessage());
-            return new Settings(0, getDefaultMusicFolder(), new Equalizer());
+            return new Settings(0, getDefaultMusicFolder(), new Equalizer(), 0);
         }
     }
 

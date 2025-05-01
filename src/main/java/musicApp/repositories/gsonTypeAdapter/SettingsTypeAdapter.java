@@ -39,6 +39,9 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         }
         out.endArray();
 
+        out.name("crossfadeDuration");
+        out.value(settings.getCrossfadeDuration());
+
         out.endObject();
     }
 
@@ -54,6 +57,7 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         double balance = 0.0;
         Path musicFolder = null;
         Equalizer equalizer = new Equalizer();
+        double crossfadeDuration = 0.0;
 
         in.beginObject();
         while (in.hasNext()) {
@@ -73,6 +77,9 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
                     }
                     in.endArray();
                     break;
+                case "crossfadeDuration":
+                    crossfadeDuration = in.nextDouble();
+                    break;
                 default:
                     in.skipValue();
                     break;
@@ -80,6 +87,6 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         }
         in.endObject();
 
-        return new Settings(balance, musicFolder, equalizer);
+        return new Settings(balance, musicFolder, equalizer, crossfadeDuration);
     }
 }

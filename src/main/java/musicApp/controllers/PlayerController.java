@@ -60,7 +60,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         playlistNavigatorController = new PlaylistNavigatorController(this, settingsDTO.getMusicFolder());
         libraryController = new LibraryController(this, getMainLibrary());
         queueController = new QueueController(this);
-        mediaPlayerController = new MediaPlayerController(this, settingsDTO.getBalance(), settingsDTO.getEqualizerBands());
+        mediaPlayerController = new MediaPlayerController(this, settingsDTO.getBalance(), settingsDTO.getCrossfadeDuration(), settingsDTO.getEqualizerBands());
         toolBarController = new ToolBarController(this);
         lyricsController = new LyricsController(this);
     }
@@ -158,6 +158,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      */
     public void onSettingsChanged(SettingsDTO newSettingsDTO) throws EqualizerGainException {
         mediaPlayerController.setBalance(newSettingsDTO.getBalance());
+        mediaPlayerController.setCrossfadeDuration(newSettingsDTO.getCrossfadeDuration());
         mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());
         // Update the music folder in case it changed
         if (newSettingsDTO.isMusicFolderChanged()) {

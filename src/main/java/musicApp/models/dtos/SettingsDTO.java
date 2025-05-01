@@ -6,12 +6,14 @@ import java.util.List;
 
 public class SettingsDTO {
     private final double balance;
+    private final double crossfadeDuration;
     private final List<Double> equalizerBands;
     private final Path musicFolder;
     private final boolean isMusicFolderChanged;
     
-    public SettingsDTO(double _balance, List<Double> _equalizerBands, Path _musicFolder, boolean _isMusicFolderChanged) {
+    public SettingsDTO(double _balance, List<Double> _equalizerBands, Path _musicFolder, double _crossfadeDuration, boolean _isMusicFolderChanged) {
         balance = _balance;
+        crossfadeDuration = _crossfadeDuration;
         equalizerBands = Collections.unmodifiableList(_equalizerBands);
         musicFolder = _musicFolder;
         isMusicFolderChanged = _isMusicFolderChanged;
@@ -19,6 +21,10 @@ public class SettingsDTO {
 
     public double getBalance() {
         return balance;
+    }
+
+    public double getCrossfadeDuration() {
+        return crossfadeDuration;
     }
 
     public List<Double> getEqualizerBands() {
