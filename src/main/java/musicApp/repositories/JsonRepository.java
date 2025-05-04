@@ -11,6 +11,7 @@ import musicApp.models.Settings;
 import musicApp.models.User;
 import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
+import musicApp.repositories.gsonTypeAdapter.UserTypeAdapter;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -306,16 +307,19 @@ public class JsonRepository {
 
     protected List<User> getUsers() throws IllegalArgumentException {
     Gson gson = new GsonBuilder()
+            .registerTypeAdapter(User.class, new UserTypeAdapter())
             .setPrettyPrinting()
             .create();
         if (!Files.exists(usersFile)) return new ArrayList<>();
         try (var reader = Files.newBufferedReader(usersFile)) {
             var type = new TypeToken<List<User>>() {}.getType();
-            return gson.fromJson(reader, type);
-        } catch (IOException e) {
-            System.err.println("An error occurred while reading the users file: " + e.getMessage());
+            List<User> users = gson.fromJson(reader, type);
+            return users != null ? users : new ArrayList<>();
+        } catch (IOException | JsonSyntaxException | IllegalStateException e) {
+            System.err.println("Failed to read users.json, returning empty list: " + e.getMessage());
             return new ArrayList<>();
         }
+        
     }
 
     public List<User> readUsers() {
@@ -328,7 +332,7 @@ public class JsonRepository {
     public void writeUsers(List<User> user) {
         try (java.io.FileWriter writer = new java.io.FileWriter(usersFile.toString())) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Library.class, new LibraryTypeAdapter())
+                    .registerTypeAdapter(User.class, new UserTypeAdapter())
                     .serializeNulls()
                     .create();
             gson.toJson(user, writer);

@@ -132,7 +132,9 @@ public class EditUserView extends View {
         File selectedDirectory = FileDialogService.chooseDirectory(null,
                 LanguageService.getInstance().get("settings.select_music_folder"));
         if (selectedDirectory != null) {
-            this.musicFolderLabel.setText(selectedDirectory.getAbsolutePath());
+            musicFolderLabel.setText(selectedDirectory.getAbsolutePath());
+            chosenMusicFolderLabel.setText(selectedDirectory.getAbsolutePath());
+            chosenMusicFolderLabel.setUserData(selectedDirectory.toPath());
         }
     }
 

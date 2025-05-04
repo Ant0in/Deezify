@@ -2,6 +2,7 @@ package musicApp.views;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -39,7 +40,6 @@ public class UsersView extends View {
     @Override
     public void init() {
         primaryStage.setScene(scene);
-        // Ici tu peux ajouter les listeners sur tes boutons
         initListeners();
         initUserAccounts();
     }
@@ -56,32 +56,43 @@ public class UsersView extends View {
         List<UserDTO> usersDTOList = listener.getUsersList();
         if (usersDTOList != null) {
             usersDTOList.forEach(user -> {
-                // Create a new VBox for each user
                 VBox userBox = new VBox();
-    //            userBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10px; -fx-spacing: 10px;");
-                userBox.setPrefWidth(200);
+                userBox.setPrefWidth(150);
                 userBox.setPrefHeight(220);
+                userBox.setSpacing(10);
+                userBox.setStyle("""
+                    -fx-background-color: white;
+                    -fx-background-radius: 10px;
+                    -fx-padding: 10px;
+                    -fx-alignment: center;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.5, 0, 2);
+                    -fx-cursor: hand;
+                """);
 
-                // Create a Text node for the username
-                Text usernameText = new Text(user.getUsername());
-                usernameText.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+                // Create a new Image object with the user's profile picture path
+                Image image;
+                try {
+                    image = new Image(user.getProfilePicturePath().toUri().toString(), true);
+                    System.out.println(user.getProfilePicturePath());
+                    if (image.isError()) throw new Exception("Image failed");
+                } catch (Exception e) {
+                    image = new Image(getClass().getResource("/images/default_account.png").toExternalForm());
+                }
 
-                // Create a ImageView for the profile picture
-                // if user.getProfilePicturePath() is null, use a default image
-                ImageView profileImageView = new ImageView(user.getProfilePicturePath() != null ? user.getProfilePicturePath().toString() : "/images/default_account.png");
+                ImageView profileImageView = new ImageView(image);
                 profileImageView.setFitWidth(200);
                 profileImageView.setFitHeight(200);
+                profileImageView.setStyle("-fx-background-radius: 100px;");
 
-                // Add the Text node to the VBox
-                userBox.getChildren().add(usernameText);
-                // Add the ImageView to the VBox
-                userBox.getChildren().add(profileImageView);
+                Text usernameText = new Text(user.getUsername());
+                usernameText.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
 
-                // Add the VBox to the FlowPane
-                userAccounts.getChildren().addFirst(userBox);
-        });
+                userBox.getChildren().addAll(profileImageView, usernameText);
+                userAccounts.getChildren().add(userBox);
+            });
         }
     }
+
 
     public void setListener(UsersViewListener newListener) {
         listener = newListener;
@@ -97,5 +108,10 @@ public class UsersView extends View {
      */
     public void show() {
         primaryStage.show();
+    }
+
+    public void refreshUI() {
+        userAccounts.getChildren().clear();
+        initUserAccounts();
     }
 }

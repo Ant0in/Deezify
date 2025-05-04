@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.stage.Stage;
 import musicApp.models.User;
 import musicApp.models.dtos.UserDTO;
+import musicApp.services.UserService;
 import musicApp.views.UsersView;
 
 public class UsersController extends ViewController<UsersView> implements UsersView.UsersViewListener {
@@ -18,10 +19,10 @@ public class UsersController extends ViewController<UsersView> implements UsersV
         usersList = _usersList;
         view.setListener(this);
         initView("/fxml/Users.fxml");
-        editController = new EditUserController();
     }
 
     public void onAddProfileClicked(){
+        editController = new EditUserController(this);
         editController.show();
     }
 
@@ -35,5 +36,10 @@ public class UsersController extends ViewController<UsersView> implements UsersV
 
     public void show() {
         view.show();
+    }
+
+    public void usersUpdate(){
+        usersList = new UserService().readUsers();
+        view.refreshUI();
     }
 }

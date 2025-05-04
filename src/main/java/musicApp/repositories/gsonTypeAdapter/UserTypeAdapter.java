@@ -5,6 +5,7 @@ import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.JsonReader;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +28,16 @@ public class UserTypeAdapter extends TypeAdapter<User> {
     public void write(JsonWriter out, User user) throws IOException {
         out.beginObject();
 
-        out.name("username");
-        out.value(user.getUsername());
-        out.name("profilePicturePath");
-        if (user.getProfilePicturePath() == null) {
-            out.value("");
-        } else {
-            out.value(user.getProfilePicturePath().toString());
-        }
-        out.name("balance");
-        out.value(user.getBalance());
+        out.name("username").value(user.getUsername());
+
+        // Profile picture path (nullable)
+        out.name("userPicturePath");
+        Path picturePath = user.getUserPicturePath();
+        out.value(picturePath != null ? picturePath.toString() : "");
+
+        out.name("balance").value(user.getBalance());
+
+        // Equalizer bands
         out.name("equalizerBands");
         out.beginArray();
         for (Double band : user.getEqualizerBands()) {
@@ -44,9 +45,16 @@ public class UserTypeAdapter extends TypeAdapter<User> {
         }
         out.endArray();
 
+        // Music path (nullable)
+        out.name("userMusicPath");
+        Path musicPath = user.getUserMusicPathToString() != null
+                ? user.getUserMusicPath()
+                : null;
+        out.value(musicPath != null ? musicPath.toString() : "");
 
         out.endObject();
     }
+
 
     /**
      * Reads a User object from JSON format.
@@ -58,8 +66,8 @@ public class UserTypeAdapter extends TypeAdapter<User> {
     @Override
     public User read(JsonReader in) throws IOException {
         String username = null;
-        String userPicturePath = null;
-        String userMusicPath = null;
+        Path userPicturePath = null;
+        Path userMusicPath = null;
         double balance = 0;
         Equalizer equalizer = new Equalizer();
 
@@ -67,31 +75,47 @@ public class UserTypeAdapter extends TypeAdapter<User> {
         while (in.hasNext()) {
             String fieldName = in.nextName();
             switch (fieldName) {
-                case "username":
-                    username = in.nextString();
-                    break;
-                case "userPicturePath":
-                    userPicturePath = in.nextString();
-                    break;
-                case "balance":
-                    balance = in.nextDouble();
-                    break;
-                case "equalizerBands":
+                case "username" -> username = in.nextString();
+                case "userPicturePath" -> {
+                    String rawPath = in.nextString();
+                    System.out.println("[UserTypeAdapter] rawPath: " + rawPath);
+                    userPicturePath = (rawPath != null && !rawPath.isBlank())
+                            ? Paths.get(rawPath)
+                            : null; 
+                }
+                case "balance" -> balance = in.nextDouble();
+                case "equalizerBands" -> {
                     in.beginArray();
                     int bandIndex = 0;
                     while (in.hasNext()) {
                         equalizer.setBandGain(bandIndex++, in.nextDouble());
                     }
                     in.endArray();
-                    break;
-                case "userMusicPath":
-                    userMusicPath = in.nextString();
-                    break;
-                default:
-                    in.skipValue();
+                }
+                case "userMusicPath" -> {
+                    String rawPath = in.nextString();
+                    userMusicPath = (rawPath != null && !rawPath.isBlank())
+                            ? Paths.get(rawPath)
+                            : Path.of(System.getProperty("user.home"), "Music");
+                }
+                default -> in.skipValue();
             }
         }
-        return new User(username, Path.of(Objects.requireNonNull(userPicturePath)), balance, Path.of(Objects.requireNonNull(userMusicPath)), equalizer);
+        in.endObject();
+
+        // Log minimal for debug
+        System.out.println("[User Loaded] " + username + " | " +
+                (userPicturePath != null ? userPicturePath : "no picture") + " | " +
+                balance + " | " +
+                userMusicPath);
+
+        return new User(
+                username,
+                userPicturePath,
+                balance,
+                userMusicPath,
+                equalizer
+        );
     }
 
 }

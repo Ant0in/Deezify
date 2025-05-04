@@ -21,7 +21,7 @@ public class User {
     public User(String _username, Path _userPicturePath,Path _userMusicPath) {
         username = _username;
         userPicturePath = _userPicturePath;
-        balance = 0;
+        balance = 0.0;
         userMusicPath = _userMusicPath;
         equalizer = new Equalizer();
     }
@@ -42,11 +42,11 @@ public class User {
         return username;
     }
 
-    public void setProfilePicturePath(Path newProfilePicturePath) {
-        userPicturePath = newProfilePicturePath;
+    public void setUserPicturePath(Path newUserPicturePath) {
+        userPicturePath = newUserPicturePath;
     }
 
-    public Path getProfilePicturePath() {
+    public Path getUserPicturePath() {
         return userPicturePath;
     }
 
@@ -68,6 +68,10 @@ public class User {
 
     public String getUserMusicPathToString() {
         return userMusicPath.toString();
+    }
+
+    public Path getUserMusicPath() {
+        return userMusicPath;
     }
 
     public void setUserMusicPath(Path newUserMusicPath) {
@@ -106,7 +110,7 @@ public class User {
                 '}';
     }
 
-    public String getProfilePicturePathToString() {
+    public String getUserPicturePathToString() {
         return userPicturePath != null ? userPicturePath.toString() : null;
     }
 }
