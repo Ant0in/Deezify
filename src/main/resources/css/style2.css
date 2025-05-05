@@ -107,7 +107,7 @@
     -fx-background-color: #2f508e;
 }
 
-.pausebtn, .previousbtn, .nextbtn, .settingsbtn ,.shuffle-btn{
+.pausebtn, .previousbtn, .nextbtn, .settingsbtn , .shuffle-btn, .returnbtn {
     -fx-background-color: transparent;
 }
 

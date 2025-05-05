@@ -33,6 +33,10 @@ public class ToolBarController extends ViewController<ToolBarView> implements To
         playerController.close();
     }
 
+    public void handleReturn() {
+        playerController.returnToUsersWindow();
+    }
+
 
     public void handleNotFoundImage(String errorMessage) {
         alertService.showAlert("ToolBarController : " + errorMessage, Alert.AlertType.ERROR);

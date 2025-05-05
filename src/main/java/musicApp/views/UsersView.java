@@ -8,6 +8,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import musicApp.controllers.UsersController;
+import musicApp.models.User;
 import musicApp.models.dtos.UserDTO;
 
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ public class UsersView extends View {
 
     public interface UsersViewListener {
         void onAddProfileClicked();
-        List<UserDTO> getUsersList();
+        List<User> getUsersList();
+        void onUserSelected(User user);
     }
 
     @Override
@@ -53,9 +56,9 @@ public class UsersView extends View {
     }
 
     private void initUserAccounts() {
-        List<UserDTO> usersDTOList = listener.getUsersList();
-        if (usersDTOList != null) {
-            usersDTOList.forEach(user -> {
+        List<User> UsersList = listener.getUsersList();
+        if (UsersList != null) {
+            UsersList.forEach(user -> {
                 VBox userBox = new VBox();
                 userBox.setPrefWidth(150);
                 userBox.setPrefHeight(220);
@@ -72,8 +75,8 @@ public class UsersView extends View {
                 // Create a new Image object with the user's profile picture path
                 Image image;
                 try {
-                    image = new Image(user.getProfilePicturePath().toUri().toString(), true);
-                    System.out.println(user.getProfilePicturePath());
+                    image = new Image(user.getUserPicturePath().toUri().toString(), true);
+                    System.out.println(user.getUserPicturePath());
                     if (image.isError()) throw new Exception("Image failed");
                 } catch (Exception e) {
                     image = new Image(getClass().getResource("/images/default_account.png").toExternalForm());
@@ -89,6 +92,11 @@ public class UsersView extends View {
 
                 userBox.getChildren().addAll(profileImageView, usernameText);
                 userAccounts.getChildren().add(userBox);
+                userBox.setOnMouseClicked(e -> {
+                    if (listener instanceof UsersController controller) {
+                        controller.onUserSelected(user);
+                    }
+                });
             });
         }
     }

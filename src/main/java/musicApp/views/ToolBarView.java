@@ -14,7 +14,7 @@ public class ToolBarView extends View {
     private ToolBarViewListener listener;
 
     @FXML
-    private Button exitButton, settingsButton;
+    private Button exitButton, settingsButton, returnButton;
     @FXML
     private Region spacer;
 
@@ -25,6 +25,8 @@ public class ToolBarView extends View {
         void handleOpenSettings();
 
         void handleExitApp();
+
+        void handleReturn();
     }
 
     /**
@@ -52,6 +54,7 @@ public class ToolBarView extends View {
         ViewService viewService = new ViewService();
         viewService.setButtonIcon(exitButton, "/images/cross.png", listener);
         viewService.setButtonIcon(settingsButton, "/images/settings.png", listener);
+        viewService.setButtonIcon(returnButton, "/images/return.png", listener);
     }
 
     /**
@@ -60,6 +63,7 @@ public class ToolBarView extends View {
     private void setButtonActions() {
         exitButton.setOnAction(this::handleExitApp);
         settingsButton.setOnAction(this::handleSettings);
+        returnButton.setOnAction(this::handleReturn);
     }
 
     /**
@@ -76,5 +80,13 @@ public class ToolBarView extends View {
      */
     private void handleExitApp(ActionEvent event) {
         listener.handleExitApp();
+    }
+
+    /**
+     * Handle the return button.
+     * @param event
+     */
+    private void handleReturn(ActionEvent event) {
+        listener.handleReturn();
     }
 }

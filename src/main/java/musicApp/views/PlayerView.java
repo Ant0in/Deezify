@@ -46,6 +46,10 @@ public class PlayerView extends View {
         Platform.exit();
     }
 
+    public void closeStage() {
+        primaryStage.close();
+    }
+
     /**
      * Listener interface for handling user actions from the controller.
      */

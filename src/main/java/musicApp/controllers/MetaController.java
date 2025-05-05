@@ -3,6 +3,7 @@ package musicApp.controllers;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Settings;
+import musicApp.models.dtos.SettingsDTO;
 import musicApp.services.AlertService;
 import musicApp.services.SettingsService;
 import musicApp.services.UserService;
@@ -39,7 +40,7 @@ public class MetaController {
         alertService = new AlertService();
         settingsService = new SettingsService();
         userService = new UserService();
-        usersController = new UsersController(primaryStage, userService.readUsers());
+        usersController = new UsersController(this,primaryStage, userService.readUsers());
 
         Settings settings = settingsService.readSettings();
 //        playerController = new PlayerController(this, primaryStage, settings.toDTO());
@@ -81,4 +82,7 @@ public class MetaController {
         }
     }
 
+    public void loadPlayerWithUser(SettingsDTO settingsDTO) throws IOException {
+        playerController = new PlayerController(this, new Stage(), settingsDTO);
+    }
 }

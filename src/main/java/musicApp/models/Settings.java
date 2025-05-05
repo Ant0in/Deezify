@@ -33,6 +33,12 @@ public class Settings {
         currentUser = _currentUser;
     }
 
+    public Settings(User _currentUser) {
+        musicFolderChanged = false;
+        musicFolder = _currentUser.getUserMusicPath();
+        currentUser = _currentUser;
+    }
+
     public SettingsDTO toDTO() {
         if (currentUser == null) {
             return new SettingsDTO(musicFolder, musicFolderChanged);

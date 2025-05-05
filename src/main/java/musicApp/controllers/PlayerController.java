@@ -125,11 +125,20 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         view.close();
     }
 
+    public void closeStage() {
+        view.closeStage();
+    }
+
     /**
      * Open the settings window.
      */
     public void openSettings() {
         metaController.switchScene(MetaController.Scenes.SETTINGS);
+    }
+
+    public void returnToUsersWindow() {
+        closeStage();
+        metaController.switchScene(MetaController.Scenes.USERSWINDOW);
     }
 
     /**
