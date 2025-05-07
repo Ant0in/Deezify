@@ -1,17 +1,1 @@
-[
-  {
-    "name": "Playlist 1",
-    "image": "",
-    "songList": []
-  },
-  {
-    "name": "Playlist 2",
-    "image": "",
-    "songList": []
-  },
-  {
-    "name": "Playlist 3",
-    "image": "",
-    "songList": []
-  }
-]
+[{"name":"??favorites??","image":"","songList":[]},{"name":"Playlist 1","image":"","songList":[]},{"name":"Playlist 2","image":"","songList":[]},{"name":"Playlist 3","image":"","songList":[]}]

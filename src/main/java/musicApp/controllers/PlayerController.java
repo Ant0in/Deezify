@@ -16,6 +16,7 @@ import musicApp.models.dtos.SettingsDTO;
 import musicApp.views.PlayerView;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -414,4 +415,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         }
     }
 
+    public Path getUserPlaylistPath() {
+        return metaController.getUserPlaylistPath();
+    }
 }

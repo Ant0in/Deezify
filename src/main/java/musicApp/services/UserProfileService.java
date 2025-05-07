@@ -13,10 +13,10 @@ public class UserProfileService {
     }
 
     public void writeUser(List<UserProfile> userProfiles) {
-        jsonRepository.writeUsers(userProfiles);
+        jsonRepository.writeUserProfiles(userProfiles);
     }
 
     public List<UserProfile> readUsers() {
-        return jsonRepository.readUsers();
+        return jsonRepository.readUserProfiles();
     }
 }

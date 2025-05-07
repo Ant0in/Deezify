@@ -53,7 +53,6 @@ public class SettingsView extends View {
         String getMusicFolderString();
     }
 
-
     /**
      * Sets listener.
      *

@@ -251,7 +251,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
             return;
         }
         try {
-            PlaylistService playlistService = new PlaylistService();
+            PlaylistService playlistService = new PlaylistService(playerController.getUserPlaylistPath());
             Path copiedFilePath = playlistService.addSongToMainLibrary(audioFile);
             addSong(copiedFilePath);
         } catch (IOException e) {

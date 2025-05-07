@@ -32,7 +32,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         super(new PlaylistNavigatorView());
         view.setListener(this);
         playerController = controller;
-        playlistsController = new PlaylistsController(musicFolder);
+        playlistsController = new PlaylistsController(musicFolder, controller.getUserPlaylistPath());
         playlistContextMenuController = new PlaylistContextMenuController(this);
         initView("/fxml/PlaylistNavigator.fxml");
         loadPlaylists();

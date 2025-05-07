@@ -19,7 +19,7 @@ public class Settings {
     /**
      * Constructor for Settings.
      *
-     * @param _musicFolder  The music folder of the settings.
+     * @param _musicFolder The music folder of the settings.
      */
     public Settings(Path _musicFolder) {
             musicFolderChanged = false;
@@ -27,12 +27,23 @@ public class Settings {
             currentUserProfile = null;
         }
 
+    /**
+     * Instantiates a new Settings.
+     *
+     * @param _musicFolder        the music folder
+     * @param _currentUserProfile the current user profile
+     */
     public Settings(Path _musicFolder, UserProfile _currentUserProfile) {
         musicFolderChanged = false;
         musicFolder = _musicFolder;
         currentUserProfile = _currentUserProfile;
     }
 
+    /**
+     * To dto settings dto.
+     *
+     * @return the settings dto
+     */
     public SettingsDTO toDTO() {
         if (currentUserProfile == null) {
             return new SettingsDTO(musicFolder, musicFolderChanged);
@@ -125,7 +136,11 @@ public class Settings {
         }
     }
 
-
+    /**
+     * Gets crossfade duration.
+     *
+     * @return the crossfade duration
+     */
     public double getCrossfadeDuration() {
         if (currentUserProfile == null) {
             return 0;
@@ -134,6 +149,11 @@ public class Settings {
         }
     }
 
+    /**
+     * Sets crossfade duration.
+     *
+     * @param _crossfadeDuration the crossfade duration
+     */
     public void setCrossfadeDuration(double _crossfadeDuration) {
         if (currentUserProfile != null) {
             currentUserProfile.setCrossfadeDuration(_crossfadeDuration);
@@ -142,8 +162,12 @@ public class Settings {
         }
     }
 
-
-    public UserProfile getCurrentUser() {
+    /**
+     * Gets current user profile.
+     *
+     * @return the current user profile
+     */
+    public UserProfile getCurrentUserProfile() {
         return currentUserProfile;
     }
 
@@ -151,6 +175,9 @@ public class Settings {
         currentUserProfile = newCurrentUserProfile;
     }
 
+    /**
+     * Remove current user.
+     */
     public void removeCurrentUser() {
         currentUserProfile = null;
     }
@@ -173,6 +200,11 @@ public class Settings {
                 otherSettings.getEqualizerBands().equals(getEqualizerBands());
     }
 
+    /**
+     * Gets equalizer.
+     *
+     * @return the equalizer
+     */
     public Equalizer getEqualizer() {
         if (currentUserProfile == null) {
             return new Equalizer();
@@ -181,11 +213,29 @@ public class Settings {
         }
     }
 
+    /**
+     * Gets equalizer bands.
+     *
+     * @return the equalizer bands
+     */
     public List<Double> getEqualizerBands() {
         if (currentUserProfile == null) {
             return new ArrayList<>(java.util.Collections.nCopies(Equalizer.DEFAULT_BANDS_SIZE, 0.0));
         } else {
             return currentUserProfile.getEqualizerBands();
+        }
+    }
+
+    /**
+     * Gets user playlist path.
+     *
+     * @return the user playlist path
+     */
+    public Path getUserPlaylistPath() {
+        if (currentUserProfile == null) {
+            return null;
+        } else {
+            return currentUserProfile.getUserPlaylistPath();
         }
     }
 
@@ -198,4 +248,5 @@ public class Settings {
         return "Settings{musicFolder=" + musicFolder.toString() +
                 "currentUserProfile=" + currentUserProfile + "}\n";
     }
+
 }

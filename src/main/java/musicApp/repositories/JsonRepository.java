@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class JsonRepository {
     private final Path settingsFile;
-    private final Path playlistsFile;
+    private Path playlistsFile;
     private final Path lyricsDir;
     private final Path lyricsFile;
     private final Path usersFile;
@@ -58,11 +58,15 @@ public class JsonRepository {
         }
         createFolderIfNotExists(settingFolder);
         settingsFile = settingFolder.resolve("settings.json");
-        playlistsFile = settingFolder.resolve("playlists.json");
+//        playlistsFile = settingFolder.resolve("playlists.json");
         lyricsDir = settingFolder.resolve("lyrics");
         createFolderIfNotExists(lyricsDir);
         lyricsFile = lyricsDir.resolve("lyrics.json");
         usersFile = settingFolder.resolve("users.json");
+    }
+
+    public void setPlaylistsPath(Path newPlaylistsFile) {
+        playlistsFile = newPlaylistsFile;
     }
 
     /**
@@ -259,9 +263,9 @@ public class JsonRepository {
         if (validPlaylists.isEmpty() || !validPlaylists.getFirst().getName().equals("??favorites??")) {
             Library favorites = new Library(new ArrayList<>(), "??favorites??", null);
             validPlaylists.addFirst(favorites);
+            writePlaylists(validPlaylists);
         }
 
-        writePlaylists(validPlaylists);
         return validPlaylists;
     }
 
@@ -304,13 +308,13 @@ public class JsonRepository {
         return lyricsDir;
     }
 
-    protected List<UserProfile> getUsers() throws IllegalArgumentException {
+    protected List<UserProfile> getUserProfiles(Path userProfilesPath) throws IllegalArgumentException {
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(UserProfile.class, new UserProfileTypeAdapter())
             .setPrettyPrinting()
             .create();
-        if (!Files.exists(usersFile)) return new ArrayList<>();
-        try (var reader = Files.newBufferedReader(usersFile)) {
+        if (!Files.exists(userProfilesPath)) return new ArrayList<>();
+        try (var reader = Files.newBufferedReader(userProfilesPath)) {
             var type = new TypeToken<List<UserProfile>>() {}.getType();
             List<UserProfile> userProfiles = gson.fromJson(reader, type);
             return userProfiles != null ? userProfiles : new ArrayList<>();
@@ -321,15 +325,8 @@ public class JsonRepository {
 
     }
 
-    public List<UserProfile> readUsers() {
-        if (!Files.exists(usersFile)) {
-            writeUsers(List.of());
-        }
-        return getUsers();
-    }
-
-    public void writeUsers(List<UserProfile> userProfile) {
-        try (java.io.FileWriter writer = new java.io.FileWriter(usersFile.toString())) {
+    protected void setUserProfiles(List<UserProfile> userProfile, Path userProfilesPath) {
+        try (java.io.FileWriter writer = new java.io.FileWriter(userProfilesPath.toString())) {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(UserProfile.class, new UserProfileTypeAdapter())
                     .serializeNulls()
@@ -338,6 +335,16 @@ public class JsonRepository {
         } catch (IOException e) {
             System.err.println("An error occurred while writing the playlists file");
         }
+    }
 
+    public List<UserProfile> readUserProfiles() {
+        if (!Files.exists(usersFile)) {
+            writeUserProfiles(List.of());
+        }
+        return getUserProfiles(usersFile);
+    }
+
+    public void writeUserProfiles(List<UserProfile> userProfiles) {
+        setUserProfiles(userProfiles, usersFile);
     }
 }

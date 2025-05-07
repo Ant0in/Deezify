@@ -18,13 +18,10 @@ public class PlaylistsController {
     private final int MAIN_LIBRARY_INDEX = 0;
     private static final int FAVORITES_INDEX = 1;
 
-
-
-    public PlaylistsController(Path musicFolder) {
-        playlistService = new PlaylistService();
+    public PlaylistsController(Path musicFolder, Path userPlaylistPath) {
+        playlistService = new PlaylistService(userPlaylistPath);
         playlists = playlistService.loadAllLibraries(musicFolder);
     }
-
 
     public void updateMainLibrary(Path newMusicFolder) {
         Library mainLibrary = playlistService.loadMainLibrary(newMusicFolder);

@@ -14,8 +14,9 @@ import java.util.List;
 public class PlaylistService {
     JsonRepository jsonRepository;
 
-    public PlaylistService() {
+    public PlaylistService(Path playlistsPath) {
         jsonRepository = new JsonRepository();
+        jsonRepository.setPlaylistsPath(playlistsPath);
     }
 
     public void writePlaylists(List<Library> playlists) {

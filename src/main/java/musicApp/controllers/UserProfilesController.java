@@ -13,7 +13,6 @@ import musicApp.views.UserProfilesView;
 public class UserProfilesController extends ViewController<UserProfilesView> implements UserProfilesView.UsersViewListener {
 
     private List<UserProfile> usersList;
-    private EditUserProfileController editController;
     private final MetaController metaController;
     private final Stage primaryStage;
 
@@ -23,20 +22,12 @@ public class UserProfilesController extends ViewController<UserProfilesView> imp
         primaryStage = _primaryStage;
         metaController = _metaController;
         view.setListener(this);
-        initView("/fxml/Users.fxml");
+        initView("/fxml/UserProfiles.fxml");
     }
 
     public void onAddProfileClicked(){
-        editController = new EditUserProfileController(this);
+        EditUserProfileController editController = new EditUserProfileController(this);
         editController.show();
-    }
-
-    public List<UserDTO> getUsersDTOList() {
-        List<UserDTO> usersDTOList = new ArrayList<>();
-        for (UserProfile userProfile : usersList) {
-            usersDTOList.add(userProfile.toDTO());
-        }
-        return usersDTOList;
     }
 
     public List<UserProfile> getUsersList() {
@@ -53,8 +44,6 @@ public class UserProfilesController extends ViewController<UserProfilesView> imp
     }
 
     public void onUserSelected(UserProfile selectedUserProfile) {
-        // TODO UserProfilesController should be able to send a message to the MetaController to link the selected user profile to the Settings model
-        //Settings userSettings = new Settings(selectedUserProfile);
         try {
             view.close();
             metaController.loadPlayerWithUser(selectedUserProfile);
@@ -62,10 +51,6 @@ public class UserProfilesController extends ViewController<UserProfilesView> imp
         } catch (IOException e) {
             e.printStackTrace(); 
         }
-    }
-
-    public Stage getPrimaryStage() {
-        return primaryStage;
     }
 
 }

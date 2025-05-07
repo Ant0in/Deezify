@@ -160,4 +160,8 @@ public class SettingsController extends ViewController<SettingsView> implements 
     public SettingsDTO getSettingsDTO() {
         return settings.toDTO();
     }
+
+    public Path getUserPlaylistPath() {
+        return settings.getUserPlaylistPath();
+    }
 }

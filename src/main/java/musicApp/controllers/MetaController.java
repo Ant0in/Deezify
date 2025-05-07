@@ -9,6 +9,7 @@ import musicApp.services.SettingsService;
 import musicApp.services.UserProfileService;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * The Meta controller.
@@ -16,7 +17,6 @@ import java.io.IOException;
 public class MetaController {
     private final AlertService alertService;
     private final SettingsService settingsService;
-    private final UserProfileService userProfileService;
     private PlayerController playerController;
     private final SettingsController settingsController;
     private final UserProfilesController userProfilesController;
@@ -39,7 +39,7 @@ public class MetaController {
     public MetaController(Stage primaryStage) throws IOException {
         alertService = new AlertService();
         settingsService = new SettingsService();
-        userProfileService = new UserProfileService();
+        UserProfileService userProfileService = new UserProfileService();
         userProfilesController = new UserProfilesController(this,primaryStage, userProfileService.readUsers());
 
         Settings settings = settingsService.readSettings();
@@ -86,4 +86,10 @@ public class MetaController {
         settingsController.setUserProfile(userProfile);
         playerController = new PlayerController(this, new Stage(), settingsController.getSettingsDTO());
     }
+
+
+    public Path getUserPlaylistPath() {
+        return settingsController.getUserPlaylistPath();
+    }
+
 }
