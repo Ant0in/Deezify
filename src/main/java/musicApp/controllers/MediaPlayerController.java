@@ -31,8 +31,11 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * Instantiates a new Media player controller.
      *
      * @param controller the player controller
+     * @param balance the balance
+     * @param crossfadeDuration the crossfade duration
+     * @param equalizerBands the equalizer bands
      */
-    public MediaPlayerController(PlayerController controller, double balance, List<Double> equalizerBands) {
+    public MediaPlayerController(PlayerController controller, double balance, double crossfadeDuration, List<Double> equalizerBands) {
         super(new MediaPlayerView());
         view.setListener(this);
         playerController = controller;
@@ -42,6 +45,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
 
         initView("/fxml/MediaPlayer.fxml");
         setBalance(balance);
+        setCrossfadeDuration(crossfadeDuration);
         try {
             setEqualizerBands(equalizerBands);
         } catch (EqualizerGainException e) {
@@ -201,6 +205,15 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     }
 
     /**
+     * Sets the crossfade duration.
+     *
+     * @param crossfadeDuration the crossfade duration
+     */
+    public void setCrossfadeDuration(double crossfadeDuration) {
+        audioPlayer.setCrossfadeDuration(crossfadeDuration);
+    }
+
+    /**
      * Load and Play the currently selected song.
      *
      * @param song the song
@@ -209,6 +222,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     public void playCurrent(Song song) throws BadSongException {
         audioPlayer.loadSong(song);
         audioPlayer.setOnEndOfMedia(playerController::skip);
+        audioPlayer.setNextSongSupplier(playerController.getNextSongSupplier());
         audioPlayer.unpause();
         miniPlayerController.loadSong(song);
     }
@@ -283,4 +297,5 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
             callback.accept(getLoadedSong()!=null);
         });
     }
+
 }

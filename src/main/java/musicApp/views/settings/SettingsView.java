@@ -27,9 +27,9 @@ public class SettingsView extends View {
     @FXML
     private ComboBox<String> languageComboBox;
     @FXML
-    private Slider balanceSlider;
+    private Slider balanceSlider, crossfadeSlider;
     @FXML
-    private Label balanceLabel, balanceTitle, languageTitle, languageSelect, left, right, musicFolderLabel;
+    private Label balanceLabel, balanceTitle, languageTitle, languageSelect, left, right, musicFolderLabel, crossfadeTitle, crossfadeLabel;
     @FXML
     private Button saveButton, cancelButton, browseButton, equalizerButton;
 
@@ -42,11 +42,13 @@ public class SettingsView extends View {
     public interface SettingsViewListener {
         double getBalance();
 
+        double getCrossfadeDuration();
+
         void handleOpenEqualizer();
 
         void handleCancel();
 
-        void handleSave(Language language, double balance, Path musicFolder);
+        void handleSave(Language language, double balance, Path musicFolder, double crossfadeDuration);
 
         String getMusicFolderString();
     }
@@ -124,6 +126,21 @@ public class SettingsView extends View {
         balanceLabel.setText(String.format("%.2f",listener.getBalance()));
         balanceSlider.valueProperty().addListener((_, _, newVal)
                 -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
+
+        crossfadeSlider.setValue(listener.getCrossfadeDuration());
+        crossfadeLabel.setText(getCrossfadeLabelString(listener.getCrossfadeDuration()));
+        crossfadeSlider.valueProperty().addListener((_, _, newVal)
+                -> crossfadeLabel.setText(getCrossfadeLabelString(newVal.doubleValue())));
+        crossfadeSlider.setMajorTickUnit(1);
+        crossfadeSlider.setMinorTickCount(1);
+        crossfadeSlider.setSnapToTicks(true);
+        crossfadeSlider.setShowTickLabels(true);
+        crossfadeSlider.setShowTickMarks(true);
+    }
+
+    private String getCrossfadeLabelString(double value) {
+        String seconds = LanguageService.getInstance().get("settings.seconds");
+        return String.format("%.1f %s", value, seconds);
     }
 
     /**
@@ -142,6 +159,8 @@ public class SettingsView extends View {
         cancelButton.setText(languageService.get("button.cancel"));
         browseButton.setText(languageService.get("settings.select_music_folder"));
         equalizerButton.setText(languageService.get("settings.manage_audio_equalizer"));
+        crossfadeTitle.setText(languageService.get("settings.crossfade"));
+        crossfadeLabel.setText(String.format("%.1f %s",listener.getCrossfadeDuration(), LanguageService.getInstance().get("settings.seconds")));
         updateLanguageComboBox();
     }
 
@@ -183,8 +202,9 @@ public class SettingsView extends View {
     private void handleSave() {
         Language selectedLanguage = getSelectedLanguage();
         double balance = balanceSlider.getValue();
+        double crossfadeDuration = crossfadeSlider.getValue();
         Path musicDirectory = Paths.get(musicFolderLabel.getText());
-        listener.handleSave(selectedLanguage, balance, musicDirectory);
+        listener.handleSave(selectedLanguage, balance, musicDirectory, crossfadeDuration);
     }
 
     /**

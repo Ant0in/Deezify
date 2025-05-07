@@ -14,6 +14,8 @@ public class Settings {
     @Expose
     private Path musicFolder;
     private User currentUser;
+    @Expose
+    private double crossfadeDuration;
     private boolean musicFolderChanged;
     
     /**
@@ -21,11 +23,23 @@ public class Settings {
      *
      * @param _musicFolder  The music folder of the settings.
      */
-    public Settings(Path _musicFolder) {
+    public Settings(double _balance, Path _musicFolder, Equalizer _equalizer, double _crossfadeDuration) {
         musicFolderChanged = false;
         musicFolder = _musicFolder;
         currentUser = null;
+        crossfadeDuration = _crossfadeDuration;
     }
+
+        /**
+         * Constructor for Settings.
+         *
+         * @param _musicFolder  The music folder of the settings.
+         */
+    public Settings(Path _musicFolder) {
+            musicFolderChanged = false;
+            musicFolder = _musicFolder;
+            currentUser = null;
+        }
 
     public Settings(Path _musicFolder, User _currentUser) {
         musicFolderChanged = false;
@@ -159,5 +173,13 @@ public class Settings {
     public String toString() {
         return "Settings{musicFolder=" + musicFolder.toString() +
                 "currentUser=" + currentUser + "}\n";
+    }
+
+    public double getCrossfadeDuration() {
+        return crossfadeDuration;
+    }
+
+    public void setCrossfadeDuration(double _crossfadeDuration) {
+        crossfadeDuration = _crossfadeDuration;
     }
 }

@@ -81,6 +81,16 @@ public class SettingsController extends ViewController<SettingsView> implements 
         return settings.getBalance();
     }
 
+    @Override
+    public double getCrossfadeDuration() {
+        return settings.getCrossfadeDuration();
+    }
+
+
+    private void setCrossfadeDuration(double crossfadeDuration) {
+        settings.setCrossfadeDuration(crossfadeDuration);
+    }
+
     /**
      * Update the balance of the application.
      *
@@ -89,6 +99,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
     private void setBalance(double balance) {
         settings.setBalance(balance);
     }
+
 
     /**
      * Open equalizer.
@@ -105,10 +116,11 @@ public class SettingsController extends ViewController<SettingsView> implements 
      * @param balance        the balance
      * @param musicFolder the music folder
      */
-    public void handleSave(Language language, double balance, Path musicFolder) {
+    public void handleSave(Language language, double balance, Path musicFolder, double crossfadeDuration) {
         LanguageService.getInstance().setLanguage(language);
         refreshLanguage();
         setBalance(balance);
+        setCrossfadeDuration(crossfadeDuration);
         setMusicFolderPath(musicFolder);
         updateEqualizer();
         metaController.notifySettingsChanged(settings);

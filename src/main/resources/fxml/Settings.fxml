@@ -23,6 +23,13 @@
                     <Label fx:id="balanceLabel" text="0" />
                 </HBox>
             </VBox>
+            <VBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10;">
+                <Label fx:id="crossfadeTitle" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Crossfade duration " />
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Slider fx:id="crossfadeSlider" max="12" min="0" prefWidth="200"/>
+                    <Label fx:id="crossfadeLabel" text="0" />
+                </HBox>
+            </VBox>
          <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
             <children>
                <Button fx:id="browseButton" mnemonicParsing="false" text="Select Music Folder" />

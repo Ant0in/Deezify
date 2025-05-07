@@ -27,6 +27,8 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         out.beginObject();
         out.name("musicFolder");
         out.value(settings.getMusicFolderString());
+        out.name("crossfadeDuration");
+        out.value(settings.getCrossfadeDuration());
         out.endObject();
     }
 
@@ -40,18 +42,26 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
     @Override
     public Settings read(JsonReader in) throws IOException {
         Path musicFolder = null;
+        Equalizer equalizer = new Equalizer();
+        double crossfadeDuration = 0.0;
 
         in.beginObject();
         while (in.hasNext()) {
             String fieldName = in.nextName();
-            if (fieldName.equals("musicFolder")) {
-                musicFolder = Paths.get(in.nextString());
-            } else {
-                in.skipValue();
+            switch (fieldName) {
+                case "musicFolder":
+                    musicFolder = Paths.get(in.nextString());
+                    break;
+                case "crossfadeDuration":
+                    crossfadeDuration = in.nextDouble();
+                    break;
+                default:
+                    in.skipValue();
+                    break;
             }
         }
         in.endObject();
 
-        return new Settings(musicFolder);
+        return new Settings(musicFolder, equalizer, crossfadeDuration);
     }
 }

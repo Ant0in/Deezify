@@ -319,7 +319,7 @@ public class JsonRepository {
             System.err.println("Failed to read users.json, returning empty list: " + e.getMessage());
             return new ArrayList<>();
         }
-        
+
     }
 
     public List<User> readUsers() {

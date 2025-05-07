@@ -11,6 +11,7 @@ import musicApp.services.AlertService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * AudioPlayer
@@ -27,9 +28,17 @@ public class AudioPlayer {
     private MediaPlayer mediaPlayer;
     private Song loadedSong;
     private double balance;
+    private double crossfadeDuration;
     private double speed;
     private final AudioSpectrumListener audioSpectrumListener;
     private final Double audioSpectrumInterval;
+
+
+    private Supplier<Song> nextSongSupplier;
+
+    private MediaPlayer transitionPlayer;
+    private Boolean isTransitioning;
+
 
     public AudioPlayer(AudioSpectrumListener _audioSpectrumListener) {
         // Initialize properties in the constructor
@@ -41,6 +50,7 @@ public class AudioPlayer {
         equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
         mediaPlayer = null;
         loadedSong = null;
+        isTransitioning = false;
         balance = 0.0;
         speed = 1.0;
         audioSpectrumListener = _audioSpectrumListener;
@@ -75,8 +85,60 @@ public class AudioPlayer {
                 alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
             }
         });
+        if (isTransitioning) {
+            mediaPlayer.setOnReady(() -> {
+                mediaPlayer.seek(transitionPlayer.getCurrentTime());
+                isTransitioning = false;
+                if (transitionPlayer != null) {
+                    transitionPlayer.stop();
+                    transitionPlayer = null;
+                }
+            });
+        }
         // Update the progression property while playing
         setupProgressListener();
+        setTransition();
+    }
+
+    /**
+     * Set up the transition between songs.
+     */
+    private void setTransition() {
+        mediaPlayer.currentTimeProperty().addListener((_, _, newValue)
+                -> this.transitionHandler(newValue));
+    }
+
+    /**
+     * Handle the transition between songs.
+     *
+     * @param progress The current progress of the song.
+     */
+    private void transitionHandler(Duration progress) {
+        Duration totalDuration = mediaPlayer.getTotalDuration();
+        if (totalDuration == null) return ;
+        double remainingTime = totalDuration.toSeconds() - progress.toSeconds();
+        if (remainingTime <= crossfadeDuration && Boolean.FALSE.equals(isTransitioning)) {
+            isTransitioning = true;
+            if (transitionPlayer == null) {
+                Song nextSong = nextSongSupplier.get();
+                Media nextMedia = new Media(nextSong.getFilePath().toUri().toString());
+                transitionPlayer = new MediaPlayer(nextMedia);
+            }
+            transitionPlayer.play();
+        }
+        if (Boolean.TRUE.equals(isTransitioning)) {
+            double fadeInVolume = volume.get() * ((crossfadeDuration - remainingTime) / crossfadeDuration);
+            transitionPlayer.setVolume(fadeInVolume);
+        }
+    }
+
+    /**
+     * Set the next song supplier.
+     *
+     * @param _nextSongSupplier The next song supplier, which is a function that returns a Song.
+     */
+    public void setNextSongSupplier(Supplier<Song> _nextSongSupplier)  {
+        nextSongSupplier = _nextSongSupplier;
     }
 
     /**
@@ -139,6 +201,9 @@ public class AudioPlayer {
         if (mediaPlayer != null) {
             mediaPlayer.pause();
             isPlaying.set(false);
+            if (transitionPlayer != null) {
+                transitionPlayer.pause();
+            }
         }
     }
 
@@ -213,6 +278,13 @@ public class AudioPlayer {
     public void seek(double progress) {
         if (mediaPlayer != null) {
             mediaPlayer.seek(mediaPlayer.getTotalDuration().multiply(progress));
+            if (isTransitioning) {
+                isTransitioning = false;
+                if (transitionPlayer != null) {
+                    transitionPlayer.stop();
+                    transitionPlayer = null;
+                }
+            }
         }
     }
 
@@ -235,6 +307,10 @@ public class AudioPlayer {
             mediaPlayer.dispose();
             mediaPlayer = null;
         }
+        if (transitionPlayer != null) {
+            transitionPlayer.dispose();
+            transitionPlayer = null;
+        }
     }
 
     /**
@@ -256,5 +332,14 @@ public class AudioPlayer {
         if (mediaPlayer != null) {
             mediaPlayer.setBalance(balance);
         }
+    }
+
+    /**
+     * Set the duration of the crossfade.
+     *
+     * @param _crossfadeDuration The duration of the crossfade in seconds.
+     */
+    public void setCrossfadeDuration(double _crossfadeDuration) {
+        crossfadeDuration = _crossfadeDuration;
     }
 }
