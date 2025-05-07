@@ -3,10 +3,10 @@ package musicApp.controllers;
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Settings;
-import musicApp.models.dtos.SettingsDTO;
+import musicApp.models.UserProfile;
 import musicApp.services.AlertService;
 import musicApp.services.SettingsService;
-import musicApp.services.UserService;
+import musicApp.services.UserProfileService;
 
 import java.io.IOException;
 
@@ -16,10 +16,10 @@ import java.io.IOException;
 public class MetaController {
     private final AlertService alertService;
     private final SettingsService settingsService;
-    private final UserService userService;
+    private final UserProfileService userProfileService;
     private PlayerController playerController;
     private final SettingsController settingsController;
-    private final UsersController usersController;
+    private final UserProfilesController userProfilesController;
 
     /**
      * Enum for the different scenes in the application.
@@ -39,8 +39,8 @@ public class MetaController {
     public MetaController(Stage primaryStage) throws IOException {
         alertService = new AlertService();
         settingsService = new SettingsService();
-        userService = new UserService();
-        usersController = new UsersController(this,primaryStage, userService.readUsers());
+        userProfileService = new UserProfileService();
+        userProfilesController = new UserProfilesController(this,primaryStage, userProfileService.readUsers());
 
         Settings settings = settingsService.readSettings();
 //        playerController = new PlayerController(this, primaryStage, settings.toDTO());
@@ -57,7 +57,7 @@ public class MetaController {
         switch (scene) {
             case MAINWINDOW -> playerController.show();
             case SETTINGS -> settingsController.show();
-            case USERSWINDOW -> usersController.show();
+            case USERSWINDOW -> userProfilesController.show();
         }
     }
 
@@ -82,7 +82,8 @@ public class MetaController {
         }
     }
 
-    public void loadPlayerWithUser(SettingsDTO settingsDTO) throws IOException {
-        playerController = new PlayerController(this, new Stage(), settingsDTO);
+    public void loadPlayerWithUser(UserProfile userProfile) throws IOException {
+        settingsController.setUserProfile(userProfile);
+        playerController = new PlayerController(this, new Stage(), settingsController.getSettingsDTO());
     }
 }

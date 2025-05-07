@@ -76,10 +76,10 @@ mvn exec:java
 - [x] 🎧 **Equalizer**
 
 ### 📌 Phase 3
-- [x] 🔎 **Research**: Lets the user search for musics in its library based on title, artist, album or tags 
+- [x] 🔎 **Research**: Lets the userProfile search for musics in its library based on title, artist, album or tags 
 - [x] 〰️ **Visualizer**: Audio Visualizer, draws a nice looking graph that updates based on the sounds that are playing
 - [x] 📜 **Metadata autocompletion**: proposes values for artist, album and tags when modifying the metadata
-- [x] 🎤 **Karaoke**: allows for the user to sing along with the music playing thanks to lyrics updating in real time with the song
+- [x] 🎤 **Karaoke**: allows for the userProfile to sing along with the music playing thanks to lyrics updating in real time with the song
 - [x] 🎛️ **DJ mode**: Allows for audio effects to be applied in real time
 
 ## 🤝 Aknowledgements

@@ -6,49 +6,48 @@ import com.google.gson.stream.JsonReader;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import musicApp.models.Equalizer;
-import musicApp.models.Settings;
-import musicApp.models.User;
+import musicApp.models.UserProfile;
 
 import java.io.IOException;
-import java.util.Objects;
 
-public class UserTypeAdapter extends TypeAdapter<User> {
+public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
     /**
-     * Writes the User object to JSON format.
+     * Writes the UserProfile object to JSON format.
      *
      * @param out      The JsonWriter to write to.
-     * @param user The User object to write.
+     * @param userProfile The UserProfile object to write.
      * @throws IOException If writing fails.
      */
     @Override
-    public void write(JsonWriter out, User user) throws IOException {
+    public void write(JsonWriter out, UserProfile userProfile) throws IOException {
         out.beginObject();
 
-        out.name("username").value(user.getUsername());
+        out.name("username").value(userProfile.getUsername());
 
         // Profile picture path (nullable)
         out.name("userPicturePath");
-        Path picturePath = user.getUserPicturePath();
+        Path picturePath = userProfile.getUserPicturePath();
         out.value(picturePath != null ? picturePath.toString() : "");
 
-        out.name("balance").value(user.getBalance());
+        out.name("balance").value(userProfile.getBalance());
 
         // Equalizer bands
         out.name("equalizerBands");
         out.beginArray();
-        for (Double band : user.getEqualizerBands()) {
+        for (Double band : userProfile.getEqualizerBands()) {
             out.value(band);
         }
         out.endArray();
 
+        // Crossfade duration
+        out.name("crossfadeDuration").value(userProfile.getCrossfadeDuration());
+
         // Music path (nullable)
         out.name("userMusicPath");
-        Path musicPath = user.getUserMusicPathToString() != null
-                ? user.getUserMusicPath()
+        Path musicPath = userProfile.getUserMusicPathToString() != null
+                ? userProfile.getUserMusicPath()
                 : null;
         out.value(musicPath != null ? musicPath.toString() : "");
 
@@ -57,18 +56,19 @@ public class UserTypeAdapter extends TypeAdapter<User> {
 
 
     /**
-     * Reads a User object from JSON format.
+     * Reads a UserProfile object from JSON format.
      *
      * @param in The JsonReader to read from.
-     * @return The User object read from JSON.
+     * @return The UserProfile object read from JSON.
      * @throws IOException If reading fails.
      */
     @Override
-    public User read(JsonReader in) throws IOException {
+    public UserProfile read(JsonReader in) throws IOException {
         String username = null;
         Path userPicturePath = null;
         Path userMusicPath = null;
         double balance = 0;
+        double crossfadeDuration = 0.0;
         Equalizer equalizer = new Equalizer();
 
         in.beginObject();
@@ -78,7 +78,7 @@ public class UserTypeAdapter extends TypeAdapter<User> {
                 case "username" -> username = in.nextString();
                 case "userPicturePath" -> {
                     String rawPath = in.nextString();
-                    System.out.println("[UserTypeAdapter] rawPath: " + rawPath);
+                    System.out.println("[UserProfileTypeAdapter] rawPath: " + rawPath);
                     userPicturePath = (rawPath != null && !rawPath.isBlank())
                             ? Paths.get(rawPath)
                             : null; 
@@ -98,23 +98,28 @@ public class UserTypeAdapter extends TypeAdapter<User> {
                             ? Paths.get(rawPath)
                             : Path.of(System.getProperty("user.home"), "Music");
                 }
+                case "crossfadeDuration" -> {
+                    crossfadeDuration = in.nextDouble();
+                    break;
+                }
                 default -> in.skipValue();
             }
         }
         in.endObject();
 
         // Log minimal for debug
-        System.out.println("[User Loaded] " + username + " | " +
+        System.out.println("[UserProfile Loaded] " + username + " | " +
                 (userPicturePath != null ? userPicturePath : "no picture") + " | " +
                 balance + " | " +
                 userMusicPath);
 
-        return new User(
+        return new UserProfile(
                 username,
                 userPicturePath,
                 balance,
                 userMusicPath,
-                equalizer
+                equalizer,
+                crossfadeDuration
         );
     }
 

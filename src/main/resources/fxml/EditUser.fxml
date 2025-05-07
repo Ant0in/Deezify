@@ -29,7 +29,7 @@
                 style="-fx-background-color: #274472; -fx-text-fill: white;"/>
     </VBox>
 
-    <!-- user Image + Button -->
+    <!-- userProfile Image + Button -->
     <HBox spacing="10" alignment="CENTER">
         <Label fx:id="userImageLabel" textFill="white"/>
         <Button fx:id="chooseUserImageButton" text="??userImage??"

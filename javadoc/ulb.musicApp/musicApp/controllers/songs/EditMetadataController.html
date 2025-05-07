@@ -163,12 +163,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleCancel()" class="member-name-link">handleCancel</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Handle when the user wants to cancel the edit.</div>
+<div class="block">Handle when the userProfile wants to cancel the edit.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleChooseCover()" class="member-name-link">handleChooseCover</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Handles the user action of choosing a cover image.</div>
+<div class="block">Handles the userProfile action of choosing a cover image.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleSaveMetadata(java.lang.String,java.lang.String,java.lang.String,java.util.Set)" class="member-name-link">handleSaveMetadata</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
@@ -176,7 +176,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;genre,
  <a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;userTags)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Handle when the user wants to edit the metadata of the song.</div>
+<div class="block">Handle when the userProfile wants to edit the metadata of the song.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadAndApplyCoverImage(java.io.File)" class="member-name-link">loadAndApplyCoverImage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;file)</code></div>
@@ -186,7 +186,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#promptUserForCoverFile()" class="member-name-link">promptUserForCoverFile</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Prompts the user with a FileChooser dialog to select an image file.</div>
+<div class="block">Prompts the userProfile with a FileChooser dialog to select an image file.</div>
 </div>
 </div>
 </div>
@@ -269,7 +269,7 @@ loadScripts(document, 'script');</script>
 <h3>handleChooseCover</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleChooseCover</span>()</div>
-<div class="block">Handles the user action of choosing a cover image.
+<div class="block">Handles the userProfile action of choosing a cover image.
  Opens a file chooser, and if a valid image is selected, loads and displays it in the view.</div>
 </div>
 </section>
@@ -279,10 +279,10 @@ loadScripts(document, 'script');</script>
 <h3>promptUserForCoverFile</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a></span>&nbsp;<span class="element-name">promptUserForCoverFile</span>()</div>
-<div class="block">Prompts the user with a FileChooser dialog to select an image file.</div>
+<div class="block">Prompts the userProfile with a FileChooser dialog to select an image file.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the selected File if the user chose one, or <code>null</code> otherwise</dd>
+<dd>the selected File if the userProfile chose one, or <code>null</code> otherwise</dd>
 </dl>
 </div>
 </section>
@@ -308,7 +308,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;artist,
  <a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;genre,
  <a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;userTags)</span></div>
-<div class="block">Handle when the user wants to edit the metadata of the song.
+<div class="block">Handle when the userProfile wants to edit the metadata of the song.
  Leave the field to `null` if you don't want to change it.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -324,7 +324,7 @@ loadScripts(document, 'script');</script>
 <h3>handleCancel</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleCancel</span>()</div>
-<div class="block">Handle when the user wants to cancel the edit.</div>
+<div class="block">Handle when the userProfile wants to cancel the edit.</div>
 </div>
 </section>
 </li>

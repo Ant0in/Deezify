@@ -8,14 +8,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import musicApp.controllers.UsersController;
-import musicApp.models.User;
-import musicApp.models.dtos.UserDTO;
+import musicApp.controllers.UserProfilesController;
+import musicApp.models.UserProfile;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class UsersView extends View {
+public class UserProfilesView extends View {
     private UsersViewListener listener;
     private final Stage primaryStage;
 
@@ -25,7 +23,7 @@ public class UsersView extends View {
     @FXML
     private Button addProfileButton;
 
-    public UsersView(Stage _primaryStage) {
+    public UserProfilesView(Stage _primaryStage) {
         super();
         primaryStage = _primaryStage;
     }
@@ -36,8 +34,8 @@ public class UsersView extends View {
 
     public interface UsersViewListener {
         void onAddProfileClicked();
-        List<User> getUsersList();
-        void onUserSelected(User user);
+        List<UserProfile> getUsersList();
+        void onUserSelected(UserProfile userProfile);
     }
 
     @Override
@@ -56,9 +54,9 @@ public class UsersView extends View {
     }
 
     private void initUserAccounts() {
-        List<User> UsersList = listener.getUsersList();
-        if (UsersList != null) {
-            UsersList.forEach(user -> {
+        List<UserProfile> usersList = listener.getUsersList();
+        if (usersList != null) {
+            usersList.forEach(user -> {
                 VBox userBox = new VBox();
                 userBox.setPrefWidth(150);
                 userBox.setPrefHeight(220);
@@ -93,7 +91,7 @@ public class UsersView extends View {
                 userBox.getChildren().addAll(profileImageView, usernameText);
                 userAccounts.getChildren().add(userBox);
                 userBox.setOnMouseClicked(e -> {
-                    if (listener instanceof UsersController controller) {
+                    if (listener instanceof UserProfilesController controller) {
                         controller.onUserSelected(user);
                     }
                 });

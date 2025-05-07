@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import musicApp.models.dtos.UserDTO;
 
-public class User {
+public class UserProfile {
     @Expose
     private String username;
     @Expose
@@ -15,10 +15,12 @@ public class User {
     private double balance;
     @Expose
     private Path userMusicPath;
+    @Expose
+    private double crossfadeDuration;
     private Equalizer equalizer;
     private List<Library> playlists;
 
-    public User(String _username, Path _userPicturePath,Path _userMusicPath) {
+    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath) {
         username = _username;
         userPicturePath = _userPicturePath;
         balance = 0.0;
@@ -26,12 +28,13 @@ public class User {
         equalizer = new Equalizer();
     }
 
-    public User(String _username, Path _userPicturePath, double _balance, Path _userMusicPath, Equalizer _equalizer) {
+    public UserProfile(String _username, Path _userPicturePath, double _balance, Path _userMusicPath, Equalizer _equalizer, double _crossfadeDuration) {
         username = _username;
         userPicturePath = _userPicturePath;
         balance = _balance;
         userMusicPath = _userMusicPath;
         equalizer = _equalizer;
+        crossfadeDuration = _crossfadeDuration;
     }
     
     public void setUsername(String newUsername) {
@@ -86,6 +89,14 @@ public class User {
         equalizer = newEqualizer;
     }
 
+    public double getCrossfadeDuration() {
+        return crossfadeDuration;
+    }
+
+    public void setCrossfadeDuration(double newCrossfadeDuration) {
+        crossfadeDuration = newCrossfadeDuration;
+    }
+
     /**
      * Get the equalizer bands of the settings.
      * @return The equalizer bands.
@@ -100,7 +111,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserProfile{" +
                 "username='" + username + '\'' +
                 ", userPicturePath=" + userPicturePath +
                 ", balance=" + balance +

@@ -5,13 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
-import musicApp.models.User;
+import musicApp.models.UserProfile;
 import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
-import musicApp.repositories.gsonTypeAdapter.UserTypeAdapter;
+import musicApp.repositories.gsonTypeAdapter.UserProfileTypeAdapter;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -305,16 +304,16 @@ public class JsonRepository {
         return lyricsDir;
     }
 
-    protected List<User> getUsers() throws IllegalArgumentException {
+    protected List<UserProfile> getUsers() throws IllegalArgumentException {
     Gson gson = new GsonBuilder()
-            .registerTypeAdapter(User.class, new UserTypeAdapter())
+            .registerTypeAdapter(UserProfile.class, new UserProfileTypeAdapter())
             .setPrettyPrinting()
             .create();
         if (!Files.exists(usersFile)) return new ArrayList<>();
         try (var reader = Files.newBufferedReader(usersFile)) {
-            var type = new TypeToken<List<User>>() {}.getType();
-            List<User> users = gson.fromJson(reader, type);
-            return users != null ? users : new ArrayList<>();
+            var type = new TypeToken<List<UserProfile>>() {}.getType();
+            List<UserProfile> userProfiles = gson.fromJson(reader, type);
+            return userProfiles != null ? userProfiles : new ArrayList<>();
         } catch (IOException | JsonSyntaxException | IllegalStateException e) {
             System.err.println("Failed to read users.json, returning empty list: " + e.getMessage());
             return new ArrayList<>();
@@ -322,20 +321,20 @@ public class JsonRepository {
 
     }
 
-    public List<User> readUsers() {
+    public List<UserProfile> readUsers() {
         if (!Files.exists(usersFile)) {
             writeUsers(List.of());
         }
         return getUsers();
     }
 
-    public void writeUsers(List<User> user) {
+    public void writeUsers(List<UserProfile> userProfile) {
         try (java.io.FileWriter writer = new java.io.FileWriter(usersFile.toString())) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(User.class, new UserTypeAdapter())
+                    .registerTypeAdapter(UserProfile.class, new UserProfileTypeAdapter())
                     .serializeNulls()
                     .create();
-            gson.toJson(user, writer);
+            gson.toJson(userProfile, writer);
         } catch (IOException e) {
             System.err.println("An error occurred while writing the playlists file");
         }

@@ -1,22 +1,22 @@
 package musicApp.services;
 
-import musicApp.models.User;
+import musicApp.models.UserProfile;
 import musicApp.repositories.JsonRepository;
 
 import java.util.List;
 
-public class UserService {
+public class UserProfileService {
     private final JsonRepository jsonRepository;
 
-    public UserService() {
+    public UserProfileService() {
         jsonRepository = new JsonRepository();
     }
 
-    public void writeUser(List<User> users) {
-        jsonRepository.writeUsers(users);
+    public void writeUser(List<UserProfile> userProfiles) {
+        jsonRepository.writeUsers(userProfiles);
     }
 
-    public List<User> readUsers() {
+    public List<UserProfile> readUsers() {
         return jsonRepository.readUsers();
     }
 }

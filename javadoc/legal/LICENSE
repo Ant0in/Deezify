@@ -13,7 +13,7 @@ Preamble
 The licenses for most software are designed to take away your freedom to share
 and change it.  By contrast, the GNU General Public License is intended to
 guarantee your freedom to share and change free software--to make sure the
-software is free for all its users.  This General Public License applies to
+software is free for all its userProfiles.  This General Public License applies to
 most of the Free Software Foundation's software and to any other program whose
 authors commit to using it.  (Some other Free Software Foundation software is
 covered by the GNU Library General Public License instead.) You can apply it to
@@ -100,8 +100,8 @@ these conditions:
     you must cause it, when started running for such interactive use in the
     most ordinary way, to print or display an announcement including an
     appropriate copyright notice and a notice that there is no warranty (or
-    else, saying that you provide a warranty) and that users may redistribute
-    the program under these conditions, and telling the user how to view a copy
+    else, saying that you provide a warranty) and that userProfiles may redistribute
+    the program under these conditions, and telling the userProfile how to view a copy
     of this License.  (Exception: if the Program itself is interactive but does
     not normally print such an announcement, your work based on the Program is
     not required to print an announcement.)

@@ -13,51 +13,31 @@ import java.util.List;
 public class Settings {
     @Expose
     private Path musicFolder;
-    private User currentUser;
-    @Expose
-    private double crossfadeDuration;
+    private UserProfile currentUserProfile;
     private boolean musicFolderChanged;
-    
+
     /**
      * Constructor for Settings.
      *
      * @param _musicFolder  The music folder of the settings.
      */
-    public Settings(double _balance, Path _musicFolder, Equalizer _equalizer, double _crossfadeDuration) {
-        musicFolderChanged = false;
-        musicFolder = _musicFolder;
-        currentUser = null;
-        crossfadeDuration = _crossfadeDuration;
-    }
-
-        /**
-         * Constructor for Settings.
-         *
-         * @param _musicFolder  The music folder of the settings.
-         */
     public Settings(Path _musicFolder) {
             musicFolderChanged = false;
             musicFolder = _musicFolder;
-            currentUser = null;
+            currentUserProfile = null;
         }
 
-    public Settings(Path _musicFolder, User _currentUser) {
+    public Settings(Path _musicFolder, UserProfile _currentUserProfile) {
         musicFolderChanged = false;
         musicFolder = _musicFolder;
-        currentUser = _currentUser;
-    }
-
-    public Settings(User _currentUser) {
-        musicFolderChanged = false;
-        musicFolder = _currentUser.getUserMusicPath();
-        currentUser = _currentUser;
+        currentUserProfile = _currentUserProfile;
     }
 
     public SettingsDTO toDTO() {
-        if (currentUser == null) {
+        if (currentUserProfile == null) {
             return new SettingsDTO(musicFolder, musicFolderChanged);
         } else {
-            return new SettingsDTO(currentUser.getBalance(), currentUser.getEqualizerBands(), musicFolder, musicFolderChanged);
+            return new SettingsDTO(currentUserProfile.getBalance(), currentUserProfile.getEqualizerBands(), musicFolder, currentUserProfile.getCrossfadeDuration(), musicFolderChanged);
         }
     }
 
@@ -67,10 +47,10 @@ public class Settings {
      * @return The balance.
      */
     public double getBalance() {
-        if (currentUser == null) {
-            return 0;
+        if (currentUserProfile != null) {
+            return currentUserProfile.getBalance();
         } else {
-            return currentUser.getBalance();
+            throw new IllegalStateException("Cannot get balance when currentUserProfile is null.");
         }
     }
 
@@ -80,10 +60,10 @@ public class Settings {
      * @param newBalance The balance.
      */
     public void setBalance(double newBalance) {
-        if (currentUser != null) {
-            currentUser.setBalance(newBalance);
+        if (currentUserProfile != null) {
+            currentUserProfile.setBalance(newBalance);
         } else {
-            throw new IllegalStateException("Cannot set balance when currentUser is null.");
+            throw new IllegalStateException("Cannot set balance when currentUserProfile is null.");
         }
     }
 
@@ -106,7 +86,7 @@ public class Settings {
     }
 
     /**
-     * Set the music folder of the settings.
+     * Set the global music folder for the app.
      *
      * @param newMusicFolder The music folder.
      */
@@ -119,16 +99,60 @@ public class Settings {
         }
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    /**
+     * returns the user's music folder
+     *
+     * @return The music folder.
+     */
+    public Path getUserMusicFolder() {
+        if (currentUserProfile != null) {
+            return currentUserProfile.getUserMusicPath();
+        } else {
+            throw new IllegalStateException("Cannot get user music folder when currentUserProfile is null.");
+        }
     }
 
-    public void setCurrentUser(User newCurrentUser) {
-        currentUser = newCurrentUser;
+    /**
+     * returns the user's music folder as a string
+     *
+     * @return The music folder as a string.
+     */
+    public String getUserMusicFolderString() {
+        if (currentUserProfile != null) {
+            return currentUserProfile.getUserMusicPathToString();
+        } else {
+            throw new IllegalStateException("Cannot get user music folder when currentUserProfile is null.");
+        }
+    }
+
+
+    public double getCrossfadeDuration() {
+        if (currentUserProfile == null) {
+            return 0;
+        } else {
+            return currentUserProfile.getCrossfadeDuration();
+        }
+    }
+
+    public void setCrossfadeDuration(double _crossfadeDuration) {
+        if (currentUserProfile != null) {
+            currentUserProfile.setCrossfadeDuration(_crossfadeDuration);
+        } else {
+            throw new IllegalStateException("Cannot set crossfade duration when currentUserProfile is null.");
+        }
+    }
+
+
+    public UserProfile getCurrentUser() {
+        return currentUserProfile;
+    }
+
+    public void setCurrentUserProfile(UserProfile newCurrentUserProfile) {
+        currentUserProfile = newCurrentUserProfile;
     }
 
     public void removeCurrentUser() {
-        currentUser = null;
+        currentUserProfile = null;
     }
 
     /**
@@ -150,18 +174,18 @@ public class Settings {
     }
 
     public Equalizer getEqualizer() {
-        if (currentUser == null) {
+        if (currentUserProfile == null) {
             return new Equalizer();
         } else {
-            return currentUser.getEqualizer();
+            return currentUserProfile.getEqualizer();
         }
     }
 
     public List<Double> getEqualizerBands() {
-        if (currentUser == null) {
+        if (currentUserProfile == null) {
             return new ArrayList<>(java.util.Collections.nCopies(Equalizer.DEFAULT_BANDS_SIZE, 0.0));
         } else {
-            return currentUser.getEqualizerBands();
+            return currentUserProfile.getEqualizerBands();
         }
     }
 
@@ -172,14 +196,6 @@ public class Settings {
     @Override
     public String toString() {
         return "Settings{musicFolder=" + musicFolder.toString() +
-                "currentUser=" + currentUser + "}\n";
-    }
-
-    public double getCrossfadeDuration() {
-        return crossfadeDuration;
-    }
-
-    public void setCrossfadeDuration(double _crossfadeDuration) {
-        crossfadeDuration = _crossfadeDuration;
+                "currentUserProfile=" + currentUserProfile + "}\n";
     }
 }

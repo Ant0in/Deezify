@@ -4,6 +4,8 @@ import musicApp.controllers.MetaController;
 import musicApp.controllers.ViewController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
+import musicApp.models.UserProfile;
+import musicApp.models.dtos.SettingsDTO;
 import musicApp.services.LanguageService;
 import musicApp.views.settings.SettingsView;
 
@@ -101,6 +103,10 @@ public class SettingsController extends ViewController<SettingsView> implements 
     }
 
 
+    public void setUserProfile(UserProfile userProfile) {
+        settings.setCurrentUserProfile(userProfile);
+    }
+
     /**
      * Open equalizer.
      */
@@ -151,4 +157,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
         return settings.getMusicFolderString();
     }
 
+    public SettingsDTO getSettingsDTO() {
+        return settings.toDTO();
+    }
 }

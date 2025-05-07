@@ -106,7 +106,7 @@ TeX Gyre DJV Math
 Fonts are (c) Bitstream (see below). DejaVu changes are in public domain.
 
 Math extensions done by B. Jackowski, P. Strzelczyk and P. Pianowski
-(on behalf of TeX users groups) are in public domain.
+(on behalf of TeX userProfiles groups) are in public domain.
 
 Letters imported from Euler Fraktur from AMSfonts are (c) American
 Mathematical Society (see below).

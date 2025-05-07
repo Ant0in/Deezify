@@ -48,20 +48,14 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         in.beginObject();
         while (in.hasNext()) {
             String fieldName = in.nextName();
-            switch (fieldName) {
-                case "musicFolder":
-                    musicFolder = Paths.get(in.nextString());
-                    break;
-                case "crossfadeDuration":
-                    crossfadeDuration = in.nextDouble();
-                    break;
-                default:
-                    in.skipValue();
-                    break;
+            if (fieldName.equals("musicFolder")) {
+                musicFolder = Paths.get(in.nextString());
+            } else {
+                in.skipValue();
             }
         }
         in.endObject();
 
-        return new Settings(musicFolder, equalizer, crossfadeDuration);
+        return new Settings(musicFolder);
     }
 }
