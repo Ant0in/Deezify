@@ -17,8 +17,9 @@ public class UserProfile {
     private Path userMusicPath;
     @Expose
     private double crossfadeDuration;
+    @Expose
+    private Path userPlaylistPath;
     private Equalizer equalizer;
-    private List<Library> playlists;
 
     public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath) {
         username = _username;
@@ -26,15 +27,23 @@ public class UserProfile {
         balance = 0.0;
         userMusicPath = _userMusicPath;
         equalizer = new Equalizer();
+        crossfadeDuration = 0.0;
+        userPlaylistPath = userMusicPath.resolve("playlists.json");
     }
 
-    public UserProfile(String _username, Path _userPicturePath, double _balance, Path _userMusicPath, Equalizer _equalizer, double _crossfadeDuration) {
+    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, Path _userPlaylistPath, double _balance, double _crossfadeDuration, Equalizer _equalizer) {
         username = _username;
         userPicturePath = _userPicturePath;
         balance = _balance;
         userMusicPath = _userMusicPath;
-        equalizer = _equalizer;
         crossfadeDuration = _crossfadeDuration;
+        if (_userPlaylistPath != null) {
+            userPlaylistPath = _userPlaylistPath;
+        }
+        else {
+            userPlaylistPath = userMusicPath.resolve("playlists.json");
+        }
+        equalizer = _equalizer;
     }
     
     public void setUsername(String newUsername) {
@@ -53,13 +62,9 @@ public class UserProfile {
         return userPicturePath;
     }
 
-    public void setPlaylists(List<Library> newPlaylists) {
-        playlists = newPlaylists;
-    }
-
-    public List<Library> getPlaylists() {
-        return playlists;
-    }
+//    public List<Library> getPlaylists() {
+//        return playlists;
+//    }
 
     public double getBalance() {
         return balance;
@@ -105,6 +110,14 @@ public class UserProfile {
         return equalizer.getBandsGain();
     }
 
+    public Path getUserPlaylistPath() {
+        return userPlaylistPath;
+    }
+
+    public void setUserPlaylistPath(Path newUserPlaylistPath) {
+        userPlaylistPath = newUserPlaylistPath;
+    }
+
     public UserDTO toDTO() {
         return new UserDTO(username, userPicturePath, balance, equalizer.getBandsGain());
     }
@@ -117,7 +130,9 @@ public class UserProfile {
                 ", balance=" + balance +
                 ", userMusicPath=" + userMusicPath +
                 ", equalizer=" + equalizer +
-                ", playlists=" + playlists +
+                ", crossfadeDuration=" + crossfadeDuration +
+                ", userPlaylistPath=" + userPlaylistPath +
+//                ", playlists=" + playlists +
                 '}';
     }
 

@@ -51,6 +51,11 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                 : null;
         out.value(musicPath != null ? musicPath.toString() : "");
 
+        // Playlist path (nullable)
+        out.name("userPlaylistPath");
+        Path playlistPath = userProfile.getUserPlaylistPath();
+        out.value(playlistPath != null ? playlistPath.toString() : "");
+
         out.endObject();
     }
 
@@ -67,8 +72,10 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
         String username = null;
         Path userPicturePath = null;
         Path userMusicPath = null;
+        Path userPlaylistPath = null;
         double balance = 0;
         double crossfadeDuration = 0.0;
+
         Equalizer equalizer = new Equalizer();
 
         in.beginObject();
@@ -102,6 +109,12 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                     crossfadeDuration = in.nextDouble();
                     break;
                 }
+                case "userPlaylistPath" -> {
+                    String rawPath = in.nextString();
+                    userPlaylistPath = (rawPath != null && !rawPath.isBlank())
+                            ? Paths.get(rawPath)
+                            : null;
+                }
                 default -> in.skipValue();
             }
         }
@@ -116,10 +129,11 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
         return new UserProfile(
                 username,
                 userPicturePath,
-                balance,
                 userMusicPath,
-                equalizer,
-                crossfadeDuration
+                userPlaylistPath,
+                balance,
+                crossfadeDuration,
+                equalizer
         );
     }
 

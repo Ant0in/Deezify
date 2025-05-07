@@ -20,9 +20,9 @@ import java.nio.file.Path;
  * The Playlist edit view.
  * This is a popup window that allows the user to create or edit a playlist.
  */
-public class EditUserView extends View {
+public class EditUserProfileView extends View {
     
-    private EditUserViewListener listener;
+    private EditUserProfileViewListener listener;
     private Stage stage;
 
     @FXML
@@ -49,7 +49,7 @@ public class EditUserView extends View {
      * Implement this interface to manage user actions such as saving a playlist,
      * checking if the view is in creation mode, retrieving the stage, and closing the view.
      */
-    public interface EditUserViewListener {
+    public interface EditUserProfileViewListener {
         void handleSave(String userName, Path imagePath, Path musicPath);
 
         void handleClose();
@@ -62,7 +62,7 @@ public class EditUserView extends View {
      *
      * @param newListener the listener
      */
-    public void setListener(EditUserViewListener newListener) {
+    public void setListener(EditUserProfileViewListener newListener) {
         listener = newListener;
     }
 
@@ -84,6 +84,8 @@ public class EditUserView extends View {
         } else {
             stage.setTitle(LanguageService.getInstance().get("edit_playlist.title"));
         }
+        stage.setMinWidth(600);
+        stage.setMinHeight(700);
         stage.setScene(scene);
     }
 

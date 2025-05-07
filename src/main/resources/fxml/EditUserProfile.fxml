@@ -7,12 +7,12 @@
       xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
       prefWidth="400" prefHeight="600"
-      spacing="20" alignment="TOP_CENTER"
+      spacing="20" alignment="CENTER"
       style="-fx-background-color: linear-gradient(to bottom, #0d1b2a, #000000); -fx-padding: 30;"
       stylesheets="@../css/style2.css">
 
-    <VBox spacing="10">
-        <HBox spacing="10" alignment="CENTER_LEFT">
+    <VBox spacing="10" alignment="CENTER">
+        <HBox spacing="10" alignment="CENTER">
             <Label fx:id="nameLabel" textFill="white"/>
             <TextField fx:id="nameField" promptText="Name"
                        HBox.hgrow="ALWAYS"
@@ -20,8 +20,8 @@
         </HBox>
     </VBox>
 
-    <VBox spacing="10">
-        <HBox spacing="10" alignment="CENTER_LEFT">
+    <VBox spacing="10" alignment="CENTER">
+        <HBox spacing="10" alignment="CENTER">
             <Label fx:id="musicFolderLabel" textFill="white"/>
             <Label fx:id="chosenMusicFolderLabel" textFill="white"/>
         </HBox>
@@ -30,13 +30,15 @@
     </VBox>
 
     <!-- userProfile Image + Button -->
-    <HBox spacing="10" alignment="CENTER">
-        <Label fx:id="userImageLabel" textFill="white"/>
-        <Button fx:id="chooseUserImageButton" text="??userImage??"
-                style="-fx-background-color: #274472; -fx-text-fill: white;"/>
+    <VBox spacing="10" alignment="CENTER">
+        <HBox spacing="10" alignment="CENTER">
+            <Label fx:id="userImageLabel" textFill="white"/>
+            <Button fx:id="chooseUserImageButton" text="??userImage??"
+                    style="-fx-background-color: #274472; -fx-text-fill: white;"/>
+        </HBox>
         <ImageView fx:id="userImage" fitHeight="200" fitWidth="200"
                    style="-fx-effect: dropshadow(gaussian, #000000, 10, 0.5, 0, 0);"/>
-    </HBox>
+    </VBox>
 
     <!-- Action Buttons -->
     <HBox spacing="10" alignment="CENTER">

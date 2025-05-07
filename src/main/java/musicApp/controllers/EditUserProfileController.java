@@ -2,7 +2,7 @@ package musicApp.controllers;
 
 import musicApp.models.UserProfile;
 import musicApp.services.UserProfileService;
-import musicApp.views.EditUserView;
+import musicApp.views.EditUserProfileView;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * The type Playlist edit controller.
  */
-public class EditUserProfileController extends ViewController<EditUserView> implements EditUserView.EditUserViewListener {
+public class EditUserProfileController extends ViewController<EditUserProfileView> implements EditUserProfileView.EditUserProfileViewListener {
 
     private final UserProfile userProfile;
     private final boolean isCreation;
@@ -20,12 +20,12 @@ public class EditUserProfileController extends ViewController<EditUserView> impl
      * Create a controller for creating a new userProfile
      */
     public EditUserProfileController(UserProfilesController _userProfilesController) {
-        super(new EditUserView());
+        super(new EditUserProfileView());
         init(_userProfilesController);
         userProfile = null;
         isCreation = true;
         view.setListener(this);
-        initView("/fxml/EditUser.fxml");
+        initView("/fxml/EditUserProfile.fxml");
     }
 
     /**
@@ -34,7 +34,7 @@ public class EditUserProfileController extends ViewController<EditUserView> impl
      * @param _userProfile   The userProfile to edit
      */
     public EditUserProfileController(UserProfilesController _userController, UserProfile _userProfile) {
-        super(new EditUserView());
+        super(new EditUserProfileView());
         init(_userController);
         userProfile = _userProfile;
         isCreation = false;
