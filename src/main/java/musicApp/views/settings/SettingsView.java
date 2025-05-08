@@ -25,13 +25,11 @@ public class SettingsView extends View {
     private Stage stage;
 
     @FXML
-    private ComboBox<String> languageComboBox;
+    private ComboBox<String> languageComboBox;    
     @FXML
-    private Slider balanceSlider, crossfadeSlider;
+    private Label languageTitle, languageSelect, musicFolderLabel;
     @FXML
-    private Label balanceLabel, balanceTitle, languageTitle, languageSelect, left, right, musicFolderLabel, crossfadeTitle, crossfadeLabel;
-    @FXML
-    private Button saveButton, cancelButton, browseButton, equalizerButton;
+    private Button saveButton, cancelButton, browseButton, editUserProfileButton;
 
 
     
@@ -40,17 +38,14 @@ public class SettingsView extends View {
      * Implement this interface to handle user actions in the settings view.
      */
     public interface SettingsViewListener {
-        double getBalance();
-
-        double getCrossfadeDuration();
-
-        void handleOpenEqualizer();
 
         void handleCancel();
 
-        void handleSave(Language language, double balance, Path musicFolder, double crossfadeDuration);
+        void handleSave(Language language, Path musicFolder);
 
         String getMusicFolderString();
+
+        void editUserProfile();
     }
 
     /**
@@ -68,7 +63,6 @@ public class SettingsView extends View {
     @Override
     public void init() {
         initComboBox();
-        initSlider();
         initButtons();
         initMusicFolderLabel();
         initStage();
@@ -116,26 +110,7 @@ public class SettingsView extends View {
         }
         updateLanguageComboBox();
     }
-
-    /**
-     * Initialize the balance slider.
-     */
-    private void initSlider() {
-        balanceSlider.setValue(listener.getBalance());
-        balanceLabel.setText(String.format("%.2f",listener.getBalance()));
-        balanceSlider.valueProperty().addListener((_, _, newVal)
-                -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
-
-        crossfadeSlider.setValue(listener.getCrossfadeDuration());
-        crossfadeLabel.setText(getCrossfadeLabelString(listener.getCrossfadeDuration()));
-        crossfadeSlider.valueProperty().addListener((_, _, newVal)
-                -> crossfadeLabel.setText(getCrossfadeLabelString(newVal.doubleValue())));
-        crossfadeSlider.setMajorTickUnit(1);
-        crossfadeSlider.setMinorTickCount(1);
-        crossfadeSlider.setSnapToTicks(true);
-        crossfadeSlider.setShowTickLabels(true);
-        crossfadeSlider.setShowTickMarks(true);
-    }
+    
 
     private String getCrossfadeLabelString(double value) {
         String seconds = LanguageService.getInstance().get("settings.seconds");
@@ -150,16 +125,10 @@ public class SettingsView extends View {
         LanguageService languageService = LanguageService.getInstance();
         languageTitle.setText(languageService.get("settings.lang_title"));
         languageSelect.setText(languageService.get("settings.lang_select"));
-        left.setText(languageService.get("settings.left"));
-        right.setText(languageService.get("settings.right"));
-        balanceTitle.setText(languageService.get("settings.balance_title"));
         stage.setTitle(languageService.get("settings.title"));
         saveButton.setText(languageService.get("button.save"));
         cancelButton.setText(languageService.get("button.cancel"));
         browseButton.setText(languageService.get("settings.select_music_folder"));
-        equalizerButton.setText(languageService.get("settings.manage_audio_equalizer"));
-        crossfadeTitle.setText(languageService.get("settings.crossfade"));
-        crossfadeLabel.setText(String.format("%.1f %s",listener.getCrossfadeDuration(), LanguageService.getInstance().get("settings.seconds")));
         updateLanguageComboBox();
     }
 
@@ -170,7 +139,7 @@ public class SettingsView extends View {
         saveButton.setOnMouseClicked(_ -> handleSave());
         cancelButton.setOnMouseClicked(_ -> listener.handleCancel());
         browseButton.setOnMouseClicked(_ -> handleBrowseMusicFolder());
-        equalizerButton.setOnMouseClicked(_ -> listener.handleOpenEqualizer());
+        editUserProfileButton.setOnMouseClicked(_ -> listener.editUserProfile());
     }
 
     /**
@@ -200,10 +169,8 @@ public class SettingsView extends View {
      */
     private void handleSave() {
         Language selectedLanguage = getSelectedLanguage();
-        double balance = balanceSlider.getValue();
-        double crossfadeDuration = crossfadeSlider.getValue();
         Path musicDirectory = Paths.get(musicFolderLabel.getText());
-        listener.handleSave(selectedLanguage, balance, musicDirectory, crossfadeDuration);
+        listener.handleSave(selectedLanguage, musicDirectory);
     }
 
     /**
@@ -211,7 +178,6 @@ public class SettingsView extends View {
      */
     public void updateView(double balance, String musicFolderString) {
         initComboBox();
-        balanceSlider.setValue(balance);
         musicFolderLabel.setText(musicFolderString);
     }
 }

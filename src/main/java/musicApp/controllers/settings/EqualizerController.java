@@ -1,5 +1,6 @@
 package musicApp.controllers.settings;
 
+import musicApp.controllers.EditUserProfileController;
 import musicApp.controllers.ViewController;
 import musicApp.enums.EqualizerBandFrequency;
 import musicApp.models.Equalizer;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class EqualizerController extends ViewController<EqualizerView> implements EqualizerView.EqualizerViewListener {
     
-    private final SettingsController settingsController;
+    private final EditUserProfileController editUserProfileController;
     private final Equalizer equalizer;
 
     /**
@@ -22,10 +23,10 @@ public class EqualizerController extends ViewController<EqualizerView> implement
      * @param _controller the controller
      * @param _equalizer  the equalizer
      */
-    public EqualizerController(SettingsController _controller, Equalizer _equalizer) {
+    public EqualizerController(EditUserProfileController _controller, Equalizer _equalizer) {
         super(new EqualizerView());
         view.setListener(this);
-        settingsController = _controller;
+        editUserProfileController = _controller;
         equalizer = _equalizer;
         initView("/fxml/Equalizer.fxml");
     }
@@ -42,7 +43,7 @@ public class EqualizerController extends ViewController<EqualizerView> implement
      */
     public void handleClose() {
         view.close();
-        settingsController.show();
+        editUserProfileController.show();
     }
 
     /**
@@ -63,6 +64,16 @@ public class EqualizerController extends ViewController<EqualizerView> implement
      */
     public double getEqualizerBandGain(EqualizerBandFrequency frequency) {
         return equalizer.getBandGain(EqualizerBandFrequency.getIndex(frequency));
+    }
+
+    /**
+     * Get the band gain.
+     *
+     * @param frequency The frequency of the band.
+     * @return the equalizer band gain
+     */
+    public List<Double> getEqualizerBandsGain() {
+        return equalizer.getBandsGain();
     }
 
     /**

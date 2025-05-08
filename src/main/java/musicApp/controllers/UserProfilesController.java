@@ -26,8 +26,7 @@ public class UserProfilesController extends ViewController<UserProfilesView> imp
     }
 
     public void onAddProfileClicked(){
-        EditUserProfileController editController = new EditUserProfileController(this);
-        editController.show();
+        new EditUserProfileController(metaController);
     }
 
     public List<UserProfile> getUsersList() {

@@ -11,7 +11,7 @@ public class SettingsDTO {
     private final double crossfadeDuration;
     private final boolean isMusicFolderChanged;
 
-    public SettingsDTO(double _balance, List<Double> _equalizerBands, Path _musicFolder, double _crossfadeDuration, boolean _isMusicFolderChanged) {
+    public SettingsDTO(double _balance, List<Double> _equalizerBands, Path _musicFolder,Path userMusicFolder, double _crossfadeDuration, boolean _isMusicFolderChanged) {
         balance = _balance;
         equalizerBands = Collections.unmodifiableList(_equalizerBands);
         musicFolder = _musicFolder;
@@ -40,6 +40,10 @@ public class SettingsDTO {
     }
 
     public Path getMusicFolder() {
+        return musicFolder;
+    }
+
+    public Path getUserMusicFolder() {
         return musicFolder;
     }
 

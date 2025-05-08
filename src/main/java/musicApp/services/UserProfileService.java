@@ -12,7 +12,7 @@ public class UserProfileService {
         jsonRepository = new JsonRepository();
     }
 
-    public void writeUser(List<UserProfile> userProfiles) {
+    public void writeUsers(List<UserProfile> userProfiles) {
         jsonRepository.writeUserProfiles(userProfiles);
     }
 

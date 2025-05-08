@@ -40,11 +40,13 @@ public class PlaylistService {
      * @return A list containing the main library followed by the playlists.
      *         The main library is loaded first, followed by any existing playlists.
      */
-    public List<Library> loadAllLibraries(Path musicFolder){
+    public List<Library> loadAllLibraries(Path musicFolder, Path userMusicFolder) {
         Library mainLibrary = loadMainLibrary(musicFolder);
+        Library userMainLibrary = loadUserLibrary(userMusicFolder);
         List<Library> playlists = readPlaylists();
         List<Library> libraries = new ArrayList<>();
         libraries.add(mainLibrary);
+        libraries.add(userMainLibrary);
         libraries.addAll(playlists);
         return libraries;
     }
@@ -69,6 +71,17 @@ public class PlaylistService {
         } catch (IOException e) {
             System.err.println("Failed to load main library: " + e.getMessage());
             return new Library(new ArrayList<>(), "??library??", null);
+        }
+    }
+
+    public Library loadUserLibrary(Path userMusicFolder) {
+        try {
+            PathRepository loader = new PathRepository();
+            List<Song> songs = loader.getAllSongs(userMusicFolder);
+            return new Library(songs, "Your Library", null);
+        } catch (IOException e) {
+            System.err.println("Failed to load user library: " + e.getMessage());
+            return new Library(new ArrayList<>(), "Your Library", null);
         }
     }
 

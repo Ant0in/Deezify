@@ -3,6 +3,7 @@ package musicApp.views;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,15 +27,17 @@ public class EditUserProfileView extends View {
     private Stage stage;
 
     @FXML
-    private Label nameLabel, userImageLabel, musicFolderLabel, chosenMusicFolderLabel;
+    private Label nameLabel, userImageLabel, musicFolderLabel, chosenMusicFolderLabel, balanceLabel, balanceTitle, left, right, crossfadeTitle, crossfadeLabel;
     @FXML
     private TextField nameField;
     @FXML
-    private Button chooseUserImageButton,chooseMusicFolderButton, actionButton, cancelButton;
+    private Button chooseUserImageButton,chooseMusicFolderButton, actionButton, cancelButton, equalizerButton;
     @FXML
     private ImageView userImage;
     @FXML
     private VBox popupLayout;
+    @FXML
+    private Slider balanceSlider, crossfadeSlider;
 
     public void show() {
         if (stage != null) {
@@ -50,11 +53,17 @@ public class EditUserProfileView extends View {
      * checking if the view is in creation mode, retrieving the stage, and closing the view.
      */
     public interface EditUserProfileViewListener {
-        void handleSave(String userName, Path imagePath, Path musicPath);
+        void handleSave(String userName,double balance, double crossfade, Path imagePath, Path musicPath);
 
-        void handleClose();
+        void handleCancel();
 
         boolean isCreation();
+        
+        double getBalance();
+
+        double getCrossfadeDuration();
+
+        void handleOpenEqualizer();
     }
 
     /**
@@ -72,7 +81,8 @@ public class EditUserProfileView extends View {
      */
     @Override
     public void init() {
-        initControls();
+        initButtons();
+        initSlider();
         refreshTranslation();
         initStage();
     }
@@ -89,9 +99,30 @@ public class EditUserProfileView extends View {
         stage.setScene(scene);
     }
 
+    /**
+     * Initialize the balance slider.
+     */
+    private void initSlider() {
+        balanceSlider.setValue(listener.getBalance());
+        balanceLabel.setText(String.format("%.2f",listener.getBalance()));
+        balanceSlider.valueProperty().addListener((_, _, newVal)
+                -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
+
+        crossfadeSlider.setValue(listener.getCrossfadeDuration());
+        crossfadeLabel.setText(getCrossfadeLabelString(listener.getCrossfadeDuration()));
+        crossfadeSlider.valueProperty().addListener((_, _, newVal)
+                -> crossfadeLabel.setText(getCrossfadeLabelString(newVal.doubleValue())));
+        crossfadeSlider.setMajorTickUnit(1);
+        crossfadeSlider.setMinorTickCount(1);
+        crossfadeSlider.setSnapToTicks(true);
+        crossfadeSlider.setShowTickLabels(true);
+        crossfadeSlider.setShowTickMarks(true);
+    }
+
     public void populateFields(String userName, String imagePath, String musicPath) {
         nameField.setText(userName);
-        userImage.setImage(new Image(imagePath));
+        userImage.setImage(new Image(Path.of(imagePath).toUri().toString()));
+        userImageLabel.setText(imagePath);
         chosenMusicFolderLabel.setText(musicPath);
     }
 
@@ -117,14 +148,15 @@ public class EditUserProfileView extends View {
      * Sets up the controls for the PlaylistEditView.
      * This method creates the text field, buttons, and labels used in the view.
      */
-    private void initControls() {
+    private void initButtons() {
         chooseUserImageButton.setOnAction(_ -> handleChooseImage());
         chooseMusicFolderButton.setOnAction(_ -> handleBrowseMusicFolder());
 
-        actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(),
-                (Path) userImageLabel.getUserData(), Path.of(chosenMusicFolderLabel.getText())));
+        actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(),balanceSlider.getValue(), crossfadeSlider.getValue(),
+                Path.of(userImageLabel.getText()), Path.of(chosenMusicFolderLabel.getText())));
 
-        cancelButton.setOnAction(_ -> listener.handleClose());
+        cancelButton.setOnAction(_ -> listener.handleCancel());
+        equalizerButton.setOnAction(_ -> listener.handleOpenEqualizer());
     }
 
     /**
@@ -161,5 +193,9 @@ public class EditUserProfileView extends View {
                 as.showExceptionAlert(e);
             }
         }
+    }
+
+    public String getCrossfadeLabelString(double crossfadeDuration) {
+        return LanguageService.getInstance().get("settings.crossfade_duration") + ": " + crossfadeDuration + "s";
     }
 }

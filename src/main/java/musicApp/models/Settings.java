@@ -48,7 +48,7 @@ public class Settings {
         if (currentUserProfile == null) {
             return new SettingsDTO(musicFolder, musicFolderChanged);
         } else {
-            return new SettingsDTO(currentUserProfile.getBalance(), currentUserProfile.getEqualizerBands(), musicFolder, currentUserProfile.getCrossfadeDuration(), musicFolderChanged);
+            return new SettingsDTO(currentUserProfile.getBalance(), currentUserProfile.getEqualizerBands(), musicFolder, currentUserProfile.getUserMusicPath(), currentUserProfile.getCrossfadeDuration(), musicFolderChanged);
         }
     }
 

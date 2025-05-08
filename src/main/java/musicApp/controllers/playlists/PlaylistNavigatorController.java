@@ -28,11 +28,11 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      *
      * @param controller the player controller
      */
-    public PlaylistNavigatorController(PlayerController controller, Path musicFolder) {
+    public PlaylistNavigatorController(PlayerController controller, Path musicFolder, Path userMusicFolder) {
         super(new PlaylistNavigatorView());
         view.setListener(this);
         playerController = controller;
-        playlistsController = new PlaylistsController(musicFolder, controller.getUserPlaylistPath());
+        playlistsController = new PlaylistsController(musicFolder, userMusicFolder, controller.getUserPlaylistPath());
         playlistContextMenuController = new PlaylistContextMenuController(this);
         initView("/fxml/PlaylistNavigator.fxml");
         loadPlaylists();

@@ -1,5 +1,6 @@
 package musicApp.controllers.settings;
 
+import musicApp.controllers.EditUserProfileController;
 import musicApp.controllers.MetaController;
 import musicApp.controllers.ViewController;
 import musicApp.enums.Language;
@@ -18,7 +19,6 @@ import java.nio.file.Path;
 public class SettingsController extends ViewController<SettingsView> implements SettingsView.SettingsViewListener {
 
     private final MetaController metaController;
-    private final EqualizerController equalizerController;
     private final Settings settings;
 
     /**
@@ -33,7 +33,6 @@ public class SettingsController extends ViewController<SettingsView> implements 
         view.setListener(this);
         settings = _settings;
         metaController = _controller;
-        equalizerController = new EqualizerController(this, _settings.getEqualizer());
         initView("/fxml/Settings.fxml");
     }
 
@@ -67,54 +66,10 @@ public class SettingsController extends ViewController<SettingsView> implements 
         settings.setMusicFolder(path);
     }
 
-    /**
-     * Updates the values of the equalizer with the values of sliders and changes the settings
-     */
-    private void updateEqualizer() {
-        equalizerController.update();
-    }
-
-    /**
-     * Get the balance of the application.
-     *
-     * @return The balance of the application.
-     */
-    public double getBalance() {
-        return settings.getBalance();
-    }
-
-    @Override
-    public double getCrossfadeDuration() {
-        return settings.getCrossfadeDuration();
-    }
-
-
-    private void setCrossfadeDuration(double crossfadeDuration) {
-        settings.setCrossfadeDuration(crossfadeDuration);
-    }
-
-    /**
-     * Update the balance of the application.
-     *
-     * @param balance The new balance.
-     */
-    private void setBalance(double balance) {
-        settings.setBalance(balance);
-    }
-
 
     public void setUserProfile(UserProfile userProfile) {
         settings.setCurrentUserProfile(userProfile);
     }
-
-    /**
-     * Open equalizer.
-     */
-    public void handleOpenEqualizer() {
-        close();
-        equalizerController.show();
-    }
-
     /**
      * Handle when the save button is pressed
      *
@@ -122,14 +77,11 @@ public class SettingsController extends ViewController<SettingsView> implements 
      * @param balance        the balance
      * @param musicFolder the music folder
      */
-    public void handleSave(Language language, double balance, Path musicFolder, double crossfadeDuration) {
+    public void handleSave(Language language, Path musicFolder) {
         LanguageService.getInstance().setLanguage(language);
         refreshLanguage();
-        setBalance(balance);
-        setCrossfadeDuration(crossfadeDuration);
         setMusicFolderPath(musicFolder);
-        updateEqualizer();
-        metaController.notifySettingsChanged(settings);
+        metaController.notifySettingsChanged(settings);    
         updateView();
         close();
     }
@@ -143,7 +95,6 @@ public class SettingsController extends ViewController<SettingsView> implements 
      * Handle when the cancel button is pressed
      */
     public void handleCancel() {
-        equalizerController.handleCancel();
         updateView();
         close();
     }
@@ -163,5 +114,10 @@ public class SettingsController extends ViewController<SettingsView> implements 
 
     public Path getUserPlaylistPath() {
         return settings.getUserPlaylistPath();
+    }
+
+    public void editUserProfile(){
+        new EditUserProfileController(metaController, settings.getCurrentUserProfile());
+        
     }
 }

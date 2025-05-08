@@ -1,6 +1,7 @@
 package musicApp.controllers;
 
 import javafx.stage.Stage;
+import musicApp.controllers.EditUserProfileController.EditUserProfileControllerListener;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;
@@ -14,11 +15,11 @@ import java.nio.file.Path;
 /**
  * The Meta controller.
  */
-public class MetaController {
+public class MetaController implements EditUserProfileController.EditUserProfileControllerListener {
     private final AlertService alertService;
     private final SettingsService settingsService;
     private PlayerController playerController;
-    private final SettingsController settingsController;
+    private SettingsController settingsController;
     private final UserProfilesController userProfilesController;
 
     /**
@@ -42,9 +43,9 @@ public class MetaController {
         UserProfileService userProfileService = new UserProfileService();
         userProfilesController = new UserProfilesController(this,primaryStage, userProfileService.readUsers());
 
-        Settings settings = settingsService.readSettings();
-//        playerController = new PlayerController(this, primaryStage, settings.toDTO());
-        settingsController = new SettingsController(this, settings);
+//         Settings settings = settingsService.readSettings();
+// //        playerController = new PlayerController(this, primaryStage, settings.toDTO());
+//         settingsController = new SettingsController(this, settings);
     }
 
 
@@ -75,21 +76,28 @@ public class MetaController {
      */
     public void notifySettingsChanged(Settings newSettings) {
         try {
+            usersUpdate();
             settingsService.writeSettings(newSettings);
             playerController.onSettingsChanged(newSettings.toDTO());
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
-        }
+        }        
     }
 
     public void loadPlayerWithUser(UserProfile userProfile) throws IOException {
-        settingsController.setUserProfile(userProfile);
+        Settings settings = settingsService.readSettings();
+        settings.setCurrentUserProfile(userProfile);
+        settingsController = new SettingsController(this, settings);
         playerController = new PlayerController(this, new Stage(), settingsController.getSettingsDTO());
     }
 
 
     public Path getUserPlaylistPath() {
         return settingsController.getUserPlaylistPath();
+    }
+
+    public void usersUpdate() {
+        userProfilesController.usersUpdate();
     }
 
 }

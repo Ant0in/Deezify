@@ -16,11 +16,12 @@ public class PlaylistsController {
     private final List<Library> playlists;
 
     private final int MAIN_LIBRARY_INDEX = 0;
-    private static final int FAVORITES_INDEX = 1;
+    private static final int USER_MAIN_LIBRARY_INDEX = 1;
+    private static final int FAVORITES_INDEX = 2;
 
-    public PlaylistsController(Path musicFolder, Path userPlaylistPath) {
+    public PlaylistsController(Path musicFolder, Path userMusicFolder, Path userPlaylistPath) {
         playlistService = new PlaylistService(userPlaylistPath);
-        playlists = playlistService.loadAllLibraries(musicFolder);
+        playlists = playlistService.loadAllLibraries(musicFolder, userMusicFolder);
     }
 
     public void updateMainLibrary(Path newMusicFolder) {
@@ -51,7 +52,7 @@ public class PlaylistsController {
     }
 
     public boolean isLibraryModifiable(Library library) {
-        return !(playlists.getFirst().equals(library) || playlists.get(FAVORITES_INDEX).equals(library));
+        return !(playlists.get(MAIN_LIBRARY_INDEX).equals(library) || playlists.get(FAVORITES_INDEX).equals(library) || playlists.get(USER_MAIN_LIBRARY_INDEX).equals(library));
     }
 
     public void deletePlaylist(Library library) throws DeletePlaylistException {

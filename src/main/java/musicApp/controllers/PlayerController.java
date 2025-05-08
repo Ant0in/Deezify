@@ -58,7 +58,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * Initializes all sub-controllers that are part of the player controller.
      */
     private void initSubControllers(SettingsDTO settingsDTO) {
-        playlistNavigatorController = new PlaylistNavigatorController(this, settingsDTO.getMusicFolder());
+        playlistNavigatorController = new PlaylistNavigatorController(this, settingsDTO.getMusicFolder() , settingsDTO.getUserMusicFolder());
         libraryController = new LibraryController(this, getMainLibrary());
         queueController = new QueueController(this);
         mediaPlayerController = new MediaPlayerController(this, settingsDTO.getBalance(), settingsDTO.getCrossfadeDuration(), settingsDTO.getEqualizerBands());
