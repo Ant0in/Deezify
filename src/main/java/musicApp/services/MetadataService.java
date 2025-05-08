@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 
 public class MetadataService {
 
@@ -124,6 +125,10 @@ public class MetadataService {
             metadata.setUserTags(new ArrayList<>());
         }
         metadata.setCover(tag.getFirstArtwork());
+
+        String encodedVideo = tag.getFirst(FieldKey.CUSTOM2);
+        metadata.setVideoCover(Base64.getDecoder().decode(encodedVideo));
+
         return metadata;
     }
 
@@ -199,6 +204,10 @@ public class MetadataService {
             tag.deleteArtworkField();
             tag.setField(metadata.getCover());
         }
+
+        String encodedVideo = Base64.getEncoder().encodeToString(metadata.getVideoCover());
+        tag.setField(FieldKey.CUSTOM2, encodedVideo);
+
         return tag;
     }
 

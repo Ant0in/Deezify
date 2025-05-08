@@ -8,15 +8,24 @@ import musicApp.services.MetadataService;
 import musicApp.views.songs.EditMetadataView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
+import javafx.embed.swing.SwingFXUtils;
+import org.jcodec.api.FrameGrab;
+import org.jcodec.api.JCodecException;
+import org.jcodec.common.io.NIOUtils;
+import org.jcodec.common.model.Picture;
+import org.jcodec.scale.AWTUtil;
+
+import java.awt.image.BufferedImage;
 
 /**
  * The type Edit metadata controller.
  */
 public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataView.EditMetadataViewListener {
-    private File selectedCoverImageFile;
+    private File selectedCoverFile;
     private final Song song;
     private final SongCellController songCellController;
 
@@ -61,11 +70,18 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      * @param file the image file to load
      */
     private void loadAndApplyCoverImage(File file) {
+
         try {
+            // Check if File is a video file
+
+            if (file.toPath().toString().endsWith(".mp4")) {
+
+            }
+
             Image image = new Image(file.toURI().toString());
             if (!image.isError()) {
                 view.setCoverImage(image);
-                selectedCoverImageFile = file;
+                selectedCoverFile = file;
             } else {
                 System.err.println("Failed to load image: " + file.getName());
             }
@@ -97,8 +113,8 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
             newMetadata.setAlbum(album);
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(new ArrayList<>(userTags));
-            if (selectedCoverImageFile != null) {
-                newMetadata.loadCoverFromPath(selectedCoverImageFile.getAbsolutePath());
+            if (selectedCoverFile != null) {
+                newMetadata.loadCoverFromPath(selectedCoverFile.getAbsolutePath());
             }
             MetadataService util = new MetadataService();
 
@@ -149,6 +165,13 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      */
     public Optional<String> getTagAutoCompletion(String input){
         return songCellController.getTagAutoCompletion(input);
+    }
+
+    public static Image getFirstFrameAsImage(File videoFile) throws IOException, JCodecException {
+        FrameGrab grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(videoFile));
+        Picture picture = grab.getNativeFrame();  // First decoded frame
+        BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
+        return SwingFXUtils.toFXImage(bufferedImage, null);
     }
 
 }

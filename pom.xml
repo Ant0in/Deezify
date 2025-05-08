@@ -50,6 +50,16 @@
       <classifier>mac</classifier>
     </dependency>
     <dependency>
+      <groupId>org.jcodec</groupId>
+      <artifactId>jcodec</artifactId>
+      <version>0.2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>17.0.2</version> <!-- or your JavaFX version -->
+    </dependency>
+    <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
       <version>23.0.2</version>

@@ -7,6 +7,7 @@ import org.jaudiotagger.tag.images.ArtworkFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +22,7 @@ public class Metadata {
     private String genre;
     private Duration duration;
     private Artwork cover;
+    private byte[] videoCover;
     private ArrayList<String> userTags;
 
     /**
@@ -183,6 +185,10 @@ public class Metadata {
             setCover(artwork);
         }
     }
+
+    public byte[] getVideoCover() {return videoCover;}
+
+    public void setVideoCover(byte[] videoCover) { this.videoCover = videoCover; }
 
     /**
      * Get the user tags.
