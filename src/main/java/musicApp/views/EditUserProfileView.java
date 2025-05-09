@@ -90,9 +90,9 @@ public class EditUserProfileView extends View {
     private void initStage() {
         stage = new Stage();
         if (listener.isCreation()) {
-            stage.setTitle(LanguageService.getInstance().get("create_playlist.title"));
+            stage.setTitle(LanguageService.getInstance().get("create_user.title"));
         } else {
-            stage.setTitle(LanguageService.getInstance().get("edit_playlist.title"));
+            stage.setTitle(LanguageService.getInstance().get("edit_user.title"));
         }
         stage.setMinWidth(600);
         stage.setMinHeight(700);
@@ -121,18 +121,18 @@ public class EditUserProfileView extends View {
 
     public void populateFields(String userName, String imagePath, String musicPath) {
         nameField.setText(userName);
-        userImage.setImage(new Image(Path.of(imagePath).toUri().toString()));
+        System.out.println("Image path: " + imagePath);
+        userImage.setImage(new Image((imagePath == null || imagePath.isBlank()) ? 
+                            getClass().getResource("/images/default_account.png").toExternalForm() : 
+                            Path.of(imagePath).toUri().toString()));
         userImageLabel.setText(imagePath);
         chosenMusicFolderLabel.setText(musicPath);
     }
 
     @Override
     protected void refreshTranslation() {
-        userImageLabel.setText(LanguageService.getInstance().get("create_playlist.image_path"));
-        musicFolderLabel.setText(LanguageService.getInstance().get("create_playlist.music_folder"));
-        chooseUserImageButton.setText(LanguageService.getInstance().get("playlist.select_image"));
-//        chooseMusicFolderButton.setText(LanguageService.getInstance().get(""));
-        chooseMusicFolderButton.setText("Select folder");
+        chooseUserImageButton.setText(LanguageService.getInstance().get("user.select_picture"));
+        chooseMusicFolderButton.setText(LanguageService.getInstance().get("user.select_music_folder"));
         String actionButtonText = listener.isCreation()
                 ? LanguageService.getInstance().get("button.create")
                 : LanguageService.getInstance().get("button.save");
@@ -153,7 +153,8 @@ public class EditUserProfileView extends View {
         chooseMusicFolderButton.setOnAction(_ -> handleBrowseMusicFolder());
 
         actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(),balanceSlider.getValue(), crossfadeSlider.getValue(),
-                Path.of(userImageLabel.getText()), Path.of(chosenMusicFolderLabel.getText())));
+                !(userImageLabel.getText() == null) ? Path.of(userImageLabel.getText()) : null
+                , Path.of(chosenMusicFolderLabel.getText())));
 
         cancelButton.setOnAction(_ -> listener.handleCancel());
         equalizerButton.setOnAction(_ -> listener.handleOpenEqualizer());
@@ -166,7 +167,6 @@ public class EditUserProfileView extends View {
         File selectedDirectory = FileDialogService.chooseDirectory(null,
                 LanguageService.getInstance().get("settings.select_music_folder"));
         if (selectedDirectory != null) {
-            musicFolderLabel.setText(selectedDirectory.getAbsolutePath());
             chosenMusicFolderLabel.setText(selectedDirectory.getAbsolutePath());
             chosenMusicFolderLabel.setUserData(selectedDirectory.toPath());
         }
@@ -196,6 +196,8 @@ public class EditUserProfileView extends View {
     }
 
     public String getCrossfadeLabelString(double crossfadeDuration) {
-        return LanguageService.getInstance().get("settings.crossfade_duration") + ": " + crossfadeDuration + "s";
+        String seconds = LanguageService.getInstance().get("settings.seconds");
+        return String.format("%.1f %s", crossfadeDuration, seconds);
+
     }
 }

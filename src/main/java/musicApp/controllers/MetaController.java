@@ -1,7 +1,6 @@
 package musicApp.controllers;
 
 import javafx.stage.Stage;
-import musicApp.controllers.EditUserProfileController.EditUserProfileControllerListener;
 import musicApp.controllers.settings.SettingsController;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;

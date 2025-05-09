@@ -31,7 +31,8 @@ public class LanguageService {
                 "lang.buttons",
                 "lang.settings",
                 "lang.default_values",
-                "lang.create_playlist"
+                "lang.create_playlist",
+                "lang.edit_user"
         };
        bundles = new ResourceBundle[BUNDLE_NAMES.length];
        languageProperty = new SimpleStringProperty();

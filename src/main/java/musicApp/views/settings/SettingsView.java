@@ -110,12 +110,6 @@ public class SettingsView extends View {
         }
         updateLanguageComboBox();
     }
-    
-
-    private String getCrossfadeLabelString(double value) {
-        String seconds = LanguageService.getInstance().get("settings.seconds");
-        return String.format("%.1f %s", value, seconds);
-    }
 
     /**
      * Initialize the translations of the view.

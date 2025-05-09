@@ -3,11 +3,14 @@ package musicApp.controllers;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.models.Equalizer;
 import musicApp.models.UserProfile;
+import musicApp.services.LanguageService;
 import musicApp.services.UserProfileService;
 import musicApp.views.EditUserProfileView;
 
 import java.nio.file.Path;
 import java.util.List;
+
+import javafx.scene.control.Alert;
 
 /**
  * The type Playlist edit controller.
@@ -77,34 +80,34 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
     @Override
     public void handleSave(String userName,double balance, double crossfade, Path imagePath, Path musicPath) {
         if (userName == null || userName.isBlank()) {
-            System.out.println("Name cannot be empty.");
+            alertService.showAlert("User name cannot be empty", Alert.AlertType.WARNING);
             return;
         }
-
-        if (imagePath == null || musicPath == null) {
-            System.out.println("Image path or music path cannot be empty.");
+        if (musicPath == null) {
+            alertService.showAlert("Music path cannot be empty", Alert.AlertType.WARNING);
             return;
         }
-
         UserProfileService userProfileService = new UserProfileService();
-        List<UserProfile> allUserProfiles = userProfileService.readUsers();
-        
+        List<UserProfile> allUserProfiles = userProfileService.readUsers();     
 
         if (isCreation) {
             UserProfile newUserProfile = new UserProfile(userName, imagePath, musicPath);
             allUserProfiles.add(newUserProfile);
         } else {
             // Update the existing userProfile
-            userProfile.setUsername(userName);
-            userProfile.setUserPicturePath(imagePath);
-            userProfile.setUserMusicPath(musicPath);
+            for (UserProfile userProfile : allUserProfiles) {
+                if (userProfile.getUsername().equals(this.userProfile.getUsername())) {
+                    userProfile.setUsername(userName);
+                    userProfile.setUserPicturePath(imagePath);
+                    userProfile.setUserMusicPath(musicPath);
+                }
+            }
     
         updateEqualizer();
         setBalance(balance);
         setCrossfadeDuration(crossfade);
         }
         System.out.println("allUserProfiles: " + allUserProfiles);
-
         userProfileService.writeUsers(allUserProfiles);
         listener.usersUpdate();
         handleClose();
