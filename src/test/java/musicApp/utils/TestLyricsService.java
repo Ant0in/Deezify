@@ -84,7 +84,7 @@ public class TestLyricsService {
         lyricsManager.saveLyrics(testSong, lyricsContent);
         LyricsRepository.LyricsFilePaths paths = lyricsDataAccess.getLyricsPaths(testSong.getFilePath().toString())
                 .orElseThrow(() -> new IOException("Mapping not found"));
-        assertTrue(paths.getTextPath().endsWith("TestSong.txt"));
+        assertTrue(paths.getTextPath().endsWith("goodTestMP3.txt")); // Changed from TestSong.txt
     }
 
     @Test

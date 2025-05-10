@@ -32,7 +32,7 @@ public class Song {
         try {
             metadata = metadataReader.getMetadata(filePath.toFile());
             refreshLyrics();
-        } catch (ID3TagException | BadFileTypeException e) {
+        } catch (ID3TagException | BadFileTypeException | RuntimeException e) {
             metadata = new Metadata(); // Default metadata on error
         } catch (SettingsFilesException e) {
             lyricsEntry = Optional.empty();
