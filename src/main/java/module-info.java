@@ -31,6 +31,7 @@ module ulb.musicApp {
     requires javafx.swing;
     requires java.desktop;
     requires jcodec;
+    requires org.bytedeco.javacv;
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;
     opens musicApp.models to javafx.fxml, javafx.controls, javafx.media, com.google.gson;

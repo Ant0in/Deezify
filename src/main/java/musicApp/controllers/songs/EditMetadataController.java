@@ -7,17 +7,17 @@ import musicApp.models.Song;
 import musicApp.services.MetadataService;
 import musicApp.views.songs.EditMetadataView;
 
+
 import java.io.File;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 import javafx.embed.swing.SwingFXUtils;
-import org.jcodec.api.FrameGrab;
-import org.jcodec.api.JCodecException;
-import org.jcodec.common.io.NIOUtils;
-import org.jcodec.common.model.Picture;
-import org.jcodec.scale.AWTUtil;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
+
+
 
 import java.awt.image.BufferedImage;
 
@@ -72,20 +72,25 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
     private void loadAndApplyCoverImage(File file) {
 
         try {
+
+            Image image = null;
+
             // Check if File is a video file
-
             if (file.toPath().toString().endsWith(".mp4")) {
-
+                image = getFirstFrame(file);
+                if (image == null) { return; }
+            } else {
+                image = new Image(file.toURI().toString());
             }
 
-            Image image = new Image(file.toURI().toString());
-            if (!image.isError()) {
+            if ( !image.isError()) {
                 view.setCoverImage(image);
                 selectedCoverFile = file;
             } else {
                 System.err.println("Failed to load image: " + file.getName());
             }
         } catch (Exception e) {
+            e.printStackTrace();
             alertService.showExceptionAlert(e);
         }
     }
@@ -167,11 +172,19 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
         return songCellController.getTagAutoCompletion(input);
     }
 
-    public static Image getFirstFrameAsImage(File videoFile) throws IOException, JCodecException {
-        FrameGrab grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(videoFile));
-        Picture picture = grab.getNativeFrame();  // First decoded frame
-        BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
-        return SwingFXUtils.toFXImage(bufferedImage, null);
+    /** Returns the very first video frame as a JavaFX {@link Image}. */
+    public static Image getFirstFrame(File videoFile) throws Exception {
+        try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoFile)) {
+            grabber.start();
+
+            var frame = grabber.grabImage();  // grabs the first *video* frame
+
+            if (frame == null) return null;
+
+            BufferedImage bimg = new Java2DFrameConverter().convert(frame);
+            return SwingFXUtils.toFXImage(bimg, null);
+        }
     }
+
 
 }

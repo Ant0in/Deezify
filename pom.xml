@@ -55,6 +55,12 @@
       <version>0.2.5</version>
     </dependency>
     <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacv-platform</artifactId>
+      <version>1.5.10</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-swing</artifactId>
       <version>17.0.2</version> <!-- or your JavaFX version -->
