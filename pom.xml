@@ -7,8 +7,8 @@
 
   <groupId>ulb</groupId>
   <artifactId>musicApp</artifactId>
-  <version>0.1</version>
-  <name>musicApp</name>
+  <version>1.0</version>
+  <name>Deezify</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

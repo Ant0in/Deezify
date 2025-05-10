@@ -10,7 +10,6 @@ import musicApp.models.dtos.SettingsDTO;
 import musicApp.services.LanguageService;
 import musicApp.views.settings.SettingsView;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -26,9 +25,8 @@ public class SettingsController extends ViewController<SettingsView> implements 
      *
      * @param _controller the meta controller
      * @param _settings   the settings
-     * @throws IOException the io exception
      */
-    public SettingsController(MetaController _controller, Settings _settings) throws IOException {
+    public SettingsController(MetaController _controller, Settings _settings) {
         super(new SettingsView());
         view.setListener(this);
         settings = _settings;
@@ -74,7 +72,6 @@ public class SettingsController extends ViewController<SettingsView> implements 
      * Handle when the save button is pressed
      *
      * @param language       the language
-     * @param balance        the balance
      * @param musicFolder the music folder
      */
     public void handleSave(Language language, Path musicFolder) {
@@ -87,7 +84,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
     }
 
     private void updateView() {
-        view.updateView(settings.getBalance(), settings.getMusicFolderString());
+        view.updateView(settings.getMusicFolderString());
         refreshLanguage();
     }
 

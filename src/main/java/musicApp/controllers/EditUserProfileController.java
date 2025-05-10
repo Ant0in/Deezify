@@ -3,7 +3,6 @@ package musicApp.controllers;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.models.Equalizer;
 import musicApp.models.UserProfile;
-import musicApp.services.LanguageService;
 import musicApp.services.UserProfileService;
 import musicApp.views.EditUserProfileView;
 
@@ -20,7 +19,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
     private final UserProfile userProfile;
     private final boolean isCreation;
     private EditUserProfileControllerListener listener;
-    private EqualizerController equalizerController;
+    private final EqualizerController equalizerController;
 
     public interface EditUserProfileControllerListener {
         void usersUpdate();
@@ -88,7 +87,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
             return;
         }
         UserProfileService userProfileService = new UserProfileService();
-        List<UserProfile> allUserProfiles = userProfileService.readUsers();     
+        List<UserProfile> allUserProfiles = userProfileService.readUserProfiles();
 
         if (isCreation) {
             UserProfile newUserProfile = new UserProfile(userName, imagePath, musicPath);
@@ -108,7 +107,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         setCrossfadeDuration(crossfade);
         }
         System.out.println("allUserProfiles: " + allUserProfiles);
-        userProfileService.writeUsers(allUserProfiles);
+        userProfileService.writeUserProfiles(allUserProfiles);
         listener.usersUpdate();
         handleClose();
     }

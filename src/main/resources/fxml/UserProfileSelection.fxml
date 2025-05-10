@@ -2,15 +2,13 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" 
-            styleClass="background" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/style2.css">
+            prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/style2.css">
     <center>
         <VBox alignment="CENTER" spacing="40">
-            <Label text="Select your profile" styleClass="title-text" />
+            <Label fx:id="titleLabel" text="??userProfile.selectProfile??" styleClass="userProfile-text"/>
             
             <FlowPane fx:id="userAccounts" alignment="CENTER" hgap="40" vgap="40">
             </FlowPane>
@@ -22,8 +20,8 @@
             <padding>
                 <Insets bottom="40" />
             </padding>
-             <Button fx:id="addProfileButton" text="Add Profile" />
-            <Button text="Manage Profiles" styleClass="manage-profiles-button" />
+            <Button fx:id="addProfileButton" text="??userProfile.addUser??" styleClass="button" />
+            <ToggleButton fx:id="toggleManageProfilesButton" text="??userProfile.toggle??" styleClass="button" />
         </HBox>
     </bottom>
 </BorderPane>

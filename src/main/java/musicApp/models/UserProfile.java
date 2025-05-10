@@ -2,9 +2,9 @@ package musicApp.models;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.gson.annotations.Expose;
-import musicApp.models.dtos.UserDTO;
 
 public class UserProfile {
     @Expose
@@ -37,12 +37,7 @@ public class UserProfile {
         balance = _balance;
         userMusicPath = _userMusicPath;
         crossfadeDuration = _crossfadeDuration;
-        if (_userPlaylistPath != null) {
-            userPlaylistPath = _userPlaylistPath;
-        }
-        else {
-            userPlaylistPath = userMusicPath.resolve("playlists.json");
-        }
+        userPlaylistPath = Objects.requireNonNullElseGet(_userPlaylistPath, () -> userMusicPath.resolve("playlists.json"));
         equalizer = _equalizer;
     }
     
@@ -114,14 +109,6 @@ public class UserProfile {
         return userPlaylistPath;
     }
 
-    public void setUserPlaylistPath(Path newUserPlaylistPath) {
-        userPlaylistPath = newUserPlaylistPath;
-    }
-
-    public UserDTO toDTO() {
-        return new UserDTO(username, userPicturePath, balance, equalizer.getBandsGain());
-    }
-
     @Override
     public String toString() {
         return "UserProfile{" +
@@ -138,5 +125,19 @@ public class UserProfile {
 
     public String getUserPicturePathToString() {
         return userPicturePath != null ? userPicturePath.toString() : null;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof UserProfile other) {
+            return this.username.equals(other.username) &&
+                    this.userPicturePath.equals(other.userPicturePath) &&
+                    this.balance == other.balance &&
+                    this.userMusicPath.equals(other.userMusicPath) &&
+                    this.crossfadeDuration == other.crossfadeDuration &&
+                    this.userPlaylistPath.equals(other.userPlaylistPath);
+        }
+        return false;
     }
 }

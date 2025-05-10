@@ -19,7 +19,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
     private final SettingsService settingsService;
     private PlayerController playerController;
     private SettingsController settingsController;
-    private final UserProfilesController userProfilesController;
+    private final UserProfileSelectionController userProfileSelectionController;
 
     /**
      * Enum for the different scenes in the application.
@@ -40,7 +40,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
         alertService = new AlertService();
         settingsService = new SettingsService();
         UserProfileService userProfileService = new UserProfileService();
-        userProfilesController = new UserProfilesController(this,primaryStage, userProfileService.readUsers());
+        userProfileSelectionController = new UserProfileSelectionController(this,primaryStage, userProfileService.readUserProfiles());
 
 //         Settings settings = settingsService.readSettings();
 // //        playerController = new PlayerController(this, primaryStage, settings.toDTO());
@@ -57,7 +57,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
         switch (scene) {
             case MAINWINDOW -> playerController.show();
             case SETTINGS -> settingsController.show();
-            case USERSWINDOW -> userProfilesController.show();
+            case USERSWINDOW -> userProfileSelectionController.show();
         }
     }
 
@@ -83,7 +83,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
         }        
     }
 
-    public void loadPlayerWithUser(UserProfile userProfile) throws IOException {
+    public void loadPlayerWithUser(UserProfile userProfile) {
         Settings settings = settingsService.readSettings();
         settings.setCurrentUserProfile(userProfile);
         settingsController = new SettingsController(this, settings);
@@ -96,7 +96,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
     }
 
     public void usersUpdate() {
-        userProfilesController.usersUpdate();
+        userProfileSelectionController.usersUpdate();
     }
 
 }

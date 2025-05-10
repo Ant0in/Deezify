@@ -26,13 +26,14 @@ public class LanguageService {
         // Initialize non-static variables in the constructor
        prefs = Preferences.userNodeForPackage(LanguageService.class);
        BUNDLE_NAMES = new String[]{
-                "lang.messages",
-                "lang.general",
                 "lang.buttons",
-                "lang.settings",
-                "lang.default_values",
                 "lang.create_playlist",
-                "lang.edit_user"
+                "lang.default_values",
+                "lang.edit_user",
+                "lang.general",
+                "lang.messages",
+                "lang.settings",
+                "lang.user_profile"
         };
        bundles = new ResourceBundle[BUNDLE_NAMES.length];
        languageProperty = new SimpleStringProperty();

@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import musicApp.enums.Language;
@@ -123,6 +122,7 @@ public class SettingsView extends View {
         saveButton.setText(languageService.get("button.save"));
         cancelButton.setText(languageService.get("button.cancel"));
         browseButton.setText(languageService.get("settings.select_music_folder"));
+        editUserProfileButton.setText(languageService.get("user_profile.edit"));
         updateLanguageComboBox();
     }
 
@@ -170,7 +170,7 @@ public class SettingsView extends View {
     /**
      * Update the view with the current settings.
      */
-    public void updateView(double balance, String musicFolderString) {
+    public void updateView(String musicFolderString) {
         initComboBox();
         musicFolderLabel.setText(musicFolderString);
     }

@@ -15,7 +15,6 @@ import musicApp.models.Song;
 import musicApp.models.dtos.SettingsDTO;
 import musicApp.views.PlayerView;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
@@ -43,10 +42,9 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * @param _metaController the meta controller
      * @param primaryStage   the primary stage
      * @param settingsDTO      the settings
-     * @throws IOException the io exception
      */
 
-    public PlayerController(MetaController _metaController, Stage primaryStage, SettingsDTO settingsDTO) throws IOException {
+    public PlayerController(MetaController _metaController, Stage primaryStage, SettingsDTO settingsDTO) {
         super(new PlayerView(primaryStage));
         view.setListener(this);
         metaController = _metaController;
@@ -78,7 +76,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * Play song.
      *
      * @param song the song
-     * @throws BadSongException
+     * @throws BadSongException the bad song exception
      */
     public void playSong(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);
@@ -164,7 +162,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * Actions to do when the settings are changed
      *
      * @param newSettingsDTO The new settings.
-     * @throws EqualizerGainException
+     * @throws EqualizerGainException if the equalizer gain is invalid
      */
     public void onSettingsChanged(SettingsDTO newSettingsDTO) throws EqualizerGainException {
         mediaPlayerController.setBalance(newSettingsDTO.getBalance());

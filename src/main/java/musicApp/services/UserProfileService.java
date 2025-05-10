@@ -12,11 +12,17 @@ public class UserProfileService {
         jsonRepository = new JsonRepository();
     }
 
-    public void writeUsers(List<UserProfile> userProfiles) {
+    public void writeUserProfiles(List<UserProfile> userProfiles) {
         jsonRepository.writeUserProfiles(userProfiles);
     }
 
-    public List<UserProfile> readUsers() {
+    public List<UserProfile> readUserProfiles() {
         return jsonRepository.readUserProfiles();
+    }
+
+    public void deleteUserProfile(UserProfile userProfile) {
+        List<UserProfile> userProfiles = readUserProfiles();
+        userProfiles.remove(userProfile);
+        writeUserProfiles(userProfiles);
     }
 }
