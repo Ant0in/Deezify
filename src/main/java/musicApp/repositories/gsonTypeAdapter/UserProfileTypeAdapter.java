@@ -85,7 +85,6 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                 case "username" -> username = in.nextString();
                 case "userPicturePath" -> {
                     String rawPath = in.nextString();
-                    System.out.println("[UserProfileTypeAdapter] rawPath: " + rawPath);
                     userPicturePath = (rawPath != null && !rawPath.isBlank())
                             ? Paths.get(rawPath)
                             : null; 
@@ -105,10 +104,7 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                             ? Paths.get(rawPath)
                             : Path.of(System.getProperty("user.home"), "Music");
                 }
-                case "crossfadeDuration" -> {
-                    crossfadeDuration = in.nextDouble();
-                    break;
-                }
+                case "crossfadeDuration" -> crossfadeDuration = in.nextDouble();
                 case "userPlaylistPath" -> {
                     String rawPath = in.nextString();
                     userPlaylistPath = (rawPath != null && !rawPath.isBlank())
@@ -119,12 +115,6 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
             }
         }
         in.endObject();
-
-        // Log minimal for debug
-        System.out.println("[UserProfile Loaded] " + username + " | " +
-                (userPicturePath != null ? userPicturePath : "no picture") + " | " +
-                balance + " | " +
-                userMusicPath);
 
         return new UserProfile(
                 username,

@@ -16,6 +16,7 @@ import musicApp.services.LanguageService;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * The Playlist edit view.
@@ -121,9 +122,8 @@ public class EditUserProfileView extends View {
 
     public void populateFields(String userName, String imagePath, String musicPath) {
         nameField.setText(userName);
-        System.out.println("Image path: " + imagePath);
-        userImage.setImage(new Image((imagePath == null || imagePath.isBlank()) ? 
-                            getClass().getResource("/images/default_account.png").toExternalForm() : 
+        userImage.setImage(new Image((imagePath == null || imagePath.isBlank()) ?
+                            Objects.requireNonNull(getClass().getResource("/images/default_account.png")).toExternalForm() :
                             Path.of(imagePath).toUri().toString()));
         userImageLabel.setText(imagePath);
         chosenMusicFolderLabel.setText(musicPath);

@@ -106,7 +106,6 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         setBalance(balance);
         setCrossfadeDuration(crossfade);
         }
-        System.out.println("allUserProfiles: " + allUserProfiles);
         userProfileService.writeUserProfiles(allUserProfiles);
         listener.usersUpdate();
         handleClose();
