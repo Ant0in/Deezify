@@ -2,6 +2,7 @@ package musicApp.controllers.songs;
 
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Song;
 import musicApp.services.LyricsService;
 import musicApp.views.songs.LyricsView;
@@ -26,7 +27,13 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
         super(new LyricsView());
         view.setLyricsListener(this);
         playerController = _controller;
-        lyricsManager = new LyricsService();
+        LyricsService newLyricsManager = null; // Initialization to null to avoid lsp warning
+        try {
+            newLyricsManager = new LyricsService();
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading lyrics settings", e);
+        }
+        lyricsManager = newLyricsManager;
         initView("/fxml/Lyrics.fxml");
         new KaraokeController(playerController, lyricsManager, view);
     }

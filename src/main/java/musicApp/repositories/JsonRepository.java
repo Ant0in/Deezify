@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
@@ -43,7 +44,7 @@ public class JsonRepository {
     /**
      * Constructor
      */
-    public JsonRepository() {
+    public JsonRepository() throws  SettingsFilesException {
         String os = System.getProperty("os.name").toLowerCase();
         String configFolder = "Deezify";
         Path settingFolder;
@@ -70,12 +71,12 @@ public class JsonRepository {
      *
      * @param folder The path of the folder to create.
      */
-    public void createFolderIfNotExists(Path folder) {
+    public void createFolderIfNotExists(Path folder) throws SettingsFilesException {
         if (!Files.exists(folder)) {
             try {
                 Files.createDirectories(folder);
             } catch (IOException e) {
-                System.err.println("An error occurred while creating the folder");
+                throw new SettingsFilesException("Failed to create folder: " + folder, e);
             }
         }
     }
@@ -104,7 +105,7 @@ public class JsonRepository {
      *
      * @return The default music folder.
      */
-    public Path getDefaultMusicFolder() {
+    public Path getDefaultMusicFolder() throws SettingsFilesException {
         Path musicFolder = getFolderByOS("Music");
         Path backupMusicFolder = getFolderByOS("MusicApp");
 
@@ -139,7 +140,7 @@ public class JsonRepository {
      *
      * @return The settings read from the settings file.
      */
-    public Settings readSettings() {
+    public Settings readSettings() throws SettingsFilesException {
         if (!Files.exists(settingsFile)) {
             Settings defaultSettings = new Settings(0, getDefaultMusicFolder(), new Equalizer(), 0);
             writeSettings(defaultSettings);
@@ -157,7 +158,7 @@ public class JsonRepository {
      * @param path The path to the JSON settings file.
      * @return A {@link Settings} object populated with the data from the file, or default settings if an error occurs.
      */
-    protected Settings getSettings(Path path) {
+    protected Settings getSettings(Path path) throws SettingsFilesException {
         try (FileReader reader = new FileReader(path.toFile())) {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Settings.class, new SettingsTypeAdapter())
@@ -165,7 +166,6 @@ public class JsonRepository {
                     .create();
             return gson.fromJson(reader, Settings.class);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
-            System.err.println("An error occurred while reading the settings file: " + e.getMessage());
             return new Settings(0, getDefaultMusicFolder(), new Equalizer(), 0);
         }
     }

@@ -1,5 +1,6 @@
 package musicApp.utils;
 
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.repositories.JsonRepository;
@@ -12,6 +13,11 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class TestJsonRepository extends JsonRepository {
+
+    public TestJsonRepository() throws SettingsFilesException {
+        super();
+    }
+
     @Test
     public void testGetPlaylist() throws URISyntaxException {
 //        readPlaylists();
@@ -34,9 +40,13 @@ public class TestJsonRepository extends JsonRepository {
 
     @Test
     public void testGetSettings() {
-        Settings settings = getSettings(Paths.get("src", "test", "resources", "settings.json"));
-        assertEquals(0.0, settings.getBalance(), 0.0);
-        assertEquals(10, settings.getEqualizerBands().size());
-        assertNotNull(settings.getMusicFolder());
+        try {
+            Settings settings = getSettings(Paths.get("src", "test", "resources", "settings.json"));
+            assertEquals(0.0, settings.getBalance(), 0.0);
+            assertEquals(10, settings.getEqualizerBands().size());
+            assertNotNull(settings.getMusicFolder());
+        } catch (SettingsFilesException e) {
+            fail("Failed to read settings: " + e.getMessage());
+        }
     }
 }

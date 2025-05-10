@@ -77,7 +77,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * Play song.
      *
      * @param song the song
-     * @throws BadSongException
+     * @throws BadSongException when the song is not valid
      */
     public void playSong(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);

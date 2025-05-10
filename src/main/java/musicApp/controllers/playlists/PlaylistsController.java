@@ -2,6 +2,7 @@ package musicApp.controllers.playlists;
 
 
 import musicApp.exceptions.DeletePlaylistException;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.services.LanguageService;
@@ -20,7 +21,7 @@ public class PlaylistsController {
 
 
 
-    public PlaylistsController(Path musicFolder) {
+    public PlaylistsController(Path musicFolder) throws SettingsFilesException {
         playlistService = new PlaylistService();
         playlists = playlistService.loadAllLibraries(musicFolder);
     }

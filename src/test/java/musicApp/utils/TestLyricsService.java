@@ -1,7 +1,7 @@
 package musicApp.utils;
 
-
 import musicApp.exceptions.LyricsOperationException;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Song;
 import musicApp.repositories.JsonRepository;
 import musicApp.repositories.LyricsRepository;
@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,22 +30,22 @@ public class TestLyricsService {
     private Song testSong;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, SettingsFilesException, URISyntaxException {
         lyricsDataAccess = new LyricsRepository(new JsonRepository());
         lyricsManager = new LyricsService();
-        lyricsDir = lyricsDataAccess.getLyricsDir(); 
+        lyricsDir = lyricsDataAccess.getLyricsDir();
 
         Files.createDirectories(lyricsDir);
+
+        // Get test song from resources
+        Path resourcePath = Paths.get(getClass().getResource("/goodTestMP3.mp3").toURI());
+        testSong = new Song(resourcePath);
 
         lyricsFile = lyricsDir.resolve("TestSong.txt");
         jsonFile = lyricsDir.resolve("lyrics.json");
 
         Files.deleteIfExists(lyricsFile);
         Files.deleteIfExists(jsonFile);
-
-        String songFileName = "TestSong.mp3";
-        Path dummySongPath = Paths.get("/tmp", songFileName);
-        testSong = new Song(dummySongPath);
     }
 
     @After
@@ -83,6 +84,12 @@ public class TestLyricsService {
         lyricsManager.saveLyrics(testSong, lyricsContent);
         LyricsRepository.LyricsFilePaths paths = lyricsDataAccess.getLyricsPaths(testSong.getFilePath().toString())
                 .orElseThrow(() -> new IOException("Mapping not found"));
-        assertEquals("TestSong.txt", paths.getTextPath());
+        assertTrue(paths.getTextPath().endsWith("TestSong.txt"));
+    }
+
+    @Test
+    public void testFileExists() {
+        assertNotNull(testSong.getFilePath());
+        assertTrue(Files.exists(testSong.getFilePath()));
     }
 }

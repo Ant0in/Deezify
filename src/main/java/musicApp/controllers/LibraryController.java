@@ -4,6 +4,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.services.PlaylistService;
@@ -256,6 +257,8 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
             addSong(copiedFilePath);
         } catch (IOException e) {
             alertService.showAlert("Could not add song to main library : " + audioFile, Alert.AlertType.ERROR);
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings files", e);
         }
     }
 
