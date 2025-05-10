@@ -78,10 +78,10 @@ public class PlaylistService {
         try {
             PathRepository loader = new PathRepository();
             List<Song> songs = loader.getAllSongs(userMusicFolder);
-            return new Library(songs, "Your Library", null);
+            return new Library(songs, "??user_library??", null);
         } catch (IOException e) {
             System.err.println("Failed to load user library: " + e.getMessage());
-            return new Library(new ArrayList<>(), "Your Library", null);
+            return new Library(new ArrayList<>(), "??user_library??", null);
         }
     }
 

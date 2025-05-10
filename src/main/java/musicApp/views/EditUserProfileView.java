@@ -152,6 +152,7 @@ public class EditUserProfileView extends View {
                 : LanguageService.getInstance().get("button.save");
         actionButton.setText(actionButtonText);
         cancelButton.setText(LanguageService.getInstance().get("button.cancel"));
+        equalizerButton.setText(LanguageService.getInstance().get("settings.manage_audio_equalizer"));
     }
 
     /**

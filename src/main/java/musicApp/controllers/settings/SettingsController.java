@@ -15,10 +15,11 @@ import java.nio.file.Path;
 /**
  * The type Settings controller.
  */
-public class SettingsController extends ViewController<SettingsView> implements SettingsView.SettingsViewListener {
+public class SettingsController extends ViewController<SettingsView> implements SettingsView.SettingsViewListener, EditUserProfileController.EditUserProfileControllerListener {
 
     private final MetaController metaController;
     private final Settings settings;
+    private EditUserProfileController editUserProfileController;
 
     /**
      * Instantiates a new Settings controller.
@@ -132,7 +133,11 @@ public class SettingsController extends ViewController<SettingsView> implements 
      * Open the edit user profile window.
      */
     public void editUserProfile(){
-        new EditUserProfileController(metaController, settings.getCurrentUserProfile());
+        editUserProfileController = new EditUserProfileController(this, settings.getCurrentUserProfile());
         
+    }
+
+    public void usersUpdate() {
+        settings.setCurrentUserProfile(editUserProfileController.getUserProfile());
     }
 }

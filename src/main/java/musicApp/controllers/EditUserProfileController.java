@@ -16,7 +16,7 @@ import javafx.scene.control.Alert;
  */
 public class EditUserProfileController extends ViewController<EditUserProfileView> implements EditUserProfileView.EditUserProfileViewListener {
 
-    private final UserProfile userProfile;
+    private UserProfile userProfile;
     private final boolean isCreation;
     private EditUserProfileControllerListener listener;
     private final EqualizerController equalizerController;
@@ -146,6 +146,11 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
                 userProfile.setUsername(userName);
                 userProfile.setUserPicturePath(imagePath);
                 userProfile.setUserMusicPath(musicPath);
+                userProfile.setBalance(getBalance());
+                userProfile.setCrossfadeDuration(getCrossfadeDuration());
+                userProfile.setEqualizerBandsGain(getEqualizerBandsGain());
+                this.userProfile = userProfile;
+                break;
             }
         }
     }
@@ -226,5 +231,13 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      */
     private void setBalance(double balance) {
         userProfile.setBalance(balance);
+    }
+
+    public List<Double> getEqualizerBandsGain() {
+        return equalizerController.getEqualizerBandsGain();
+    }
+
+    public UserProfile getUserProfile() {
+        return userProfile;
     }
 }

@@ -229,4 +229,8 @@ public class UserProfile {
         String s2 = (p2 == null) ? "" : p2.toString();
         return s1.equals(s2);
     }
+
+    public void setEqualizerBandsGain(List<Double> newEqualizerBandsGain) {
+        equalizer.setBandsGain(newEqualizerBandsGain);
+    }
 }
