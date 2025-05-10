@@ -107,6 +107,10 @@ public class LanguageService {
         return Language.getSupportedLanguages().contains(language);
     }
 
+    /**
+     * Get the language property.
+     * @return The language property.
+     */
     public StringProperty getLanguageProperty() {return languageProperty;}
 }
 

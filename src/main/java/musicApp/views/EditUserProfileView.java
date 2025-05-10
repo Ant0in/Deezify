@@ -88,6 +88,9 @@ public class EditUserProfileView extends View {
         initStage();
     }
 
+    /**
+     * Initialize the stage for the EditUserProfileView.
+     */
     private void initStage() {
         stage = new Stage();
         if (listener.isCreation()) {
@@ -120,6 +123,13 @@ public class EditUserProfileView extends View {
         crossfadeSlider.setShowTickMarks(true);
     }
 
+    /**
+     * Populate the fields with the provided user name, image path, and music path.
+     *
+     * @param userName   The user name to set in the text field.
+     * @param imagePath  The path to the user image.
+     * @param musicPath  The path to the music folder.
+     */
     public void populateFields(String userName, String imagePath, String musicPath) {
         nameField.setText(userName);
         userImage.setImage(new Image((imagePath == null || imagePath.isBlank()) ?
@@ -129,6 +139,10 @@ public class EditUserProfileView extends View {
         chosenMusicFolderLabel.setText(musicPath);
     }
 
+    /**
+     * Refresh the translation for the UI elements.
+     * This method updates the text of various labels and buttons based on the current language settings.
+     */
     @Override
     protected void refreshTranslation() {
         chooseUserImageButton.setText(LanguageService.getInstance().get("user.select_picture"));
@@ -140,6 +154,10 @@ public class EditUserProfileView extends View {
         cancelButton.setText(LanguageService.getInstance().get("button.cancel"));
     }
 
+    /**
+     * Close the stage.
+     * This method is called to close the EditUserProfileView when the user is done editing.
+     */
     public void close() {
         stage.close();
     }
@@ -195,6 +213,13 @@ public class EditUserProfileView extends View {
         }
     }
 
+    /**
+     * Get the crossfade label string.
+     * This method formats the crossfade duration to a string with one decimal place and appends the unit "seconds".
+     *
+     * @param crossfadeDuration The crossfade duration in seconds.
+     * @return The formatted crossfade label string.
+     */
     public String getCrossfadeLabelString(double crossfadeDuration) {
         String seconds = LanguageService.getInstance().get("settings.seconds");
         return String.format("%.1f %s", crossfadeDuration, seconds);

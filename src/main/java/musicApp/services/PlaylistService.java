@@ -42,7 +42,7 @@ public class PlaylistService {
      */
     public List<Library> loadAllLibraries(Path musicFolder, Path userMusicFolder) {
         Library mainLibrary = loadMainLibrary(musicFolder);
-        Library userMainLibrary = loadUserLibrary(userMusicFolder);
+        Library userMainLibrary = loadUserMainLibrary(userMusicFolder);
         List<Library> playlists = readPlaylists();
         List<Library> libraries = new ArrayList<>();
         libraries.add(mainLibrary);
@@ -74,7 +74,7 @@ public class PlaylistService {
         }
     }
 
-    public Library loadUserLibrary(Path userMusicFolder) {
+    public Library loadUserMainLibrary(Path userMusicFolder) {
         try {
             PathRepository loader = new PathRepository();
             List<Song> songs = loader.getAllSongs(userMusicFolder);

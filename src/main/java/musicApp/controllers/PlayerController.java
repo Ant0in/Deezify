@@ -167,7 +167,8 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     public void onSettingsChanged(SettingsDTO newSettingsDTO) throws EqualizerGainException {
         mediaPlayerController.setBalance(newSettingsDTO.getBalance());
         mediaPlayerController.setCrossfadeDuration(newSettingsDTO.getCrossfadeDuration());
-        mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());
+        mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());        
+        playlistNavigatorController.updateUserMainLibrary(newSettingsDTO.getUserMusicFolder());
         // Update the music folder in case it changed
         if (newSettingsDTO.isMusicFolderChanged()) {
             playlistNavigatorController.updateMainLibrary(newSettingsDTO.getMusicFolder());
@@ -401,10 +402,19 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         return playlistNavigatorController.isFavorite(song);
     }
 
+    /**
+     * Check if the given library is the main library.
+     * @param library
+     * @return True if the library is the main library, false otherwise.
+     */
     public boolean isMainLibrary(Library library) {
         return getMainLibrary().equals(library);
     }
 
+    /**
+     * Get the next song supplier.
+     * @return The next song supplier.
+     */
     public Supplier<Song> getNextSongSupplier() {
         if (queueController.queueIsEmpty()) {
             return libraryController::getNextSong;
@@ -413,6 +423,10 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         }
     }
 
+    /**
+     * Get the UserPlaylistPath
+     * @return The path to the user playlist
+     */
     public Path getUserPlaylistPath() {
         return metaController.getUserPlaylistPath();
     }

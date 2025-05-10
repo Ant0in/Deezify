@@ -41,10 +41,6 @@ public class MetaController implements EditUserProfileController.EditUserProfile
         settingsService = new SettingsService();
         UserProfileService userProfileService = new UserProfileService();
         userProfileSelectionController = new UserProfileSelectionController(this,primaryStage, userProfileService.readUserProfiles());
-
-//         Settings settings = settingsService.readSettings();
-// //        playerController = new PlayerController(this, primaryStage, settings.toDTO());
-//         settingsController = new SettingsController(this, settings);
     }
 
 
@@ -83,6 +79,10 @@ public class MetaController implements EditUserProfileController.EditUserProfile
         }        
     }
 
+    /**
+     * Load the player with the specified user profile.
+     * @param userProfile
+     */
     public void loadPlayerWithUser(UserProfile userProfile) {
         Settings settings = settingsService.readSettings();
         settings.setCurrentUserProfile(userProfile);
@@ -90,13 +90,18 @@ public class MetaController implements EditUserProfileController.EditUserProfile
         playerController = new PlayerController(this, new Stage(), settingsController.getSettingsDTO());
     }
 
-
+    /**
+     * Get the user playlist path.
+     * @return
+     */
     public Path getUserPlaylistPath() {
         return settingsController.getUserPlaylistPath();
     }
 
+    /**
+     * Update the users list in the user profile selection controller.
+     */
     public void usersUpdate() {
         userProfileSelectionController.usersUpdate();
     }
-
 }

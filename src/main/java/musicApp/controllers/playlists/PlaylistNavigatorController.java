@@ -200,6 +200,10 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         playlistsController.updateMainLibrary(newMusicFolder);
     }
 
+    public void updateUserMainLibrary(Path newUserMusicFolder) {
+        playlistsController.updateUserMainLibrary(newUserMusicFolder);
+    }
+    
     public Library getMainLibrary() {
         return playlistsController.getMainLibrary();
     }

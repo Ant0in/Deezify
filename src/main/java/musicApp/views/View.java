@@ -43,6 +43,11 @@ public abstract class View {
         scene = new Scene(rootPane);
     }
 
+    /**
+     * Initialize popup window.
+     * @param fxmlPath
+     * @throws IOException
+     */
     public void initializePopupWindow(String fxmlPath) throws IOException {
         URL url = getClass().getResource(fxmlPath);
         FXMLLoader loader = new FXMLLoader(url);
@@ -50,11 +55,17 @@ public abstract class View {
         rootWindow = loader.load();
     }
 
+    /**
+     * Initialize language property.
+     */
     public void initializeLanguageProperty() {
         languageProperty = LanguageService.getInstance().getLanguageProperty();
         languageProperty.addListener((_, _, _) -> refreshTranslation());
     }
 
+    /**
+     * Refresh translation.
+     */
     protected void refreshTranslation() {
         // Override this method in subclasses to refresh translations
     }

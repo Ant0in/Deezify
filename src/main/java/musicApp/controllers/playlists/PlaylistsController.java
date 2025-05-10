@@ -29,12 +29,21 @@ public class PlaylistsController {
         setMainLibrary(mainLibrary);
     }
 
+    public void updateUserMainLibrary(Path newMusicFolder) {
+        Library userMainLibrary = playlistService.loadUserMainLibrary(newMusicFolder);
+        setUserMainLibrary(userMainLibrary);
+    }
+    
     private void setMainLibrary(Library newMainLibrary) {
         playlists.set(MAIN_LIBRARY_INDEX, newMainLibrary);
     }
 
     public Library getMainLibrary() {
         return playlists.get(MAIN_LIBRARY_INDEX);
+    }
+
+    public void setUserMainLibrary(Library newUserMainLibrary) {
+        playlists.set(USER_MAIN_LIBRARY_INDEX, newUserMainLibrary);
     }
 
     public Library getFavoritesPlaylist() {

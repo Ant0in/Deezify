@@ -68,6 +68,9 @@ public class EditPlaylistView extends View {
         initStage();
     }
 
+    /**
+     * Initializes the stage for the EditPlaylistView.
+     */
     private void initStage() {
         stage = new Stage();
         if (listener.isCreation()) {
@@ -79,6 +82,9 @@ public class EditPlaylistView extends View {
         stage.show();
     }
 
+    /**
+     * Refreshes the translation for the UI elements.
+     */
     @Override
     protected void refreshTranslation() {
         nameLabel.setText(LanguageService.getInstance().get("create_playlist.name"));
@@ -91,6 +97,9 @@ public class EditPlaylistView extends View {
         cancelButton.setText(LanguageService.getInstance().get("button.cancel"));
     }
 
+    /**
+     * Handle closing the view.
+     */
     public void close() {
         stage.close();
     }

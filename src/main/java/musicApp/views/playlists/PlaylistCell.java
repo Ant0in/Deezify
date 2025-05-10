@@ -32,7 +32,6 @@ public class PlaylistCell extends ListCell<Library> {
         void update(Library library);
     }
 
-
     /**
      * Initializes the cell with the given library.
      *

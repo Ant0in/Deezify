@@ -21,6 +21,9 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
     private EditUserProfileControllerListener listener;
     private final EqualizerController equalizerController;
 
+    /**
+     * The interface Edit userProfile controller listener.
+     */
     public interface EditUserProfileControllerListener {
         void usersUpdate();
     }
@@ -66,6 +69,9 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         view.show();
     }
 
+    /**
+     * * Check if the userProfile is being created or edited.
+     */
     public boolean isCreation() {
         return isCreation;
     }
@@ -77,55 +83,98 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      * @param imagePath The playlist image path
      */
     @Override
-    public void handleSave(String userName,double balance, double crossfade, Path imagePath, Path musicPath) {
-        if (userName == null || userName.isBlank()) {
-            alertService.showAlert("User name cannot be empty", Alert.AlertType.WARNING);
-            return;
-        }
-        if (musicPath == null) {
-            alertService.showAlert("Music path cannot be empty", Alert.AlertType.WARNING);
+    public void handleSave(String userName, double balance, double crossfade, Path imagePath, Path musicPath) {
+        if (!validateInputs(userName, musicPath)) {
             return;
         }
         UserProfileService userProfileService = new UserProfileService();
         List<UserProfile> allUserProfiles = userProfileService.readUserProfiles();
-
         if (isCreation) {
-            UserProfile newUserProfile = new UserProfile(userName, imagePath, musicPath);
-            allUserProfiles.add(newUserProfile);
+            createUserProfile(userName, imagePath, musicPath, allUserProfiles);
         } else {
-            // Update the existing userProfile
-            for (UserProfile userProfile : allUserProfiles) {
-                if (userProfile.getUsername().equals(this.userProfile.getUsername())) {
-                    userProfile.setUsername(userName);
-                    userProfile.setUserPicturePath(imagePath);
-                    userProfile.setUserMusicPath(musicPath);
-                }
-            }
-    
-        updateEqualizer();
-        setBalance(balance);
-        setCrossfadeDuration(crossfade);
+            updateUserProfile(userName, imagePath, musicPath, allUserProfiles);
+            updateEqualizer();
+            setBalance(balance);
+            setCrossfadeDuration(crossfade);
         }
         userProfileService.writeUserProfiles(allUserProfiles);
         listener.usersUpdate();
         handleClose();
     }
 
+    /**
+     * Validate the inputs for creating or updating a userProfile.
+     *
+     * @param userName  The userProfile's name
+     * @param musicPath The userProfile's music path
+     * @return true if the inputs are valid, false otherwise
+     */
+    private boolean validateInputs(String userName, Path musicPath) {
+        if (userName == null || userName.isBlank()) {
+            alertService.showAlert("User name cannot be empty", Alert.AlertType.WARNING);
+            return false;
+        }
+        if (musicPath == null) {
+            alertService.showAlert("Music path cannot be empty", Alert.AlertType.WARNING);
+            return false;
+        }
+        return true;
+    }
 
+    /**
+     * Create a new userProfile and add it to the list of all userProfiles.
+     * @param userName
+     * @param imagePath
+     * @param musicPath
+     * @param allUserProfiles
+     */
+    private void createUserProfile(String userName, Path imagePath, Path musicPath, List<UserProfile> allUserProfiles) {
+        UserProfile newUserProfile = new UserProfile(userName, imagePath, musicPath);
+        allUserProfiles.add(newUserProfile);
+    }
+
+    /**
+     * Update the existing userProfile with the new values.
+     * @param userName
+     * @param imagePath
+     * @param musicPath
+     * @param allUserProfiles
+     */
+    private void updateUserProfile(String userName, Path imagePath, Path musicPath, List<UserProfile> allUserProfiles) {
+        for (UserProfile userProfile : allUserProfiles) {
+            if (userProfile.getUsername().equals(this.userProfile.getUsername())) {
+                userProfile.setUsername(userName);
+                userProfile.setUserPicturePath(imagePath);
+                userProfile.setUserMusicPath(musicPath);
+            }
+        }
+    }
+
+    /**
+     * Handle closing the view.
+     */
     public void handleClose() {
         view.close();
     }
 
+    /**
+     * Handle canceling the view.
+     */
     public void handleCancel() {
         equalizerController.handleCancel();
         view.close();
     }
 
+    /**
+     * Handle the showing of the view.
+     */
     public void show() {
         view.show();
-    }
-    
+    }    
 
+    /**
+     * Get the Crossfade duration
+     */
     @Override
     public double getCrossfadeDuration() {
         if (userProfile == null) {
@@ -134,6 +183,11 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         return userProfile.getCrossfadeDuration();
     }
 
+    /**
+     * Update the crossfade duration of the application.
+     *
+     * @param crossfadeDuration The new crossfade duration.
+     */
     private void setCrossfadeDuration(double crossfadeDuration) {
         userProfile.setCrossfadeDuration(crossfadeDuration);
     }    
@@ -144,8 +198,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
     public void handleOpenEqualizer() {
         handleClose();
         equalizerController.show();
-    }
-    
+    }    
 
     /**
      * Updates the values of the equalizer with the values of sliders and changes the settings

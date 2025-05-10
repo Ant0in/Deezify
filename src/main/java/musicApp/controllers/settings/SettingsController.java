@@ -64,10 +64,14 @@ public class SettingsController extends ViewController<SettingsView> implements 
         settings.setMusicFolder(path);
     }
 
-
+    /**
+     * Set the current user profile.
+     * @param userProfile
+     */
     public void setUserProfile(UserProfile userProfile) {
         settings.setCurrentUserProfile(userProfile);
     }
+
     /**
      * Handle when the save button is pressed
      *
@@ -83,6 +87,9 @@ public class SettingsController extends ViewController<SettingsView> implements 
         close();
     }
 
+    /**
+     * Update the view with the current settings.
+     */
     private void updateView() {
         view.updateView(settings.getMusicFolderString());
         refreshLanguage();
@@ -105,14 +112,25 @@ public class SettingsController extends ViewController<SettingsView> implements 
         return settings.getMusicFolderString();
     }
 
+    /**
+     * Get the settings DTO.
+     * @return
+     */
     public SettingsDTO getSettingsDTO() {
         return settings.toDTO();
     }
 
+    /**
+     * Get the current user playlist path.
+     * @return
+     */
     public Path getUserPlaylistPath() {
         return settings.getUserPlaylistPath();
     }
 
+    /**
+     * Open the edit user profile window.
+     */
     public void editUserProfile(){
         new EditUserProfileController(metaController, settings.getCurrentUserProfile());
         

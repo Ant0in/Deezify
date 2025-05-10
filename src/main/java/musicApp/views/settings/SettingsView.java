@@ -67,7 +67,10 @@ public class SettingsView extends View {
         initStage();
         refreshTranslation();
     }
-    
+
+    /**
+     * Initialize the stage for the settings view.
+     */
     private void initStage() {
         stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -76,10 +79,16 @@ public class SettingsView extends View {
         stage.setOnCloseRequest(_ -> listener.handleCancel());
     }
 
+    /**
+     * Show the settings view.
+     */
     public void show(){
         stage.show();
     }
 
+    /**
+     * Close the settings view.
+     */
     public void close(){
         stage.close();
     }

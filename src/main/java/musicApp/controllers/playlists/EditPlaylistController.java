@@ -52,6 +52,9 @@ public class EditPlaylistController extends ViewController<EditPlaylistView> imp
         navigatorController = _controller;
     }
 
+    /**
+     * Check if the view is in creation mode.
+     */
     public boolean isCreation() {
         return isCreation;
     }
@@ -71,6 +74,9 @@ public class EditPlaylistController extends ViewController<EditPlaylistView> imp
         handleClose();
     }
 
+    /**
+     * Handle the close action of the view.
+     */
     public void handleClose() {
         view.close();
     }
