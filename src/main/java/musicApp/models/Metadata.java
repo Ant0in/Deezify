@@ -9,7 +9,6 @@ import org.jaudiotagger.tag.images.ArtworkFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -196,9 +195,24 @@ public class Metadata {
         }
     }
 
-    public byte[] getVideoCover() {return videoCover;}
+    /**
+     * Returns the byte array representing the video cover associated with the song.
+     * If no video cover is set, an empty array is returned.
+     *
+     * @return a byte array containing the video cover data, or an empty array if none is set
+     */
+    public byte[] getVideoCover() {
+        return videoCover;
+    }
 
-    public void setVideoCover(byte[] videoCover) { this.videoCover = videoCover; }
+    /**
+     * Sets the video cover associated with the song.
+     *
+     * @param videoCover the byte array representing the video cover; may be empty.
+     */
+    public void setVideoCover(byte[] videoCover) {
+        this.videoCover = videoCover;
+    }
 
     /**
      * Get the user tags.
