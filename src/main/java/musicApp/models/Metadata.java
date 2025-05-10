@@ -2,12 +2,14 @@ package musicApp.models;
 
 import javafx.util.Duration;
 import musicApp.services.LanguageService;
+import musicApp.services.VideoService;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -174,15 +176,23 @@ public class Metadata {
     }
 
     /**
-     * Loads the cover image from a file path.
+     * Loads the cover file from a file path.
      *
-     * @param path The path to the image file.
-     * @throws IOException If an error occurs while loading the image.
+     * @param file The file representing the image or video.
+     * @throws IOException If an error occurs while loading the file.
      */
-    public void loadCoverFromPath(String path) throws IOException {
-        if (path != null && !path.isEmpty()) {
-            Artwork artwork = ArtworkFactory.createArtworkFromFile(new File(path));
-            setCover(artwork);
+    public void loadCoverFromPath(File file) throws Exception {
+        if (file != null && file.exists()) {
+            // If cover is a video
+            if (file.getPath().endsWith(".mp4")){
+                byte[] rawFile = Files.readAllBytes(file.toPath());
+                setVideoCover(rawFile);
+                if ( cover != null ) {
+                    return;
+                }
+            }
+            VideoService s = new VideoService();
+            setCover(s.getArtworkFromFile(file));
         }
     }
 

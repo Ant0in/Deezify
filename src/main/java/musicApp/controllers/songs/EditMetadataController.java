@@ -1,10 +1,12 @@
 package musicApp.controllers.songs;
 
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import musicApp.controllers.ViewController;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.services.MetadataService;
+import musicApp.services.VideoService;
 import musicApp.views.songs.EditMetadataView;
 
 
@@ -60,6 +62,12 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      */
     public void handleCoverChanged(File file) {
         if (file != null && file.exists()) {
+            long maxSizeBytes = 100L * 1024 * 1024; // 100 MB in bytes
+            if (file.length() > maxSizeBytes) {
+                alertService.showAlert("Selected file is too large. Please choose a file under 100 MB.", Alert.AlertType.ERROR);
+                return;
+            }
+
             loadAndApplyCoverImage(file);
         }
     }
@@ -77,7 +85,8 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
 
             // Check if File is a video file
             if (file.toPath().toString().endsWith(".mp4")) {
-                image = getFirstFrame(file);
+                VideoService videoService = new VideoService();
+                image = videoService.getFirstFrame(file);
                 if (image == null) { return; }
             } else {
                 image = new Image(file.toURI().toString());
@@ -87,7 +96,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
                 view.setCoverImage(image);
                 selectedCoverFile = file;
             } else {
-                System.err.println("Failed to load image: " + file.getName());
+                System.err.println("Failed to load file: " + file.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,7 +128,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(new ArrayList<>(userTags));
             if (selectedCoverFile != null) {
-                newMetadata.loadCoverFromPath(selectedCoverFile.getAbsolutePath());
+                newMetadata.loadCoverFromPath(selectedCoverFile);
             }
             MetadataService util = new MetadataService();
 
@@ -171,20 +180,5 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
     public Optional<String> getTagAutoCompletion(String input){
         return songCellController.getTagAutoCompletion(input);
     }
-
-    /** Returns the very first video frame as a JavaFX {@link Image}. */
-    public static Image getFirstFrame(File videoFile) throws Exception {
-        try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoFile)) {
-            grabber.start();
-
-            var frame = grabber.grabImage();  // grabs the first *video* frame
-
-            if (frame == null) return null;
-
-            BufferedImage bimg = new Java2DFrameConverter().convert(frame);
-            return SwingFXUtils.toFXImage(bimg, null);
-        }
-    }
-
 
 }
