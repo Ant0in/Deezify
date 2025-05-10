@@ -1,10 +1,12 @@
 package musicApp.services;
 
-import javafx.util.Duration;
-import musicApp.enums.SupportedFileType;
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
-import musicApp.models.Metadata;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
@@ -12,12 +14,11 @@ import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
+import javafx.util.Duration;
+import musicApp.enums.SupportedFileType;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.exceptions.ID3TagException;
+import musicApp.models.Metadata;
 
 public class MetadataService {
 
@@ -205,8 +206,11 @@ public class MetadataService {
             tag.setField(metadata.getCover());
         }
 
-        String encodedVideo = Base64.getEncoder().encodeToString(metadata.getVideoCover());
-        tag.setField(FieldKey.CUSTOM2, encodedVideo);
+        if (metadata.getVideoCover() != null && metadata.getVideoCover().length > 0) {
+            // Encode the video cover to Base64
+            String encodedVideo = Base64.getEncoder().encodeToString(metadata.getVideoCover());
+            tag.setField(FieldKey.CUSTOM2, encodedVideo);
+        }
 
         return tag;
     }
