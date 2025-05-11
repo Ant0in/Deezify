@@ -5,7 +5,6 @@ import javafx.scene.media.EqualizerBand;
 import musicApp.enums.EqualizerBandFrequency;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Equalizer {

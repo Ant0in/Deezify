@@ -188,7 +188,7 @@ public class Library {
      * @return The cover image or a default image if none is set
      */
     public Image getCoverImage() {
-        String defaultCover = getClass().getResource("/images/playlist.png").toExternalForm();
+        String defaultCover = Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm();
         try {
             if (image != null) {
                 return new Image(image.toUri().toURL().toExternalForm());
@@ -261,5 +261,14 @@ public class Library {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String toString() {
+        return "Library{" +
+                "songList=" + songList +
+                ", name='" + name + '\'' +
+                ", image=" + image +
+                '}';
     }
 }

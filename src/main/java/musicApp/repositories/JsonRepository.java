@@ -58,13 +58,17 @@ public class JsonRepository {
         }
         createFolderIfNotExists(settingFolder);
         settingsFile = settingFolder.resolve("settings.json");
-//        playlistsFile = settingFolder.resolve("playlists.json");
         lyricsDir = settingFolder.resolve("lyrics");
         createFolderIfNotExists(lyricsDir);
         lyricsFile = lyricsDir.resolve("lyrics.json");
         usersFile = settingFolder.resolve("users.json");
     }
 
+    /**
+     * Sets playlists path.
+     *
+     * @param newPlaylistsFile the new playlists file
+     */
     public void setPlaylistsPath(Path newPlaylistsFile) {
         playlistsFile = newPlaylistsFile;
     }
@@ -154,6 +158,7 @@ public class JsonRepository {
         }
         return getSettings(settingsFile);
     }
+
     /**
      * Retrieves the settings from a JSON file located at the specified path.
      *
@@ -272,6 +277,8 @@ public class JsonRepository {
     /**
      * Reads the lyrics library from the lyrics file.
      * If the lyrics file does not exist, it will be created with an empty library.
+     *
+     * @return the list
      */
     public List<LyricsRepository.LyricsFilePaths> readLyricsLibrary() {
         Gson gson = new GsonBuilder()
@@ -289,6 +296,9 @@ public class JsonRepository {
 
     /**
      * Writes the lyrics library to the lyrics file.
+     *
+     * @param lib the lib
+     * @throws IOException the io exception
      */
     public void writeLyricsLibrary(List<LyricsRepository.LyricsFilePaths> lib) throws IOException {
         Gson gson = new GsonBuilder()
@@ -308,6 +318,13 @@ public class JsonRepository {
         return lyricsDir;
     }
 
+    /**
+     * Gets user profiles.
+     *
+     * @param userProfilesPath the user profiles path
+     * @return the user profiles
+     * @throws IllegalArgumentException the illegal argument exception
+     */
     protected List<UserProfile> getUserProfiles(Path userProfilesPath) throws IllegalArgumentException {
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(UserProfile.class, new UserProfileTypeAdapter())
@@ -325,6 +342,12 @@ public class JsonRepository {
 
     }
 
+    /**
+     * Sets user profiles.
+     *
+     * @param userProfile      the user profile
+     * @param userProfilesPath the user profiles path
+     */
     protected void setUserProfiles(List<UserProfile> userProfile, Path userProfilesPath) {
         try (java.io.FileWriter writer = new java.io.FileWriter(userProfilesPath.toString())) {
             Gson gson = new GsonBuilder()
@@ -337,6 +360,11 @@ public class JsonRepository {
         }
     }
 
+    /**
+     * Read user profiles list.
+     *
+     * @return the list
+     */
     public List<UserProfile> readUserProfiles() {
         if (!Files.exists(usersFile)) {
             writeUserProfiles(List.of());
@@ -344,6 +372,11 @@ public class JsonRepository {
         return getUserProfiles(usersFile);
     }
 
+    /**
+     * Write user profiles.
+     *
+     * @param userProfiles the user profiles
+     */
     public void writeUserProfiles(List<UserProfile> userProfiles) {
         setUserProfiles(userProfiles, usersFile);
     }

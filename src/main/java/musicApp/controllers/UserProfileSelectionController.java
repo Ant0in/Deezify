@@ -1,28 +1,26 @@
 package musicApp.controllers;
 
-import java.io.IOException;
-import java.util.List;
-
 import javafx.stage.Stage;
 import musicApp.models.UserProfile;
 import musicApp.services.UserProfileService;
 import musicApp.views.UserProfileSelectionView;
 
+import java.util.List;
+
 public class UserProfileSelectionController extends ViewController<UserProfileSelectionView> implements UserProfileSelectionView.UserProfileSelectionViewListener {
 
     private List<UserProfile> usersList;
     private final MetaController metaController;
-    private final Stage primaryStage;
+
     /**
      * * The constructor for the UserProfileSelectionController class.
-     * @param _metaController
-     * @param _primaryStage
-     * @param _usersList
+     * @param _metaController MetaController instance to handle the main application logic
+     * @param _primaryStage Primary stage of the application
+     * @param _usersList List of user profiles to be displayed
      */
     public UserProfileSelectionController(MetaController _metaController, Stage _primaryStage, List<UserProfile> _usersList) {
         super(new UserProfileSelectionView(_primaryStage));
         usersList = _usersList;
-        primaryStage = _primaryStage;
         metaController = _metaController;
         view.setListener(this);
         initView("/fxml/UserProfileSelection.fxml");

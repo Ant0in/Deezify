@@ -169,6 +169,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         mediaPlayerController.setCrossfadeDuration(newSettingsDTO.getCrossfadeDuration());
         mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());        
         playlistNavigatorController.updateUserMainLibrary(newSettingsDTO.getUserMusicFolder());
+        playlistNavigatorController.updateUserPlaylists(newSettingsDTO.getUserPlaylistPath());
         // Update the music folder in case it changed
         if (newSettingsDTO.isMusicFolderChanged()) {
             playlistNavigatorController.updateMainLibrary(newSettingsDTO.getMusicFolder());
@@ -404,7 +405,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
 
     /**
      * Check if the given library is the main library.
-     * @param library
+     * @param library The library to check.
      * @return True if the library is the main library, false otherwise.
      */
     public boolean isMainLibrary(Library library) {

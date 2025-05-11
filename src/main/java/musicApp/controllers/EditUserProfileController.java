@@ -1,5 +1,6 @@
 package musicApp.controllers;
 
+import javafx.scene.control.Alert;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.models.Equalizer;
 import musicApp.models.UserProfile;
@@ -8,8 +9,6 @@ import musicApp.views.EditUserProfileView;
 
 import java.nio.file.Path;
 import java.util.List;
-
-import javafx.scene.control.Alert;
 
 /**
  * The type Playlist edit controller.
@@ -123,10 +122,10 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
 
     /**
      * Create a new userProfile and add it to the list of all userProfiles.
-     * @param userName
-     * @param imagePath
-     * @param musicPath
-     * @param allUserProfiles
+     * @param userName userProfile's name
+     * @param imagePath userProfile's image path
+     * @param musicPath userProfile's music path
+     * @param allUserProfiles list of all userProfiles
      */
     private void createUserProfile(String userName, Path imagePath, Path musicPath, List<UserProfile> allUserProfiles) {
         UserProfile newUserProfile = new UserProfile(userName, imagePath, musicPath);
@@ -135,10 +134,10 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
 
     /**
      * Update the existing userProfile with the new values.
-     * @param userName
-     * @param imagePath
-     * @param musicPath
-     * @param allUserProfiles
+     * @param userName userProfile's name
+     * @param imagePath userProfile's image path
+     * @param musicPath userProfile's music path
+     * @param allUserProfiles list of all userProfiles
      */
     private void updateUserProfile(String userName, Path imagePath, Path musicPath, List<UserProfile> allUserProfiles) {
         for (UserProfile userProfile : allUserProfiles) {
@@ -146,6 +145,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
                 userProfile.setUsername(userName);
                 userProfile.setUserPicturePath(imagePath);
                 userProfile.setUserMusicPath(musicPath);
+                userProfile.setUserPlaylistsPath(musicPath);
                 userProfile.setBalance(getBalance());
                 userProfile.setCrossfadeDuration(getCrossfadeDuration());
                 userProfile.setEqualizerBandsGain(getEqualizerBandsGain());

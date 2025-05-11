@@ -1,10 +1,10 @@
 package musicApp.models;
 
+import com.google.gson.annotations.Expose;
+
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-
-import com.google.gson.annotations.Expose;
 
 public class UserProfile {
     @Expose
@@ -22,9 +22,9 @@ public class UserProfile {
     private Equalizer equalizer;
     /**
      * Contstructor of the UserProfile class.
-     * @param _username
-     * @param _userPicturePath
-     * @param _userMusicPath
+     * @param _username username of the userProfile.
+     * @param _userPicturePath path to the profile picture of the userProfile.
+     * @param _userMusicPath path to the music folder of the userProfile.
      */
     public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath) {
         username = _username;
@@ -38,13 +38,13 @@ public class UserProfile {
 
     /**
      * Constructor of the UserProfile class.
-     * @param _username
-     * @param _userPicturePath
-     * @param _userMusicPath
-     * @param _userPlaylistPath
-     * @param _balance
-     * @param _crossfadeDuration
-     * @param _equalizer
+     * @param _username username of the userProfile.
+     * @param _userPicturePath path to the profile picture of the userProfile.
+     * @param _userMusicPath path to the music folder of the userProfile.
+     * @param _userPlaylistPath path to the playlist folder of the userProfile.
+     * @param _balance music balance of the userProfile.
+     * @param _crossfadeDuration crossfade duration of the userProfile.
+     * @param _equalizer equalizer of the userProfile.
      */
     public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, Path _userPlaylistPath, double _balance, double _crossfadeDuration, Equalizer _equalizer) {
         username = _username;
@@ -58,7 +58,7 @@ public class UserProfile {
     
     /**
      * Set the username of the userProfile.
-     * @param newUsername
+     * @param newUsername new username of the userProfile.
      */
     public void setUsername(String newUsername) {
         username = newUsername;
@@ -74,7 +74,7 @@ public class UserProfile {
 
     /**
      * Set the userPicturePath of the userProfile.
-     * @param newUserPicturePath
+     * @param newUserPicturePath new userPicturePath of the userProfile.
      */
     public void setUserPicturePath(Path newUserPicturePath) {
         userPicturePath = newUserPicturePath;
@@ -98,7 +98,7 @@ public class UserProfile {
 
     /**
      * Set the balance of the userProfile.
-     * @param newBalance
+     * @param newBalance new balance of the userProfile.
      */
     public void setBalance(double newBalance) {
         balance = newBalance;
@@ -122,7 +122,7 @@ public class UserProfile {
 
     /**
      * Set the userMusicPath of the userProfile.
-     * @param newUserMusicPath
+     * @param newUserMusicPath new userMusicPath of the userProfile.
      */
     public void setUserMusicPath(Path newUserMusicPath) {
         userMusicPath = newUserMusicPath;
@@ -138,7 +138,7 @@ public class UserProfile {
 
     /**
      * Set the equalizer of the userProfile.
-     * @param newEqualizer
+     * @param newEqualizer new equalizer of the userProfile.
      */
     public void setEqualizer(Equalizer newEqualizer) {
         equalizer = newEqualizer;
@@ -154,7 +154,7 @@ public class UserProfile {
 
     /**
      * Set the crossfade duration of the userProfile.
-     * @param newCrossfadeDuration
+     * @param newCrossfadeDuration new crossfade duration of the userProfile.
      */
     public void setCrossfadeDuration(double newCrossfadeDuration) {
         crossfadeDuration = newCrossfadeDuration;
@@ -220,9 +220,9 @@ public class UserProfile {
     /**
      * Check if two paths are equal.
      * Null and "" are considered equal.
-     * @param p1
-     * @param p2
-     * @return
+     * @param p1 path 1
+     * @param p2 path 2
+     * @return true if the paths are equal, false otherwise
      */
     private boolean pathToStringEquals(Path p1, Path p2) {
         String s1 = (p1 == null) ? "" : p1.toString();
@@ -232,5 +232,9 @@ public class UserProfile {
 
     public void setEqualizerBandsGain(List<Double> newEqualizerBandsGain) {
         equalizer.setBandsGain(newEqualizerBandsGain);
+    }
+
+    public void setUserPlaylistsPath(Path musicPath) {
+        userPlaylistPath = musicPath.resolve("playlists.json");
     }
 }

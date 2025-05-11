@@ -90,4 +90,8 @@ public class PlaylistService {
         JsonRepository jsonRepository = new JsonRepository();
         return loader.copyFileToDirectory(song, jsonRepository.getDefaultMusicFolder());
     }
+
+    public void setPlaylistsPath(Path userPlaylistPath) {
+        jsonRepository.setPlaylistsPath(userPlaylistPath);
+    }
 }

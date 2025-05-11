@@ -48,7 +48,9 @@ public class Settings {
         if (currentUserProfile == null) {
             return new SettingsDTO(musicFolder, musicFolderChanged);
         } else {
-            return new SettingsDTO(currentUserProfile.getBalance(), currentUserProfile.getEqualizerBands(), musicFolder, currentUserProfile.getUserMusicPath(), currentUserProfile.getCrossfadeDuration(), musicFolderChanged);
+            return new SettingsDTO(currentUserProfile.getBalance(), currentUserProfile.getEqualizerBands(), musicFolder,
+                                   currentUserProfile.getUserMusicPath(), currentUserProfile.getUserPlaylistPath(),
+                                   currentUserProfile.getCrossfadeDuration(), musicFolderChanged);
         }
     }
 
@@ -111,32 +113,6 @@ public class Settings {
     }
 
     /**
-     * returns the user's music folder
-     *
-     * @return The music folder.
-     */
-    public Path getUserMusicFolder() {
-        if (currentUserProfile != null) {
-            return currentUserProfile.getUserMusicPath();
-        } else {
-            throw new IllegalStateException("Cannot get user music folder when currentUserProfile is null.");
-        }
-    }
-
-    /**
-     * returns the user's music folder as a string
-     *
-     * @return The music folder as a string.
-     */
-    public String getUserMusicFolderString() {
-        if (currentUserProfile != null) {
-            return currentUserProfile.getUserMusicPathToString();
-        } else {
-            throw new IllegalStateException("Cannot get user music folder when currentUserProfile is null.");
-        }
-    }
-
-    /**
      * Gets crossfade duration.
      *
      * @return the crossfade duration
@@ -146,19 +122,6 @@ public class Settings {
             return 0;
         } else {
             return currentUserProfile.getCrossfadeDuration();
-        }
-    }
-
-    /**
-     * Sets crossfade duration.
-     *
-     * @param _crossfadeDuration the crossfade duration
-     */
-    public void setCrossfadeDuration(double _crossfadeDuration) {
-        if (currentUserProfile != null) {
-            currentUserProfile.setCrossfadeDuration(_crossfadeDuration);
-        } else {
-            throw new IllegalStateException("Cannot set crossfade duration when currentUserProfile is null.");
         }
     }
 
@@ -173,13 +136,6 @@ public class Settings {
 
     public void setCurrentUserProfile(UserProfile newCurrentUserProfile) {
         currentUserProfile = newCurrentUserProfile;
-    }
-
-    /**
-     * Remove current user.
-     */
-    public void removeCurrentUser() {
-        currentUserProfile = null;
     }
 
     /**

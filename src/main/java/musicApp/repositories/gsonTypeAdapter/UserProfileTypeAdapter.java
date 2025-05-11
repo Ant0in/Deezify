@@ -1,16 +1,14 @@
 package musicApp.repositories.gsonTypeAdapter;
 
 import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.JsonReader;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
+import com.google.gson.stream.JsonWriter;
 import musicApp.models.Equalizer;
 import musicApp.models.UserProfile;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
     /**

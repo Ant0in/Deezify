@@ -8,7 +8,6 @@ import musicApp.repositories.JsonRepository;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -26,7 +25,6 @@ public class TestJsonRepository extends JsonRepository {
         userProfile.setEqualizer(new Equalizer());
         setUserProfiles(List.of(userProfile), userProfilePath);
         setPlaylistsPath(Paths.get("src", "test", "resources", "playlists.json"));
-        System.out.println("UserProfile set up for testing.");
     }
 
     @Test

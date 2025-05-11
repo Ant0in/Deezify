@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PlaylistsController {
     private final PlaylistService playlistService;
-    private final List<Library> playlists;
+    private List<Library> playlists;
 
     private final int MAIN_LIBRARY_INDEX = 0;
     private static final int USER_MAIN_LIBRARY_INDEX = 1;
@@ -108,5 +108,12 @@ public class PlaylistsController {
         playlist.setName(name);
         playlist.setImagePath(imagePath);
         writePlaylists();
+    }
+
+    public void updateUserPlaylists(Path userPlaylistPath) {
+        playlistService.setPlaylistsPath(userPlaylistPath);
+        playlists = playlists.subList(0, USER_MAIN_LIBRARY_INDEX+1); // Keep only main and user libraries
+        List<Library> newPlaylists = playlistService.readPlaylists();
+        playlists.addAll(newPlaylists);
     }
 }
