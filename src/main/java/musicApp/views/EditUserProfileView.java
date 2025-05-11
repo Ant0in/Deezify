@@ -173,7 +173,7 @@ public class EditUserProfileView extends View {
 
         actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(),balanceSlider.getValue(), crossfadeSlider.getValue(),
                 !(userImageLabel.getText() == null) ? Path.of(userImageLabel.getText()) : null
-                , Path.of(chosenMusicFolderLabel.getText())));
+                , !(chosenMusicFolderLabel.getText() ==null ) ?Path.of(chosenMusicFolderLabel.getText()) : null));
 
         cancelButton.setOnAction(_ -> listener.handleCancel());
         equalizerButton.setOnAction(_ -> listener.handleOpenEqualizer());

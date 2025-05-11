@@ -97,6 +97,15 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     }
 
     /**
+     * Stop the playback of the current song.
+     */
+    public void stopPlayback() {
+        if (mediaPlayerController != null) {
+            mediaPlayerController.close(); 
+        }
+    }
+    
+    /**
      * Skip to the next song in the library or the queue.
      * If the queue is not empty, the next song in the queue is played.
      * Otherwise, the next song in the library is played.
@@ -125,6 +134,9 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         view.close();
     }
 
+    /**
+     * Close the stage.
+     */
     public void closeStage() {
         view.closeStage();
     }
@@ -137,6 +149,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     }
 
     public void returnToUsersWindow() {
+        stopPlayback();
         closeStage();
         metaController.switchScene(MetaController.Scenes.USERSWINDOW);
     }
