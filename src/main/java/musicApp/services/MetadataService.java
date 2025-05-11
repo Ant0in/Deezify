@@ -222,7 +222,7 @@ public class MetadataService {
      * @param fd : File Object
      * @return AudioFile object
      */
-    private AudioFile readFile(File fd) throws BadFileTypeException {
+    private AudioFile readFile(File fd) throws BadFileTypeException, RuntimeException {
         SupportedFileType ext = getFileExtension(fd);
         AudioFile file;
 

@@ -3,8 +3,7 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
-import musicApp.exceptions.BadSongException;
-import musicApp.exceptions.LyricsNotFoundException;
+import musicApp.exceptions.*;
 import musicApp.services.LyricsService;
 import musicApp.services.MetadataService;
 
@@ -32,10 +31,12 @@ public class Song {
         MetadataService metadataReader = new MetadataService();
         try {
             metadata = metadataReader.getMetadata(filePath.toFile());
-        } catch (Exception e) {
+            refreshLyrics();
+        } catch (ID3TagException | BadFileTypeException | RuntimeException e) {
             metadata = new Metadata(); // Default metadata on error
+        } catch (SettingsFilesException e) {
+            lyricsEntry = Optional.empty();
         }
-        refreshLyrics();
     }
 
     /**
@@ -258,7 +259,7 @@ public class Song {
      * Refresh the lyrics for this song.
      * This will load the lyrics from the file system.
      */
-    public void refreshLyrics() {
+    public void refreshLyrics() throws SettingsFilesException {
         LyricsService lyricsService = new LyricsService();
         try {
             lyricsEntry = Optional.of(lyricsService.getLyricsEntry(this));

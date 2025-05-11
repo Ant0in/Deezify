@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
 import musicApp.exceptions.DeletePlaylistException;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.services.LanguageService;
@@ -32,7 +33,12 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
         super(new PlaylistNavigatorView());
         view.setListener(this);
         playerController = controller;
-        playlistsController = new PlaylistsController(musicFolder);
+        try {
+            playlistsController = new PlaylistsController(musicFolder);
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert(LanguageService.getInstance().get("error.playlist_load"), e);
+            throw new RuntimeException(e);
+        }
         playlistContextMenuController = new PlaylistContextMenuController(this);
         initView("/fxml/PlaylistNavigator.fxml");
         loadPlaylists();

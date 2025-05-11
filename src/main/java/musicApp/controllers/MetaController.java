@@ -2,6 +2,7 @@ package musicApp.controllers;
 
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Settings;
 import musicApp.services.AlertService;
 import musicApp.services.SettingsService;
@@ -33,8 +34,14 @@ public class MetaController {
      */
     public MetaController(Stage primaryStage) throws IOException {
         alertService = new AlertService();
-        settingsService = new SettingsService();
-        Settings settings = settingsService.readSettings();
+        Settings settings;
+        try {
+            settingsService = new SettingsService();
+            settings = settingsService.readSettings();
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
         playerController = new PlayerController(this, primaryStage, settings.toDTO());
         settingsController = new SettingsController(this, settings);
     }

@@ -46,11 +46,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
         initView("/fxml/MediaPlayer.fxml");
         setBalance(balance);
         setCrossfadeDuration(crossfadeDuration);
-        try {
-            setEqualizerBands(equalizerBands);
-        } catch (EqualizerGainException e) {
-            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
-        }
+        setEqualizerBands(equalizerBands);
     }
 
 
@@ -217,24 +213,30 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * Load and Play the currently selected song.
      *
      * @param song the song
-     * @throws BadSongException the bad song exception
      */
-    public void playCurrent(Song song) throws BadSongException {
-        audioPlayer.loadSong(song);
-        audioPlayer.setOnEndOfMedia(playerController::skip);
-        audioPlayer.setNextSongSupplier(playerController.getNextSongSupplier());
-        audioPlayer.unpause();
-        miniPlayerController.loadSong(song);
+    public void playCurrent(Song song) {
+        try {
+            audioPlayer.loadSong(song);
+            audioPlayer.setOnEndOfMedia(playerController::skip);
+            audioPlayer.setNextSongSupplier(playerController.getNextSongSupplier());
+            audioPlayer.unpause();
+            miniPlayerController.loadSong(song);
+        } catch (BadSongException e) {
+            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+        }
     }
 
     /**
      * Set the equalizer bands.
      *
      * @param equalizerBandsGain The gain of the equalizer bands.
-     * @throws EqualizerGainException 
      */
-    public void setEqualizerBands(List<Double> equalizerBandsGain) throws EqualizerGainException {
-        audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
+    public void setEqualizerBands(List<Double> equalizerBandsGain) {
+        try {
+            audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
+        } catch (EqualizerGainException e) {
+            alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     public List<Double> getEqualizerBands() {
@@ -252,7 +254,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     public void handleLaunchDjMode() {
         try {
             djPlayerController.play(getLoadedSong());
-        }catch(BadSongException e){
+        } catch(BadSongException e){
             alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
         }
     }

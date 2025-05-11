@@ -80,7 +80,7 @@ public class Library {
      *
      * @param song The song to remove.
      */
-    public void remove(Song song) {
+    public void remove(Song song) throws IllegalArgumentException {
         if (!contains(song)) {
             throw new IllegalArgumentException("Media not in library");
         }

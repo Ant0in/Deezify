@@ -30,7 +30,7 @@ public enum EqualizerBandFrequency {
         return band.ordinal();
     }
 
-    public static EqualizerBandFrequency fromIndex(int index) {
+    public static EqualizerBandFrequency fromIndex(int index) throws IndexOutOfBoundsException {
         EqualizerBandFrequency[] values = values();
         if (index < 0 || index >= values.length) {
             throw new IndexOutOfBoundsException("Invalid band index: " + index);

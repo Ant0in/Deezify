@@ -1,5 +1,6 @@
 package musicApp.services;
 
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.repositories.JsonRepository;
@@ -14,7 +15,7 @@ import java.util.List;
 public class PlaylistService {
     JsonRepository jsonRepository;
 
-    public PlaylistService() {
+    public PlaylistService() throws SettingsFilesException {
         jsonRepository = new JsonRepository();
     }
 
@@ -71,7 +72,7 @@ public class PlaylistService {
         }
     }
 
-    public Path addSongToMainLibrary(File song) throws IOException {
+    public Path addSongToMainLibrary(File song) throws IOException, SettingsFilesException {
         PathRepository loader = new PathRepository();
         JsonRepository jsonRepository = new JsonRepository();
         return loader.copyFileToDirectory(song, jsonRepository.getDefaultMusicFolder());
