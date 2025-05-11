@@ -25,7 +25,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     private final PlayerController playerController;
     private final MiniPlayerController miniPlayerController;
     private final DjPlayerController djPlayerController;
-    private final AudioPlayerController audioPlayerController;
+    private final AudioPlayer audioPlayer;
 
     /**
      * Instantiates a new Media player controller.
@@ -40,17 +40,13 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
         view.setListener(this);
         playerController = controller;
         miniPlayerController = new MiniPlayerController();
-        audioPlayerController = new AudioPlayerController(miniPlayerController);
+        audioPlayer = new AudioPlayer(miniPlayerController);
         djPlayerController = new DjPlayerController(this);
 
         initView("/fxml/MediaPlayer.fxml");
         setBalance(balance);
         setCrossfadeDuration(crossfadeDuration);
-        try {
-            setEqualizerBands(equalizerBands);
-        } catch (EqualizerGainException e) {
-            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
-        }
+        setEqualizerBands(equalizerBands);
     }
 
 
@@ -60,7 +56,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return Whether the song is playing.
      */
     public BooleanProperty getIsPlayingProperty() {
-        return audioPlayerController.getIsPlayingProperty();
+        return audioPlayer.getIsPlayingProperty();
     }
 
     /**
@@ -69,7 +65,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The progress of the song.
      */
     public DoubleProperty progressProperty() {
-        return audioPlayerController.getProgressProperty();
+        return audioPlayer.getProgressProperty();
     }
 
     /**
@@ -78,7 +74,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The current time of the song.
      */
     public Duration getCurrentTime() {
-        return new Duration(audioPlayerController.getCurrentTime().toMillis()) ;
+        return new Duration(audioPlayer.getCurrentTime().toMillis()) ;
     }
 
     /**
@@ -87,7 +83,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The total duration of the song.
      */
     public Duration getTotalDuration() {
-        return new Duration(audioPlayerController.getTotalDuration().toMillis()) ;
+        return new Duration(audioPlayer.getTotalDuration().toMillis()) ;
     }
 
     /**
@@ -96,7 +92,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @param duration The duration to seek to.
      */
     public void seek(double duration) {
-        audioPlayerController.seek(duration);
+        audioPlayer.seek(duration);
     }
 
     /**
@@ -105,7 +101,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @param speed The speed to set.
      */
     public void changeSpeed(double speed) {
-        audioPlayerController.changeSpeed(speed);
+        audioPlayer.changeSpeed(speed);
     }
 
     /**
@@ -114,7 +110,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The volume property.
      */
     public DoubleProperty getVolumeProperty() {
-        return audioPlayerController.getVolumeProperty();
+        return audioPlayer.getVolumeProperty();
     }
 
     /**
@@ -123,7 +119,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return the current song
      */
     public Song getLoadedSong() {
-        return audioPlayerController.getLoadedSong();
+        return audioPlayer.getLoadedSong();
     }
 
     /**
@@ -132,7 +128,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The current song property.
      */
     public StringProperty getCurrentSongProperty() {
-        return audioPlayerController.getCurrentSongStringProperty();
+        return audioPlayer.getCurrentSongStringProperty();
     }
 
 
@@ -151,7 +147,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * Close the audio player.
      */
     public void close() {
-        audioPlayerController.close();
+        audioPlayer.close();
     }
 
     /**
@@ -169,14 +165,14 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * Pause the currently playing song.
      */
     public void pause() {
-        audioPlayerController.pause();
+        audioPlayer.pause();
     }
 
     /**
      * Unpause the currently paused song.
      */
     public void unpause() {
-        audioPlayerController.unpause();
+        audioPlayer.unpause();
     }
 
 
@@ -201,7 +197,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @param balance the balance
      */
     public void setBalance(double balance) {
-        audioPlayerController.setBalance(balance);
+        audioPlayer.setBalance(balance);
     }
 
     /**
@@ -210,35 +206,41 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @param crossfadeDuration the crossfade duration
      */
     public void setCrossfadeDuration(double crossfadeDuration) {
-        audioPlayerController.setCrossfadeDuration(crossfadeDuration);
+        audioPlayer.setCrossfadeDuration(crossfadeDuration);
     }
 
     /**
      * Load and Play the currently selected song.
      *
      * @param song the song
-     * @throws BadSongException the bad song exception
      */
-    public void playCurrent(Song song) throws BadSongException {
-        audioPlayerController.loadSong(song);
-        audioPlayerController.setOnEndOfMedia(playerController::skip);
-        audioPlayerController.setNextSongSupplier(playerController.getNextSongSupplier());
-        audioPlayerController.unpause();
-        miniPlayerController.loadSong(song);
+    public void playCurrent(Song song) {
+        try {
+            audioPlayer.loadSong(song);
+            audioPlayer.setOnEndOfMedia(playerController::skip);
+            audioPlayer.setNextSongSupplier(playerController.getNextSongSupplier());
+            audioPlayer.unpause();
+            miniPlayerController.loadSong(song);
+        } catch (BadSongException e) {
+            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+        }
     }
 
     /**
      * Set the equalizer bands.
      *
      * @param equalizerBandsGain The gain of the equalizer bands.
-     * @throws EqualizerGainException
      */
-    public void setEqualizerBands(List<Double> equalizerBandsGain) throws EqualizerGainException {
-        audioPlayerController.updateEqualizerBandsGain(equalizerBandsGain);
+    public void setEqualizerBands(List<Double> equalizerBandsGain) {
+        try {
+            audioPlayer.updateEqualizerBandsGain(equalizerBandsGain);
+        } catch (EqualizerGainException e) {
+            alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     public List<Double> getEqualizerBands() {
-        return audioPlayerController.getEqualizerBandsGain();
+        return audioPlayer.getEqualizerBandsGain();
     }
 
     public void toggleLyrics(boolean show) {
@@ -252,7 +254,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     public void handleLaunchDjMode() {
         try {
             djPlayerController.play(getLoadedSong());
-        }catch(BadSongException e){
+        } catch(BadSongException e){
             alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
         }
     }
