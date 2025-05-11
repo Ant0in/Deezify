@@ -21,7 +21,7 @@
                 <Insets bottom="40" />
             </padding>
             <Button fx:id="addProfileButton" text="??userProfile.addUser??" styleClass="button" />
-            <ToggleButton fx:id="toggleManageProfilesButton" text="??userProfile.toggle??" styleClass="button" />
+            <ToggleButton fx:id="toggleDeleteProfilesButton" text="??userProfile.toggle??" styleClass="button" />
         </HBox>
     </bottom>
 </BorderPane>

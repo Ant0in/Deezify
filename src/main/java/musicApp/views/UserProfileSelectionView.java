@@ -27,7 +27,7 @@ public class UserProfileSelectionView extends View {
     @FXML
     private Button addProfileButton;
     @FXML
-    private ToggleButton toggleManageProfilesButton;
+    private ToggleButton toggleDeleteProfilesButton;
 
     /**
      * * The constructor for the UserProfileSelectionView class.
@@ -73,7 +73,7 @@ public class UserProfileSelectionView extends View {
      */
     private void initTranslation() {
         addProfileButton.setText(LanguageService.getInstance().get("user_profile.add"));
-        toggleManageProfilesButton.setText(LanguageService.getInstance().get("user_profile.manage"));
+        toggleDeleteProfilesButton.setText(LanguageService.getInstance().get("user_profile.manage"));
         titleLabel.setText(LanguageService.getInstance().get("user_profile.select"));
 
     }
@@ -87,7 +87,7 @@ public class UserProfileSelectionView extends View {
                 listener.onAddProfileClicked();
             }
         });
-        toggleManageProfilesButton.setOnAction(_ -> refreshUI());
+        toggleDeleteProfilesButton.setOnAction(_ -> refreshUI());
 
     }
 
@@ -128,7 +128,7 @@ public class UserProfileSelectionView extends View {
         if (usersList != null) {
             usersList.forEach(user -> {
                 VBox userBox = initUserVBox(user);
-                if (toggleManageProfilesButton.isSelected()) {
+                if (toggleDeleteProfilesButton.isSelected()) {
                     userBox.getStyleClass().add("deletable-userProfile-vbox");
                     userBox.setOnMouseClicked(_ -> listener.onDeleteUserProfile(user));
                 } else {
@@ -171,6 +171,6 @@ public class UserProfileSelectionView extends View {
         LanguageService languageService = LanguageService.getInstance();
         titleLabel.setText(languageService.get("user_profile.select"));
         addProfileButton.setText(languageService.get("user_profile.add"));
-        toggleManageProfilesButton.setText(languageService.get("user_profile.manage"));
+        toggleDeleteProfilesButton.setText(languageService.get("user_profile.manage"));
     }
 }
