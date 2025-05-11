@@ -85,10 +85,9 @@ public class PlaylistService {
         }
     }
 
-    public Path addSongToMainLibrary(File song) throws IOException {
+    public Path addSongToLibrary(File song, Path libraryPath) throws IOException {
         PathRepository loader = new PathRepository();
-        JsonRepository jsonRepository = new JsonRepository();
-        return loader.copyFileToDirectory(song, jsonRepository.getDefaultMusicFolder());
+        return loader.copyFileToDirectory(song, libraryPath);
     }
 
     public void setPlaylistsPath(Path userPlaylistPath) {

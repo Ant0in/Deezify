@@ -140,4 +140,12 @@ public class SettingsController extends ViewController<SettingsView> implements 
     public void usersUpdate() {
         settings.setCurrentUserProfile(editUserProfileController.getUserProfile());
     }
+
+    public Path getUserMusicFolder() {
+        return settings.getUserMusicFolder();
+    }
+
+    public Path getMusicFolder() {
+        return settings.getMusicFolder();
+    }
 }

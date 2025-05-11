@@ -444,4 +444,16 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     public Path getUserPlaylistPath() {
         return metaController.getUserPlaylistPath();
     }
+
+    public boolean isUserLibrary(Library library) {
+        return playlistNavigatorController.isUserLibrary(library);
+    }
+
+    public Path getUserLibraryPath() {
+        return metaController.getUserMusicFolder();
+    }
+
+    public Path getMainLibraryPath() {
+        return metaController.getMusicFolder();
+    }
 }

@@ -240,6 +240,12 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         return playerController.isMainLibrary(library);
     }
 
+    /**
+     * Checks if the user's main library is currently being shown
+     */
+    public boolean isShowingUserLibrary() {
+        return playerController.isUserLibrary(library);
+    }
 
     /**
      * Handle add song.
@@ -252,8 +258,14 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         }
         try {
             PlaylistService playlistService = new PlaylistService(playerController.getUserPlaylistPath());
-            Path copiedFilePath = playlistService.addSongToMainLibrary(audioFile);
-            addSong(copiedFilePath);
+            // depending on which library is being shown, we copy the file to the global main library or the user library
+            if (isShowingMainLibrary()) {
+                Path copiedFilePath = playlistService.addSongToLibrary(audioFile, playerController.getMainLibraryPath());
+                addSong(copiedFilePath);
+            } else if (isShowingUserLibrary()) {
+                Path copiedFilePath = playlistService.addSongToLibrary(audioFile, playerController.getUserLibraryPath() );
+                addSong(copiedFilePath);
+            }
         } catch (IOException e) {
             alertService.showAlert("Could not add song to main library : " + audioFile, Alert.AlertType.ERROR);
         }

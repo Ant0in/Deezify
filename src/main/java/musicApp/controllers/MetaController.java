@@ -81,7 +81,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
 
     /**
      * Load the player with the specified user profile.
-     * @param userProfile
+     * @param userProfile The user profile to load.
      */
     public void loadPlayerWithUser(UserProfile userProfile) {
         Settings settings = settingsService.readSettings();
@@ -92,11 +92,24 @@ public class MetaController implements EditUserProfileController.EditUserProfile
 
     /**
      * Get the user playlist path.
-     * @return
+     * @return The user playlist path.
      */
     public Path getUserPlaylistPath() {
         return settingsController.getUserPlaylistPath();
     }
+
+    /**
+     * Get the user library path.
+     * @return The user library path.
+     */
+    public Path getUserMusicFolder() {
+        return settingsController.getUserMusicFolder();
+    }
+
+    public Path getMusicFolder() {
+        return settingsController.getMusicFolder();
+    }
+
 
     /**
      * Update the users list in the user profile selection controller.

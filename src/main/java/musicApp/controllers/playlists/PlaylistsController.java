@@ -116,4 +116,8 @@ public class PlaylistsController {
         List<Library> newPlaylists = playlistService.readPlaylists();
         playlists.addAll(newPlaylists);
     }
+
+    public boolean isUserLibrary(Library library) {
+        return library.equals(playlists.get(USER_MAIN_LIBRARY_INDEX));
+    }
 }

@@ -215,4 +215,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
     public List<Library> getPlaylists() {
         return playlistsController.getPlaylists();
     }
+
+    public boolean isUserLibrary(Library library) {
+        return playlistsController.isUserLibrary(library);
+    }
 }

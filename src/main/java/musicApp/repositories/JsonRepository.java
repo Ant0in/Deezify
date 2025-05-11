@@ -46,6 +46,16 @@ public class JsonRepository {
      * Constructor
      */
     public JsonRepository() {
+        Path settingFolder = getSettingsFolder();
+        createFolderIfNotExists(settingFolder);
+        settingsFile = settingFolder.resolve("settings.json");
+        lyricsDir = settingFolder.resolve("lyrics");
+        createFolderIfNotExists(lyricsDir);
+        lyricsFile = lyricsDir.resolve("lyrics.json");
+        usersFile = settingFolder.resolve("users.json");
+    }
+
+    private Path getSettingsFolder() {
         String os = System.getProperty("os.name").toLowerCase();
         String configFolder = "Deezify";
         Path settingFolder;
@@ -57,11 +67,7 @@ public class JsonRepository {
             settingFolder = Path.of(System.getProperty("user.home"), ".config", configFolder);
         }
         createFolderIfNotExists(settingFolder);
-        settingsFile = settingFolder.resolve("settings.json");
-        lyricsDir = settingFolder.resolve("lyrics");
-        createFolderIfNotExists(lyricsDir);
-        lyricsFile = lyricsDir.resolve("lyrics.json");
-        usersFile = settingFolder.resolve("users.json");
+        return settingFolder;
     }
 
     /**
@@ -117,7 +123,7 @@ public class JsonRepository {
      */
     public Path getDefaultMusicFolder() {
         Path musicFolder = getFolderByOS("Music");
-        Path backupMusicFolder = getFolderByOS("MusicApp");
+        Path backupMusicFolder = getFolderByOS("Deezify");
 
         if (Files.exists(musicFolder)) {
             return musicFolder;

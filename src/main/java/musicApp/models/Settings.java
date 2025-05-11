@@ -205,4 +205,11 @@ public class Settings {
                 "currentUserProfile=" + currentUserProfile + "}\n";
     }
 
+    public Path getUserMusicFolder() {
+        if (currentUserProfile == null) {
+            return null;
+        } else {
+            return currentUserProfile.getUserMusicPath();
+        }
+    }
 }
