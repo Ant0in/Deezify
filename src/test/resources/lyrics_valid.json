@@ -1,0 +1,12 @@
+[
+  {
+    "songPath": "song1.mp3",
+    "textPath": "song1.txt",
+    "karaokePath": "song1.lrc"
+  },
+  {
+    "songPath": "song2.mp3",
+    "textPath": null,
+    "karaokePath": "song2.lrc"
+  }
+]
