@@ -11,6 +11,8 @@ import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
+import musicApp.repositories.LyricsRepository.LyricsFilePaths; 
+
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -265,8 +267,9 @@ public class JsonRepository {
     /**
      * Reads the lyrics library from the lyrics file.
      * If the lyrics file does not exist, it will be created with an empty library.
+     * protected for testing purposes.
      */
-    public List<LyricsRepository.LyricsFilePaths> readLyricsLibrary() {
+    protected List<LyricsRepository.LyricsFilePaths> readLyricsLibrary(Path lyricsFile) {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
@@ -282,12 +285,21 @@ public class JsonRepository {
 
     /**
      * Writes the lyrics library to the lyrics file.
+     * protected for testing purposes.
      */
-    public void writeLyricsLibrary(List<LyricsRepository.LyricsFilePaths> lib) throws IOException {
+    protected void writeLyricsLibrary(Path lyricsFile, List<LyricsRepository.LyricsFilePaths> lib) throws IOException {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
         Files.writeString(lyricsFile, gson.toJson(lib));
+    }
+
+    public List<LyricsFilePaths> readLyricsLibrary() {
+        return readLyricsLibrary(lyricsFile);
+    }
+
+    public void writeLyricsLibrary(List<LyricsFilePaths> lib) throws IOException {
+        writeLyricsLibrary(lyricsFile, lib);
     }
 
     /**
