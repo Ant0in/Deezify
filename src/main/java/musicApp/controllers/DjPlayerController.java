@@ -22,7 +22,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     private final MediaPlayerController mediaPlayerController;
     private final Equalizer equalizerBackup;
     private Timeline timeline;
-    
+
     // parameters for the effects
     private double timelineSpeed;
     private double bassBoostGain;
@@ -161,7 +161,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     private void updateWave(double amplitude, double offset) {
         double currentTime = System.currentTimeMillis() / 1000.0;
         List<Double> bandsGain = calculateBandsGain(currentTime, amplitude, offset);
-        mediaPlayerController.setEqualizerBands(bandsGain);
+        setEqualizerBands(bandsGain);
     }
 
     /**
@@ -240,7 +240,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * @param equalizer the equalizer to set
      */
     private void updateMediaPlayerEqualizer(Equalizer equalizer) {
-        mediaPlayerController.setEqualizerBands(equalizer.getBandsGain());
+        setEqualizerBands(equalizer.getBandsGain());
     }
 
     /**
@@ -327,8 +327,21 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      */
     public void handleClose() {
         if (timeline != null) { timeline.stop(); }
-        mediaPlayerController.setEqualizerBands(equalizerBackup.getBandsGain());
+        setEqualizerBands(equalizerBackup.getBandsGain());
         view.close();
+    }
+
+    /**
+     * Applies a new equalizer configuration to the media player.
+     *
+     * @param equalizerBands a list of gain values (in decibels) for each frequency band
+     */
+    public void setEqualizerBands(List<Double> equalizerBands) {
+        try{
+            mediaPlayerController.setEqualizerBands(equalizerBands);
+        } catch (EqualizerGainException e) {
+            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+        }
     }
 
 }
