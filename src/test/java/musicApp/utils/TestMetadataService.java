@@ -5,14 +5,6 @@
  */
 package musicApp.utils;
 
-import javafx.util.Duration;
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
-import musicApp.models.Metadata;
-import musicApp.services.LanguageService;
-import musicApp.services.MetadataService;
-import org.junit.Test;
-
 import java.io.File;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -23,7 +15,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.fail;
+import org.junit.Test;
+
+import javafx.util.Duration;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.exceptions.ID3TagException;
+import musicApp.models.Metadata;
+import musicApp.services.LanguageService;
+import musicApp.services.MetadataService;
 
 public class TestMetadataService {
 

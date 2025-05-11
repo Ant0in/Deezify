@@ -1,9 +1,12 @@
 package musicApp.controllers;
 
+import javafx.scene.control.Alert;
 import javafx.scene.media.AudioSpectrumListener;
 import musicApp.models.Song;
+import musicApp.services.VideoService;
 import musicApp.views.MiniPlayerView;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -53,7 +56,19 @@ public class MiniPlayerController extends ViewController<MiniPlayerView> impleme
      * @param song the song to load
      */
     public void loadSong(Song song) {
-        view.updateSongProperties(song.getTitle(), song.getCoverImage());
+        Path videoPath = null;
+
+        byte[] videoBytes = song.getMetadata().getVideoCover();
+        if ( videoBytes != null && videoBytes.length > 0 ) {
+            VideoService s = new VideoService();
+            try {
+                videoPath = s.tempFileFromBytes(videoBytes).toPath();
+            } catch (Exception e) {
+                alertService.showAlert("Failed to load video cover from song", Alert.AlertType.WARNING);
+            }
+        }
+
+        view.updateSongProperties(song.getTitle(), song.getCoverImage(), videoPath );
     }
 
     /**

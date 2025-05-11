@@ -269,10 +269,10 @@ public class EditMetadataView extends View {
      */
     private File promptUserForCoverFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose Cover Image");
+        fileChooser.setTitle("Choose Cover Image/Video");
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+                new FileChooser.ExtensionFilter("Image or Video File", "*.png", "*.jpg", "*.jpeg", "*.mp4")
         );
 
         return fileChooser.showOpenDialog(stage);

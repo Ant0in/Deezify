@@ -1,15 +1,21 @@
 package musicApp.views;
 
 import javafx.fxml.FXML;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
+import org.jetbrains.annotations.Nullable;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -25,6 +31,11 @@ public class MiniPlayerView extends View{
 
     @FXML
     private ImageView coverImage;
+
+    @FXML
+    private MediaView coverVideo;
+    @FXML
+    private StackPane coverWrapper;
 
     @FXML
     private Canvas canvas;
@@ -99,9 +110,32 @@ public class MiniPlayerView extends View{
      * @param title      the title
      * @param newCoverImage the cover image
      */
-    public void updateSongProperties(String title, Image newCoverImage) {
+    public void updateSongProperties(String title, @Nullable Image newCoverImage, @Nullable Path videoPath) {
         songTitleLabel.setText(title);
-        coverImage.setImage(newCoverImage);
+
+        if (videoPath != null) {
+            // Handle video cover
+            Media media = new Media(videoPath.toUri().toString());
+            MediaPlayer player = new MediaPlayer(media);
+            coverVideo.setMediaPlayer(player);
+            coverVideo.setVisible(true);
+            coverImage.setVisible(false);
+            player.setVolume(0);
+            player.setCycleCount(MediaPlayer.INDEFINITE);
+            player.play();
+        } else if (newCoverImage != null) {
+            // Handle image cover
+            coverImage.setImage(newCoverImage);
+            coverImage.setVisible(true);
+            coverVideo.setVisible(false);
+            coverVideo.setMediaPlayer(null);
+        } else {
+            // No cover at all
+            coverImage.setVisible(false);
+            coverVideo.setVisible(false);
+            coverImage.setImage(null);
+            coverVideo.setMediaPlayer(null);
+        }
     }
 
 
@@ -112,11 +146,11 @@ public class MiniPlayerView extends View{
     public void toggleClip() {
         if (isClipped) {
             // Remove the clip (non-clipped state)
-            coverImage.setClip(null);
+            coverWrapper.setClip(null);
         } else {
             // Set the clip to a circle (clipped state)
-            Circle clip = new Circle(coverImage.getFitWidth() / 2, coverImage.getFitHeight() / 2, coverImage.getFitWidth() / 2);
-            coverImage.setClip(clip);
+            Circle clip = new Circle(coverWrapper.getWidth() / 2, coverWrapper.getHeight() / 2, coverWrapper.getWidth() / 2);
+            coverWrapper.setClip(clip);
         }
         // Toggle the flag
         isClipped = !isClipped;

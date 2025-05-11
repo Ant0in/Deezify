@@ -1,22 +1,33 @@
 package musicApp.controllers.songs;
 
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import musicApp.controllers.ViewController;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
 import musicApp.services.MetadataService;
+import musicApp.services.VideoService;
 import musicApp.views.songs.EditMetadataView;
 
+
 import java.io.File;
+
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
+import javafx.embed.swing.SwingFXUtils;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
+
+
+
+import java.awt.image.BufferedImage;
 
 /**
  * The type Edit metadata controller.
  */
 public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataView.EditMetadataViewListener {
-    private File selectedCoverImageFile;
+    private File selectedCoverFile;
     private final Song song;
     private final SongCellController songCellController;
 
@@ -51,6 +62,12 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      */
     public void handleCoverChanged(File file) {
         if (file != null && file.exists()) {
+            long maxSizeBytes = 100L * 1024 * 1024; // 100 MB in bytes
+            if (file.length() > maxSizeBytes) {
+                alertService.showAlert("Selected file is too large. Please choose a file under 100 MB.", Alert.AlertType.ERROR);
+                return;
+            }
+
             loadAndApplyCoverImage(file);
         }
     }
@@ -61,15 +78,28 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      * @param file the image file to load
      */
     private void loadAndApplyCoverImage(File file) {
+
         try {
-            Image image = new Image(file.toURI().toString());
-            if (!image.isError()) {
-                view.setCoverImage(image);
-                selectedCoverImageFile = file;
+
+            Image image = null;
+
+            // Check if File is a video file
+            if (file.toPath().toString().endsWith(".mp4")) {
+                VideoService videoService = new VideoService();
+                image = videoService.getFirstFrame(file);
+                if (image == null) { return; }
             } else {
-                System.err.println("Failed to load image: " + file.getName());
+                image = new Image(file.toURI().toString());
+            }
+
+            if ( !image.isError()) {
+                view.setCoverImage(image);
+                selectedCoverFile = file;
+            } else {
+                System.err.println("Failed to load file: " + file.getName());
             }
         } catch (Exception e) {
+            e.printStackTrace();
             alertService.showExceptionAlert(e);
         }
     }
@@ -97,8 +127,8 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
             newMetadata.setAlbum(album);
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(new ArrayList<>(userTags));
-            if (selectedCoverImageFile != null) {
-                newMetadata.loadCoverFromPath(selectedCoverImageFile.getAbsolutePath());
+            if (selectedCoverFile != null) {
+                newMetadata.loadCoverFromPath(selectedCoverFile);
             }
             MetadataService util = new MetadataService();
 
