@@ -8,6 +8,7 @@ import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.services.PlaylistService;
 import musicApp.views.LibraryView;
+import musicApp.services.LanguageService;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,13 @@ import java.util.*;
  */
 public class LibraryController extends SongContainerController<LibraryView, Library>
         implements LibraryView.LibraryViewListener {
+
+    private final int MAX_SUGGESTIONS = 5;
+    private final LanguageService LANG = LanguageService.getInstance();
+    private final String DEFAULT_ARTIST = LANG.get("metadata.artist");
+    private final String DEFAULT_ALBUM  = LANG.get("metadata.album");
+    private final String DEFAULT_GENRE  = LANG.get("metadata.genre");
+
     private int currentIndex;
     private Boolean shuffle;
 
@@ -360,28 +368,61 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
         return songs;
     }
 
-
     /**
-     * Provides song suggestions based on the current library.
+     * Provides song suggestions based on the current playlist.
      *
      * @return A list of suggested songs based on the query.
      */
     private List<Song> getSuggestions(String query) {
         Set<String> artists = new HashSet<>(), albums = new HashSet<>(), tags = new HashSet<>(), genres = new HashSet<>();
-        for (Song p : library.toList()) {
-            artists.add(p.getArtist());
-            albums.add(p.getAlbum());
-            String g = p.getGenre();
-            if (g != null && !g.isBlank()) genres.add(g);
-            for (String t : p.getUserTags()) if (t != null && !t.isBlank()) tags.add(t);
+        collectPlaylistData(artists, albums, tags, genres);
+
+        List<Song> candidates = new ArrayList<>(playerController.getMainLibrary().toList()); // get all songs in main library
+        candidates.removeAll(library.toList()); // remove songs already in playlist
+
+        if (artists.isEmpty() && albums.isEmpty() && genres.isEmpty()  && tags.isEmpty()) {
+            return fallbackCandidates(candidates);
         }
-        List<Song> candidates = new ArrayList<>(playerController.getMainLibrary().toList());
-        candidates.removeAll(library.toList()); // remove already added songs
-        candidates.sort((a, b) -> score(b, artists, albums, tags, genres) - score(a, artists, albums, tags, genres));
+
+        candidates.sort((a,b) -> score(b, artists, albums, tags, genres) - score(a, artists, albums, tags, genres));
 
         List<Song> suggestions = new ArrayList<>();
-        for (Song s : candidates) if (score(s, artists, albums, tags, genres) > 0) suggestions.add(s);
+        for (Song s : candidates) {
+            if (score(s, artists, albums, tags, genres) <= 0) break;
+            suggestions.add(s);
+            if (suggestions.size() >= MAX_SUGGESTIONS) break;
+        }
         return suggestions;
+    }
+
+    /**
+     * Collects data from the currentƒ playlist
+     */
+    private void collectPlaylistData(Set<String> artists, Set<String> albums, Set<String> tags, Set<String> genres) {
+        for (Song s : library.toList()) {
+            if (DEFAULT_ARTIST.equals(s.getArtist()) && DEFAULT_ALBUM.equals(s.getAlbum()) && DEFAULT_GENRE.equals(s.getGenre())) continue;
+
+            String art = s.getArtist(), alb = s.getAlbum(), g = s.getGenre();
+
+            if (art != null && !art.isBlank() && !art.equals(DEFAULT_ARTIST))
+                artists.add(art);
+            if (alb != null && !alb.isBlank() && !alb.equals(DEFAULT_ALBUM))
+                albums.add(alb);
+            if (g != null && !g.isBlank() && !g.equals(DEFAULT_GENRE))
+                genres.add(g);
+            for (String t : s.getUserTags()) if (t != null && !t.isBlank()) tags.add(t);
+
+        }
+    }
+    /**
+     * Provides a fallback list of songs if the playlist has no data.
+     */
+    private List<Song> fallbackCandidates(List<Song> candidates) {
+        List<Song> first = new ArrayList<>();
+        for (int i = 0; i < candidates.size() && i < MAX_SUGGESTIONS; i++) {
+            first.add(candidates.get(i));
+        }
+        return first;
     }
 
     /**
@@ -390,14 +431,14 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      */
     private int score(Song s, Set<String> artists, Set<String> albums, Set<String> tags, Set<String> genres) {
         int sc = 0;
-        // simple content based scoring
-        if (artists.contains(s.getArtist())) sc++;
-        if (albums.contains(s.getAlbum())) sc++;
-        if (genres.contains(s.getGenre())) sc++;
+        String art = s.getArtist(), alb = s.getAlbum(), g = s.getGenre();
+
+        if (art != null && !art.equals(DEFAULT_ARTIST) && artists.contains(art)) sc++;
+        if (alb != null && !alb.equals(DEFAULT_ALBUM)  && albums.contains(alb)) sc++;
+        if (g   != null && !g.equals(DEFAULT_GENRE)  && genres.contains(g)) sc++;
+
         for (String t : s.getUserTags()) if (tags.contains(t)) sc++;
         return sc;
     }
-
-
 
 }
