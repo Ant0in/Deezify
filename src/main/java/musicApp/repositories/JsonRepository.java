@@ -58,7 +58,6 @@ public class JsonRepository {
         }
         createFolderIfNotExists(settingFolder);
         settingsFile = settingFolder.resolve("settings.json");
-//        playlistsFile = settingFolder.resolve("playlists.json");
         lyricsDir = settingFolder.resolve("lyrics");
         createFolderIfNotExists(lyricsDir);
         lyricsFile = lyricsDir.resolve("lyrics.json");
