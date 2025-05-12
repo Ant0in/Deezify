@@ -40,9 +40,14 @@ public class MetaController implements EditUserProfileController.EditUserProfile
      */
     public MetaController(Stage primaryStage) throws IOException {
         alertService = new AlertService();
-        settingsService = new SettingsService();
-        UserProfileService userProfileService = new UserProfileService();
-        userProfileSelectionController = new UserProfileSelectionController(this,primaryStage, userProfileService.readUserProfiles());
+        try {
+            settingsService = new SettingsService();
+            UserProfileService userProfileService = new UserProfileService();
+            userProfileSelectionController = new UserProfileSelectionController(this,primaryStage, userProfileService.readUserProfiles());
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -130,5 +135,12 @@ public class MetaController implements EditUserProfileController.EditUserProfile
      *
      * @return the default language.
      */
-    public Language getDefaultLanguage() { return settingsService.readSettings().getCurrentLanguage(); }
+    public Language getDefaultLanguage() {
+        try {
+            return settingsService.readSettings().getCurrentLanguage();
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
+    }
 }

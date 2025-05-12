@@ -3,6 +3,7 @@ package musicApp.controllers;
 import javafx.scene.control.Alert;
 import musicApp.controllers.settings.EqualizerController;
 import musicApp.enums.Language;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Equalizer;
 import musicApp.models.UserProfile;
 import musicApp.services.LanguageService;
@@ -87,27 +88,32 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      */
     @Override
     public void handleSave(String userName, double balance, double crossfade, Path imagePath, Path musicPath, String language) {
-        if (!validateInputs(userName, musicPath)) {
-            return;
+        try {
+            if (!validateInputs(userName, musicPath)) {
+                return;
+            }
+            switch (language) {
+                case "Nederlands" -> language = "nl";
+                case "Français" -> language = "fr";
+                case "English" -> language = "en";
+            }
+            UserProfileService userProfileService = new UserProfileService();
+            if (isCreation) {
+                userProfile = new UserProfile(userName, imagePath, musicPath, language, balance, crossfade);
+                userProfileService.addUserProfile(userProfile);
+            } else {
+                String originalUserName = userProfile.getUsername();
+                updateEqualizer();
+                updateUserProfile(userName, imagePath, musicPath, balance, crossfade, language);
+                userProfileService.updateUserProfile(userProfile, originalUserName);
+            }
+    //        setLanguage(Language.fromCode(language));
+            listener.usersUpdate();
+            handleClose();
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
         }
-        switch (language) {
-            case "Nederlands" -> language = "nl";
-            case "Français" -> language = "fr";
-            case "English" -> language = "en";
-        }
-        UserProfileService userProfileService = new UserProfileService();
-        if (isCreation) {
-            userProfile = new UserProfile(userName, imagePath, musicPath, language, balance, crossfade);
-            userProfileService.addUserProfile(userProfile);
-        } else {
-            String originalUserName = userProfile.getUsername();
-            updateEqualizer();
-            updateUserProfile(userName, imagePath, musicPath, balance, crossfade, language);
-            userProfileService.updateUserProfile(userProfile, originalUserName);
-        }
-//        setLanguage(Language.fromCode(language));
-        listener.usersUpdate();
-        handleClose();
     }
 
 

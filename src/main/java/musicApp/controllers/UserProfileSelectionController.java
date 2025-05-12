@@ -2,6 +2,7 @@ package musicApp.controllers;
 
 import javafx.stage.Stage;
 import musicApp.enums.Language;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.UserProfile;
 import musicApp.services.LanguageService;
 import musicApp.services.UserProfileService;
@@ -53,8 +54,13 @@ public class UserProfileSelectionController extends ViewController<UserProfileSe
      * * This method updates the list of user profiles and refreshes the UI.
      */
     public void usersUpdate(){
-        usersList = new UserProfileService().readUserProfiles();
-        view.refreshUI();
+        try {
+            usersList = new UserProfileService().readUserProfiles();
+            view.refreshUI();
+        }  catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -75,9 +81,13 @@ public class UserProfileSelectionController extends ViewController<UserProfileSe
      * @param userProfile The user profile to delete
      */
     public void onDeleteUserProfile(UserProfile userProfile) {
-        UserProfileService userProfileService = new UserProfileService();
-        userProfileService.deleteUserProfile(userProfile);
-        usersUpdate();
+        try {
+            UserProfileService userProfileService = new UserProfileService();
+            userProfileService.deleteUserProfile(userProfile);
+            usersUpdate();
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
     }
-
 }

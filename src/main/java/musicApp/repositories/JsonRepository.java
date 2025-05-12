@@ -6,7 +6,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import musicApp.exceptions.SettingsFilesException;
-import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;
@@ -59,7 +58,7 @@ public class JsonRepository {
         usersFile = settingFolder.resolve("users.json");
     }
 
-    private Path getSettingsFolder() {
+    private Path getSettingsFolder() throws SettingsFilesException {
         String os = System.getProperty("os.name").toLowerCase();
         String configFolder = "Deezify";
         Path settingFolder;
