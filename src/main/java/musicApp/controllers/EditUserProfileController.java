@@ -10,7 +10,6 @@ import musicApp.services.UserProfileService;
 import musicApp.views.EditUserProfileView;
 
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * The type Playlist edit controller.
@@ -92,30 +91,21 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
             return;
         }
         switch (language) {
-            case "Nederlands": language = "nl"; break;
-            case "Français": language = "fr"; break;
-            default: language = "en"; break;
+            case "Nederlands" -> language = "nl";
+            case "Français" -> language = "fr";
+            case "English" -> language = "en";
         }
-        if (isCreation) {
-            userProfile = new UserProfile(userName, imagePath, musicPath, language);
-        }
-        updateEqualizer();
-        String originalUserName = userProfile.getUsername();
-        userProfile.setUsername(userName);
-        userProfile.setUserPicturePath(imagePath);
-        userProfile.setUserMusicPath(musicPath);
-        userProfile.setBalance(balance);
-        userProfile.setCrossfadeDuration(crossfade);
-        userProfile.setEqualizerBandsGain(getEqualizerBandsGain());
-        userProfile.setLanguage(language);
-
         UserProfileService userProfileService = new UserProfileService();
         if (isCreation) {
+            userProfile = new UserProfile(userName, imagePath, musicPath, language, balance, crossfade);
             userProfileService.addUserProfile(userProfile);
         } else {
+            String originalUserName = userProfile.getUsername();
+            updateEqualizer();
+            updateUserProfile(userName, imagePath, musicPath, balance, crossfade, language);
             userProfileService.updateUserProfile(userProfile, originalUserName);
         }
-        setLanguage(Language.fromCode(language));
+//        setLanguage(Language.fromCode(language));
         listener.usersUpdate();
         handleClose();
     }
@@ -139,6 +129,23 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         }
         return true;
     }
+
+    /**
+     * Update the existing userProfile with the new values.
+     * @param userName userProfile's name
+     * @param imagePath userProfile's image path
+     * @param musicPath userProfile's music path
+     */
+    private void updateUserProfile(String userName, Path imagePath, Path musicPath, double balance, double crossfade, String language) {
+        userProfile.setUsername(userName);
+        userProfile.setUserPicturePath(imagePath);
+        userProfile.setUserMusicPath(musicPath);
+        userProfile.setUserPlaylistsPath(musicPath);
+        userProfile.setBalance(balance);
+        userProfile.setCrossfadeDuration(crossfade);
+        setLanguage(Language.fromCode(language));
+    }
+
 
     /**
      * Handle closing the view.
@@ -198,10 +205,6 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
             return 0.0;
         }
         return userProfile.getBalance();
-    }
-
-    public List<Double> getEqualizerBandsGain() {
-        return equalizerController.getEqualizerBandsGain();
     }
 
     public UserProfile getUserProfile() {

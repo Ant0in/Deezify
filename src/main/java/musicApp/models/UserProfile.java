@@ -29,13 +29,13 @@ public class UserProfile {
      * @param _userPicturePath path to the profile picture of the userProfile.
      * @param _userMusicPath path to the music folder of the userProfile.
      */
-    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, String _language) {
+    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, String _language, double _balance, double _crossfadeDuration) {
         username = _username;
         userPicturePath = _userPicturePath;
-        balance = 0.0;
+        balance = _balance;
         userMusicPath = _userMusicPath;
         equalizer = new Equalizer();
-        crossfadeDuration = 0.0;
+        crossfadeDuration = _crossfadeDuration;
         userPlaylistPath = userMusicPath.resolve("playlists.json");
         language = _language;
     }
@@ -239,10 +239,6 @@ public class UserProfile {
         String s1 = (p1 == null) ? "" : p1.toString();
         String s2 = (p2 == null) ? "" : p2.toString();
         return s1.equals(s2);
-    }
-
-    public void setEqualizerBandsGain(List<Double> newEqualizerBandsGain) {
-        equalizer.setBandsGain(newEqualizerBandsGain);
     }
 
     public void setUserPlaylistsPath(Path musicPath) {
