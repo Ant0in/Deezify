@@ -55,6 +55,8 @@
     <VBox spacing="10" alignment="CENTER">
         <HBox spacing="10" alignment="CENTER">
             <Label fx:id="userImageLabel" textFill="white"/>
+            <ComboBox fx:id="languageChoice" prefWidth="120"  style="-fx-background-color: #41729f;
+            -fx-text-fill: white; -fx-font-weight: bold;"/>
             <Button fx:id="chooseUserImageButton" text="??userImage??"
                     style="-fx-background-color: #274472; -fx-text-fill: white;"/>
         </HBox>

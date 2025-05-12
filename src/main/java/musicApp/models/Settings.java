@@ -1,7 +1,9 @@
 package musicApp.models;
 
 import com.google.gson.annotations.Expose;
+import musicApp.enums.Language;
 import musicApp.models.dtos.SettingsDTO;
+import musicApp.services.LanguageService;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,16 +17,18 @@ public class Settings {
     private Path musicFolder;
     private UserProfile currentUserProfile;
     private boolean musicFolderChanged;
+    private Language currentLanguage;
 
     /**
      * Constructor for Settings.
      *
      * @param _musicFolder The music folder of the settings.
      */
-    public Settings(Path _musicFolder) {
+    public Settings(Path _musicFolder, String _language) {
             musicFolderChanged = false;
             musicFolder = _musicFolder;
             currentUserProfile = null;
+            currentLanguage = Language.fromCode(_language);
         }
 
     /**
@@ -37,6 +41,13 @@ public class Settings {
         musicFolderChanged = false;
         musicFolder = _musicFolder;
         currentUserProfile = _currentUserProfile;
+    }
+
+    public Settings(Path _musicFolder, UserProfile _currentUserProfile, Language _language) {
+        musicFolderChanged = false;
+        musicFolder = _musicFolder;
+        currentUserProfile = _currentUserProfile;
+        currentLanguage = _language;
     }
 
     /**
@@ -137,6 +148,19 @@ public class Settings {
     public void setCurrentUserProfile(UserProfile newCurrentUserProfile) {
         currentUserProfile = newCurrentUserProfile;
     }
+
+    /**
+     * Get the settings current language.
+     * @return the settings current language.
+     */
+    public Language getCurrentLanguage() { return currentLanguage; }
+
+    /**
+     * Set the settings current language.
+     *
+     * @param newCurrentLanguage the new current language.
+     */
+    public void setCurrentLanguage(Language newCurrentLanguage) { currentLanguage = newCurrentLanguage; }
 
     /**
      * Checks if the settings object is equal to another settings object.

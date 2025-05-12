@@ -13,6 +13,7 @@ import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.models.dtos.SettingsDTO;
+import musicApp.services.LanguageService;
 import musicApp.views.PlayerView;
 
 import java.nio.file.Path;
@@ -151,6 +152,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     public void returnToUsersWindow() {
         stopPlayback();
         closeStage();
+        LanguageService.getInstance().setLanguage(metaController.getDefaultLanguage());
         metaController.switchScene(MetaController.Scenes.USERSWINDOW);
     }
 

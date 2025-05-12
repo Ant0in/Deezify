@@ -1,15 +1,18 @@
 package musicApp.views;
 
 import javafx.fxml.FXML;
+import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import musicApp.enums.Language;
 import musicApp.services.AlertService;
 import musicApp.services.FileDialogService;
 import musicApp.services.LanguageService;
@@ -39,6 +42,8 @@ public class EditUserProfileView extends View {
     private VBox popupLayout;
     @FXML
     private Slider balanceSlider, crossfadeSlider;
+    @FXML
+    private ComboBox<String> languageChoice;
 
     public void show() {
         if (stage != null) {
@@ -54,7 +59,7 @@ public class EditUserProfileView extends View {
      * checking if the view is in creation mode, retrieving the stage, and closing the view.
      */
     public interface EditUserProfileViewListener {
-        void handleSave(String userName,double balance, double crossfade, Path imagePath, Path musicPath);
+        void handleSave(String userName,double balance, double crossfade, Path imagePath, Path musicPath, String Language);
 
         void handleCancel();
 
@@ -63,6 +68,8 @@ public class EditUserProfileView extends View {
         double getBalance();
 
         double getCrossfadeDuration();
+
+        Language getLanguage();
 
         void handleOpenEqualizer();
     }
@@ -84,6 +91,7 @@ public class EditUserProfileView extends View {
     public void init() {
         initButtons();
         initSlider();
+        initLanguageChoice();
         refreshTranslation();
         initStage();
     }
@@ -139,6 +147,19 @@ public class EditUserProfileView extends View {
         chosenMusicFolderLabel.setText(musicPath);
     }
 
+    private void initLanguageChoice() {
+        languageChoice.setItems(FXCollections.observableArrayList(
+                "English",
+                "Français",
+                "Nederlands"
+        ));
+        try {
+            languageChoice.setValue(listener.getLanguage().getDisplayName());
+        } catch (Exception e) {
+            languageChoice.setValue(Language.DEFAULT.getDisplayName());
+        }
+    }
+
     /**
      * Refresh the translation for the UI elements.
      * This method updates the text of various labels and buttons based on the current language settings.
@@ -173,7 +194,7 @@ public class EditUserProfileView extends View {
 
         actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(),balanceSlider.getValue(), crossfadeSlider.getValue(),
                 !(userImageLabel.getText() == null) ? Path.of(userImageLabel.getText()) : null
-                , !(chosenMusicFolderLabel.getText() ==null ) ?Path.of(chosenMusicFolderLabel.getText()) : null));
+                , !(chosenMusicFolderLabel.getText() ==null ) ?Path.of(chosenMusicFolderLabel.getText()) : null, languageChoice.getValue()));
 
         cancelButton.setOnAction(_ -> listener.handleCancel());
         equalizerButton.setOnAction(_ -> listener.handleOpenEqualizer());

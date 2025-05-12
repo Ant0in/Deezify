@@ -29,6 +29,8 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         out.value(settings.getMusicFolderString());
         out.name("crossfadeDuration");
         out.value(settings.getCrossfadeDuration());
+        out.name("language");
+        out.value(settings.getCurrentLanguage().getCode());
         out.endObject();
     }
 
@@ -44,18 +46,21 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         Path musicFolder = null;
         Equalizer equalizer = new Equalizer();
         double crossfadeDuration = 0.0;
+        String language = null;
 
         in.beginObject();
         while (in.hasNext()) {
             String fieldName = in.nextName();
             if (fieldName.equals("musicFolder")) {
                 musicFolder = Paths.get(in.nextString());
+            } else if (fieldName.equals("language")) {
+                language = in.nextString();
             } else {
                 in.skipValue();
             }
         }
         in.endObject();
 
-        return new Settings(musicFolder);
+        return new Settings(musicFolder, language);
     }
 }

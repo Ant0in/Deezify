@@ -45,6 +45,8 @@ public class SettingsView extends View {
         String getMusicFolderString();
 
         void editUserProfile();
+
+        Language getDefaultLanguage();
     }
 
     /**
@@ -104,7 +106,7 @@ public class SettingsView extends View {
      * Update the language combobox to display the current language.
      */
     private void updateLanguageComboBox() {
-        Language currentLang = LanguageService.getInstance().getCurrentLanguage();
+        Language currentLang = listener.getDefaultLanguage();
         languageComboBox.getSelectionModel().select(currentLang.getDisplayName());
     }
 

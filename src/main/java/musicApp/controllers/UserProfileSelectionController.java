@@ -1,7 +1,9 @@
 package musicApp.controllers;
 
 import javafx.stage.Stage;
+import musicApp.enums.Language;
 import musicApp.models.UserProfile;
+import musicApp.services.LanguageService;
 import musicApp.services.UserProfileService;
 import musicApp.views.UserProfileSelectionView;
 
@@ -63,7 +65,8 @@ public class UserProfileSelectionController extends ViewController<UserProfileSe
         view.close();
         metaController.loadPlayerWithUser(selectedUserProfile);
         metaController.switchScene(MetaController.Scenes.MAINWINDOW);
-
+        LanguageService.getInstance().setLanguage(Language.fromCode(selectedUserProfile.getLanguage()));
+        metaController.refreshUI();
     }
 
     /**

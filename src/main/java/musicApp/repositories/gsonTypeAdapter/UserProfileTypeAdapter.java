@@ -54,6 +54,9 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
         Path playlistPath = userProfile.getUserPlaylistPath();
         out.value(playlistPath != null ? playlistPath.toString() : "");
 
+        // User preferred language
+        out.name("language").value(userProfile.getLanguage());
+
         out.endObject();
     }
 
@@ -73,6 +76,7 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
         Path userPlaylistPath = null;
         double balance = 0;
         double crossfadeDuration = 0.0;
+        String language = null;
 
         Equalizer equalizer = new Equalizer();
 
@@ -109,6 +113,9 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                             ? Paths.get(rawPath)
                             : null;
                 }
+                case "language" -> {
+                    language = in.nextString();
+                }
                 default -> in.skipValue();
             }
         }
@@ -118,6 +125,7 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                 username,
                 userPicturePath,
                 userMusicPath,
+                language,
                 userPlaylistPath,
                 balance,
                 crossfadeDuration,

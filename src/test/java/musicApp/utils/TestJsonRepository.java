@@ -20,7 +20,7 @@ public class TestJsonRepository extends JsonRepository {
     public void setUp() {
         // set the test data into userProfile.json
         Path userProfilePath = Paths.get("src", "test", "resources", "userProfile.json");
-        UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""));
+        UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""), "English");
         userProfile.setBalance(0.0);
         userProfile.setEqualizer(new Equalizer());
         setUserProfiles(List.of(userProfile), userProfilePath);

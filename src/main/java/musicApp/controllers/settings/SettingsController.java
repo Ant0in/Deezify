@@ -66,6 +66,13 @@ public class SettingsController extends ViewController<SettingsView> implements 
     }
 
     /**
+     * Set the default language.
+     *
+     * @param language the language
+     */
+    private void setLanguage(Language language) { settings.setCurrentLanguage(language); }
+
+    /**
      * Set the current user profile.
      * @param userProfile
      */
@@ -80,10 +87,9 @@ public class SettingsController extends ViewController<SettingsView> implements 
      * @param musicFolder the music folder
      */
     public void handleSave(Language language, Path musicFolder) {
-        LanguageService.getInstance().setLanguage(language);
-        refreshLanguage();
+        setLanguage(language);
         setMusicFolderPath(musicFolder);
-        metaController.notifySettingsChanged(settings);    
+        metaController.notifySettingsChanged(settings);
         updateView();
         close();
     }
@@ -148,4 +154,11 @@ public class SettingsController extends ViewController<SettingsView> implements 
     public Path getMusicFolder() {
         return settings.getMusicFolder();
     }
+
+    /**
+     * Get the default language of the app.
+     *
+     * @return The default language.
+     */
+    public Language getDefaultLanguage() { return metaController.getDefaultLanguage(); }
 }

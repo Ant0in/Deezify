@@ -2,6 +2,7 @@ package musicApp.controllers;
 
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
+import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;
 import musicApp.services.AlertService;
@@ -117,4 +118,11 @@ public class MetaController implements EditUserProfileController.EditUserProfile
     public void usersUpdate() {
         userProfileSelectionController.usersUpdate();
     }
+
+    /**
+     * Get the app's default language.
+     *
+     * @return the default language.
+     */
+    public Language getDefaultLanguage() { return settingsService.readSettings().getCurrentLanguage(); }
 }

@@ -2,6 +2,7 @@ package musicApp.controllers;
 
 import javafx.scene.control.Alert;
 import musicApp.controllers.settings.EqualizerController;
+import musicApp.enums.Language;
 import musicApp.models.Equalizer;
 import musicApp.models.UserProfile;
 import musicApp.services.LanguageService;
@@ -86,12 +87,17 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      * @param musicPath The userProfile's music path
      */
     @Override
-    public void handleSave(String userName, double balance, double crossfade, Path imagePath, Path musicPath) {
+    public void handleSave(String userName, double balance, double crossfade, Path imagePath, Path musicPath, String language) {
         if (!validateInputs(userName, musicPath)) {
             return;
         }
+        switch (language) {
+            case "Nederlands": language = "nl"; break;
+            case "Français": language = "fr"; break;
+            default: language = "en"; break;
+        }
         if (isCreation) {
-            userProfile = new UserProfile(userName, imagePath, musicPath);
+            userProfile = new UserProfile(userName, imagePath, musicPath, language);
         }
         updateEqualizer();
         String originalUserName = userProfile.getUsername();
@@ -101,6 +107,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         userProfile.setBalance(balance);
         userProfile.setCrossfadeDuration(crossfade);
         userProfile.setEqualizerBandsGain(getEqualizerBandsGain());
+        userProfile.setLanguage(language);
 
         UserProfileService userProfileService = new UserProfileService();
         if (isCreation) {
@@ -108,6 +115,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         } else {
             userProfileService.updateUserProfile(userProfile, originalUserName);
         }
+        setLanguage(Language.fromCode(language));
         listener.usersUpdate();
         handleClose();
     }
@@ -133,41 +141,6 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
     }
 
     /**
-     * Create a new userProfile and add it to the list of all userProfiles.
-     * @param userName userProfile's name
-     * @param imagePath userProfile's image path
-     * @param musicPath userProfile's music path
-     * @param allUserProfiles list of all userProfiles
-     */
-    private void createUserProfile(String userName, Path imagePath, Path musicPath, List<UserProfile> allUserProfiles) {
-        UserProfile newUserProfile = new UserProfile(userName, imagePath, musicPath);
-        allUserProfiles.add(newUserProfile);
-    }
-
-    /**
-     * Update the existing userProfile with the new values.
-     * @param userName userProfile's name
-     * @param imagePath userProfile's image path
-     * @param musicPath userProfile's music path
-     * @param allUserProfiles list of all userProfiles
-     */
-    private void updateUserProfile(String userName, Path imagePath, Path musicPath, List<UserProfile> allUserProfiles) {
-        for (UserProfile userProfile : allUserProfiles) {
-            if (userProfile.getUsername().equals(this.userProfile.getUsername())) {
-                userProfile.setUsername(userName);
-                userProfile.setUserPicturePath(imagePath);
-                userProfile.setUserMusicPath(musicPath);
-                userProfile.setUserPlaylistsPath(musicPath);
-                userProfile.setBalance(getBalance());
-                userProfile.setCrossfadeDuration(getCrossfadeDuration());
-                userProfile.setEqualizerBandsGain(getEqualizerBandsGain());
-                this.userProfile = userProfile;
-                break;
-            }
-        }
-    }
-
-    /**
      * Handle closing the view.
      */
     public void handleClose() {
@@ -187,7 +160,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      */
     public void show() {
         view.show();
-    }    
+    }
 
     /**
      * Get the Crossfade duration
@@ -206,7 +179,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
     public void handleOpenEqualizer() {
         handleClose();
         equalizerController.show();
-    }    
+    }
 
     /**
      * Updates the values of the equalizer with the values of sliders and changes the settings
@@ -233,5 +206,26 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
 
     public UserProfile getUserProfile() {
         return userProfile;
+    }
+
+    /**
+     * Get the user's preferred language
+     *
+     * @return The user's preferred language
+     */
+    public Language getLanguage () {
+        if (userProfile == null) {
+            return Language.DEFAULT;
+        }
+        return Language.fromCode(userProfile.getLanguage());
+    }
+
+    /**
+     * Set the user's preferred language (saves it and applies it to the UI).
+     * @param language the user's preferred language.
+     */
+    public void setLanguage(Language language) {
+        userProfile.setLanguage(language.getDisplayName());
+        LanguageService.getInstance().setLanguage(language);
     }
 }

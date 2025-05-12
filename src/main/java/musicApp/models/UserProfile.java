@@ -20,13 +20,16 @@ public class UserProfile {
     @Expose
     private Path userPlaylistPath;
     private Equalizer equalizer;
+    @Expose
+    private String language;
+
     /**
      * Contstructor of the UserProfile class.
      * @param _username username of the userProfile.
      * @param _userPicturePath path to the profile picture of the userProfile.
      * @param _userMusicPath path to the music folder of the userProfile.
      */
-    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath) {
+    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, String _language) {
         username = _username;
         userPicturePath = _userPicturePath;
         balance = 0.0;
@@ -34,6 +37,7 @@ public class UserProfile {
         equalizer = new Equalizer();
         crossfadeDuration = 0.0;
         userPlaylistPath = userMusicPath.resolve("playlists.json");
+        language = _language;
     }
 
     /**
@@ -46,7 +50,7 @@ public class UserProfile {
      * @param _crossfadeDuration crossfade duration of the userProfile.
      * @param _equalizer equalizer of the userProfile.
      */
-    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, Path _userPlaylistPath, double _balance, double _crossfadeDuration, Equalizer _equalizer) {
+    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, String _language, Path _userPlaylistPath, double _balance, double _crossfadeDuration, Equalizer _equalizer) {
         username = _username;
         userPicturePath = _userPicturePath;
         balance = _balance;
@@ -54,6 +58,7 @@ public class UserProfile {
         crossfadeDuration = _crossfadeDuration;
         userPlaylistPath = Objects.requireNonNullElseGet(_userPlaylistPath, () -> userMusicPath.resolve("playlists.json"));
         equalizer = _equalizer;
+        language = _language;
     }
     
     /**
@@ -176,6 +181,10 @@ public class UserProfile {
         return userPlaylistPath;
     }
 
+    public String getLanguage() { return language; }
+
+    public void setLanguage(String newLanguage) { language = newLanguage; }
+
     /**
      * To string method for the UserProfile class.
      */
@@ -188,7 +197,9 @@ public class UserProfile {
                 ", userMusicPath=" + userMusicPath +
                 ", equalizer=" + equalizer +
                 ", crossfadeDuration=" + crossfadeDuration +
-                ", userPlaylistPath=" + userPlaylistPath +               
+                ", userPlaylistPath=" + userPlaylistPath +
+                ", userPlaylistPath=" + userPlaylistPath +
+                ", language='" + language +
                 '}';
     }
 
@@ -216,7 +227,7 @@ public class UserProfile {
         }
         return false;
     }
-    
+
     /**
      * Check if two paths are equal.
      * Null and "" are considered equal.
