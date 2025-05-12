@@ -15,7 +15,6 @@ import org.junit.Test;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.nio.file.Path;
 import java.util.List;
 import java.nio.file.Files;
 
@@ -28,7 +27,7 @@ public class TestJsonRepository extends JsonRepository {
     public void setUp() {
         // set the test data into userProfile.json
         Path userProfilePath = Paths.get("src", "test", "resources", "userProfile.json");
-        UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""), "English");
+        UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""), "English", 0.0, 0.0);
         userProfile.setBalance(0.0);
         userProfile.setEqualizer(new Equalizer());
         setUserProfiles(List.of(userProfile), userProfilePath);
@@ -64,7 +63,7 @@ public class TestJsonRepository extends JsonRepository {
     public void testGetSettings() {
         try {
             Settings settings = getSettings(Paths.get("src", "test", "resources", "settings.json"));
-            UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""));
+            UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""),"English", 0.0, 0.0 );
         settings.setCurrentUserProfile(userProfile);
         assertEquals(0.0, settings.getBalance(), 0.0);
         assertEquals(10, settings.getEqualizerBands().size());
@@ -93,7 +92,7 @@ public class TestJsonRepository extends JsonRepository {
         List<LyricsFilePaths> list = readLyricsLibrary(Paths.get("src", "test", "resources", "lyrics_valid.json"));
         assertEquals("Should parse 2 entries", 2, list.size());
 
-        LyricsFilePaths first = list.get(0);
+        LyricsFilePaths first = list.getFirst();
         assertEquals("song1.mp3", first.getSongPath());
         assertEquals("song1.txt", first.getTextPath());
         assertEquals("song1.lrc", first.getKaraokePath());
@@ -111,7 +110,7 @@ public class TestJsonRepository extends JsonRepository {
         List<LyricsFilePaths> result = readLyricsLibrary(roundtrip);
 
         assertEquals(2, result.size());
-        assertEquals("s1.mp3", result.get(0).getSongPath());
+        assertEquals("s1.mp3", result.getFirst().getSongPath());
         assertEquals("s1.txt", result.get(0).getTextPath());
         assertEquals("s1.lrc", result.get(0).getKaraokePath());
         assertEquals("s2.mp3", result.get(1).getSongPath());

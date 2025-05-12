@@ -40,11 +40,11 @@ module ulb.musicApp {
     opens musicApp.views.playlists to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.controllers to javafx.fxml, javafx.controls, javafx.media;
     opens musicApp.controllers.settings to javafx.controls, javafx.fxml, javafx.media;
-    opens musicApp.controllers.songs to javafx.controls, javafx.fxml, javafx.media, musicApp.controllers;
+    opens musicApp.controllers.songs to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.controllers.playlists to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.views.songs to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.views.settings to javafx.controls, javafx.fxml, javafx.media;
     opens musicApp.services to jaudiotagger, javafx.controls, javafx.fxml, javafx.media;
-    opens musicApp.repositories to jaudiotagger, javafx.controls, javafx.fxml, javafx.media;
+    opens musicApp.repositories to jaudiotagger, javafx.controls, javafx.fxml, javafx.media, com.google.gson;
 
 }

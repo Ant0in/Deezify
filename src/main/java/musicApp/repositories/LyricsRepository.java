@@ -1,5 +1,7 @@
 package musicApp.repositories;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -18,8 +20,11 @@ public class LyricsRepository {
      * Store both the text and karaoke paths for a song
      */
     public static class LyricsFilePaths {
+        @Expose
         private String textPath;
+        @Expose
         private String karaokePath;
+        @Expose
         private final String songPath;
         
         public LyricsFilePaths(String _songPath, String _textPath, String _karaokePath) {
