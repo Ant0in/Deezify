@@ -1,5 +1,6 @@
 package musicApp.controllers.songs;
 
+import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
@@ -112,7 +113,7 @@ public class KaraokeController extends ViewController<LyricsView> implements Lyr
         try {
             lyricsToDisplay = currentSong.getKaraokeLines();
         } catch (LyricsNotFoundException e) {
-            System.err.println("Error getting karaoke lines: " + e.getMessage());
+            alertService.showAlert("Error getting karaoke lines: " + e.getMessage(), Alert.AlertType.ERROR);
             return;
         }
         handleStopKaraoke();

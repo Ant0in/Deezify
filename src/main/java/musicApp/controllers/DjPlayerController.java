@@ -22,7 +22,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
     private final MediaPlayerController mediaPlayerController;
     private final Equalizer equalizerBackup;
     private Timeline timeline;
-    
+
     // parameters for the effects
     private double timelineSpeed;
     private double bassBoostGain;
@@ -92,84 +92,155 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * Toggles the wave gain mode.
      */
     public void toggleWaveGainMode() {
-
-        if (timeline != null && timeline.getStatus() == javafx.animation.Animation.Status.RUNNING) {
-            timeline.stop();
-            timeline = null;
+        if (isWaveRunning()) {
+            stopWave();
             return;
         }
+        startWave();
+    }
 
-        // centers the function (amplitude = 18 db, offset = -6 db)
-        double amplitude = (MAX_DB - MIN_DB) / 2.0;
-        double offset = MIN_DB + amplitude;
+    /**
+     * Checks if the wave effect is currently running.
+     * @return true if the wave effect is running, false otherwise
+     */
+    private boolean isWaveRunning() {
+        return timeline != null && timeline.getStatus() == javafx.animation.Animation.Status.RUNNING;
+    }
 
-        // Timeline for sequential update on the bands gain
-        timeline = new Timeline(new KeyFrame(Duration.millis(50), _ -> {
-            double currentTime = System.currentTimeMillis() / 1000.0;
-            List<Double> bandsGain = new ArrayList<>();
+    /**
+     * Stops the wave effect on the media player.
+     */
+    private void stopWave() {
+        timeline.stop();
+        timeline = null;
+    }
 
-            // Gain of each band, dephased depending on the band
-            for (int i = 0; i < NUM_BANDS; i++) {
-                double phase = currentTime * timelineSpeed + (i * Math.PI / NUM_BANDS);
-                double gain = offset + amplitude * Math.sin(phase);
-                bandsGain.add(gain);
-            }
-
-            try {
-                mediaPlayerController.setEqualizerBands(bandsGain);
-            } catch (EqualizerGainException e) {
-                alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
-            }
-        }));
-
+    /**
+     * Starts the wave effect on the media player.
+     */
+    private void startWave() {
+        double amplitude = calculateAmplitude();
+        double offset = calculateOffset(amplitude);
+        timeline = createWaveTimeline(amplitude, offset);
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+    }
 
+    /**
+     * Calculates the amplitude for the wave effect.
+     * @return the amplitude of the wave
+     */
+    private double calculateAmplitude() {
+        return (MAX_DB - MIN_DB) / 2.0;
+    }
+
+    /**
+     * Calculates the offset for the wave effect.
+     * @param amplitude the amplitude of the wave
+     * @return the offset for the wave effect
+     */
+    private double calculateOffset(double amplitude) {
+        return MIN_DB + amplitude;
+    }
+
+    /**
+     * Creates a timeline for the wave effect.
+     * @param amplitude the amplitude of the wave
+     * @param offset the offset of the wave
+     * @return the timeline for the wave effect
+     */
+    private Timeline createWaveTimeline(double amplitude, double offset) {
+        return new Timeline(new KeyFrame(Duration.millis(50), e -> updateWave(amplitude, offset)));
+    }
+
+    /**
+     * Updates the wave effect on the media player.
+     * @param amplitude the amplitude of the wave
+     * @param offset the offset of the wave
+     */
+    private void updateWave(double amplitude, double offset) {
+        double currentTime = System.currentTimeMillis() / 1000.0;
+        List<Double> bandsGain = calculateBandsGain(currentTime, amplitude, offset);
+        setEqualizerBands(bandsGain);
+    }
+
+    /**
+     * Calculates the gain for each band based on the current time.
+     * @param currentTime the current time
+     * @param amplitude the amplitude of the wave
+     * @param offset the offset of the wave
+     * @return a list of gains for each band
+     */
+    private List<Double> calculateBandsGain(double currentTime, double amplitude, double offset) {
+        List<Double> bandsGain = new ArrayList<>();
+        for (int i = 0; i < NUM_BANDS; i++) {
+            double phase = currentTime * timelineSpeed + (i * Math.PI / NUM_BANDS);
+            double gain = offset + amplitude * Math.sin(phase);
+            bandsGain.add(gain);
+        }
+        return bandsGain;
     }
 
     /**
      * Applies the mixed effects to the media player.
      */
     public void applyMixedEffects() {
+        stopTimelineIfRunning();
+        Equalizer equalizerMixed = buildMixedEqualizer();
+        updateMediaPlayerEqualizer(equalizerMixed);
+    }
 
-        if (timeline != null) { timeline.stop(); }
+    /**
+     * Stops the timeline if it is running.
+     */
+    private void stopTimelineIfRunning() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+    }
 
-        Equalizer equalizerMixed = new Equalizer();
-
+    /**
+     * Builds the mixed equalizer based on the current settings.
+     * @return the mixed equalizer
+     */
+    private Equalizer buildMixedEqualizer() {
+        Equalizer mixed = new Equalizer();
         for (int band = 0; band < NUM_BANDS; band++) {
-            double sum = 0.0;
-            int count = 0;
-
-            if (gainModeOn) {
-                double value = equalizerGainMode.getBandGain(band);
-                if (value != 0) {
-                    sum += value;
-                    count++;
-                }
-            }
-            if (bassBoostModeOn) {
-                double value = equalizerBassBoostMode.getBandGain(band);
-                if (value != 0) {
-                    sum += value;
-                    count++;
-                }
-            }
-            if (pressureModeOn) {
-                double value = equalizerPressureMode.getBandGain(band);
-                if (value != 0) {
-                    sum += value;
-                    count++;
-                }
-            }
-            if (count != 0) { equalizerMixed.setBandGain(band, sum / count); }
-            else { equalizerMixed.setBandGain(band, sum); }
+            double gain = computeMixedBandGain(band);
+            mixed.setBandGain(band, gain);
         }
+        return mixed;
+    }
 
-        try{
-            mediaPlayerController.setEqualizerBands(equalizerMixed.getBandsGain());
-        } catch (EqualizerGainException e) {
-            alertService.showAlert("Failed to update equalizer (from dj mode) : "+e.getMessage(), Alert.AlertType.ERROR);
+    /**
+     * Computes the mixed band gain based on the current settings.
+     * @param band the band index
+     * @return the mixed band gain
+     */
+    private double computeMixedBandGain(int band) {
+        double sum = 0.0;
+        int count = 0;
+        if (gainModeOn) {
+            double value = equalizerGainMode.getBandGain(band);
+            if (value != 0) { sum += value; count++; }
         }
+        if (bassBoostModeOn) {
+            double value = equalizerBassBoostMode.getBandGain(band);
+            if (value != 0) { sum += value; count++; }
+        }
+        if (pressureModeOn) {
+            double value = equalizerPressureMode.getBandGain(band);
+            if (value != 0) { sum += value; count++; }
+        }
+        return count != 0 ? sum / count : sum;
+    }
+
+    /**
+     * Updates the media player equalizer with the current equalizer settings.
+     * @param equalizer the equalizer to set
+     */
+    private void updateMediaPlayerEqualizer(Equalizer equalizer) {
+        setEqualizerBands(equalizer.getBandsGain());
     }
 
     /**
@@ -200,8 +271,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
         // From 6 to 12 db
         if (gain > 0.0) {
             bassBoostModeOn = true;
-            double newGain = (gain / 100) * (MAX_DB - MIN_BASS_BOOST) + MIN_BASS_BOOST;
-            bassBoostGain = newGain;
+            bassBoostGain = (gain / 100) * (MAX_DB - MIN_BASS_BOOST) + MIN_BASS_BOOST;
         } else {
             bassBoostModeOn = false;
         }
@@ -217,8 +287,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
         // From -24 to 12 db
         if (gain > 0.0) {
             gainModeOn = true;
-            double newGain = (gain / 100) * (MAX_DB - MIN_DB) + MIN_DB;
-            gainValue = newGain;
+            gainValue = (gain / 100) * (MAX_DB - MIN_DB) + MIN_DB;
         } else {
             gainModeOn = false;
         }
@@ -235,8 +304,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
         // From 0 to 18
         if (strength > 0.0) {
             pressureModeOn = true;
-            double newStrength = (strength / 100) * MAX_STRENGTH;
-            pressureStrength = newStrength;
+            pressureStrength = (strength / 100) * MAX_STRENGTH;
         } else {
             pressureModeOn = false;
         }
@@ -259,12 +327,21 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      */
     public void handleClose() {
         if (timeline != null) { timeline.stop(); }
-        try {
-            mediaPlayerController.setEqualizerBands(equalizerBackup.getBandsGain());
-        } catch (EqualizerGainException e) {
-            alertService.showAlert("Failed to reset equalizer (from dj mode) : "+e.getMessage(), Alert.AlertType.ERROR);
-        }
+        setEqualizerBands(equalizerBackup.getBandsGain());
         view.close();
+    }
+
+    /**
+     * Applies a new equalizer configuration to the media player.
+     *
+     * @param equalizerBands a list of gain values (in decibels) for each frequency band
+     */
+    public void setEqualizerBands(List<Double> equalizerBands) {
+        try{
+            mediaPlayerController.setEqualizerBands(equalizerBands);
+        } catch (EqualizerGainException e) {
+            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
+        }
     }
 
 }

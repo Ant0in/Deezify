@@ -45,10 +45,12 @@ public class Equalizer {
      * @param bandIndex Index of the band to check
      * @param gain Gain value to check
      */
-    private void checkBand(int bandIndex, double gain) {
+    private void checkBand(int bandIndex, double gain) throws IllegalArgumentException {
         checkBandIndex(bandIndex);
         if (gain < MIN_GAIN_DB || gain > MAX_GAIN_DB) {
-            throw new IllegalArgumentException("Equalizer band value for band " + bandIndex + " (" + gain + ") is out of range. Must be between " + MIN_GAIN_DB + " and " + MAX_GAIN_DB + ".");
+            throw new IllegalArgumentException(
+                    "Equalizer band value for band " + bandIndex +
+                            " (" + gain + ") is out of range. Must be between " + MIN_GAIN_DB + " and " + MAX_GAIN_DB + ".");
         }
     }
 
@@ -56,7 +58,7 @@ public class Equalizer {
      * Check if the band index is valid.
      * @param bandIndex Index of the band to check
      */
-    private void checkBandIndex(int bandIndex) {
+    private void checkBandIndex(int bandIndex) throws IllegalArgumentException {
         if (bandIndex < 0 || bandIndex >= getBandsSize()) {
             throw new IllegalArgumentException("Invalid band index: " + bandIndex);
         }
@@ -66,7 +68,7 @@ public class Equalizer {
      * Check if the bands gain list is valid.
      * @param bandsGain List of bands gain to check
      */
-    private void checkBandsGain(List<Double> bandsGain) {
+    private void checkBandsGain(List<Double> bandsGain) throws IllegalArgumentException {
         if (bandsGain == null || bandsGain.size() != getBandsSize()) {
             throw new IllegalArgumentException("Equalizer bands must have exactly " + getBandsSize() + " values.");
         }

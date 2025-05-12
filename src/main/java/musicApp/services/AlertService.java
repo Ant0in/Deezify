@@ -67,4 +67,27 @@ public class AlertService {
         };
     }
 
+    /**
+     * Displays a fatal error alert and exits the application after user acknowledgment.
+     *
+     * @param message The error message to display
+     * @param ex The exception that caused the fatal error (can be null)
+     */
+    public void showFatalErrorAlert(String message, Exception ex) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(languageService.get("alert.title.fatal"));
+        alert.setHeaderText(languageService.get("alert.header.fatal"));
+
+        String content = message;
+        if (ex != null && ex.getMessage() != null) {
+            content += "\n\nError details: " + ex.getMessage();
+        }
+
+        alert.setContentText(content);
+        alert.setResizable(true);
+        alert.showAndWait();
+
+        System.exit(1);
+    }
+
 }

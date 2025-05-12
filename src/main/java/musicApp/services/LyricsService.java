@@ -3,6 +3,7 @@ package musicApp.services;
 import javafx.util.Duration;
 import musicApp.exceptions.LyricsNotFoundException;
 import musicApp.exceptions.LyricsOperationException;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.KaraokeLine;
 import musicApp.models.Song;
 import musicApp.models.SongLyrics;
@@ -26,7 +27,7 @@ public class LyricsService {
 
     private final LyricsRepository repository;
 
-    public LyricsService() {
+    public LyricsService() throws SettingsFilesException {
         repository = new LyricsRepository(new JsonRepository());
     }
 

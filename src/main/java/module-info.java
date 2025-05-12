@@ -29,7 +29,9 @@ module ulb.musicApp {
     requires com.google.gson;
     requires java.logging;
     requires javafx.graphics;
-
+    requires javafx.swing;
+    requires org.bytedeco.javacv;
+    requires org.jetbrains.annotations;
 
     opens musicApp to javafx.fxml, javafx.controls, javafx.media, javafx.graphics;
     opens musicApp.models to javafx.fxml, javafx.controls, javafx.media, com.google.gson;

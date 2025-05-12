@@ -77,7 +77,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * Play song.
      *
      * @param song the song
-     * @throws BadSongException the bad song exception
+     * @throws BadSongException gets throwm if an error occured when trying to play the file contained byt the Song object
      */
     public void playSong(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);
@@ -102,10 +102,10 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      */
     public void stopPlayback() {
         if (mediaPlayerController != null) {
-            mediaPlayerController.close(); 
+            mediaPlayerController.close();
         }
     }
-    
+
     /**
      * Skip to the next song in the library or the queue.
      * If the queue is not empty, the next song in the queue is played.
@@ -182,7 +182,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     public void onSettingsChanged(SettingsDTO newSettingsDTO) throws EqualizerGainException {
         mediaPlayerController.setBalance(newSettingsDTO.getBalance());
         mediaPlayerController.setCrossfadeDuration(newSettingsDTO.getCrossfadeDuration());
-        mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());        
+        mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());
         playlistNavigatorController.updateUserMainLibrary(newSettingsDTO.getUserMusicFolder());
         playlistNavigatorController.updateUserPlaylists(newSettingsDTO.getUserPlaylistPath());
         // Update the music folder in case it changed
@@ -419,7 +419,8 @@ public class PlayerController extends ViewController<PlayerView> implements Play
     }
 
     /**
-     * Check if the given library is the main library.
+     * Returns whether the given library is the main library.
+
      * @param library The library to check.
      * @return True if the library is the main library, false otherwise.
      */
@@ -437,6 +438,17 @@ public class PlayerController extends ViewController<PlayerView> implements Play
         } else {
             return queueController::getNextSong;
         }
+    }
+
+    /**
+     * Checks whether the given library is modifiable.
+     * A modifiable library can have songs added or removed.
+     *
+     * @param library The library to check.
+     * @return true if the library is modifiable, false otherwise.
+     */
+    public boolean isModifiable(Library library) {
+        return playlistNavigatorController.isModifiable(library);
     }
 
     /**

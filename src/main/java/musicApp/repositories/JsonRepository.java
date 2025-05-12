@@ -5,12 +5,16 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import musicApp.exceptions.SettingsFilesException;
+import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;
 import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.UserProfileTypeAdapter;
+import musicApp.repositories.LyricsRepository.LyricsFilePaths;
+
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -45,7 +49,7 @@ public class JsonRepository {
     /**
      * Constructor
      */
-    public JsonRepository() {
+    public JsonRepository() throws  SettingsFilesException {
         Path settingFolder = getSettingsFolder();
         createFolderIfNotExists(settingFolder);
         settingsFile = settingFolder.resolve("settings.json");
@@ -87,12 +91,12 @@ public class JsonRepository {
      *
      * @param folder The path of the folder to create.
      */
-    public void createFolderIfNotExists(Path folder) {
+    public void createFolderIfNotExists(Path folder) throws SettingsFilesException {
         if (!Files.exists(folder)) {
             try {
                 Files.createDirectories(folder);
             } catch (IOException e) {
-                System.err.println("An error occurred while creating the folder");
+                throw new SettingsFilesException("Failed to create folder: " + folder, e);
             }
         }
     }
@@ -121,7 +125,7 @@ public class JsonRepository {
      *
      * @return The default music folder.
      */
-    public Path getDefaultMusicFolder() {
+    public Path getDefaultMusicFolder() throws SettingsFilesException {
         Path musicFolder = getFolderByOS("Music");
         Path backupMusicFolder = getFolderByOS("Deezify");
 
@@ -156,7 +160,7 @@ public class JsonRepository {
      *
      * @return The settings read from the settings file.
      */
-    public Settings readSettings() {
+    public Settings readSettings() throws SettingsFilesException {
         if (!Files.exists(settingsFile)) {
             Settings defaultSettings = new Settings(getDefaultMusicFolder(), "en");
             writeSettings(defaultSettings);
@@ -175,7 +179,7 @@ public class JsonRepository {
      * @param path The path to the JSON settings file.
      * @return A {@link Settings} object populated with the data from the file, or default settings if an error occurs.
      */
-    protected Settings getSettings(Path path) {
+    protected Settings getSettings(Path path) throws SettingsFilesException {
         try (FileReader reader = new FileReader(path.toFile())) {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Settings.class, new SettingsTypeAdapter())
@@ -183,7 +187,6 @@ public class JsonRepository {
                     .create();
             return gson.fromJson(reader, Settings.class);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
-            System.err.println("An error occurred while reading the settings file: " + e.getMessage());
             return new Settings(getDefaultMusicFolder(), "en");
         }
     }
@@ -283,10 +286,11 @@ public class JsonRepository {
     /**
      * Reads the lyrics library from the lyrics file.
      * If the lyrics file does not exist, it will be created with an empty library.
+     * protected for testing purposes.
      *
      * @return the list
      */
-    public List<LyricsRepository.LyricsFilePaths> readLyricsLibrary() {
+    protected List<LyricsRepository.LyricsFilePaths> readLyricsLibrary(Path lyricsFile) {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
@@ -302,15 +306,24 @@ public class JsonRepository {
 
     /**
      * Writes the lyrics library to the lyrics file.
+     * protected for testing purposes.
      *
      * @param lib the lib
      * @throws IOException the io exception
      */
-    public void writeLyricsLibrary(List<LyricsRepository.LyricsFilePaths> lib) throws IOException {
+    protected void writeLyricsLibrary(Path lyricsFile, List<LyricsRepository.LyricsFilePaths> lib) throws IOException {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
         Files.writeString(lyricsFile, gson.toJson(lib));
+    }
+
+    public List<LyricsFilePaths> readLyricsLibrary() {
+        return readLyricsLibrary(lyricsFile);
+    }
+
+    public void writeLyricsLibrary(List<LyricsFilePaths> lib) throws IOException {
+        writeLyricsLibrary(lyricsFile, lib);
     }
 
     /**

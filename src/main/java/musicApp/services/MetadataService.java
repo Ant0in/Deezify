@@ -1,10 +1,12 @@
 package musicApp.services;
 
-import javafx.util.Duration;
-import musicApp.enums.SupportedFileType;
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
-import musicApp.models.Metadata;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
@@ -12,11 +14,11 @@ import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
+import javafx.util.Duration;
+import musicApp.enums.SupportedFileType;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.exceptions.ID3TagException;
+import musicApp.models.Metadata;
 
 public class MetadataService {
 
@@ -124,6 +126,10 @@ public class MetadataService {
             metadata.setUserTags(new ArrayList<>());
         }
         metadata.setCover(tag.getFirstArtwork());
+
+        String encodedVideo = tag.getFirst(FieldKey.CUSTOM2);
+        metadata.setVideoCover(Base64.getDecoder().decode(encodedVideo));
+
         return metadata;
     }
 
@@ -199,6 +205,13 @@ public class MetadataService {
             tag.deleteArtworkField();
             tag.setField(metadata.getCover());
         }
+
+        if (metadata.getVideoCover() != null && metadata.getVideoCover().length > 0) {
+            // Encode the video cover to Base64
+            String encodedVideo = Base64.getEncoder().encodeToString(metadata.getVideoCover());
+            tag.setField(FieldKey.CUSTOM2, encodedVideo);
+        }
+
         return tag;
     }
 
@@ -209,7 +222,7 @@ public class MetadataService {
      * @param fd : File Object
      * @return AudioFile object
      */
-    private AudioFile readFile(File fd) throws BadFileTypeException {
+    private AudioFile readFile(File fd) throws BadFileTypeException, RuntimeException {
         SupportedFileType ext = getFileExtension(fd);
         AudioFile file;
 

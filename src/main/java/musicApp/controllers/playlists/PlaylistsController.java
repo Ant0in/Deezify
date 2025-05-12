@@ -2,6 +2,7 @@ package musicApp.controllers.playlists;
 
 
 import musicApp.exceptions.DeletePlaylistException;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.services.LanguageService;
@@ -19,7 +20,7 @@ public class PlaylistsController {
     private static final int USER_MAIN_LIBRARY_INDEX = 1;
     private static final int FAVORITES_INDEX = 2;
 
-    public PlaylistsController(Path musicFolder, Path userMusicFolder, Path userPlaylistPath) {
+    public PlaylistsController(Path musicFolder, Path userMusicFolder, Path userPlaylistPath) throws SettingsFilesException {
         playlistService = new PlaylistService(userPlaylistPath);
         playlists = playlistService.loadAllLibraries(musicFolder, userMusicFolder);
     }
@@ -33,7 +34,7 @@ public class PlaylistsController {
         Library userMainLibrary = playlistService.loadUserMainLibrary(newMusicFolder);
         setUserMainLibrary(userMainLibrary);
     }
-    
+
     private void setMainLibrary(Library newMainLibrary) {
         playlists.set(MAIN_LIBRARY_INDEX, newMainLibrary);
     }

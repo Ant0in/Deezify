@@ -2,6 +2,7 @@ package musicApp.controllers;
 
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;
@@ -77,7 +78,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
             playerController.onSettingsChanged(newSettings.toDTO());
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
-        }        
+        }
     }
 
     /**
@@ -85,10 +86,15 @@ public class MetaController implements EditUserProfileController.EditUserProfile
      * @param userProfile The user profile to load.
      */
     public void loadPlayerWithUser(UserProfile userProfile) {
-        Settings settings = settingsService.readSettings();
-        settings.setCurrentUserProfile(userProfile);
-        settingsController = new SettingsController(this, settings);
-        playerController = new PlayerController(this, new Stage(), settingsController.getSettingsDTO());
+        try {
+            Settings settings = settingsService.readSettings();
+            settings.setCurrentUserProfile(userProfile);
+            settingsController = new SettingsController(this, settings);
+            playerController = new PlayerController(this, new Stage(), settingsController.getSettingsDTO());
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**

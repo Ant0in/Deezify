@@ -47,7 +47,11 @@ public class SongCellController extends ViewController<SongCellView> implements 
         if (!newSong.equals(song)) {
             song = newSong;
         }
-        view.update();
+        if (isSuggestion()){
+            view.updateSuggestion();
+        }else{
+            view.update();
+        }
     }
 
     /**
@@ -109,12 +113,12 @@ public class SongCellController extends ViewController<SongCellView> implements 
 
     public void handleLoadedSongChange(Runnable callback) {
         libraryController.getCurrentlyLoadedSongStringProperty().
-            addListener((_, _, _) -> callback.run());
+                addListener((_, _, _) -> callback.run());
     }
 
     public void handlePlayingStatusChange(Runnable callback) {
         libraryController.getIsPlayingProperty().
-            addListener((_, _, _) -> callback.run());
+                addListener((_, _, _) -> callback.run());
     }
 
     public Image getSongCoverImage() {
@@ -261,5 +265,13 @@ public class SongCellController extends ViewController<SongCellView> implements 
      */
     public Optional<String> getTagAutoCompletion(String input) {
         return libraryController.getTagAutoCompletion(input);
+    }
+
+    private boolean isSuggestion(){
+        return !libraryController.containsSong(song);
+    }
+
+    public void handleAdd(){
+        libraryController.addSongToPlaylist(song);
     }
 }
