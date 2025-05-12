@@ -2,6 +2,7 @@ package musicApp.views.playlists;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import musicApp.views.View;
@@ -69,6 +70,7 @@ public class PlaylistCellView extends View{
      */
     public void update() {
         playlistNameLabel.setText(listener.getLibraryName());
+        playlistNameLabel.setTooltip(new Tooltip(playlistNameLabel.getText()));
         playlistSizeLabel.setText(listener.getLibrarySize() + " songs");
         imageCover.setImage(listener.getLibraryCoverImage());
     }

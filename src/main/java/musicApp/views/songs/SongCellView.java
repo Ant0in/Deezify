@@ -1,8 +1,10 @@
 package musicApp.views.songs;
 
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -84,6 +86,7 @@ public class SongCellView extends View {
         initComponents();
         setButtonActions();
         setupContextMenu();
+        bindLabelsWidth();
     }
 
     /**
@@ -115,6 +118,13 @@ public class SongCellView extends View {
     private void setupContextMenu() {
         // Show context menu on click
         editButton.setOnMouseClicked(e -> listener.showContextMenu(e.getScreenX(), e.getScreenY()));
+    }
+
+    private void bindLabelsWidth() {
+        ReadOnlyDoubleProperty listWidth = rootPane.widthProperty();
+        titleLabel.prefWidthProperty().bind(listWidth.multiply(0.15));
+        artistLabel.prefWidthProperty().bind(listWidth.multiply(0.1));
+        genreLabel.prefWidthProperty().bind(listWidth.multiply(0.1));
     }
 
     /**
@@ -187,9 +197,12 @@ public class SongCellView extends View {
         coverImage.setImage(listener.getSongCoverImage());
         titleLabel.setText(listener.getSongTitle());
         titleLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
+        titleLabel.setTooltip(new Tooltip(titleLabel.getText()));
         artistLabel.setText(listener.getSongArtist());
+        artistLabel.setTooltip(new Tooltip(artistLabel.getText()));
         genreLabel.setText(listener.getSongGenre());
         genreLabel.setStyle("-fx-text-fill: rgb(255, 255, 255);");
+        genreLabel.setTooltip(new Tooltip(genreLabel.getText()));
         durationLabel.setText(getDurationLabelString());
         durationLabel.setStyle("-fx-text-fill: rgb(255, 255, 255); -fx-opacity: 50%;");
     }
