@@ -86,16 +86,21 @@ public class AudioPlayerController {
         Duration totalDuration = mediaPlayer.getTotalDuration();
         if (totalDuration == null) return ;
         double remainingTime = totalDuration.toSeconds() - progress.toSeconds();
-        if (remainingTime <= audioPlayer.getCrossfadeDuration() && Boolean.FALSE.equals(audioPlayer.isTransitioning())) {
+        if (remainingTime <= audioPlayer.getCrossfadeDuration() && !audioPlayer.isTransitioning()) {
             audioPlayer.setTransitioning(true);
             if (transitionPlayer == null) {
-                Song nextSong = audioPlayer.getNextSongSupplier();
-                Media nextMedia = new Media(nextSong.getFilePath().toUri().toString());
-                transitionPlayer = new MediaPlayer(nextMedia);
+                try {
+                    Song nextSong = audioPlayer.getNextSongSupplier();
+                    Media nextMedia = new Media(nextSong.getSource());
+                    transitionPlayer = new MediaPlayer(nextMedia);
+                } catch (BadSongException e) {
+                    audioPlayer.setTransitioning(false);
+                    return;
+                }
             }
             transitionPlayer.play();
         }
-        if (Boolean.TRUE.equals(audioPlayer.isTransitioning())) {
+        if (audioPlayer.isTransitioning()) {
             double crossfadeDuration = audioPlayer.getCrossfadeDuration();
             double fadeInVolume = audioPlayer.getVolumeProperty().get() * ((crossfadeDuration - remainingTime) / crossfadeDuration);
             transitionPlayer.setVolume(fadeInVolume);
