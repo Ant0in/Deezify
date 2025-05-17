@@ -59,19 +59,11 @@ public class PlaylistCellController extends ViewController<PlaylistCellView> imp
     }
 
     /**
-     * Get the name of the library.
+     * Get the display name of the library.
      *
-     * @return the name of the library
+     * @return the display name of the library
      */
-    public String getLibraryName() {
-        if (library.getName().equals("??favorites??")) {
-            return LanguageService.getInstance().get("favorites");
-        } else if (library.getName().equals("??library??")) {
-            return LanguageService.getInstance().get("library");
-        } else if (library.getName().equals("??user_library??")) {
-                return LanguageService.getInstance().get("user_library");
-        } else {
-            return library.getName();
-        }
+    public String getLibraryDisplayName() {
+        return library.getDisplayName();
     }
 }

@@ -72,12 +72,12 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
         List<Library> playlists = songCellController.getPlaylists();
 
         playlists.stream().skip(2).forEach(playlist -> {
-            MenuItem playlistItem = new MenuItem(playlist.getName());
+            MenuItem playlistItem = new MenuItem(playlist.getDisplayName());
             playlistItem.setOnAction(_ -> songCellController.addSongToPlaylist(playlist));
             addToMenu.getItems().add(playlistItem);
 
             if (isShowingMainLibrary() && songCellController.containsSong(playlist)) {
-                MenuItem removeItem = new MenuItem(playlist.getName());
+                MenuItem removeItem = new MenuItem(playlist.getDisplayName());
                 removeItem.setOnAction(_ -> songCellController.removeSongFromPlaylist(playlist));
                 if (removeFromMenu != null) {
                     removeFromMenu.getItems().add(removeItem);

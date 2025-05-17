@@ -27,7 +27,7 @@ public class PlaylistCellView extends View{
     public interface PlaylistCellViewListener {
         int getLibrarySize();
 
-        String getLibraryName();
+        String getLibraryDisplayName();
 
         boolean isShowingLibrary();
 
@@ -58,7 +58,7 @@ public class PlaylistCellView extends View{
      */
     private void initComponents() {
         if (listener.isShowingLibrary()) {
-            playlistNameLabel.setText(listener.getLibraryName());
+            playlistNameLabel.setText(listener.getLibraryDisplayName());
             playlistSizeLabel.setText(listener.getLibrarySize() + " songs");
         }
     }
@@ -69,7 +69,7 @@ public class PlaylistCellView extends View{
      *
      */
     public void update() {
-        playlistNameLabel.setText(listener.getLibraryName());
+        playlistNameLabel.setText(listener.getLibraryDisplayName());
         playlistNameLabel.setTooltip(new Tooltip(playlistNameLabel.getText()));
         playlistSizeLabel.setText(listener.getLibrarySize() + " songs");
         imageCover.setImage(listener.getLibraryCoverImage());

@@ -155,6 +155,15 @@ public class Library {
         return name;
     }
 
+    public String getDisplayName() {
+        return switch (name) {
+            case "??favorites??" -> LanguageService.getInstance().get("favorites");
+            case "??library??" -> LanguageService.getInstance().get("library");
+            case "??user_library??" -> LanguageService.getInstance().get("user_library");
+            default -> name;
+        };
+    }
+
     /**
      * Set the name of the library.
      *
