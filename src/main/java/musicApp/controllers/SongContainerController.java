@@ -14,14 +14,14 @@ import java.util.List;
  *
  * @param <V> the View class
  */
-public abstract class SongContainerController<V extends SongContainerView, M extends Library>
+public abstract class SongContainerController<V extends SongContainerView>
         extends ViewController<V>
         implements SongContainerView.SongContainerViewListener {
 
     
     protected PlayerController playerController;
-    
-    protected M library;
+
+    protected Library library;
 
     /**
      * Instantiates a new SongContainer controller.
@@ -32,7 +32,6 @@ public abstract class SongContainerController<V extends SongContainerView, M ext
     public SongContainerController(V view, PlayerController playerController) {
         super(view);
         view.setListener(this);
-        library = (M) new Library(new ArrayList<>(), "??library??", null);
         this.playerController = playerController;
     }
 

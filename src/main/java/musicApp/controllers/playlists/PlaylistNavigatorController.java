@@ -145,8 +145,15 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param playlist to add the song to
      */
     public void addSongToPlaylist(Song song, Library playlist) {
-        playlistsController.addSongToPlaylist(song, playlist);
-        refreshUI();
+        try{
+            playlistsController.addSongToPlaylist(song, playlist);
+            refreshUI();
+        } catch (IllegalArgumentException e) {
+            alertService.showExceptionAlert(
+                    e,
+                    Alert.AlertType.INFORMATION
+            );
+        }
     }
 
     /**

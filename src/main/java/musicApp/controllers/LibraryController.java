@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * The controller for the Main Library view.
  */
-public class LibraryController extends SongContainerController<LibraryView, Library>
+public class LibraryController extends SongContainerController<LibraryView>
         implements LibraryView.LibraryViewListener {
 
     private final int MAX_SUGGESTIONS = 5;
@@ -40,6 +40,7 @@ public class LibraryController extends SongContainerController<LibraryView, Libr
      */
     public LibraryController(PlayerController controller, Library mainLibrary) {
         super(new LibraryView(), controller);
+        library = new Library(new ArrayList<>(), "??library??", null);
         view.setListener((LibraryView.LibraryViewListener) this);
         shuffle = false;
         nextSong = Optional.empty();

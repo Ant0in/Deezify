@@ -53,7 +53,7 @@ public class Library {
         if (contains(song)) {
             throw new IllegalArgumentException(
                     LanguageService.getInstance().get("error.media_already_in_library")
-                            + " " + song.toString()
+                            + " (" + getDisplayName() +") : "+ song.toString()
             );
         }
         songList.add(song);
@@ -160,6 +160,7 @@ public class Library {
             case "??favorites??" -> LanguageService.getInstance().get("favorites");
             case "??library??" -> LanguageService.getInstance().get("library");
             case "??user_library??" -> LanguageService.getInstance().get("user_library");
+            case "??queue??" -> LanguageService.getInstance().get("queue");
             default -> name;
         };
     }
