@@ -1,71 +1,67 @@
 package musicApp.controllers.playlists;
 
+import javafx.scene.image.Image;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.services.LanguageService;
+import musicApp.views.playlists.PlaylistCell;
 import musicApp.views.playlists.PlaylistCellView;
 
 /**
  * The type Playlist cell controller.
  */
-public class PlaylistCellController extends ViewController<PlaylistCellView, PlaylistCellController> {
+public class PlaylistCellController extends ViewController<PlaylistCellView> implements PlaylistCellView.PlaylistCellViewListener, PlaylistCell.PlaylistCellListener {
 
-    private final PlaylistNavigatorController navigatorController;
     private Library library;
 
     /**
      * Instantiates a new Playlist cell controller.
-     *
-     * @param controller the controller
      */
-    public PlaylistCellController(PlaylistNavigatorController controller) {
+    public PlaylistCellController() {
         super(new PlaylistCellView());
-        navigatorController = controller;
+        view.setListener(this);
         initView("/fxml/PlaylistCell.fxml");
+    }
+
+    public boolean isShowingLibrary() {
+        return library != null;
     }
 
     /**
      * Update the song in the view.
      *
-     * @param _library the new selected library
+     * @param newLibrary the new selected library
      */
-    public void update(Library _library) {
-        if (!_library.equals(getLibrary())) {
-            library = _library;
+    public void update(Library newLibrary) {
+        if (!newLibrary.equals(library)) {
+            library = newLibrary;
         }
-        view.update(library);
+        view.update();
     }
 
     /**
-     * Get the library of the cell.
+     * Get the library size.
      *
-     * @return the library
+     * @return the library size
      */
-    public Library getLibrary() {
-        return library;
+    public int getLibrarySize() {
+        return library.size();
     }
 
     /**
-     * Is the library selected.
+     * Get the cover image of the library.
      *
-     * @return True if the library is selected, false otherwise.
+     * @return the cover image
      */
-    public boolean isSelected() {
-        return navigatorController.getSelectedLibrary().equals(library);
+    public Image getLibraryCoverImage() {
+        return library.getCoverImage();
     }
 
     /**
-     * Get the name of the library.
+     * Get the display name of the library.
      *
-     * @return the name of the library
+     * @return the display name of the library
      */
-    public String getLibraryName() {
-        if (library.getName().equals("??favorites??")) {
-            return LanguageService.getInstance().get("favorites");
-        } else if (library.getName().equals("??library??")) {
-            return LanguageService.getInstance().get("library");
-        } else {
-            return library.getName();
-        }
+    public String getLibraryDisplayName() {
+        return library.getDisplayName();
     }
 }

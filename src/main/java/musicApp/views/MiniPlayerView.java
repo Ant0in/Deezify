@@ -1,45 +1,43 @@
 package musicApp.views;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import musicApp.controllers.MiniPlayerController;
+import javafx.stage.Stage;
+import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.List;
 
 /**
  * View component used to render the audio spectrum visualizer in a separate window (popup)
  */
-public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
-    /**
-     * The Song title label.
-     */
+public class MiniPlayerView extends View {
+
+    Boolean isBasicMode;
+    private MiniPlayerViewListener listener;
+    private Stage stage;
     @FXML
     private Label songTitleLabel;
-
-    /**
-     * The Cover image.
-     */
     @FXML
     private ImageView coverImage;
-    /**
-     * The Canvas.
-     */
+    @FXML
+    private MediaView coverVideo;
+    @FXML
+    private StackPane coverWrapper;
     @FXML
     private Canvas canvas;
     // Flag to track whether the image is clipped or not
     private boolean isClipped;
-
-    /**
-     * The Is basic mode.
-     */
-    Boolean isBasicMode;
 
     public MiniPlayerView() {
         super();
@@ -50,6 +48,30 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
     @Override
     public void init() {
         scene.setOnMouseClicked(_ -> changeVisualizerMode());
+        initStage();
+    }
+
+    private void initStage() {
+        stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("MiniPlayer");
+    }
+
+    public void close() {
+        stage.close();
+    }
+
+    public void show() {
+        stage.show();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(MiniPlayerViewListener newListener) {
+        listener = newListener;
     }
 
     private void changeVisualizerMode() {
@@ -71,32 +93,38 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
     }
 
     /**
-     * Gets scene.
-     *
-     * @return the scene
-     */
-    public Scene getScene() { return scene; }
-
-    /**
      * Update song properties.
      *
-     * @param title      the title
-     * @param coverImage the cover image
+     * @param title         the title
+     * @param newCoverImage the cover image
      */
-    public void updateSongProperties(String title, Image coverImage) {
+    public void updateSongProperties(String title, @Nullable Image newCoverImage, @Nullable Path videoPath) {
         songTitleLabel.setText(title);
-        setCoverImage(coverImage);
-    }
 
-    /**
-     * Sets cover image.
-     *
-     * @param image the image
-     */
-    public void setCoverImage(Image image) {
-        coverImage.setImage(image);
+        if (videoPath != null) {
+            // Handle video cover
+            Media media = new Media(videoPath.toUri().toString());
+            MediaPlayer player = new MediaPlayer(media);
+            coverVideo.setMediaPlayer(player);
+            coverVideo.setVisible(true);
+            coverImage.setVisible(false);
+            player.setVolume(0);
+            player.setCycleCount(MediaPlayer.INDEFINITE);
+            player.play();
+        } else if (newCoverImage != null) {
+            // Handle image cover
+            coverImage.setImage(newCoverImage);
+            coverImage.setVisible(true);
+            coverVideo.setVisible(false);
+            coverVideo.setMediaPlayer(null);
+        } else {
+            // No cover at all
+            coverImage.setVisible(false);
+            coverVideo.setVisible(false);
+            coverImage.setImage(null);
+            coverVideo.setMediaPlayer(null);
+        }
     }
-
 
     /**
      * Toggle clip.
@@ -104,11 +132,11 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
     public void toggleClip() {
         if (isClipped) {
             // Remove the clip (non-clipped state)
-            coverImage.setClip(null);
+            coverWrapper.setClip(null);
         } else {
             // Set the clip to a circle (clipped state)
-            Circle clip = new Circle(coverImage.getFitWidth() / 2, coverImage.getFitHeight() / 2, coverImage.getFitWidth() / 2);
-            coverImage.setClip(clip);
+            Circle clip = new Circle(coverWrapper.getWidth() / 2, coverWrapper.getHeight() / 2, coverWrapper.getWidth() / 2);
+            coverWrapper.setClip(clip);
         }
         // Toggle the flag
         isClipped = !isClipped;
@@ -117,8 +145,8 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
     /**
      * Draw a frame for the audio spectrum visualizer.
      */
-    private void drawFrame( List<Float> values) {
-        int numBars = viewController.getBandsNumber();
+    private void drawFrame(List<Float> values) {
+        int numBars = listener.getBandsNumber();
         double barWidth = canvas.getWidth() / numBars; // Width of each bar
         double canvasHeight = canvas.getHeight();
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -143,7 +171,7 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
      * Draw a circular frame for the audio spectrum visualizer.
      */
     private void drawCircularFrame(List<Float> values) {
-        int numBars = viewController.getBandsNumber();
+        int numBars = listener.getBandsNumber();
         double radius = Math.min(canvas.getWidth(), canvas.getHeight()) / 3; // Radius for the circle
         double centerX = canvas.getWidth() / 2;
         double centerY = canvas.getHeight() / 2;
@@ -177,7 +205,11 @@ public class MiniPlayerView extends View<MiniPlayerView, MiniPlayerController>{
         }
     }
 
-
-
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface MiniPlayerViewListener {
+        int getBandsNumber();
+    }
 
 }

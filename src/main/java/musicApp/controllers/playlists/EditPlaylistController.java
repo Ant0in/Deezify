@@ -1,9 +1,7 @@
 package musicApp.controllers.playlists;
 
-import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.services.LanguageService;
 import musicApp.views.playlists.EditPlaylistView;
 
 import java.nio.file.Path;
@@ -11,12 +9,11 @@ import java.nio.file.Path;
 /**
  * The type Playlist edit controller.
  */
-public class EditPlaylistController extends ViewController<EditPlaylistView, EditPlaylistController> {
+public class EditPlaylistController extends ViewController<EditPlaylistView> implements EditPlaylistView.EditPlaylistViewListener {
 
-    private final PlaylistNavigatorController navigatorController;
     private final Library playlistToEdit;
-    private final Stage stage;
     private final boolean isCreation;
+    private PlaylistNavigatorController navigatorController;
 
     /**
      * Create a controller for creating a new playlist
@@ -25,14 +22,10 @@ public class EditPlaylistController extends ViewController<EditPlaylistView, Edi
      */
     public EditPlaylistController(PlaylistNavigatorController _controller) {
         super(new EditPlaylistView());
-        stage = new Stage();
+        init(_controller);
         isCreation = true;
-        navigatorController = _controller;
         playlistToEdit = null;
         initView("/fxml/EditPlaylist.fxml");
-        stage.setTitle(LanguageService.getInstance().get("create_playlist.title"));
-        stage.setScene(view.getScene());
-        stage.show();
     }
 
     /**
@@ -43,16 +36,25 @@ public class EditPlaylistController extends ViewController<EditPlaylistView, Edi
      */
     public EditPlaylistController(PlaylistNavigatorController _controller, Library _playlist) {
         super(new EditPlaylistView());
-        stage = new Stage();
+        init(_controller);
         isCreation = false;
-        navigatorController = _controller;
         playlistToEdit = _playlist;
         initView("/fxml/EditPlaylist.fxml");
-        stage.setTitle(LanguageService.getInstance().get("edit_playlist.title"));
-        stage.setScene(view.getScene());
-        stage.show();
     }
 
+    /**
+     * Initialize the controller and part of the constructor.
+     *
+     * @param _controller The parent navigator controller
+     */
+    private void init(PlaylistNavigatorController _controller) {
+        view.setListener(this);
+        navigatorController = _controller;
+    }
+
+    /**
+     * Check if the view is in creation mode.
+     */
     public boolean isCreation() {
         return isCreation;
     }
@@ -60,23 +62,22 @@ public class EditPlaylistController extends ViewController<EditPlaylistView, Edi
     /**
      * Handle saving the playlist - either create a new one or update an existing one
      *
-     * @param name      The playlist name
-     * @param imagePath The playlist image path
+     * @param playlistName The playlist name
+     * @param imagePath    The playlist image path
      */
-    public void handleSave(String name, Path imagePath) {
+    public void handleSave(String playlistName, Path imagePath) {
         if (playlistToEdit == null) {
-            navigatorController.createPlaylist(name, imagePath);
+            navigatorController.createPlaylist(playlistName, imagePath);
         } else {
-            navigatorController.updatePlaylist(playlistToEdit, name, imagePath);
+            navigatorController.updatePlaylist(playlistToEdit, playlistName, imagePath);
         }
-        close();
+        handleClose();
     }
 
-    public Stage getStage() {
-        return stage;
-    }
-
-    public void close() {
-        stage.close();
+    /**
+     * Handle the close action of the view.
+     */
+    public void handleClose() {
+        view.close();
     }
 }

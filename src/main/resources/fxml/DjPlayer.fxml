@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
-
+<?import javafx.scene.layout.*?>
 <VBox fx:id="mainContainer"
       xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -16,7 +14,7 @@
 
         <VBox alignment="CENTER" spacing="5">
 
-            <Label fx:id="gainLabel"/>
+            <Label fx:id="gainLabel" text="🎛"/>
 
             <Slider fx:id="gainSlider"
                     orientation="VERTICAL"
@@ -26,7 +24,7 @@
 
         <VBox alignment="CENTER" spacing="5">
 
-            <Label fx:id="bassBoostLabel"/>
+            <Label fx:id="bassBoostLabel" text = "📈"/>
 
             <Slider fx:id="bassBoostSlider"
                     orientation="VERTICAL"
@@ -36,7 +34,7 @@
 
         <VBox alignment="CENTER" spacing="5">
 
-            <Label fx:id="pressureLabel"/>
+            <Label fx:id="pressureLabel" text="💧"/>
 
             <Slider fx:id="pressureSlider"
                     orientation="VERTICAL"
@@ -46,7 +44,7 @@
 
         <VBox alignment="CENTER" spacing="5">
 
-            <Label fx:id="speedLabel"/>
+            <Label fx:id="speedLabel" text="x0"/>
 
             <Slider fx:id="waveSlider"
                     orientation="VERTICAL"

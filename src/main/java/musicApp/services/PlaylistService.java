@@ -1,5 +1,6 @@
 package musicApp.services;
 
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.repositories.JsonRepository;
@@ -14,8 +15,9 @@ import java.util.List;
 public class PlaylistService {
     JsonRepository jsonRepository;
 
-    public PlaylistService() {
+    public PlaylistService(Path playlistsPath) throws SettingsFilesException {
         jsonRepository = new JsonRepository();
+        jsonRepository.setPlaylistsPath(playlistsPath);
     }
 
     public void writePlaylists(List<Library> playlists) {
@@ -24,6 +26,7 @@ public class PlaylistService {
 
     /**
      * Returns all the playlists excluding the main library.
+     *
      * @return A list of playlists.
      */
     public List<Library> readPlaylists() {
@@ -37,14 +40,15 @@ public class PlaylistService {
      * <p>Then, it loads the playlists from the playlists file, if available, and combines both the main library and the playlists into a single list.</p>
      *
      * @return A list containing the main library followed by the playlists.
-     *         The main library is loaded first, followed by any existing playlists.
+     * The main library is loaded first, followed by any existing playlists.
      */
-    public List<Library> loadAllLibraries(){
-        SettingsService settingsService = new SettingsService();
-        Library mainLibrary = loadMainLibrary(settingsService.readSettings().getMusicFolder());
+    public List<Library> loadAllLibraries(Path musicFolder, Path userMusicFolder) {
+        Library mainLibrary = loadMainLibrary(musicFolder);
+        Library userMainLibrary = loadUserMainLibrary(userMusicFolder);
         List<Library> playlists = readPlaylists();
         List<Library> libraries = new ArrayList<>();
         libraries.add(mainLibrary);
+        libraries.add(userMainLibrary);
         libraries.addAll(playlists);
         return libraries;
     }
@@ -59,7 +63,7 @@ public class PlaylistService {
      * @param musicDirectory The directory from which to load the songs. This is usually the user's default
      *                       music folder.
      * @return A {@link Library} containing all songs from the specified directory, or an empty library
-     *         if loading fails due to an IOException.
+     * if loading fails due to an IOException.
      */
     public Library loadMainLibrary(Path musicDirectory) {
         try {
@@ -72,9 +76,23 @@ public class PlaylistService {
         }
     }
 
-    public Path addSongToMainLibrary(File song) throws IOException {
+    public Library loadUserMainLibrary(Path userMusicFolder) {
+        try {
+            PathRepository loader = new PathRepository();
+            List<Song> songs = loader.getAllSongs(userMusicFolder);
+            return new Library(songs, "??user_library??", null);
+        } catch (IOException e) {
+            System.err.println("Failed to load user library: " + e.getMessage());
+            return new Library(new ArrayList<>(), "??user_library??", null);
+        }
+    }
+
+    public Path addSongToLibrary(File song, Path libraryPath) throws IOException {
         PathRepository loader = new PathRepository();
-        JsonRepository jsonRepository = new JsonRepository();
-        return loader.copyFileToDirectory(song, jsonRepository.getDefaultMusicFolder());
+        return loader.copyFileToDirectory(song, libraryPath);
+    }
+
+    public void setPlaylistsPath(Path userPlaylistPath) {
+        jsonRepository.setPlaylistsPath(userPlaylistPath);
     }
 }

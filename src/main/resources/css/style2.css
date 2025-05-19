@@ -107,7 +107,7 @@
     -fx-background-color: #2f508e;
 }
 
-.pausebtn, .previousbtn, .nextbtn, .settingsbtn ,.shuffle-btn{
+.pausebtn, .previousbtn, .nextbtn, .settingsbtn , .shuffle-btn, .returnbtn {
     -fx-background-color: transparent;
 }
 
@@ -233,4 +233,49 @@
     -fx-font-size: 14px;
     -fx-background-color: transparent;
     -fx-text-fill: lightgray;
+}
+
+.userProfile-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.userProfile-vbox {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 250px;
+    -fx-spacing: 10px;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.5, 0, 2);
+    -fx-cursor: hand;
+}
+
+.userProfile-vbox:hover {
+-fx-background-color: #e0e0e0;
+}
+
+.userProfile-img {
+    -fx-background-radius: 100px;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-min-height: 200px;
+    -fx-max-height: 200px;
+}
+
+.userProfile-img:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.deletable-userProfile-vbox {
+/*    same as userProfile-vbox, but has a semi-transparent red overlay and black X*/
+    -fx-border-color: #ff0000;
+    -fx-border-width: 4px;
+    -fx-border-radius: 10px;
+}
+
+.deletable-userProfile-vbox:hover {
+    -fx-background-color: #ffcccc;
 }

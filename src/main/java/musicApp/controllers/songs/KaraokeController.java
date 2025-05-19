@@ -1,9 +1,9 @@
 package musicApp.controllers.songs;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import musicApp.controllers.PlayerController;
+import musicApp.controllers.ViewController;
 import musicApp.exceptions.LyricsNotFoundException;
 import musicApp.models.KaraokeLine;
 import musicApp.models.Song;
@@ -19,13 +19,10 @@ import java.util.Optional;
  * This controller handles the synchronization of karaoke lines
  * with the current playback time of a song.
  */
-public class KaraokeController {
+public class KaraokeController extends ViewController<LyricsView> implements LyricsView.KaraokeListener {
 
     private final PlayerController playerController;
     private final LyricsService lyricsManager;
-    private final LyricsView view;
-
-    private Timeline syncTimeline;
     private List<KaraokeLine> lyricsToDisplay;
 
     /**
@@ -38,10 +35,11 @@ public class KaraokeController {
     public KaraokeController(PlayerController _controller,
                              LyricsService _manager,
                              LyricsView _view) {
+        super(_view);
         playerController = _controller;
         lyricsToDisplay = List.of();
         lyricsManager = _manager;
-        view = _view;
+        view.setKaraokeListener(this);
     }
 
     /**
@@ -62,11 +60,11 @@ public class KaraokeController {
      * Imports karaoke lyrics from a .lrc file and updates the song's lyrics.
      * If a .txt file already exists, prompts the user for confirmation to overwrite it.
      */
-    public void importKaraokeLyrics() {
+    public void handleImportKaraokeLyrics() {
         Song currentSong = playerController.getCurrentlyLoadedSong();
         if (currentSong == null) return;
 
-        Optional<Path> selectedFile = view.showLrcFileChooser();
+        Optional<Path> selectedFile = view.getLrcFile();
         if (selectedFile.isEmpty()) return;
 
         Optional<Boolean> evaluation = evaluateOverwriteTxt(currentSong);
@@ -79,7 +77,7 @@ public class KaraokeController {
             as.showExceptionAlert(e);
         }
         view.updateKaraokeLyrics();
-        startKaraoke();
+        handleShowKaraoke();
     }
 
     /**
@@ -94,7 +92,7 @@ public class KaraokeController {
         boolean overwriteTxt;
 
         if (txtExists) {
-            Optional<Boolean> userChoice =view.showOverwriteTxtConfirmation();
+            Optional<Boolean> userChoice = view.showOverwriteTxtConfirmation();
             if (userChoice.isEmpty()) return Optional.empty();
             overwriteTxt = userChoice.get();
         } else {
@@ -107,7 +105,7 @@ public class KaraokeController {
      * Starts the karaoke feature by creating a timeline that updates the lyrics
      * based on the current playback time of the song.
      */
-    public void startKaraoke() {
+    public void handleShowKaraoke() {
         Song currentSong = playerController.getCurrentlyLoadedSong();
 
         if (currentSong == null) return;
@@ -115,32 +113,26 @@ public class KaraokeController {
         try {
             lyricsToDisplay = currentSong.getKaraokeLines();
         } catch (LyricsNotFoundException e) {
-            System.err.println("Error getting karaoke lines: " + e.getMessage());
+            alertService.showAlert("Error getting karaoke lines: " + e.getMessage(), Alert.AlertType.ERROR);
             return;
         }
-        stopKaraoke();
-
+        handleStopKaraoke();
         view.updateKaraokeLyricsHighlight(lyricsToDisplay, null);
-
-        syncTimeline = new Timeline(new KeyFrame(Duration.millis(200), _ -> syncLyrics()));
-        syncTimeline.setCycleCount(Timeline.INDEFINITE);
-        syncTimeline.play();
+        view.updateTimeLine();
+        view.showKaraoke();
     }
 
     /**
      * Stop the timeline so we no longer update lines.
      */
-    public void stopKaraoke() {
-        if (syncTimeline != null) {
-            syncTimeline.stop();
-            syncTimeline = null;
-        }
+    public void handleStopKaraoke() {
+        view.stopKaraoke();
     }
 
     /**
      * Called periodically by the timeline to highlight the correct line.
      */
-    private void syncLyrics() {
+    public void handleSyncLyrics() {
         if (lyricsToDisplay.isEmpty()) return;
 
         Duration currentTime = playerController.getCurrentSongTime();

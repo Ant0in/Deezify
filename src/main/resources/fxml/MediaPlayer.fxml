@@ -18,8 +18,8 @@
                 </clip>
             </ImageView>
             <VBox alignment="CENTER_LEFT">
-                <Label fx:id="currentSongLabel" styleClass="currentSong" text="None" />
-                <Label fx:id="currentArtistLabel" styleClass="currentArtist" text="" />
+                <Label fx:id="currentSongLabel" styleClass="currentSong"/>
+                <Label fx:id="currentArtistLabel" styleClass="currentArtist"/>
             </VBox>
         </HBox>
         <HBox alignment="CENTER" spacing="10">
@@ -28,7 +28,8 @@
             <Button fx:id="nextSongButton" styleClass="nextbtn" />
         </HBox>
         <HBox alignment="CENTER_RIGHT" spacing="10" HBox.hgrow="ALWAYS">
-            <ToggleButton fx:id="miniPlayerToggle"  mnemonicParsing="false" text="~"/>
+            <Button fx:id="djButton"  mnemonicParsing="false" styleClass="lyrics-btn" />
+            <ToggleButton fx:id="miniPlayerToggle"  mnemonicParsing="false"  styleClass="lyrics-btn"/>
             <ToggleButton fx:id="lyricsToggle" styleClass="lyrics-btn" mnemonicParsing="false" />
             <ToggleButton fx:id="shuffleToggle" styleClass="shuffle-btn" mnemonicParsing="false" />
             <ComboBox fx:id="speedBox" styleClass="speed-box" prefHeight="15.0" prefWidth="95.0" />

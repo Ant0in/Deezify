@@ -1,16 +1,12 @@
 package musicApp.models;
 
 import javafx.beans.property.*;
-import javafx.scene.control.Alert;
-import javafx.scene.media.*;
-import javafx.util.Duration;
 import musicApp.exceptions.BadSongException;
-import musicApp.exceptions.EqualizerGainException;
-import musicApp.services.AlertService;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * AudioPlayer
@@ -23,15 +19,18 @@ public class AudioPlayer {
     private final BooleanProperty isPlaying;
     private final BooleanProperty isLoaded;
     private final DoubleProperty volume;
+    private final Double audioSpectrumInterval;
     private List<Double> equalizerBandsGain;
-    private MediaPlayer mediaPlayer;
     private Song loadedSong;
     private double balance;
+    private double crossfadeDuration;
     private double speed;
-    private final AudioSpectrumListener audioSpectrumListener;
-    private final Double audioSpectrumInterval;
+    private Supplier<Song> nextSongSupplier;
 
-    public AudioPlayer(AudioSpectrumListener _audioSpectrumListener) {
+    private Boolean isTransitioning;
+
+
+    public AudioPlayer() {
         // Initialize properties in the constructor
         progress = new SimpleDoubleProperty(0.0);
         currentSongString = new SimpleStringProperty("None");
@@ -39,11 +38,10 @@ public class AudioPlayer {
         isLoaded = new SimpleBooleanProperty(false);
         volume = new SimpleDoubleProperty(1.0);
         equalizerBandsGain = new ArrayList<>(Collections.nCopies(10, 0.0));
-        mediaPlayer = null;
         loadedSong = null;
+        isTransitioning = false;
         balance = 0.0;
         speed = 1.0;
-        audioSpectrumListener = _audioSpectrumListener;
         audioSpectrumInterval = 0.05; // Optimal Speed (lower is blinky, higher is laggy)
     }
 
@@ -53,120 +51,26 @@ public class AudioPlayer {
      * @param song The song to load.
      */
     public void loadSong(Song song) throws BadSongException {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-        }
         loadedSong = song;
-        Media media = new Media(song.getSource());
-        mediaPlayer = new MediaPlayer(media);
-
         currentSongString.set(song.getSource());
-        mediaPlayer.volumeProperty().bind(volume);
-        mediaPlayer.setBalance(balance);
-        mediaPlayer.setRate(speed);
-        mediaPlayer.setAudioSpectrumListener(audioSpectrumListener);
-        mediaPlayer.setAudioSpectrumInterval(audioSpectrumInterval);
-        mediaPlayer.setOnReady(() -> {
-            isLoaded.set(true);
-            try {
-                applyEqualizerBandsGain();
-            } catch (EqualizerGainException e) {
-                AlertService alertService = new AlertService();
-                alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
-            }
-        });
-        // Update the progression property while playing
-        setupProgressListener();
     }
 
     /**
-     * Set up a listener to update the progress property.
+     * Returns the list of equalizer band gains.
+     *
+     * @return list of gains for each equalizer band
      */
-    private void setupProgressListener() {
-        mediaPlayer.currentTimeProperty().addListener((_, _, newTime) -> {
-            if (mediaPlayer.getTotalDuration().greaterThan(Duration.ZERO)) {
-                progress.set(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
-            } else {
-                progress.set(0.0);
-            }
-        });
-    }
-
-    /**
-     * Apply the equalizer bands gain to the media player.
-     */
-    private void applyEqualizerBandsGain() throws EqualizerGainException {      
-        AudioEqualizer audioEqualizer = mediaPlayer.getAudioEqualizer();
-        if (audioEqualizer == null) {
-            throw new EqualizerGainException("No audio equalizer available");
-        }
-        for (int bandIndex = 0; bandIndex < equalizerBandsGain.size(); bandIndex++) {
-            EqualizerBand bandToSet = audioEqualizer.getBands().get(bandIndex);
-            double gain = equalizerBandsGain.get(bandIndex);
-            bandToSet.setGain(gain);
-        }
-    }
-
     public List<Double> getEqualizerBandsGain() {
         return equalizerBandsGain;
     }
 
     /**
-     * Update the equalizer bands gain.
-     * @param newEqualizerBandsGain The new equalizer bands gain.
+     * Replaces the entire list of equalizer band gains.
+     *
+     * @param newEqualizerBandsGain list of new gain values
      */
-    public void updateEqualizerBandsGain(List<Double> newEqualizerBandsGain) throws EqualizerGainException {
+    public void setEqualizerBandsGain(List<Double> newEqualizerBandsGain) {
         equalizerBandsGain = newEqualizerBandsGain;
-        if (mediaPlayer != null) {
-            applyEqualizerBandsGain();
-        }
-    }
-
-    /**
-     * Unpause the loaded song.
-     */
-    public void unpause() {
-        if (mediaPlayer != null) {
-            mediaPlayer.play();
-            isPlaying.set(true);
-        }
-    }
-
-    /**
-     * Pause the loaded song.
-     */
-    public void pause() {
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
-            isPlaying.set(false);
-        }
-    }
-
-    /**
-     * Change speed of the loaded song.
-     */
-    public void changeSpeed(double newSpeed) {
-        speed = newSpeed;
-        if (mediaPlayer != null) {
-            mediaPlayer.setRate(speed);
-        }
-    }
-
-    /**
-     * Get the current time of the song.
-     *
-     * @return The current time of the song.
-     */
-    public Duration getCurrentTime() { return (mediaPlayer != null) ? mediaPlayer.getCurrentTime() : Duration.ZERO; }
-
-    /**
-     * Get the total duration of the song.
-     *
-     * @return The total duration of the song.
-     */
-    public Duration getTotalDuration() {
-        return (mediaPlayer != null && mediaPlayer.getTotalDuration() != null)
-                ? mediaPlayer.getTotalDuration() : Duration.ZERO;
     }
 
     /**
@@ -179,31 +83,11 @@ public class AudioPlayer {
     }
 
     /**
-     * Get the progress of the song.
-     *
-     * @return The progress of the song.
-     */
-    public double getProgress() {
-        return progress.get();
-    }
-
-    /**
-     * Set the volume of the song.
-     *
-     * @param volume The volume to set.
-     */
-    public void setVolume(double volume) {
-        if (mediaPlayer != null) {
-            mediaPlayer.setVolume(volume);
-        }
-    }
-
-    /**
      * Check if the song is playing.
      *
      * @return True if the song is playing, False otherwise.
      */
-    public BooleanProperty isPlaying() {
+    public BooleanProperty getIsPlayingProperty() {
         return isPlaying;
     }
 
@@ -226,49 +110,6 @@ public class AudioPlayer {
     }
 
     /**
-     * Stop the song.
-     */
-    public void stop() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-        }
-        mediaPlayer = null;
-        isPlaying.set(false);
-    }
-
-    /**
-     * Seek to a specific progress in the song.
-     *
-     * @param progress The progress to seek to.
-     */
-    public void seek(double progress) {
-        if (mediaPlayer != null) {
-            mediaPlayer.seek(mediaPlayer.getTotalDuration().multiply(progress));
-        }
-    }
-
-    /**
-     * Set the action to perform when the song ends.
-     *
-     * @param action The action to perform.
-     */
-    public void setOnEndOfMedia(Runnable action) {
-        if (mediaPlayer != null) {
-            mediaPlayer.setOnEndOfMedia(action);
-        }
-    }
-
-    /**
-     * Close the player.
-     */
-    public void close() {
-        if (mediaPlayer != null) {
-            mediaPlayer.dispose();
-            mediaPlayer = null;
-        }
-    }
-
-    /**
      * Get the volume property.
      *
      * @return The volume property.
@@ -278,9 +119,9 @@ public class AudioPlayer {
     }
 
     /**
-     * Get the balance of the AudioPlayer.
+     * Gets the current balance setting.
      *
-     * @return The balance of the AudioPlayer.
+     * @return balance value
      */
     public double getBalance() {
         return balance;
@@ -293,8 +134,128 @@ public class AudioPlayer {
      */
     public void setBalance(double newBalance) {
         balance = newBalance;
-        if (mediaPlayer != null) {
-            mediaPlayer.setBalance(balance);
-        }
+    }
+
+    /**
+     * Retrieves the current playback speed multiplier.
+     *
+     * @return speed multiplier
+     */
+    public double getSpeed() {
+        return speed;
+    }
+
+    /**
+     * Change speed of the loaded song.
+     */
+    public void setSpeed(double newSpeed) {
+        speed = newSpeed;
+    }
+
+    /**
+     * Gets the interval for audio spectrum analysis.
+     *
+     * @return spectrum interval in seconds
+     */
+    public double getAudioSpectrumInterval() {
+        return audioSpectrumInterval;
+    }
+
+    /**
+     * Marks the player state as loaded.
+     */
+    public void setLoaded() {
+        isLoaded.set(true);
+    }
+
+    /**
+     * Returns the number of equalizer bands configured.
+     *
+     * @return count of bands
+     */
+    public int getEqualizerBandsGainSize() {
+        return equalizerBandsGain.size();
+    }
+
+    /**
+     * Retrieves the gain value for a specific equalizer band.
+     *
+     * @param bandIndex index of the band (0-based)
+     * @return gain value of that band
+     */
+    public double getEqualizerBandGain(int bandIndex) {
+        return equalizerBandsGain.get(bandIndex);
+    }
+
+    /**
+     * Checks if a transition is currently in progress.
+     *
+     * @return true if transitioning, false otherwise
+     */
+    public boolean isTransitioning() {
+        return isTransitioning;
+    }
+
+    /**
+     * Sets the transitioning flag to manage crossfade state.
+     *
+     * @param transitioning new transitioning state
+     */
+    public void setTransitioning(boolean transitioning) {
+        isTransitioning = transitioning;
+    }
+
+    /**
+     * Gets the configured crossfade duration.
+     *
+     * @return crossfade duration in seconds
+     */
+    public double getCrossfadeDuration() {
+        return crossfadeDuration;
+    }
+
+    /**
+     * Set the duration of the crossfade.
+     *
+     * @param _crossfadeDuration The duration of the crossfade in seconds.
+     */
+    public void setCrossfadeDuration(double _crossfadeDuration) {
+        crossfadeDuration = _crossfadeDuration;
+    }
+
+    /**
+     * Retrieves the next song from the supplier.
+     *
+     * @return next Song instance
+     */
+    public Song getNextSongSupplier() {
+        return nextSongSupplier.get();
+    }
+
+    /**
+     * Set the next song supplier.
+     *
+     * @param _nextSongSupplier The next song supplier, which is a function that returns a Song.
+     */
+    public void setNextSongSupplier(Supplier<Song> _nextSongSupplier) {
+        nextSongSupplier = _nextSongSupplier;
+    }
+
+    /**
+     * Updates the playback progress value.
+     *
+     * @param newProgress progress ratio (0.0 to 1.0)
+     */
+    public void setProgress(double newProgress) {
+        progress.set(newProgress);
+    }
+
+    /**
+     * Sets the playing flag to update playback status.
+     *
+     * @param playing new playing state
+     */
+    public void setPlaying(boolean playing) {
+        isPlaying.set(playing);
     }
 }

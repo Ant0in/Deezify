@@ -31,17 +31,6 @@ public class KaraokeLine {
     }
 
     /**
-     * Sets the lyric for this line.
-     * This method is used for deserialization.
-     */
-    private void setLyric(String _lyric) throws IllegalArgumentException {
-        if (_lyric == null) {
-            throw new IllegalArgumentException("Lyric cannot be null.");
-        }
-        lyric = _lyric;
-    }
-
-    /**
      * @return The timestamp for this line (javafx.util.Duration).
      */
     public Duration getTime() {
@@ -53,5 +42,16 @@ public class KaraokeLine {
      */
     public String getLyric() {
         return lyric;
+    }
+
+    /**
+     * Sets the lyric for this line.
+     * This method is used for deserialization.
+     */
+    private void setLyric(String _lyric) throws IllegalArgumentException {
+        if (_lyric == null) {
+            throw new IllegalArgumentException("Lyric cannot be null.");
+        }
+        lyric = _lyric;
     }
 }

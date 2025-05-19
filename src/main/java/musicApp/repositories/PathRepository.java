@@ -47,6 +47,7 @@ public class PathRepository {
         }
         return songList;
     }
+
     /**
      * Retrieves all valid song file paths from the specified folder.
      *

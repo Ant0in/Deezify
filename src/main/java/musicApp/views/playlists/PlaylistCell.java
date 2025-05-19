@@ -1,7 +1,7 @@
 package musicApp.views.playlists;
 
 import javafx.scene.control.ListCell;
-import musicApp.controllers.playlists.PlaylistCellController;
+import javafx.scene.layout.Pane;
 import musicApp.models.Library;
 
 /**
@@ -10,16 +10,16 @@ import musicApp.models.Library;
  */
 public class PlaylistCell extends ListCell<Library> {
 
-    private final PlaylistCellController playlistCellController;
+    private final PlaylistCellListener listener;
 
     /**
      * Instantiates a new Playlist cell.
      *
-     * @param controller the controller
+     * @param newListener the listener
      */
-    public PlaylistCell(PlaylistCellController controller) {
+    public PlaylistCell(PlaylistCellListener newListener) {
         super();
-        playlistCellController = controller;
+        listener = newListener;
     }
 
     /**
@@ -35,8 +35,18 @@ public class PlaylistCell extends ListCell<Library> {
             setGraphic(null);
             setText(null);
         } else {
-            setGraphic(playlistCellController.getRoot());
-            playlistCellController.update(library);
+            setGraphic(listener.getRoot());
+            listener.update(library);
         }
+    }
+
+    /**
+     * The listener interface for handling playlist cell events.
+     * Implement this interface to provide the cell layout and update functionality.
+     */
+    public interface PlaylistCellListener {
+        Pane getRoot();
+
+        void update(Library library);
     }
 }

@@ -1,24 +1,24 @@
 package musicApp.views.songs;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import musicApp.controllers.songs.KaraokeController;
-import musicApp.controllers.songs.LyricsController;
+import javafx.util.Duration;
 import musicApp.models.KaraokeLine;
 import musicApp.services.LanguageService;
+import musicApp.services.ViewService;
 import musicApp.views.View;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -26,7 +26,13 @@ import java.util.Optional;
  * the lyrics of a song. It handles the user interactions and delegates
  * actions to the LyricsController.
  */
-public class LyricsView extends View<LyricsView, LyricsController> {
+public class LyricsView extends View {
+
+    private LyricsViewListener lyricsListener;
+    private KaraokeListener karaokeListener;
+    private Timeline syncTimeline;
+
+
     @FXML
     private HBox karaokeHeader;
 
@@ -40,12 +46,26 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     private Button simpleLyricsButton, karaokeLyricsButton, karaokeAddLyricsButton, karaokeEditButton;
 
     @FXML
-    private ButtonType yesButton, noButton, cancelButton,saveButton;
+    private ButtonType yesButton, noButton, cancelButton, saveButton;
 
     @FXML
-    private ScrollPane scrollPane, karaokeScrollPane;
+    private ScrollPane lyricsScrollPane, karaokeScrollPane;
 
-    private KaraokeController karaokeController;
+    public void stopKaraoke() {
+        if (syncTimeline != null) {
+            syncTimeline.stop();
+            syncTimeline = null;
+        }
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setLyricsListener(LyricsViewListener newListener) {
+        lyricsListener = newListener;
+    }
 
     /**
      * Initializes the view. Sets up listeners and UI components.
@@ -53,12 +73,11 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     @Override
     public void init() {
         initButtons();
-        initButtonsTypes();
         refreshTranslation();
     }
 
-    public void setKaraokeController(KaraokeController controller) {
-        karaokeController = controller;
+    public void setKaraokeListener(KaraokeListener listener) {
+        karaokeListener = listener;
     }
 
     /**
@@ -66,30 +85,32 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * When the song changes, the lyrics are updated.
      */
     public void initButtons() {
-        karaokeAddLyricsButton.setOnAction(_ -> karaokeController.importKaraokeLyrics());
-        karaokeEditButton.setOnAction(_ -> karaokeController.importKaraokeLyrics());
+        karaokeAddLyricsButton.setOnAction(_ -> karaokeListener.handleImportKaraokeLyrics());
+        karaokeEditButton.setOnAction(_ -> karaokeListener.handleImportKaraokeLyrics());
+        simpleLyricsButton.setOnAction(_ -> lyricsListener.handleShowLyrics());
+        karaokeLyricsButton.setOnAction(_ -> karaokeListener.handleShowKaraoke());
 
-        simpleLyricsButton.setOnAction(_ -> {
-            scrollPane.setVisible(true);
-            scrollPane.setManaged(true);
-            karaokeScrollPane.setVisible(false);
-            karaokeScrollPane.setManaged(false);
-            updateLyrics();
-        });
 
-        karaokeLyricsButton.setOnAction(_ -> {
-            scrollPane.setVisible(false);
-            scrollPane.setManaged(false);
-            karaokeScrollPane.setVisible(true);
-            karaokeScrollPane.setManaged(true);
-            karaokeController.startKaraoke();
-        });
+        lyricsListener.handleLoadedSongChange(this::handleLoadedSongChange);
+    }
 
-        viewController.getCurrentlyLoadedSongStringProperty().addListener((_, _, _) -> {
-            initButtonsTypes();
-            karaokeController.stopKaraoke();
-            simpleLyricsButton.fire();
-        });
+    public void showLyrics() {
+        lyricsScrollPane.setVisible(true);
+        lyricsScrollPane.setManaged(true);
+        karaokeScrollPane.setVisible(false);
+        karaokeScrollPane.setManaged(false);
+    }
+
+    public void showKaraoke() {
+        lyricsScrollPane.setVisible(false);
+        lyricsScrollPane.setManaged(false);
+        karaokeScrollPane.setVisible(true);
+        karaokeScrollPane.setManaged(true);
+    }
+
+    private void handleLoadedSongChange() {
+        karaokeListener.handleStopKaraoke();
+        simpleLyricsButton.fire();
     }
 
     /**
@@ -99,7 +120,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     @Override
     protected void refreshTranslation() {
         LanguageService lang = LanguageService.getInstance();
-        initButtonsTypes();
+        initButtonsTypes(lang);
         karaokeEditButton.setText(lang.get("button.edit"));
         karaokeLyricsButton.setText(lang.get("button.modeKaraoke"));
         simpleLyricsButton.setText(lang.get("button.simpleLyrics"));
@@ -108,8 +129,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         lyricsTitle.setText(lang.get("lyrics.title"));
     }
 
-    private void initButtonsTypes(){
-        LanguageService lang = LanguageService.getInstance();
+    private void initButtonsTypes(LanguageService lang) {
         yesButton = new ButtonType(lang.get("button.yes"), ButtonBar.ButtonData.YES);
         noButton = new ButtonType(lang.get("button.no"), ButtonBar.ButtonData.NO);
         cancelButton = new ButtonType(lang.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -119,7 +139,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     /**
      * Displays a dialog to edit the lyrics.
      */
-    public Optional<String> showEditLyricsDialog(String initialText) {
+    public Optional<String> getEditedLyrics(String initialText) {
         LanguageService lang = LanguageService.getInstance();
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle(lang.get("dialog.edit_lyrics.title"));
@@ -149,7 +169,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      */
     public void updateLyrics() {
         lyricsContainer.getChildren().clear();
-        List<String> lyrics = viewController.getCurrentSongLyrics();
+        List<String> lyrics = lyricsListener.getCurrentSongLyrics();
 
         if (lyrics == null || lyrics.isEmpty()) {
             displayEmptyLyricsPlaceholder();
@@ -157,6 +177,12 @@ public class LyricsView extends View<LyricsView, LyricsController> {
             displayLyricsWithHeader(lyrics);
         }
         lyricsContainer.requestLayout();
+    }
+
+    public void updateTimeLine() {
+        syncTimeline = new Timeline(new KeyFrame(Duration.millis(200), _ -> karaokeListener.handleSyncLyrics()));
+        syncTimeline.setCycleCount(Timeline.INDEFINITE);
+        syncTimeline.play();
     }
 
     /**
@@ -169,7 +195,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         noLyricsLabel.getStyleClass().add("no-lyrics-label");
 
         Button addLyricsButton = createEditButton(lang.get("button.addLyrics"));
-        addLyricsButton.setOnAction(_ -> viewController.editLyrics());
+        addLyricsButton.setOnAction(_ -> lyricsListener.handleEditLyrics());
 
         VBox placeholder = new VBox(10, noLyricsLabel, addLyricsButton);
         placeholder.setAlignment(Pos.CENTER);
@@ -178,13 +204,12 @@ public class LyricsView extends View<LyricsView, LyricsController> {
 
     /**
      * Displays the lyrics along with an edit header.
-
      */
     private void displayLyricsWithHeader(List<String> lyrics) {
         HBox header = new HBox();
         header.setAlignment(Pos.TOP_RIGHT);
         Button editButton = createEditButton(null);
-        editButton.setOnAction(_ -> viewController.editLyrics());
+        editButton.setOnAction(_ -> lyricsListener.handleEditLyrics());
         header.getChildren().add(editButton);
         lyricsContainer.getChildren().add(header);
 
@@ -204,9 +229,8 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         if (text != null) {
             button.setText(text);
         }
-        ImageView pencilIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/edit.png")).toExternalForm()));
-        pencilIcon.setFitWidth(16);
-        pencilIcon.setFitHeight(16);
+        ViewService viewService = new ViewService();
+        ImageView pencilIcon = viewService.createIcon("/images/edit.png");
         button.setGraphic(pencilIcon);
         return button;
     }
@@ -282,7 +306,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
      * It retrieves the karaoke lines from the karaoke controller and renders them.
      */
     public void updateKaraokeLyrics() {
-        List<KaraokeLine> karaokeLines = karaokeController.getKaraokeLines();
+        List<KaraokeLine> karaokeLines = karaokeListener.getKaraokeLines();
         renderKaraokeLines(karaokeLines, null);
     }
 
@@ -297,7 +321,7 @@ public class LyricsView extends View<LyricsView, LyricsController> {
     /**
      * Shows a file chooser dialog to select an .lrc file.
      */
-    public Optional<Path> showLrcFileChooser() {
+    public Optional<Path> getLrcFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select .lrc File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("LRC files", "*.lrc"));
@@ -336,4 +360,30 @@ public class LyricsView extends View<LyricsView, LyricsController> {
         updateKaraokeLyrics();
     }
 
+    /**
+     * Listener interface for handling events in the LyricsView.
+     * Implement this interface to define behaviors for editing lyrics,
+     * retrieving the current song lyrics, and accessing the currently loaded song property.
+     */
+    public interface LyricsViewListener {
+        void handleEditLyrics();
+
+        List<String> getCurrentSongLyrics();
+
+        void handleLoadedSongChange(Runnable callback);
+
+        void handleShowLyrics();
+    }
+
+    public interface KaraokeListener {
+        void handleImportKaraokeLyrics();
+
+        void handleShowKaraoke();
+
+        void handleStopKaraoke();
+
+        void handleSyncLyrics();
+
+        List<KaraokeLine> getKaraokeLines();
+    }
 }

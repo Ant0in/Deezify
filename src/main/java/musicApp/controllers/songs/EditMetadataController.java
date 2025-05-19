@@ -1,13 +1,12 @@
 package musicApp.controllers.songs;
 
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import musicApp.controllers.ViewController;
 import musicApp.models.Metadata;
 import musicApp.models.Song;
-import musicApp.services.LanguageService;
 import musicApp.services.MetadataService;
+import musicApp.services.VideoService;
 import musicApp.views.songs.EditMetadataView;
 
 import java.io.File;
@@ -18,11 +17,10 @@ import java.util.Set;
 /**
  * The type Edit metadata controller.
  */
-public class EditMetadataController extends ViewController<EditMetadataView, EditMetadataController> {
-    private File selectedFile;
+public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataView.EditMetadataViewListener {
     private final Song song;
-    private final Stage editStage;
     private final SongCellController songCellController;
+    private File selectedCoverFile;
 
 
     /**
@@ -32,7 +30,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      */
     public EditMetadataController(SongCellController cellController) {
         super(new EditMetadataView());
-        editStage = new Stage();
+        view.setListener(this);
         songCellController = cellController;
         song = songCellController.getSong();
         initView("/fxml/EditMetadata.fxml");
@@ -47,37 +45,22 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             );
             view.setCoverImage(song.getCoverImage());
         }
-
-        editStage.setTitle(LanguageService.getInstance().get("button.edit_metadata"));
-        editStage.setScene(view.getScene());
-        editStage.show();
     }
 
     /**
      * Handles the user action of choosing a cover image.
      * Opens a file chooser, and if a valid image is selected, loads and displays it in the view.
      */
-    public void handleChooseCover() {
-        File file = promptUserForCoverFile();
+    public void handleCoverChanged(File file) {
         if (file != null && file.exists()) {
+            long maxSizeBytes = 100L * 1024 * 1024; // 100 MB in bytes
+            if (file.length() > maxSizeBytes) {
+                alertService.showAlert("Selected file is too large. Please choose a file under 100 MB.", Alert.AlertType.ERROR);
+                return;
+            }
+
             loadAndApplyCoverImage(file);
         }
-    }
-
-    /**
-     * Prompts the user with a FileChooser dialog to select an image file.
-     *
-     * @return the selected File if the user chose one, or {@code null} otherwise
-     */
-    private File promptUserForCoverFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose Cover Image");
-
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
-        );
-
-        return fileChooser.showOpenDialog(editStage);
     }
 
     /**
@@ -86,13 +69,27 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      * @param file the image file to load
      */
     private void loadAndApplyCoverImage(File file) {
+
         try {
-            Image image = new Image(file.toURI().toString());
+
+            Image image;
+
+            // Check if File is a video file
+            if (file.toPath().toString().endsWith(".mp4")) {
+                VideoService videoService = new VideoService();
+                image = videoService.getFirstFrame(file);
+                if (image == null) {
+                    return;
+                }
+            } else {
+                image = new Image(file.toURI().toString());
+            }
+
             if (!image.isError()) {
                 view.setCoverImage(image);
-                selectedFile = file;
+                selectedCoverFile = file;
             } else {
-                System.err.println("Failed to load image: " + file.getName());
+                System.err.println("Failed to load file: " + file.getName());
             }
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
@@ -122,8 +119,8 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
             newMetadata.setAlbum(album);
             newMetadata.setGenre(genre);
             newMetadata.setUserTags(new ArrayList<>(userTags));
-            if (selectedFile != null) {
-                newMetadata.loadCoverFromPath(selectedFile.getAbsolutePath());
+            if (selectedCoverFile != null) {
+                newMetadata.loadCoverFromPath(selectedCoverFile);
             }
             MetadataService util = new MetadataService();
 
@@ -135,7 +132,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
 
         song.reloadMetadata();
         songCellController.refreshSong();
-        editStage.close();
+        view.close();
     }
 
     /**
@@ -143,7 +140,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      */
     public void handleCancel() {
         songCellController.refreshSong();
-        editStage.close();
+        view.close();
     }
 
     /**
@@ -152,7 +149,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      * @param input the input
      * @return the optional
      */
-    public Optional<String> getArtistAutoCompletion(String input){
+    public Optional<String> getArtistAutoCompletion(String input) {
         return songCellController.getArtistAutoCompletion(input);
     }
 
@@ -162,7 +159,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      * @param input the input
      * @return the optional
      */
-    public Optional<String> getAlbumAutoCompletion(String input){
+    public Optional<String> getAlbumAutoCompletion(String input) {
         return songCellController.getAlbumAutoCompletion(input);
     }
 
@@ -172,7 +169,7 @@ public class EditMetadataController extends ViewController<EditMetadataView, Edi
      * @param input the input
      * @return the optional
      */
-    public Optional<String> getTagAutoCompletion(String input){
+    public Optional<String> getTagAutoCompletion(String input) {
         return songCellController.getTagAutoCompletion(input);
     }
 

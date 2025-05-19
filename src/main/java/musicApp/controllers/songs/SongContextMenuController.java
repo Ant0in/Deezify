@@ -7,20 +7,19 @@ import musicApp.controllers.ViewController;
 import musicApp.models.Library;
 import musicApp.services.LanguageService;
 import musicApp.views.songs.SongContextMenuView;
-import musicApp.exceptions.BadSongException;
 
 import java.util.List;
 
 /**
  * The type Song context menu controller.
  */
-public class SongContextMenuController extends ViewController<SongContextMenuView, SongContextMenuController> {
+public class SongContextMenuController extends ViewController<SongContextMenuView> implements SongContextMenuView.SongContextMenuViewListener {
 
+    private final boolean isMainLibrary;
     /**
      * The Song cell controller.
      */
     public SongCellController songCellController;
-    private final boolean isMainLibrary;
 
     /**
      * Instantiates a new Song context menu controller.
@@ -29,6 +28,7 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
      */
     public SongContextMenuController(SongCellController cellController) {
         super(new SongContextMenuView());
+        view.setListener(this);
         songCellController = cellController;
         isMainLibrary = cellController.isShowingMainLibrary();
         initView("/fxml/SongContextMenu.fxml", true);
@@ -72,12 +72,12 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
         List<Library> playlists = songCellController.getPlaylists();
 
         playlists.stream().skip(2).forEach(playlist -> {
-            MenuItem playlistItem = new MenuItem(playlist.getName());
+            MenuItem playlistItem = new MenuItem(playlist.getDisplayName());
             playlistItem.setOnAction(_ -> songCellController.addSongToPlaylist(playlist));
             addToMenu.getItems().add(playlistItem);
 
             if (isShowingMainLibrary() && songCellController.containsSong(playlist)) {
-                MenuItem removeItem = new MenuItem(playlist.getName());
+                MenuItem removeItem = new MenuItem(playlist.getDisplayName());
                 removeItem.setOnAction(_ -> songCellController.removeSongFromPlaylist(playlist));
                 if (removeFromMenu != null) {
                     removeFromMenu.getItems().add(removeItem);
@@ -95,9 +95,4 @@ public class SongContextMenuController extends ViewController<SongContextMenuVie
     public void showAt(double x, double y) {
         view.show(songCellController.getRoot(), x, y);
     }
-
-    public void launchDjMode() throws BadSongException {
-        songCellController.launchDjMode();
-    }
-    
 }

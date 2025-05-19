@@ -3,32 +3,34 @@ package musicApp.views;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import musicApp.controllers.SongContainerController;
-import musicApp.models.Library;
 import musicApp.models.Song;
+
+import java.util.List;
 
 /**
  * The  PlayList view.
- *
- * @param <V> the type parameter
- * @param <C> the type parameter
- * @param <M> the type parameter
  */
-public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C extends SongContainerController<V, C, M>, M extends Library>
-        extends View<V, C> {
-    /**
-     * The List view.
-     */
+public abstract class SongContainerView extends View {
+
     @FXML
     protected ListView<Song> listView;
+    private SongContainerViewListener listener;
 
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(SongContainerViewListener newListener) {
+        listener = newListener;
+    }
 
     /**
      * Update list view.
      */
     public void updateListView() {
         listView.getItems().clear();
-        listView.getItems().setAll(viewController.toList());
+        listView.getItems().setAll(listener.toList());
     }
 
     /**
@@ -53,7 +55,7 @@ public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C 
     public void enableDoubleClickToPlay() {
         listView.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                viewController.handlePlaySong();
+                listener.handlePlaySong();
             }
         });
     }
@@ -68,9 +70,13 @@ public abstract class SongContainerView<V extends SongContainerView<V, C, M>, C 
     }
 
     /**
-     * Refresh ui.
+     * Listener interface for handling user actions from the controller.
      */
-    public void refreshUI() {
+    public interface SongContainerViewListener {
+        void handlePlaySong();
+
+        List<Song> toList();
     }
+
 
 }

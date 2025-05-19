@@ -9,15 +9,11 @@ import static org.junit.Assert.assertThrows;
 public class TestKaraokeLine {
     @Test
     public void testNegativeTimestamp() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new KaraokeLine(Duration.millis(-1), "Test lyric");
-        });
+        assertThrows(IllegalArgumentException.class, () -> new KaraokeLine(Duration.millis(-1), "Test lyric"));
     }
 
     @Test
     public void testNullLyric() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new KaraokeLine(Duration.millis(1000), null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new KaraokeLine(Duration.millis(1000), null));
     }
 }

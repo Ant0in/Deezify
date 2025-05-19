@@ -1,16 +1,20 @@
 package musicApp.controllers;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.Alert;
 import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.views.QueueView;
 
+import java.util.ArrayList;
+
 /**
  * Controller responsible for managing the song queue view and logic.
  * Handles adding, removing, reordering, and playing songs in the queue.
  */
-public class QueueController extends SongContainerController<QueueView, QueueController, Library> {
+public class QueueController extends SongContainerController<QueueView> implements QueueView.QueueViewListener {
 
     /**
      * Instantiates a new Queue controller.
@@ -19,6 +23,8 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
      */
     public QueueController(PlayerController playerController) {
         super(new QueueView(), playerController);
+        library = new Library(new ArrayList<>(), "??queue??", null);
+        view.setListener((QueueView.QueueViewListener) this);
         initView("/fxml/Queue.fxml");
     }
 
@@ -29,6 +35,18 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
      */
     public BooleanBinding isPlaylistItemSelected() {
         return playerController.isPlaylistItemSelected();
+    }
+
+    public void bindClearSelection(ReadOnlyObjectProperty<Song> songReadOnlyObjectProperty) {
+        songReadOnlyObjectProperty.addListener((_, _, newValue) -> {
+            if (newValue != null) {
+                clearPlayListViewSelection();
+            }
+        });
+    }
+
+    public void bindIsPlaylistItemSelected(BooleanProperty booleanProperty) {
+        booleanProperty.bind(isPlaylistItemSelected());
     }
 
 
@@ -49,7 +67,7 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
     /**
      * Clear play list view selection.
      */
-    public void clearPlayListViewSelection() {
+    private void clearPlayListViewSelection() {
         playerController.clearPlayListViewSelection();
     }
 
@@ -129,5 +147,9 @@ public class QueueController extends SongContainerController<QueueView, QueueCon
     public void replaceQueue(Library playlist) {
         library.clear();
         appendPlaylistToQueue(playlist);
+    }
+
+    public Song getNextSong() {
+        return library.get(0);
     }
 }

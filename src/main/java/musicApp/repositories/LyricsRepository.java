@@ -1,5 +1,7 @@
 package musicApp.repositories;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -13,41 +15,6 @@ import java.util.Optional;
  */
 public class LyricsRepository {
     private final JsonRepository jsonRepository;
-    
-    /**
-     * Store both the text and karaoke paths for a song
-     */
-    public static class LyricsFilePaths {
-        private String textPath;
-        private String karaokePath;
-        private final String songPath;
-        
-        public LyricsFilePaths(String _songPath, String _textPath, String _karaokePath) {
-            textPath = _textPath;
-            karaokePath = _karaokePath;
-            songPath = _songPath;
-        }
-        
-        public String getTextPath() {
-            return textPath;
-        }
-        
-        public String getKaraokePath() {
-            return karaokePath;
-        }
-
-        public String getSongPath() {
-            return songPath;
-        }
-
-        public void setPathLyricsTxt(String path) {
-            textPath = path;
-        }
-
-        public void setPathLyricsKaraoke(String path) {
-            karaokePath = path;
-        }
-    }
 
     /**
      * Constructor injecting a DataProvider, which handles file paths and JSON reading/writing.
@@ -65,6 +32,7 @@ public class LyricsRepository {
 
     /**
      * Gets the paths to lyrics files for a song.
+     *
      * @param songPath The path to the song file
      * @return LyricsFilePaths containing text and karaoke paths, or null if not found
      */
@@ -79,8 +47,9 @@ public class LyricsRepository {
 
     /**
      * Updates the lyrics file paths for a song.
-     * @param songPath Path to the song file
-     * @param textPath Path to the text lyrics file (relative to lyrics directory)
+     *
+     * @param songPath    Path to the song file
+     * @param textPath    Path to the text lyrics file (relative to lyrics directory)
      * @param karaokePath Path to the karaoke lyrics file (relative to lyrics directory)
      */
     private void updateLyricsPaths(String songPath, String textPath, String karaokePath) throws IllegalArgumentException, IOException {
@@ -115,6 +84,43 @@ public class LyricsRepository {
         updateLyricsPaths(songPath, null, karaokePath);
     }
 
+    /**
+     * Store both the text and karaoke paths for a song
+     */
+    public static class LyricsFilePaths {
+        @Expose
+        private final String songPath;
+        @Expose
+        private String textPath;
+        @Expose
+        private String karaokePath;
+
+        public LyricsFilePaths(String _songPath, String _textPath, String _karaokePath) {
+            textPath = _textPath;
+            karaokePath = _karaokePath;
+            songPath = _songPath;
+        }
+
+        public String getTextPath() {
+            return textPath;
+        }
+
+        public String getKaraokePath() {
+            return karaokePath;
+        }
+
+        public String getSongPath() {
+            return songPath;
+        }
+
+        public void setPathLyricsTxt(String path) {
+            textPath = path;
+        }
+
+        public void setPathLyricsKaraoke(String path) {
+            karaokePath = path;
+        }
+    }
 
 
 }

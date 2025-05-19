@@ -1,47 +1,41 @@
 package musicApp.controllers;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
-import musicApp.models.Library;
+import musicApp.enums.Language;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Settings;
+import musicApp.models.UserProfile;
 import musicApp.services.AlertService;
-import musicApp.services.PlaylistService;
 import musicApp.services.SettingsService;
+import musicApp.services.UserProfileService;
+
+import java.nio.file.Path;
 
 /**
  * The Meta controller.
  */
-public class MetaController {
-
+public class MetaController implements EditUserProfileController.EditUserProfileControllerListener {
     private final AlertService alertService;
-    private final Stage stage;
     private final SettingsService settingsService;
-    private final PlaylistService playlistService;
-    private final PlayerController playerController;
-    private final SettingsController settingsController;
-    private final List<Library> playlists;
-    private final DjPlayerController djPlayerController;
+    private final UserProfileSelectionController userProfileSelectionController;
+    private PlayerController playerController;
+    private SettingsController settingsController;
+
     /**
      * Instantiates a new Meta controller.
-     *
-     * @param stage the stage
-     * @throws IOException the io exception
      */
-    public MetaController(Stage stage) throws IOException {
-        this.stage = stage;
+    public MetaController(Stage primaryStage) {
         alertService = new AlertService();
-        settingsService = new SettingsService();
-        playlistService = new PlaylistService();
-        playlists = playlistService.loadAllLibraries();
-        playerController = new PlayerController(this, settingsService.readSettings(), getMainLibrary());
-        settingsController = new SettingsController(this, settingsService.readSettings());
-        djPlayerController = new DjPlayerController(this.playerController);
+        try {
+            settingsService = new SettingsService();
+            UserProfileService userProfileService = new UserProfileService();
+            userProfileSelectionController = new UserProfileSelectionController(this, primaryStage, userProfileService.readUserProfiles());
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
     }
-
 
     /**
      * Switches the scene to the specified scene.
@@ -50,8 +44,9 @@ public class MetaController {
      */
     public final void switchScene(Scenes scene) {
         switch (scene) {
-            case MAINWINDOW -> playerController.show(stage);
+            case MAINWINDOW -> playerController.show();
             case SETTINGS -> settingsController.show();
+            case USERSWINDOW -> userProfileSelectionController.show();
         }
     }
 
@@ -69,30 +64,72 @@ public class MetaController {
      */
     public void notifySettingsChanged(Settings newSettings) {
         try {
+            usersUpdate();
             settingsService.writeSettings(newSettings);
-            Library mainLibrary = playlistService.loadMainLibrary(newSettings.getMusicFolder());
-            playlists.set(0, mainLibrary);
-            playerController.onSettingsChanged(newSettings);
+            playerController.onSettingsChanged(newSettings.toDTO());
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
         }
     }
 
     /**
-     * Get the playlists.
+     * Load the player with the specified user profile.
      *
-     * @return the playlists
+     * @param userProfile The user profile to load.
      */
-    public List<Library> getPlaylists() {
-        return playlists;
+    public void loadPlayerWithUser(UserProfile userProfile) {
+        try {
+            Settings settings = settingsService.readSettings();
+            settings.setCurrentUserProfile(userProfile);
+            settingsController = new SettingsController(this, settings);
+            playerController = new PlayerController(this, new Stage(), settingsController.getSettingsDTO());
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
-     * Get the main library.
-     * @return the main library
+     * Get the user playlist path.
+     *
+     * @return The user playlist path.
      */
-    public Library getMainLibrary() {
-        return playlists.getFirst();
+    public Path getUserPlaylistPath() {
+        return settingsController.getUserPlaylistPath();
+    }
+
+    /**
+     * Get the user library path.
+     *
+     * @return The user library path.
+     */
+    public Path getUserMusicFolder() {
+        return settingsController.getUserMusicFolder();
+    }
+
+    public Path getMusicFolder() {
+        return settingsController.getMusicFolder();
+    }
+
+    /**
+     * Update the users list in the user profile selection controller.
+     */
+    public void usersUpdate() {
+        userProfileSelectionController.usersUpdate();
+    }
+
+    /**
+     * Get the app's default language.
+     *
+     * @return the default language.
+     */
+    public Language getDefaultLanguage() {
+        try {
+            return settingsService.readSettings().getDefaultLanguage();
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading settings", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -101,15 +138,7 @@ public class MetaController {
      */
     public enum Scenes {
         MAINWINDOW,
-        SETTINGS
-    }
-
-    /**
-     * Retrieves the current music directory from the settings controller.
-     *
-     * @return The path to the music directory as defined in the settings.
-     */
-    public Path getMusicDirectory() {
-        return settingsController.getMusicDirectory();
+        SETTINGS,
+        USERSWINDOW
     }
 }

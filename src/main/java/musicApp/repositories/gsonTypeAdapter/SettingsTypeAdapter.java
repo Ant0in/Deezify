@@ -3,7 +3,7 @@ package musicApp.repositories.gsonTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import musicApp.models.Equalizer;
+import musicApp.enums.Language;
 import musicApp.models.Settings;
 
 import java.io.IOException;
@@ -25,20 +25,17 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
     @Override
     public void write(JsonWriter out, Settings settings) throws IOException {
         out.beginObject();
-
-        out.name("balance");
-        out.value(settings.getBalance());
-
         out.name("musicFolder");
-        out.value(settings.getMusicFolder().toString());
+        out.value(settings.getMusicFolderString());
+        out.name("crossfadeDuration");
+        out.value(settings.getCrossfadeDuration());
+        out.name("language");
 
-        out.name("equalizerBands");
-        out.beginArray();
-        for (Double band : settings.getEqualizerBands()) {
-            out.value(band);
+        switch (settings.getDefaultLanguage()) {
+            case FRENCH: out.value("fr"); break;
+            case DUTCH: out.value("nl"); break;
+            default: out.value("en");
         }
-        out.endArray();
-
         out.endObject();
     }
 
@@ -51,35 +48,22 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
      */
     @Override
     public Settings read(JsonReader in) throws IOException {
-        double balance = 0.0;
         Path musicFolder = null;
-        Equalizer equalizer = new Equalizer();
+        Language language = null;
 
         in.beginObject();
         while (in.hasNext()) {
             String fieldName = in.nextName();
-            switch (fieldName) {
-                case "balance":
-                    balance = in.nextDouble();
-                    break;
-                case "musicFolder":
-                    musicFolder = Paths.get(in.nextString());
-                    break;
-                case "equalizerBands":
-                    in.beginArray();
-                    int bandIndex = 0;
-                    while (in.hasNext()) {
-                        equalizer.setBandGain(bandIndex++, in.nextDouble());
-                    }
-                    in.endArray();
-                    break;
-                default:
-                    in.skipValue();
-                    break;
+            if (fieldName.equals("musicFolder")) {
+                musicFolder = Paths.get(in.nextString());
+            } else if (fieldName.equals("language")) {
+                language = Language.fromCode(in.nextString());
+            } else {
+                in.skipValue();
             }
         }
         in.endObject();
 
-        return new Settings(balance, musicFolder, equalizer);
+        return new Settings(musicFolder, language);
     }
 }

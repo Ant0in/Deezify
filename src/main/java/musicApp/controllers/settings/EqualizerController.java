@@ -1,20 +1,20 @@
 package musicApp.controllers.settings;
 
-import java.util.List;
-
-import javafx.stage.Stage;
+import musicApp.controllers.EditUserProfileController;
 import musicApp.controllers.ViewController;
-import musicApp.views.settings.EqualizerView;
+import musicApp.enums.EqualizerBandFrequency;
 import musicApp.models.Equalizer;
+import musicApp.views.settings.EqualizerView;
+
+import java.util.List;
 
 
 /**
  * The type Equalizer controller.
  */
-public class EqualizerController extends ViewController<EqualizerView, EqualizerController> {
-    
-    private final SettingsController settingsController;
-    private final Stage stage;
+public class EqualizerController extends ViewController<EqualizerView> implements EqualizerView.EqualizerViewListener {
+
+    private final EditUserProfileController editUserProfileController;
     private final Equalizer equalizer;
 
     /**
@@ -23,10 +23,10 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      * @param _controller the controller
      * @param _equalizer  the equalizer
      */
-    public EqualizerController(SettingsController _controller, Equalizer _equalizer) {
+    public EqualizerController(EditUserProfileController _controller, Equalizer _equalizer) {
         super(new EqualizerView());
-        settingsController = _controller;
-        stage = new Stage();
+        view.setListener(this);
+        editUserProfileController = _controller;
         equalizer = _equalizer;
         initView("/fxml/Equalizer.fxml");
     }
@@ -35,15 +35,15 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      * Show the equalizer.
      */
     public void show() {
-        view.show(stage);
+        view.show();
     }
 
     /**
      * Close the equalizer.
      */
-    public void close() {
-        stage.close();
-        settingsController.show();
+    public void handleClose() {
+        view.close();
+        editUserProfileController.show();
     }
 
     /**
@@ -57,32 +57,13 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
     }
 
     /**
-     * * Update a band in the equalizer.
-     *
-     * @param bandsGain The new values of the bands.
-    */
-    public void updateEqualizerBands(List<Double> bandsGain) {
-        equalizer.setBandsGain(bandsGain);
-    }
-
-    /**
-     * Get the band frequency.
-     *
-     * @param bandIndex The index of the band.
-     * @return the band frequency
-     */
-    public int getBandFrequency(int bandIndex) {
-        return equalizer.getBandFrequency(bandIndex);
-    }
-
-    /**
      * Get the band gain.
      *
-     * @param bandIndex The index of the band.
+     * @param frequency The frequency of the band.
      * @return the equalizer band gain
      */
-    public double getEqualizerBandGain(int bandIndex) {
-        return equalizer.getBandGain(bandIndex);
+    public double getEqualizerBandGain(EqualizerBandFrequency frequency) {
+        return equalizer.getBandGain(EqualizerBandFrequency.getIndex(frequency));
     }
 
     /**
@@ -91,7 +72,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      * @return the max gain db
      */
     public double getMaxGainDB() {
-        return equalizer.getMaxGainDB();
+        return Equalizer.MAX_GAIN_DB;
     }
 
     /**
@@ -100,7 +81,7 @@ public class EqualizerController extends ViewController<EqualizerView, Equalizer
      * @return the min gain db
      */
     public double getMinGainDB() {
-        return equalizer.getMinGainDB();
+        return Equalizer.MIN_GAIN_DB;
     }
 
     /**

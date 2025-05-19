@@ -1,17 +1,20 @@
 package musicApp.controllers;
 
+import javafx.scene.control.Alert;
 import javafx.scene.media.AudioSpectrumListener;
-import javafx.stage.Stage;
 import musicApp.models.Song;
+import musicApp.services.VideoService;
 import musicApp.views.MiniPlayerView;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 /**
  * Controller managing the MiniPlayerView and processing audio spectrum data received on `spectrumDataUpdate`
  */
-public class MiniPlayerController extends ViewController<MiniPlayerView, MiniPlayerController> implements AudioSpectrumListener {
+public class MiniPlayerController extends ViewController<MiniPlayerView> implements AudioSpectrumListener, MiniPlayerView.MiniPlayerViewListener {
 
     private static final int DEFAULT_BANDS_NUMBER = 128;
     private static final float MIN_DECIBEL_LEVEL = -60f;
@@ -19,27 +22,23 @@ public class MiniPlayerController extends ViewController<MiniPlayerView, MiniPla
     private static final float LOG_SCALE_OFFSET = 1.1f;
     private static final float VISUAL_INTENSITY_MULTIPLIER = 1.5f;
 
-    private final Stage stage;
-
     /**
      * Instantiates the MiniPlayerController and initializes the MiniPlayer view.
      */
     public MiniPlayerController() {
         super(new MiniPlayerView());
+        view.setListener(this);
         initView("/fxml/MiniPlayer.fxml");
-        stage = new Stage();
-        stage.setScene(view.getScene());
-        stage.setTitle("MiniPlayer");
     }
 
     /**
      * Toggle the visibility of the mini player window.
      */
-    public void toggleView() {
-        if (stage.isShowing()) {
-            stage.close();
+    public void toggleView(boolean show) {
+        if (show) {
+            view.show();
         } else {
-            stage.show();
+            view.close();
         }
     }
 
@@ -58,7 +57,19 @@ public class MiniPlayerController extends ViewController<MiniPlayerView, MiniPla
      * @param song the song to load
      */
     public void loadSong(Song song) {
-        view.updateSongProperties(song.getTitle(), song.getCoverImage());
+        Path videoPath = null;
+
+        byte[] videoBytes = song.getMetadata().getVideoCover();
+        if (videoBytes != null && videoBytes.length > 0) {
+            VideoService s = new VideoService();
+            try {
+                videoPath = s.tempFileFromBytes(videoBytes).toPath();
+            } catch (Exception e) {
+                alertService.showAlert("Failed to load video cover from song", Alert.AlertType.WARNING);
+            }
+        }
+
+        view.updateSongProperties(song.getTitle(), song.getCoverImage(), videoPath);
     }
 
     /**

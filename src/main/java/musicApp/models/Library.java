@@ -50,10 +50,10 @@ public class Library {
      * @param song The song to add.
      */
     public void add(Song song) throws IllegalArgumentException {
-        if (songList.contains(song)) {
+        if (contains(song)) {
             throw new IllegalArgumentException(
                     LanguageService.getInstance().get("error.media_already_in_library")
-                            + " " + song.toString()
+                            + " (" + getDisplayName() + ") : " + song.toString()
             );
         }
         songList.add(song);
@@ -66,7 +66,7 @@ public class Library {
      * @param song  The media to add.
      */
     public void add(int index, Song song) throws IllegalArgumentException {
-        if (songList.contains(song)) {
+        if (contains(song)) {
             throw new IllegalArgumentException(
                     LanguageService.getInstance().get("error.media_already_in_library")
                             + " " + song.toString()
@@ -80,8 +80,8 @@ public class Library {
      *
      * @param song The song to remove.
      */
-    public void remove(Song song) {
-        if (!songList.contains(song)) {
+    public void remove(Song song) throws IllegalArgumentException {
+        if (!contains(song)) {
             throw new IllegalArgumentException("Media not in library");
         }
         songList.remove(song);
@@ -92,7 +92,9 @@ public class Library {
      *
      * @return The size of the library.
      */
-    public int size() { return songList.size(); }
+    public int size() {
+        return songList.size();
+    }
 
     /**
      * Check if the library is empty.
@@ -101,6 +103,10 @@ public class Library {
      */
     public Boolean isEmpty() {
         return songList.isEmpty();
+    }
+
+    public Boolean contains(Song song) {
+        return songList.contains(song);
     }
 
     /**
@@ -143,21 +149,6 @@ public class Library {
     }
 
     /**
-     * Get a song by its path.
-     *
-     * @param path The path of the song.
-     * @return The song at the path.
-     */
-    public Song getSongByPath(Path path) {
-        for (Song song : songList) {
-            if (song.getFilePath().equals(path)) {
-                return song;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Get the name of the library.
      *
      * @return The name of the library.
@@ -173,6 +164,16 @@ public class Library {
      */
     public void setName(String newName) {
         name = newName;
+    }
+
+    public String getDisplayName() {
+        return switch (name) {
+            case "??favorites??" -> LanguageService.getInstance().get("favorites");
+            case "??library??" -> LanguageService.getInstance().get("library");
+            case "??user_library??" -> LanguageService.getInstance().get("user_library");
+            case "??queue??" -> LanguageService.getInstance().get("queue");
+            default -> name;
+        };
     }
 
     /**
@@ -199,7 +200,7 @@ public class Library {
      * @return The cover image or a default image if none is set
      */
     public Image getCoverImage() {
-        String defaultCover = getClass().getResource("/images/playlist.png").toExternalForm();
+        String defaultCover = Objects.requireNonNull(getClass().getResource("/images/playlist.png")).toExternalForm();
         try {
             if (image != null) {
                 return new Image(image.toUri().toURL().toExternalForm());
@@ -211,10 +212,10 @@ public class Library {
             return new Image(Objects.requireNonNull(defaultCover));
         }
     }
-    
+
     /**
      * Get the auto-completion for a song artist.
-     * 
+     *
      * @param input The input string to complete.
      * @return The auto-completion for the song artist.
      */
@@ -234,7 +235,7 @@ public class Library {
 
     /**
      * Get the auto-completion for a song tag.
-     * 
+     *
      * @param input The input string to complete.
      * @return The auto-completion for the song tag.
      */
@@ -244,8 +245,8 @@ public class Library {
 
     /**
      * Get the auto-completion for a string in a list given as argument.
-     * 
-     * @param input The input string to complete.
+     *
+     * @param input     The input string to complete.
      * @param extractor The function to extract the list of strings for the autocompletion.
      * @return The auto-completion for the input string.
      */
@@ -272,5 +273,14 @@ public class Library {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String toString() {
+        return "Library{" +
+                "songList=" + songList +
+                ", name='" + name + '\'' +
+                ", image=" + image +
+                '}';
     }
 }

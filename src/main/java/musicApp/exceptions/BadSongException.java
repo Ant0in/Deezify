@@ -5,10 +5,6 @@ public class BadSongException extends Exception {
         super(message);
     }
 
-    public BadSongException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     public BadSongException(Throwable cause) {
         super(cause);
     }

@@ -6,26 +6,21 @@ import musicApp.models.Library;
 import musicApp.models.Song;
 import musicApp.views.SongContainerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Abstract container class for all classes that will contain Songs.
  *
  * @param <V> the View class
- * @param <C> the Controller class
  */
-public abstract class SongContainerController<V extends SongContainerView<V, C, M>, C extends SongContainerController<V, C, M>, M extends Library>
-        extends ViewController<V, C> {
+public abstract class SongContainerController<V extends SongContainerView>
+        extends ViewController<V>
+        implements SongContainerView.SongContainerViewListener {
 
-    /**
-     * The Player controller.
-     */
+
     protected PlayerController playerController;
-    /**
-     * The Library.
-     */
-    protected M library;
+
+    protected Library library;
 
     /**
      * Instantiates a new SongContainer controller.
@@ -35,7 +30,7 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
      */
     public SongContainerController(V view, PlayerController playerController) {
         super(view);
-        library = (M) new Library(new ArrayList<>(), "??library??", null);
+        view.setListener(this);
         this.playerController = playerController;
     }
 
@@ -145,16 +140,4 @@ public abstract class SongContainerController<V extends SongContainerView<V, C, 
         view.clearSelection();
     }
 
-    public Library getLibrary() {
-        return library;
-    }
-
-    /**
-     * Refresh ui.
-     */
-    public void refreshUI() {
-        view.refreshUI();
-    }
-
-    public PlayerController getPlayerController() { return playerController; }
 }

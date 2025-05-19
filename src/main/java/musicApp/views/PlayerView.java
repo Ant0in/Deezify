@@ -9,14 +9,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import musicApp.controllers.PlayerController;
 import musicApp.services.LanguageService;
 
 /**
  * PlayerView
  * Class that represents the view of the music player.
  */
-public class PlayerView extends View<PlayerView, PlayerController> {
+public class PlayerView extends View {
+
+    private final Stage primaryStage;
+    private PlayerViewListener listener;
     @FXML
     private Pane controls;
     @FXML
@@ -31,17 +33,46 @@ public class PlayerView extends View<PlayerView, PlayerController> {
     /**
      * Instantiates a new Player view.
      */
-    public PlayerView() {
+    public PlayerView(Stage _primaryStage) {
         super();
+        primaryStage = _primaryStage;
         xOffset = 0;
         yOffset = 0;
     }
 
+    public void close() {
+        primaryStage.close();
+        Platform.exit();
+    }
+
+    public void closeStage() {
+        primaryStage.close();
+    }
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(PlayerViewListener newListener) {
+        listener = newListener;
+    }
 
     @Override
     public void init() {
+        initStage();
         initPanes();
         initBindings();
+    }
+
+    private void initStage() {
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(getTitle());
+        enableDrag();
+        enableDoubleClickToGrow();
+        setupWindowCloseHandler();
     }
 
     private void initPanes() {
@@ -53,29 +84,27 @@ public class PlayerView extends View<PlayerView, PlayerController> {
     }
 
     private void initControlPanel() {
-        controls = viewController.getControlPanelRoot();
+        controls = listener.getControlPanelRoot();
         labelContainer.setBottom(controls);
     }
 
     private void initToolBar() {
-        Pane toolBarPane = viewController.getToolBarRoot();
+        Pane toolBarPane = listener.getToolBarRoot();
         labelContainer.setTop(toolBarPane);
     }
 
-
     private void initMainLibrary() {
-        playerContainer.getChildren().set(0, viewController.getMainLibraryRoot());
+        playerContainer.getChildren().set(0, listener.getMainLibraryRoot());
     }
 
     private void initPlaylistNavigator() {
-        Pane playListsPane = viewController.getPlaylistNavigatorRoot();
+        Pane playListsPane = listener.getPlaylistNavigatorRoot();
         labelContainer.setLeft(playListsPane);
     }
 
     private void initQueue() {
-        playerContainer.getChildren().set(1, viewController.getQueueRoot());
+        playerContainer.getChildren().set(1, listener.getQueueRoot());
     }
-
 
     /**
      * Initialize the bindings between the view and the controller.
@@ -84,7 +113,6 @@ public class PlayerView extends View<PlayerView, PlayerController> {
         bindPlayingSongAnchor();
     }
 
-
     /**
      * Bind the visibility of the playing song anchor (the controls at the bottom).
      */
@@ -92,44 +120,36 @@ public class PlayerView extends View<PlayerView, PlayerController> {
         controls.setVisible(true);
     }
 
-
     /**
      * Enable double click to grow (fullscreen)
-     *
-     * @param stage the stage
      */
-    public void enableDoubleClickToGrow(Stage stage) {
+    public void enableDoubleClickToGrow() {
         labelContainer.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                stage.setFullScreen(true);
+                primaryStage.setFullScreen(true);
             }
         });
     }
 
     /**
      * Setup the window close handler.
-     *
-     * @param stage The stage to setup the handler for.
      */
-    private void setupWindowCloseHandler(Stage stage) {
-        stage.setOnCloseRequest(_ -> {
-            viewController.close();
-            Platform.exit();
-        });
+    private void setupWindowCloseHandler() {
+        primaryStage.setOnCloseRequest(_ -> listener.close());
     }
 
     /**
      * Enable drag of the window.
      */
-    private void enableDrag(Stage stage) {
+    private void enableDrag() {
         labelContainer.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
         });
 
         labelContainer.setOnMouseDragged(event -> {
-            stage.setX(event.getScreenX() - xOffset);
-            stage.setY(event.getScreenY() - yOffset);
+            primaryStage.setX(event.getScreenX() - xOffset);
+            primaryStage.setY(event.getScreenY() - yOffset);
         });
     }
 
@@ -144,18 +164,9 @@ public class PlayerView extends View<PlayerView, PlayerController> {
 
     /**
      * Show the stage.
-     *
-     * @param stage The stage to show.
      */
-    public void show(Stage stage) {
-        stage.initStyle(StageStyle.TRANSPARENT);
-        scene.setFill(Color.TRANSPARENT);
-        stage.setScene(scene);
-        stage.setTitle(getTitle());
-        enableDrag(stage);
-        enableDoubleClickToGrow(stage);
-        setupWindowCloseHandler(stage);
-        stage.show();
+    public void show() {
+        primaryStage.show();
     }
 
     /**
@@ -173,16 +184,35 @@ public class PlayerView extends View<PlayerView, PlayerController> {
      */
     public void toggleLyrics(boolean show) {
         if (show) {
-            Pane lyricsPane = viewController.getLyricsRoot();
+            Pane lyricsPane = listener.getLyricsRoot();
             HBox.setHgrow(lyricsPane, Priority.ALWAYS);
             playerContainer.getChildren().set(0, lyricsPane);
             playerContainer.applyCss();
 
         } else {
-            Pane libraryPane = viewController.getMainLibraryRoot();
+            Pane libraryPane = listener.getMainLibraryRoot();
             HBox.setHgrow(libraryPane, Priority.ALWAYS);
             playerContainer.getChildren().set(0, libraryPane);
         }
+    }
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface PlayerViewListener {
+        void close();
+
+        Pane getControlPanelRoot();
+
+        Pane getToolBarRoot();
+
+        Pane getMainLibraryRoot();
+
+        Pane getPlaylistNavigatorRoot();
+
+        Pane getQueueRoot();
+
+        Pane getLyricsRoot();
     }
 
 }

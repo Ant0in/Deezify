@@ -1,8 +1,8 @@
 package musicApp.controllers.songs;
 
-import javafx.beans.property.StringProperty;
 import musicApp.controllers.PlayerController;
 import musicApp.controllers.ViewController;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Song;
 import musicApp.services.LyricsService;
 import musicApp.views.songs.LyricsView;
@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * The type Lyrics controller.
  */
-public class LyricsController extends ViewController<LyricsView, LyricsController> {
+public class LyricsController extends ViewController<LyricsView> implements LyricsView.LyricsViewListener {
 
     private final PlayerController playerController;
     private final LyricsService lyricsManager;
@@ -25,20 +25,17 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
      */
     public LyricsController(PlayerController _controller) {
         super(new LyricsView());
+        view.setLyricsListener(this);
         playerController = _controller;
-        lyricsManager = new LyricsService();
+        LyricsService newLyricsManager = null; // Initialization to null to avoid lsp warning
+        try {
+            newLyricsManager = new LyricsService();
+        } catch (SettingsFilesException e) {
+            alertService.showFatalErrorAlert("Error loading lyrics settings", e);
+        }
+        lyricsManager = newLyricsManager;
         initView("/fxml/Lyrics.fxml");
-        view.setKaraokeController(new KaraokeController(playerController, lyricsManager, view));
-    }
-
-
-    /**
-     * Get currently loaded song string property.
-     *
-     * @return the string property
-     */
-    public StringProperty getCurrentlyLoadedSongStringProperty(){
-        return playerController.getCurrentlyLoadedSongStringProperty();
+        new KaraokeController(playerController, lyricsManager, view);
     }
 
     /**
@@ -50,7 +47,7 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
     public List<String> getCurrentSongLyrics() {
         Song song = playerController.getCurrentlyLoadedSong();
         if (song == null) {
-            return List.of("No song loaded."); 
+            return List.of("No song loaded.");
         }
         return song.getLyrics();
     }
@@ -71,24 +68,33 @@ public class LyricsController extends ViewController<LyricsView, LyricsControlle
             lyricsManager.saveLyrics(currentSong, newLyrics);
         } catch (Exception e) {
             alertService.showExceptionAlert(e);
-            e.printStackTrace();
         }
         view.updateLyrics();
-}
+    }
+
+    public void handleLoadedSongChange(Runnable callback) {
+        playerController.getCurrentlyLoadedSongStringProperty().
+                addListener((_, _, _) -> callback.run());
+    }
+
+    public void handleShowLyrics() {
+        view.updateLyrics();
+        view.showLyrics();
+    }
 
     /**
      * Edit lyrics.
      */
-    public void editLyrics() {
+    public void handleEditLyrics() {
         List<String> currentLyricsList = getCurrentSongLyrics();
         String initialText = "";
         if (currentLyricsList != null && !currentLyricsList.isEmpty()) {
             initialText = String.join("\n", currentLyricsList);
         }
-        
-        Optional<String> result = view.showEditLyricsDialog(initialText);
+
+        Optional<String> result = view.getEditedLyrics(initialText);
         result.ifPresent(newLyrics -> {
-            updateCurrentSongLyrics(newLyrics); 
+            updateCurrentSongLyrics(newLyrics);
             view.updateLyrics();
         });
     }

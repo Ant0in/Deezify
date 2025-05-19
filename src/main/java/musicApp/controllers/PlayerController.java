@@ -1,33 +1,24 @@
 package musicApp.controllers;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import musicApp.controllers.playlists.PlaylistNavigatorController;
-import musicApp.controllers.settings.EqualizerController;
 import musicApp.controllers.songs.LyricsController;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
 import musicApp.models.Library;
-import musicApp.models.Settings;
 import musicApp.models.Song;
-import musicApp.services.FileDialogService;
-import musicApp.services.PlaylistService;
+import musicApp.models.dtos.SettingsDTO;
+import musicApp.services.LanguageService;
 import musicApp.views.PlayerView;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Controller class for the music player.
@@ -36,7 +27,7 @@ import java.util.List;
  * It provides methods to play, pause, skip, and go back to the previous song.
  * It also allows to add songs to a queue and play them in the order they were added.
  */
-public class PlayerController extends ViewController<PlayerView, PlayerController> {
+public class PlayerController extends ViewController<PlayerView> implements PlayerView.PlayerViewListener {
 
     private final MetaController metaController;
     private MediaPlayerController mediaPlayerController;
@@ -45,57 +36,47 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     private QueueController queueController;
     private LyricsController lyricsController;
     private PlaylistNavigatorController playlistNavigatorController;
-    private DjPlayerController djPlayerController;
 
     /**
      * Constructor
      *
-     * @param metaController the meta controller
-     * @throws IOException the io exception
+     * @param _metaController the meta controller
+     * @param primaryStage    the primary stage
+     * @param settingsDTO     the settings
      */
-    public PlayerController(MetaController metaController, Settings settings, Library mainLibrary) throws IOException {
 
-        super(new PlayerView());
-        this.metaController = metaController;
-        initSubControllers();
+    public PlayerController(MetaController _metaController, Stage primaryStage, SettingsDTO settingsDTO) {
+        super(new PlayerView(primaryStage));
+        view.setListener(this);
+        metaController = _metaController;
+        initSubControllers(settingsDTO);
         initView("/fxml/MainLayout.fxml");
-
-        libraryController.loadPlaylist(mainLibrary);
-        mediaPlayerController.setBalance(settings.getBalance());
-        try {
-            this.mediaPlayerController.setEqualizerBands(settings.getEqualizerBands());
-        } catch (EqualizerGainException e) {
-            alertService.showExceptionAlert(e, Alert.AlertType.ERROR);
-        }
     }
 
     /**
      * Initializes all sub-controllers that are part of the player controller.
      */
-    private void initSubControllers() {
-        libraryController = new LibraryController(this);
+    private void initSubControllers(SettingsDTO settingsDTO) {
+        playlistNavigatorController = new PlaylistNavigatorController(this, settingsDTO.getMusicFolder(), settingsDTO.getUserMusicFolder());
+        libraryController = new LibraryController(this, getMainLibrary());
         queueController = new QueueController(this);
-        mediaPlayerController = new MediaPlayerController(this);
+        mediaPlayerController = new MediaPlayerController(this, settingsDTO.getBalance(), settingsDTO.getCrossfadeDuration(), settingsDTO.getEqualizerBands());
         toolBarController = new ToolBarController(this);
         lyricsController = new LyricsController(this);
-        playlistNavigatorController = new PlaylistNavigatorController(this);
-        this.djPlayerController = new DjPlayerController(this);
     }
 
     /**
      * Show the player view.
-     *
-     * @param stage The stage to show the view on.
      */
-    public void show(Stage stage) {
-        view.show(stage);
+    public void show() {
+        view.show();
     }
 
     /**
      * Play song.
      *
      * @param song the song
-     * @throws EqualizerGainException
+     * @throws BadSongException gets throwm if an error occured when trying to play the file contained byt the Song object
      */
     public void playSong(Song song) throws BadSongException {
         mediaPlayerController.playCurrent(song);
@@ -116,6 +97,15 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     }
 
     /**
+     * Stop the playback of the current song.
+     */
+    public void stopPlayback() {
+        if (mediaPlayerController != null) {
+            mediaPlayerController.close();
+        }
+    }
+
+    /**
      * Skip to the next song in the library or the queue.
      * If the queue is not empty, the next song in the queue is played.
      * Otherwise, the next song in the library is played.
@@ -126,10 +116,6 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         } else {
             queueController.playSong(0);
         }
-    }
-
-    public MediaPlayerController getMediaPlayerController() {
-        return mediaPlayerController;
     }
 
     /**
@@ -145,6 +131,14 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      */
     public void close() {
         mediaPlayerController.close();
+        view.close();
+    }
+
+    /**
+     * Close the stage.
+     */
+    public void closeStage() {
+        view.closeStage();
     }
 
     /**
@@ -154,12 +148,18 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
         metaController.switchScene(MetaController.Scenes.SETTINGS);
     }
 
+    public void returnToUsersWindow() {
+        stopPlayback();
+        closeStage();
+        LanguageService.getInstance().setLanguage(metaController.getDefaultLanguage());
+        metaController.switchScene(MetaController.Scenes.USERSWINDOW);
+    }
+
     /**
      * Refresh the UI.
      */
     public void refreshUI() {
         view.refreshUI();
-        queueController.refreshUI();
         lyricsController.refreshUI();
         playlistNavigatorController.refreshUI();
         libraryController.refreshUI();
@@ -168,21 +168,27 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     /**
      * Toggle the shuffle mode.
      */
-    public void toggleShuffle() {
-        libraryController.toggleShuffle();
+    public void toggleShuffle(boolean isShuffle) {
+        libraryController.toggleShuffle(isShuffle);
     }
 
     /**
      * Actions to do when the settings are changed
      *
-     * @param newSettings The new settings.
-     * @throws EqualizerGainException
+     * @param newSettingsDTO The new settings.
+     * @throws EqualizerGainException if the equalizer gain is invalid
      */
-    public void onSettingsChanged(Settings newSettings) throws EqualizerGainException {
-        mediaPlayerController.setBalance(newSettings.getBalance());
-        mediaPlayerController.setEqualizerBands(newSettings.getEqualizerBands());
-        if (newSettings.isMusicFolderChanged())
-            libraryController.loadPlaylist(metaController.getMainLibrary());
+    public void onSettingsChanged(SettingsDTO newSettingsDTO) throws EqualizerGainException {
+        mediaPlayerController.setBalance(newSettingsDTO.getBalance());
+        mediaPlayerController.setCrossfadeDuration(newSettingsDTO.getCrossfadeDuration());
+        mediaPlayerController.setEqualizerBands(newSettingsDTO.getEqualizerBands());
+        playlistNavigatorController.updateUserMainLibrary(newSettingsDTO.getUserMusicFolder());
+        playlistNavigatorController.updateUserPlaylists(newSettingsDTO.getUserPlaylistPath());
+        // Update the music folder in case it changed
+        if (newSettingsDTO.isMusicFolderChanged()) {
+            playlistNavigatorController.updateMainLibrary(newSettingsDTO.getMusicFolder());
+            libraryController.loadPlaylist(getMainLibrary());
+        }
     }
 
     /**
@@ -278,7 +284,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return True if the player is playing a song, false if its paused.
      */
     public boolean isPlaying() {
-        return mediaPlayerController.isPlaying().get();
+        return mediaPlayerController.getIsPlayingProperty().get();
     }
 
     /**
@@ -287,7 +293,7 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      * @return The currently loaded song string property.
      */
     public StringProperty getCurrentlyLoadedSongStringProperty() {
-        return mediaPlayerController.currentSongProperty();
+        return mediaPlayerController.getCurrentSongProperty();
     }
 
     /**
@@ -296,8 +302,8 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      *
      * @return A BooleanProperty that is true if the music is playing, BooleanProperty false if paused.
      */
-    public BooleanProperty isPlayingProperty() {
-        return mediaPlayerController.isPlayingProperty();
+    public BooleanProperty getIsPlayingProperty() {
+        return mediaPlayerController.getIsPlayingProperty();
     }
 
     /**
@@ -329,12 +335,21 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     }
 
     /**
+     * Get the main library.
+     *
+     * @return the main library
+     */
+    public Library getMainLibrary() {
+        return playlistNavigatorController.getMainLibrary();
+    }
+
+    /**
      * Get all the playlists of the user
      *
      * @return The list of playlists
      */
     public List<Library> getPlaylists() {
-        return metaController.getPlaylists();
+        return playlistNavigatorController.getPlaylists();
     }
 
     /**
@@ -342,15 +357,6 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
      */
     public void updateShownPlaylist(Library library) {
         libraryController.loadPlaylist(library);
-    }
-
-    /**
-     * Get the main library
-     *
-     * @return The main library
-     */
-    public Library getLibrary() {
-        return libraryController.getLibrary();
     }
 
     /**
@@ -413,27 +419,57 @@ public class PlayerController extends ViewController<PlayerView, PlayerControlle
     }
 
     /**
-     * Handle add song to main library.
-     * This method opens a file dialog to select an audio file and adds it to the main library.
+     * Returns whether the given library is the main library.
+     *
+     * @param library The library to check.
+     * @return True if the library is the main library, false otherwise.
      */
-    public void handleAddSongToMainLibrary() {
-        File selectedFile = FileDialogService.chooseAudioFile(null, "Select Music File");
-        if (selectedFile != null) {
-            Path mainLibraryPath = metaController.getMusicDirectory();
-            try {
-                PlaylistService playlistService = new PlaylistService();
-                Path copiedFilePath = playlistService.addSongToMainLibrary(selectedFile);
-                libraryController.addSong(copiedFilePath);
-            } catch (IOException e) {
-                alertService.showExceptionAlert(e);
-            }
+    public boolean isMainLibrary(Library library) {
+        return getMainLibrary().equals(library);
+    }
+
+    /**
+     * Get the next song supplier.
+     *
+     * @return The next song supplier.
+     */
+    public Supplier<Song> getNextSongSupplier() {
+        if (queueController.queueIsEmpty()) {
+            return libraryController::getNextSong;
+        } else {
+            return queueController::getNextSong;
         }
     }
 
     /**
-     * Handle add song to queue.
-     * This method opens a file dialog to select an audio file and adds it to the queue.
+     * Checks whether the given library is modifiable.
+     * A modifiable library can have songs added or removed.
+     *
+     * @param library The library to check.
+     * @return true if the library is modifiable, false otherwise.
      */
-    public DjPlayerController getDjPlayerController() { return djPlayerController; }
+    public boolean isModifiable(Library library) {
+        return playlistNavigatorController.isModifiable(library);
+    }
 
+    /**
+     * Get the UserPlaylistPath
+     *
+     * @return The path to the user playlist
+     */
+    public Path getUserPlaylistPath() {
+        return metaController.getUserPlaylistPath();
+    }
+
+    public boolean isUserLibrary(Library library) {
+        return playlistNavigatorController.isUserLibrary(library);
+    }
+
+    public Path getUserLibraryPath() {
+        return metaController.getUserMusicFolder();
+    }
+
+    public Path getMainLibraryPath() {
+        return metaController.getMusicFolder();
+    }
 }

@@ -4,16 +4,27 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import musicApp.controllers.playlists.PlaylistContextMenuController;
 import musicApp.services.LanguageService;
 import musicApp.views.View;
 
-public class PlaylistContextMenuView extends View<PlaylistContextMenuView, PlaylistContextMenuController> {
+public class PlaylistContextMenuView extends View {
+
+    private PlaylistContextMenuViewListener listener;
+
     @FXML
     private ContextMenu contextMenu;
 
     @FXML
     private MenuItem addToQueueItem, replaceQueueItem, editItem, deleteItem;
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(PlaylistContextMenuViewListener newListener) {
+        listener = newListener;
+    }
 
     /**
      * Initialize the view.
@@ -40,10 +51,10 @@ public class PlaylistContextMenuView extends View<PlaylistContextMenuView, Playl
      * Initializes the actions for the context menu items.
      */
     private void initActions() {
-        addToQueueItem.setOnAction(_ -> viewController.appendToQueue());
-        replaceQueueItem.setOnAction(_ -> viewController.replaceQueue());
-        editItem.setOnAction(_ -> viewController.editPlaylist());
-        deleteItem.setOnAction(_ -> viewController.deletePlaylist());
+        addToQueueItem.setOnAction(_ -> listener.handleAppendToQueue());
+        replaceQueueItem.setOnAction(_ -> listener.handleReplaceQueue());
+        editItem.setOnAction(_ -> listener.handleEditPlaylist());
+        deleteItem.setOnAction(_ -> listener.handleDeletePlaylist());
     }
 
     /**
@@ -55,5 +66,20 @@ public class PlaylistContextMenuView extends View<PlaylistContextMenuView, Playl
      */
     public void show(Node node, double x, double y) {
         contextMenu.show(node, x, y);
+    }
+
+    /**
+     * Listener interface for handling context menu actions related to playlists.
+     * Implement this interface to define behavior for deleting, editing,
+     * appending to, or replacing the queue.
+     */
+    public interface PlaylistContextMenuViewListener {
+        void handleDeletePlaylist();
+
+        void handleEditPlaylist();
+
+        void handleAppendToQueue();
+
+        void handleReplaceQueue();
     }
 }

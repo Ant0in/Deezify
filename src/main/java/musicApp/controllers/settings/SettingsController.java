@@ -1,69 +1,50 @@
 package musicApp.controllers.settings;
 
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import musicApp.controllers.EditUserProfileController;
 import musicApp.controllers.MetaController;
 import musicApp.controllers.ViewController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
-import musicApp.services.LanguageService;
+import musicApp.models.dtos.SettingsDTO;
 import musicApp.views.settings.SettingsView;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**
  * The type Settings controller.
  */
-public class SettingsController extends ViewController<SettingsView, SettingsController> {
-    private final Stage settingsStage;
+public class SettingsController extends ViewController<SettingsView> implements SettingsView.SettingsViewListener, EditUserProfileController.EditUserProfileControllerListener {
+
     private final MetaController metaController;
-    private final EqualizerController equalizerController;
     private final Settings settings;
+    private EditUserProfileController editUserProfileController;
 
     /**
      * Instantiates a new Settings controller.
      *
      * @param _controller the meta controller
      * @param _settings   the settings
-     * @throws IOException the io exception
      */
-    public SettingsController(MetaController _controller, Settings _settings) throws IOException {
+    public SettingsController(MetaController _controller, Settings _settings) {
         super(new SettingsView());
+        view.setListener(this);
         settings = _settings;
         metaController = _controller;
-        equalizerController = new EqualizerController(this, _settings.getEqualizer());
         initView("/fxml/Settings.fxml");
-        settingsStage = new Stage();
-        initSettingsStage();
-    }
-
-    private void initSettingsStage() {
-        settingsStage.initModality(Modality.APPLICATION_MODAL);
-        settingsStage.setResizable(false);
-        settingsStage.setTitle("Settings");
-        settingsStage.setScene(view.getScene());
-        settingsStage.setOnCloseRequest(_ -> {
-            handleCancel();
-        });
     }
 
     /**
      * Show the settings window.
      */
     public void show() {
-        if (settingsStage != null) {
-            settingsStage.show();
-        }
+        view.show();
     }
 
     /**
      * Close the settings window.
      */
     public void close() {
-        if (settingsStage != null) {
-            settingsStage.close();
-        }
+        view.close();
     }
 
     /**
@@ -74,67 +55,42 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
     }
 
     /**
-     * Set the music directory path .
+     * Set the music folder path .
      *
-     * @param path The path to the music directory.
+     * @param path The path to the music folder.
      */
-    private void setMusicDirectoryPath(Path path) {
+    private void setMusicFolderPath(Path path) {
         settings.setMusicFolder(path);
     }
 
     /**
-     * Updates the values of the equalizer with the values of sliders and changes the settings
-     */
-    private void updateEqualizer() {
-        equalizerController.update();
-    }
-
-    /**
-     * Get the balance of the application.
+     * Set the default language.
      *
-     * @return The balance of the application.
+     * @param language the language
      */
-    public double getBalance() {
-        return settings.getBalance();
-    }
-
-    /**
-     * Update the balance of the application.
-     *
-     * @param balance The new balance.
-     */
-    private void setBalance(double balance) {
-        settings.setBalance(balance);
-    }
-
-    /**
-     * Open equalizer.
-     */
-    public void openEqualizer() {
-        close();
-        equalizerController.show();
+    private void setLanguage(Language language) {
+        settings.setDefaultLanguage(language);
     }
 
     /**
      * Handle when the save button is pressed
      *
-     * @param language       the language
-     * @param balance        the balance
-     * @param musicDirectory the music directory
+     * @param language    the language
+     * @param musicFolder the music folder
      */
-    public void handleSave(Language language, double balance, Path musicDirectory) {
-        LanguageService.getInstance().setLanguage(language);
-        refreshLanguage();
-        setBalance(balance);
-        setMusicDirectoryPath(musicDirectory);
-        updateEqualizer();
+    public void handleSave(Language language, Path musicFolder) {
+        setLanguage(language);
+        setMusicFolderPath(musicFolder);
         metaController.notifySettingsChanged(settings);
         updateView();
         close();
     }
 
+    /**
+     * Update the view with the current settings.
+     */
     private void updateView() {
-        view.updateView(settings);
+        view.updateView(settings.getMusicFolderString());
         refreshLanguage();
     }
 
@@ -142,18 +98,63 @@ public class SettingsController extends ViewController<SettingsView, SettingsCon
      * Handle when the cancel button is pressed
      */
     public void handleCancel() {
-        equalizerController.handleCancel();
         updateView();
         close();
     }
 
     /**
-     * Get the path of the music directory
+     * Get the path of the music folder
      *
-     * @return The path of the music directory
+     * @return The path of the music folder
      */
-    public Path getMusicDirectory() {
+    public String getMusicFolderString() {
+        return settings.getMusicFolderString();
+    }
+
+    /**
+     * Get the settings DTO.
+     *
+     * @return
+     */
+    public SettingsDTO getSettingsDTO() {
+        return settings.toDTO();
+    }
+
+    /**
+     * Get the current user playlist path.
+     *
+     * @return
+     */
+    public Path getUserPlaylistPath() {
+        return settings.getUserPlaylistPath();
+    }
+
+    /**
+     * Open the edit user profile window.
+     */
+    public void editUserProfile() {
+        editUserProfileController = new EditUserProfileController(this, settings.getCurrentUserProfile());
+
+    }
+
+    public void usersUpdate() {
+        settings.setCurrentUserProfile(editUserProfileController.getUserProfile());
+    }
+
+    public Path getUserMusicFolder() {
+        return settings.getUserMusicFolder();
+    }
+
+    public Path getMusicFolder() {
         return settings.getMusicFolder();
     }
 
+    /**
+     * Get the default language of the app.
+     *
+     * @return The default language.
+     */
+    public Language getDefaultLanguage() {
+        return metaController.getDefaultLanguage();
+    }
 }

@@ -1,25 +1,28 @@
 package musicApp.views;
 
-import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-import musicApp.controllers.MediaPlayerController;
-import musicApp.models.Song;
+import musicApp.services.ViewService;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * The MediaPlayer view.
  */
-public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController> {
+public class MediaPlayerView extends View {
+
+    private MediaPlayerViewListener listener;
 
     @FXML
-    private Button pauseSongButton, nextSongButton, previousSongButton;
+    private Button pauseSongButton, nextSongButton, previousSongButton, djButton;
     @FXML
     private ComboBox<String> speedBox;
     @FXML
@@ -33,25 +36,35 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     @FXML
     private ToggleButton shuffleToggle, lyricsToggle, miniPlayerToggle;
 
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(MediaPlayerViewListener newListener) {
+        listener = newListener;
+    }
+
     @Override
     public void init() {
         initBindings();
         initSpeed();
         setButtonActions();
+        setDefaultCoverImage();
     }
 
-
     private void setButtonActions() {
-        pauseSongButton.setOnAction(_ -> viewController.handlePauseSong());
-        nextSongButton.setOnAction(_ -> viewController.handleNextSong());
-        previousSongButton.setOnAction(_ -> viewController.handlePreviousSong());
-        shuffleToggle.setOnAction(_ -> viewController.toggleShuffle());
-        lyricsToggle.setOnAction(_ -> viewController.toggleLyrics(lyricsToggle.isSelected()));
-        miniPlayerToggle.setOnAction(_ -> viewController.toggleMiniPlayer() );
+        pauseSongButton.setOnAction(_ -> listener.handlePauseSong());
+        nextSongButton.setOnAction(_ -> listener.handleNextSong());
+        djButton.setOnAction(_ -> listener.handleLaunchDjMode());
+        previousSongButton.setOnAction(_ -> listener.handlePreviousSong());
+        shuffleToggle.setOnAction(_ -> listener.toggleShuffle(shuffleToggle.isSelected()));
+        lyricsToggle.setOnAction(_ -> listener.toggleLyrics(lyricsToggle.isSelected()));
+        miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer(miniPlayerToggle.isSelected()));
     }
 
     private void initBindings() {
-        bindButtons();
+        bindPlayPauseButton();
         bindSongProgress();
         bindVolumeControls();
         bindCurrentSongControls();
@@ -63,42 +76,37 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
     /**
      * Bind buttons.
      */
-    public void bindButtons() {
-        ImageView playIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/play_white.png")).toExternalForm()));
-        playIcon.setFitWidth(20);
-        playIcon.setFitHeight(20);
-
-        ImageView pauseIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/images/pause_white.png")).toExternalForm()));
-        pauseIcon.setFitWidth(20);
-        pauseIcon.setFitHeight(20);
-
-        viewController.isPlaying().addListener((_, _, isPlaying) -> {
-            if (isPlaying) {
-                pauseSongButton.setGraphic(pauseIcon);
-                currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");
-            } else {
-                pauseSongButton.setGraphic(playIcon);
-                currentSongLabel.setStyle("-fx-text-fill: white;");
-            }
-        });
+    public void bindPlayPauseButton() {
+        listener.handlePlayingStatusChange(this::updatePlayPauseButton);
     }
 
+    private void updatePlayPauseButton(boolean isPlaying) {
+        ViewService viewService = new ViewService();
+        if (isPlaying) {
+            ImageView pauseIcon = viewService.createIcon("/images/pause_white.png");
+            pauseSongButton.setGraphic(pauseIcon);
+            currentSongLabel.setStyle("-fx-text-fill: #4CAF50;");
+        } else {
+            ImageView playIcon = viewService.createIcon("/images/play_white.png");
+            pauseSongButton.setGraphic(playIcon);
+            currentSongLabel.setStyle("-fx-text-fill: white;");
+        }
+    }
 
     /**
      * Bind the song progress bar and label.
      */
     private void bindSongProgress() {
-        songProgressBar.progressProperty().bind(viewController.progressProperty());
-        songProgressTimeLabel.textProperty().bind(
-                Bindings.createStringBinding(
-                        this::getFormattedSongProgress,  // Extracted method
-                        viewController.progressProperty()
-                )
-        );
+        listener.bindProgressProperty(songProgressBar.progressProperty());
+        listener.handleProgressChange(this::updateProgressBarTime);
         songProgressBar.setOnMouseClicked(e -> {
             double progress = e.getX() / songProgressBar.getWidth();
-            viewController.seek(progress);
+            listener.seek(progress);
         });
+    }
+
+    private void updateProgressBarTime() {
+        songProgressTimeLabel.setText(getFormattedSongProgress());
     }
 
     /**
@@ -107,8 +115,8 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
      * @return The formatted song progress.
      */
     private String getFormattedSongProgress() {
-        Duration currentTime = viewController.getCurrentTime();
-        Duration totalDuration = viewController.getTotalDuration();
+        Duration currentTime = listener.getCurrentTime();
+        Duration totalDuration = listener.getTotalDuration();
         if (totalDuration == null || totalDuration.isUnknown() || totalDuration == Duration.ZERO) {
             return formatDuration(currentTime) + " / --:--";
         }
@@ -138,7 +146,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         speedBox.setOnAction(_ -> {
             String speed = speedBox.getValue();
             double rate = getSpeedValue(speed);
-            viewController.changeSpeed(rate);
+            listener.changeSpeed(rate);
         });
     }
 
@@ -169,9 +177,7 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
         volumeLabel.textProperty().bind(
                 volumeSlider.valueProperty().asString("%.0f")
         );
-        viewController.volumeProperty().bind(
-                volumeSlider.valueProperty().divide(100)
-        );
+        listener.bindVolumeProperty(volumeSlider.valueProperty().divide(100));
 
         // For gradual filling
         volumeSlider.valueProperty().addListener((_, _, newValue) -> {
@@ -191,50 +197,35 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
      * Bind the current song controls (name and artist).
      */
     private void bindCurrentSongControls() {
-        currentSongLabel.textProperty().bind(
-                Bindings.createStringBinding(
-                        () -> {
-                            Song currentSong = viewController.getLoadedSong();
-                            return currentSong == null ? "" : currentSong.getTitle();
-                        },
-                        viewController.currentSongProperty()
-                )
-        );
+        listener.handleCurrentSongTitleChange(this::updateCurrentSongLabel);
+        listener.handleCurrentSongArtistChange(this::updateCurrentArtistLabel);
+    }
 
-        currentArtistLabel.textProperty().bind(
-                Bindings.createStringBinding(
-                        () -> {
-                            Song currentSong = viewController.getLoadedSong();
-                            return currentSong == null ? "" : currentSong.getArtist();
-                        },
-                        viewController.currentSongProperty()
-                )
-        );
+    private void updateCurrentSongLabel(String newSongTitle) {
+        currentSongLabel.setText(newSongTitle == null ? "" : newSongTitle);
+    }
+
+    private void updateCurrentArtistLabel(String newArtist) {
+        currentArtistLabel.setText(newArtist == null ? "" : newArtist);
     }
 
     /**
      * Bind the current song cover.
      */
     private void bindCurrentSongCover() {
-        Image defaultCoverImage = loadDefaultCoverImage();
-        imageCover.imageProperty().bind(
-                Bindings.createObjectBinding(
-                        () -> {
-                            Song currentSong = viewController.getLoadedSong();
-                            if (currentSong == null || currentSong.getCover() == null) {
-                                return defaultCoverImage;
-                            }
-                            try {
-                                Image coverImage = currentSong.getCoverImage();
-                                return coverImage != null ? coverImage : defaultCoverImage;
-                            } catch (Exception e) {
-                                System.err.println("Failed to load cover image for song: " + currentSong.getTitle());
-                                return defaultCoverImage;
-                            }
-                        },
-                        viewController.currentSongProperty()
-                )
-        );
+        listener.handleCurrentImageCoverChange(this::updateCurrentImageCover);
+    }
+
+    private void updateCurrentImageCover(Image coverImage) {
+        if (coverImage == null) {
+            setDefaultCoverImage();
+        } else {
+            imageCover.setImage(coverImage);
+        }
+    }
+
+    private void setDefaultCoverImage() {
+        imageCover.setImage(loadDefaultCoverImage());
     }
 
     /**
@@ -258,57 +249,26 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
      * Bind the images of the buttons.
      */
     private void bindButtonsImages() {
-
-        ImageView playIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/play_white.png")).toExternalForm());
-        playIcon.setFitWidth(20);
-        playIcon.setFitHeight(20);
-        pauseSongButton.setGraphic(playIcon);
-
-        ImageView nextIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/next_white.png")).toExternalForm());
-        nextIcon.setFitWidth(20);
-        nextIcon.setFitHeight(20);
-        nextSongButton.setGraphic(nextIcon);
-
-        ImageView previousIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/previous_white.png")).toExternalForm());
-        previousIcon.setFitWidth(20);
-        previousIcon.setFitHeight(20);
-        previousSongButton.setGraphic(previousIcon);
-
-        try {
-            ImageView shuffleIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/shuffle.png")).toExternalForm());
-            shuffleIcon.setFitWidth(20);
-            shuffleIcon.setFitHeight(20);
-            shuffleToggle.setGraphic(shuffleIcon);
-        } catch (NullPointerException e) {
-            System.err.println("Failed to load shuffle icon");
-        }
-
-        try {
-            ImageView lyricsIcon = new ImageView(Objects.requireNonNull(getClass().getResource("/images/lyrics.png")).toExternalForm());
-            lyricsIcon.setFitWidth(20);
-            lyricsIcon.setFitHeight(20);
-            lyricsToggle.setGraphic(lyricsIcon);
-        } catch (NullPointerException e) {
-            System.err.println("Failed to load lyrics icon");
-        }
+        ViewService viewService = new ViewService();
+        viewService.setButtonIcon(pauseSongButton, "/images/play_white.png", listener);
+        viewService.setButtonIcon(nextSongButton, "/images/next_white.png", listener);
+        viewService.setButtonIcon(previousSongButton, "/images/previous_white.png", listener);
+        viewService.setButtonIcon(shuffleToggle, "/images/shuffle.png", listener);
+        viewService.setButtonIcon(lyricsToggle, "/images/lyrics.png", listener);
+        viewService.setButtonIcon(djButton, "/images/dj.png", listener);
+        viewService.setButtonIcon(miniPlayerToggle, "/images/mini.png", listener);
     }
 
-
     private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle);
+        List<Control> controls = Arrays.asList(pauseSongButton, nextSongButton, previousSongButton, shuffleToggle, speedBox, volumeSlider, lyricsToggle, djButton, miniPlayerToggle);
         updateControlsState(controls, true);
-        viewController.currentSongProperty().addListener((_, _, newVal) -> {
-            boolean songIsPlaying = (newVal != null && !newVal.equals("None"));
-            updateControlsState(controls, !songIsPlaying);
+        listener.handleLoadedSongStatusChange(isLoaded ->
+                updateLoadedSongChange(controls, isLoaded)
+        );
+    }
 
-            if (!viewController.getLoadedSong().isSong()) {
-                speedBox.setValue("1x");
-                speedBox.setDisable(true);
-                viewController.changeSpeed(1.0);
-            } else {
-                speedBox.setDisable(false);
-            }
-        });
+    private void updateLoadedSongChange(List<Control> controls, boolean isLoadedSong) {
+        updateControlsState(controls, !isLoadedSong);
     }
 
     private void updateControlsState(List<Control> controls, boolean disable) {
@@ -319,6 +279,49 @@ public class MediaPlayerView extends View<MediaPlayerView, MediaPlayerController
                 c.getStyleClass().add("disabled-btn");
             }
         }
+    }
+
+    /**
+     * Listener interface for handling user actions from the media player view.
+     */
+    public interface MediaPlayerViewListener extends ViewService.ViewServiceListener {
+        void handlePauseSong();
+
+        void handleNextSong();
+
+        void handlePreviousSong();
+
+        void handleLaunchDjMode();
+
+        void seek(double duration);
+
+        void changeSpeed(double speed);
+
+        void toggleLyrics(boolean show);
+
+        void toggleShuffle(boolean isShuffle);
+
+        void toggleMiniPlayer(boolean show);
+
+        void handlePlayingStatusChange(Consumer<Boolean> callback);
+
+        void bindProgressProperty(DoubleProperty property);
+
+        void handleProgressChange(Runnable callback);
+
+        void bindVolumeProperty(DoubleBinding divide);
+
+        void handleCurrentSongTitleChange(Consumer<String> callback);
+
+        void handleCurrentSongArtistChange(Consumer<String> callback);
+
+        void handleCurrentImageCoverChange(Consumer<Image> callback);
+
+        void handleLoadedSongStatusChange(Consumer<Boolean> callback);
+
+        Duration getCurrentTime();
+
+        Duration getTotalDuration();
     }
 
 }

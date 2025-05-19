@@ -13,25 +13,16 @@
                     <ComboBox fx:id="languageComboBox" prefWidth="150">
                     </ComboBox>
                 </HBox>
-            </VBox>
-            <VBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10;">
-                <Label fx:id="balanceTitle" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Audio Balance" />
-                <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label fx:id="left" text="L" />
-                    <Slider fx:id="balanceSlider" max="1.0" min="-1.0" prefWidth="200" value="0.0" />
-                    <Label fx:id="right" text="R" />
-                    <Label fx:id="balanceLabel" text="0" />
-                </HBox>
-            </VBox>
+        </VBox>
          <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
             <children>
                <Button fx:id="browseButton" mnemonicParsing="false" text="Select Music Folder" />
-               <Label fx:id="directoryLabel" prefHeight="17.0" prefWidth="161.0" text="None" />
+               <Label fx:id="musicFolderLabel" prefHeight="17.0" prefWidth="161.0" text="None" />
             </children>
          </HBox>
-         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+         <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
             <children>
-               <Button fx:id="equalizerButton" mnemonicParsing="false" text="Manage Audio Equalizer" />
+               <Button fx:id="editUserProfileButton" mnemonicParsing="false" text="Edit User" />
             </children>
          </HBox>
         </VBox>

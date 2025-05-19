@@ -24,17 +24,19 @@ public class LanguageService {
 
     public LanguageService() {
         // Initialize non-static variables in the constructor
-       prefs = Preferences.userNodeForPackage(LanguageService.class);
-       BUNDLE_NAMES = new String[]{
-                "lang.messages",
-                "lang.general",
+        prefs = Preferences.userNodeForPackage(LanguageService.class);
+        BUNDLE_NAMES = new String[]{
                 "lang.buttons",
-                "lang.settings",
+                "lang.create_playlist",
                 "lang.default_values",
-                "lang.create_playlist"
+                "lang.edit_user",
+                "lang.general",
+                "lang.messages",
+                "lang.settings",
+                "lang.user_profile"
         };
-       bundles = new ResourceBundle[BUNDLE_NAMES.length];
-       languageProperty = new SimpleStringProperty();
+        bundles = new ResourceBundle[BUNDLE_NAMES.length];
+        languageProperty = new SimpleStringProperty();
 
         // Initialize language settings based on saved preferences
         String savedLanguageString = prefs.get("language", Locale.getDefault().getLanguage());
@@ -87,15 +89,6 @@ public class LanguageService {
     }
 
     /**
-     * Get the current language.
-     *
-     * @return The current language.
-     */
-    public Language getCurrentLanguage() {
-        return Language.fromCode(languageProperty.get());
-    }
-
-    /**
      * Check if the language is supported.
      *
      * @param language The language.
@@ -105,7 +98,14 @@ public class LanguageService {
         return Language.getSupportedLanguages().contains(language);
     }
 
-    public StringProperty getLanguageProperty() {return languageProperty;}
+    /**
+     * Get the language property.
+     *
+     * @return The language property.
+     */
+    public StringProperty getLanguageProperty() {
+        return languageProperty;
+    }
 }
 
 

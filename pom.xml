@@ -7,8 +7,8 @@
 
   <groupId>ulb</groupId>
   <artifactId>musicApp</artifactId>
-  <version>0.1</version>
-  <name>musicApp</name>
+  <version>1.0</version>
+  <name>Deezify</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,12 +25,6 @@
     <repository>
       <id>central</id>
       <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-
-    <repository>
-      <id>be.0110.repo-releases</id>
-      <name>0110.be repository</name>
-      <url>https://mvn.0110.be/releases</url>
     </repository>
   </repositories>
 
@@ -54,6 +48,16 @@
       <artifactId>javafx-graphics</artifactId>
       <version>23.0.2</version>
       <classifier>mac</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacv-platform</artifactId>
+      <version>1.5.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>17.0.2</version> <!-- or your JavaFX version -->
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
@@ -120,23 +124,6 @@
       <artifactId>gson</artifactId>
       <version>2.10.1</version>
     </dependency>
-    <!-- minim : https://mvnrepository.com/artifact/ddf.minim/ddf.minim -->
-    <dependency>
-      <groupId>net.compartmental.code</groupId>
-      <artifactId>minim</artifactId>
-      <version>2.2.2</version>
-    </dependency>
-    <!-- TarsosDSP -->
-    <dependency>
-      <groupId>be.tarsos.dsp</groupId>
-      <artifactId>core</artifactId>
-      <version>2.5</version>
-    </dependency>
-    <dependency>
-      <groupId>be.tarsos.dsp</groupId>
-      <artifactId>jvm</artifactId>
-      <version>2.5</version>
-    </dependency>
     <!-- Additional dependencies -->
     <dependency>
       <groupId>com.gluonhq</groupId>
@@ -174,20 +161,12 @@
       <version>3.0.1</version>
     </dependency>
     <dependency>
-      <groupId>net.compartmental.code</groupId>
-      <artifactId>minim</artifactId>
-      <version>2.2.2</version>
-      <exclusions>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xercesImpl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>xml-apis</groupId>
-          <artifactId>xml-apis</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>RELEASE</version>
+      <scope>compile</scope>
     </dependency>
+
   </dependencies>
   <build>
     <plugins>
@@ -219,7 +198,7 @@
             <configuration>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>musicApp.MainLauncher</mainClass>
+                  <mainClass>musicApp.Main</mainClass>
                 </transformer>
                 <!-- Merge service files if any -->
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
@@ -278,7 +257,7 @@
           <artifactId>exec-maven-plugin</artifactId>
           <version>3.1.1</version>
           <configuration>
-            <mainClass>musicApp.MainLauncher</mainClass>
+            <mainClass>musicApp.Main</mainClass>
             <arguments>
               <argument>--module-path</argument>
               <!-- Replace [module-path-value] with your actual module path -->
@@ -299,7 +278,7 @@
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
-                <mainClass>musicApp.MainLauncher</mainClass>
+                <mainClass>musicApp.Main</mainClass>
               </manifest>
             </archive>
           </configuration>

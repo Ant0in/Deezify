@@ -2,20 +2,32 @@ package musicApp.views.playlists;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import musicApp.controllers.playlists.PlaylistCellController;
-import musicApp.models.Library;
 import musicApp.views.View;
 
 /**
  * The PlaylistCellView class is responsible for displaying a cell of a playlist.
  * It extends the View class and uses FXML to define its layout.
  */
-public class PlaylistCellView extends View<PlaylistCellView, PlaylistCellController> {
+public class PlaylistCellView extends View {
+
+    private PlaylistCellViewListener listener;
+
     @FXML
     private ImageView imageCover;
     @FXML
     private Label playlistNameLabel, playlistSizeLabel;
+
+    /**
+     * Sets listener.
+     *
+     * @param newListener the listener
+     */
+    public void setListener(PlaylistCellViewListener newListener) {
+        listener = newListener;
+    }
 
     /**
      * Initializes the PlaylistCellView.
@@ -31,20 +43,40 @@ public class PlaylistCellView extends View<PlaylistCellView, PlaylistCellControl
      * This method sets the playlist name and size labels based on the library data.
      */
     private void initComponents() {
-        if (viewController.getLibrary() == null) return;
-        playlistNameLabel.setText(viewController.getLibraryName());
-        playlistSizeLabel.setText(viewController.getLibrary().size() + " songs");
+        if (listener.isShowingLibrary()) {
+            playlistNameLabel.setText(listener.getLibraryDisplayName());
+            playlistSizeLabel.setText(listener.getLibrarySize() + " songs");
+        }
     }
 
     /**
      * Updates the PlaylistCellView with the given library data.
      * This method is called to refresh the view when the library data changes.
-     *
-     * @param library The library data to update the view with.
      */
-    public void update(Library library) {
-        playlistNameLabel.setText(viewController.getLibraryName());
-        playlistSizeLabel.setText(library.size() + " songs");
-        imageCover.setImage(library.getCoverImage());
+    public void update() {
+        playlistNameLabel.setText(listener.getLibraryDisplayName());
+        playlistNameLabel.setTooltip(new Tooltip(playlistNameLabel.getText()));
+        playlistSizeLabel.setText(listener.getLibrarySize() + " songs");
+        imageCover.setImage(listener.getLibraryCoverImage());
+    }
+
+    @Override
+    protected void refreshTranslation() {
+        playlistNameLabel.setText(listener.getLibraryDisplayName());
+        playlistNameLabel.setTooltip(new Tooltip(playlistNameLabel.getText()));
+    }
+
+    /**
+     * Listener interface for handling events or retrieving data for the PlaylistCellView.
+     * Implement this interface to provide the necessary library information for the cell view.
+     */
+    public interface PlaylistCellViewListener {
+        int getLibrarySize();
+
+        String getLibraryDisplayName();
+
+        boolean isShowingLibrary();
+
+        Image getLibraryCoverImage();
     }
 }
