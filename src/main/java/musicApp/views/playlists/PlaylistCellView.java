@@ -60,6 +60,12 @@ public class PlaylistCellView extends View {
         imageCover.setImage(listener.getLibraryCoverImage());
     }
 
+    @Override
+    protected void refreshTranslation() {
+        playlistNameLabel.setText(listener.getLibraryDisplayName());
+        playlistNameLabel.setTooltip(new Tooltip(playlistNameLabel.getText()));
+    }
+
     /**
      * Listener interface for handling events or retrieving data for the PlaylistCellView.
      * Implement this interface to provide the necessary library information for the cell view.
