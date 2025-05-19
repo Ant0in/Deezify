@@ -1,5 +1,6 @@
 package musicApp.repositories;
 
+import musicApp.enums.Language;
 import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
@@ -26,7 +27,7 @@ public class TestJsonRepository extends JsonRepository {
     public void setUp() {
         // set the test data into userProfile.json
         Path userProfilePath = Paths.get("src", "test", "resources", "userProfile.json");
-        UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""), "English", 0.0, 0.0);
+        UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""), Language.ENGLISH, 0.0, 0.0);
         userProfile.setBalance(0.0);
         userProfile.setEqualizer(new Equalizer());
         setUserProfiles(List.of(userProfile), userProfilePath);
@@ -62,7 +63,7 @@ public class TestJsonRepository extends JsonRepository {
     public void testGetSettings() {
         try {
             Settings settings = getSettings(Paths.get("src", "test", "resources", "settings.json"));
-            UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""),"English", 0.0, 0.0 );
+            UserProfile userProfile = new UserProfile("test", Path.of(""), Path.of(""),Language.ENGLISH, 0.0, 0.0 );
         settings.setCurrentUserProfile(userProfile);
         assertEquals(0.0, settings.getBalance(), 0.0);
         assertEquals(10, settings.getEqualizerBands().size());

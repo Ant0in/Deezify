@@ -129,7 +129,7 @@ public class EditUserProfileView extends View {
                 "Nederlands"
         ));
         try {
-            languageChoice.setValue(listener.getLanguage().getDisplayName());
+            languageChoice.setValue(listener.getUserLanguage().getDisplayName());
         } catch (Exception e) {
             languageChoice.setValue(Language.DEFAULT.getDisplayName());
         }
@@ -239,7 +239,7 @@ public class EditUserProfileView extends View {
 
         double getCrossfadeDuration();
 
-        Language getLanguage();
+        Language getUserLanguage();
 
         void handleOpenEqualizer();
     }

@@ -85,19 +85,20 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
             if (!validateInputs(userName, musicPath)) {
                 return;
             }
+            Language selectedLanguage = null;
             switch (language) {
-                case "Nederlands" -> language = "nl";
-                case "Français" -> language = "fr";
-                case "English" -> language = "en";
+                case "Nederlands" -> selectedLanguage = Language.fromCode("nl");
+                case "Français" -> selectedLanguage = Language.fromCode("fr");
+                case "English" -> selectedLanguage = Language.fromCode("en");
             }
             UserProfileService userProfileService = new UserProfileService();
             if (isCreation) {
-                userProfile = new UserProfile(userName, imagePath, musicPath, language, balance, crossfade);
+                userProfile = new UserProfile(userName, imagePath, musicPath, selectedLanguage, balance, crossfade);
                 userProfileService.addUserProfile(userProfile);
             } else {
                 String originalUserName = userProfile.getUsername();
                 updateEqualizer();
-                updateUserProfile(userName, imagePath, musicPath, balance, crossfade, language);
+                updateUserProfile(userName, imagePath, musicPath, balance, crossfade, selectedLanguage);
                 userProfileService.updateUserProfile(userProfile, originalUserName);
             }
             //        setLanguage(Language.fromCode(language));
@@ -135,14 +136,14 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      * @param imagePath userProfile's image path
      * @param musicPath userProfile's music path
      */
-    private void updateUserProfile(String userName, Path imagePath, Path musicPath, double balance, double crossfade, String language) {
+    private void updateUserProfile(String userName, Path imagePath, Path musicPath, double balance, double crossfade, Language language) {
         userProfile.setUsername(userName);
         userProfile.setUserPicturePath(imagePath);
         userProfile.setUserMusicPath(musicPath);
         userProfile.setUserPlaylistsPath(musicPath);
         userProfile.setBalance(balance);
         userProfile.setCrossfadeDuration(crossfade);
-        setLanguage(Language.fromCode(language));
+        setUserLanguage(language);
     }
 
     /**
@@ -214,11 +215,11 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      *
      * @return The user's preferred language
      */
-    public Language getLanguage() {
+    public Language getUserLanguage() {
         if (userProfile == null) {
             return Language.DEFAULT;
         }
-        return Language.fromCode(userProfile.getLanguage());
+        return userProfile.getLanguage();
     }
 
     /**
@@ -226,8 +227,8 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      *
      * @param language the user's preferred language.
      */
-    public void setLanguage(Language language) {
-        userProfile.setLanguage(language.getDisplayName());
+    public void setUserLanguage(Language language) {
+        userProfile.setLanguage(language);
         LanguageService.getInstance().setLanguage(language);
     }
 

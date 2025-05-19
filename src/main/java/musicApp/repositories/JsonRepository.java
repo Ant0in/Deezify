@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import musicApp.enums.Language;
 import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Settings;
@@ -160,7 +161,7 @@ public class JsonRepository {
      */
     public Settings readSettings() throws SettingsFilesException {
         if (!Files.exists(settingsFile)) {
-            Settings defaultSettings = new Settings(getDefaultMusicFolder(), "en");
+            Settings defaultSettings = new Settings(getDefaultMusicFolder(), Language.DEFAULT);
             writeSettings(defaultSettings);
             return defaultSettings;
         }
@@ -185,7 +186,7 @@ public class JsonRepository {
                     .create();
             return gson.fromJson(reader, Settings.class);
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
-            return new Settings(getDefaultMusicFolder(), "en");
+            return new Settings(getDefaultMusicFolder(), Language.DEFAULT);
         }
     }
 

@@ -1,6 +1,7 @@
 package musicApp.models;
 
 import com.google.gson.annotations.Expose;
+import musicApp.enums.Language;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -21,7 +22,7 @@ public class UserProfile {
     private Path userPlaylistPath;
     private Equalizer equalizer;
     @Expose
-    private String language;
+    private Language language;
 
     /**
      * Contstructor of the UserProfile class.
@@ -30,7 +31,7 @@ public class UserProfile {
      * @param _userPicturePath path to the profile picture of the userProfile.
      * @param _userMusicPath   path to the music folder of the userProfile.
      */
-    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, String _language, double _balance, double _crossfadeDuration) {
+    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, Language _language, double _balance, double _crossfadeDuration) {
         username = _username;
         userPicturePath = _userPicturePath;
         balance = _balance;
@@ -52,7 +53,7 @@ public class UserProfile {
      * @param _crossfadeDuration crossfade duration of the userProfile.
      * @param _equalizer         equalizer of the userProfile.
      */
-    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, String _language, Path _userPlaylistPath, double _balance, double _crossfadeDuration, Equalizer _equalizer) {
+    public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, Language _language, Path _userPlaylistPath, double _balance, double _crossfadeDuration, Equalizer _equalizer) {
         username = _username;
         userPicturePath = _userPicturePath;
         balance = _balance;
@@ -198,11 +199,11 @@ public class UserProfile {
         return userPlaylistPath;
     }
 
-    public String getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
-    public void setLanguage(String newLanguage) {
+    public void setLanguage(Language newLanguage) {
         language = newLanguage;
     }
 

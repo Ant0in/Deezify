@@ -125,7 +125,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
      */
     public Language getDefaultLanguage() {
         try {
-            return settingsService.readSettings().getCurrentLanguage();
+            return settingsService.readSettings().getDefaultLanguage();
         } catch (SettingsFilesException e) {
             alertService.showFatalErrorAlert("Error loading settings", e);
             throw new RuntimeException(e);

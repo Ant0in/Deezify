@@ -73,7 +73,7 @@ public class UserProfileSelectionController extends ViewController<UserProfileSe
         view.close();
         metaController.loadPlayerWithUser(selectedUserProfile);
         metaController.switchScene(MetaController.Scenes.MAINWINDOW);
-        LanguageService.getInstance().setLanguage(Language.fromDisplayName(selectedUserProfile.getLanguage()));
+        LanguageService.getInstance().setLanguage(selectedUserProfile.getLanguage());
         metaController.refreshUI();
     }
 

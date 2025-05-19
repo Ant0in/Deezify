@@ -3,6 +3,7 @@ package musicApp.repositories.gsonTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import musicApp.enums.Language;
 import musicApp.models.Settings;
 
 import java.io.IOException;
@@ -29,7 +30,12 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
         out.name("crossfadeDuration");
         out.value(settings.getCrossfadeDuration());
         out.name("language");
-        out.value(settings.getCurrentLanguage().getCode());
+
+        switch (settings.getDefaultLanguage()) {
+            case FRENCH: out.value("fr"); break;
+            case DUTCH: out.value("nl"); break;
+            default: out.value("en");
+        }
         out.endObject();
     }
 
@@ -43,7 +49,7 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
     @Override
     public Settings read(JsonReader in) throws IOException {
         Path musicFolder = null;
-        String language = null;
+        Language language = null;
 
         in.beginObject();
         while (in.hasNext()) {
@@ -51,7 +57,7 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
             if (fieldName.equals("musicFolder")) {
                 musicFolder = Paths.get(in.nextString());
             } else if (fieldName.equals("language")) {
-                language = in.nextString();
+                language = Language.fromCode(in.nextString());
             } else {
                 in.skipValue();
             }

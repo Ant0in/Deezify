@@ -69,7 +69,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
      * @param language the language
      */
     private void setLanguage(Language language) {
-        settings.setCurrentLanguage(language);
+        settings.setDefaultLanguage(language);
     }
 
     /**

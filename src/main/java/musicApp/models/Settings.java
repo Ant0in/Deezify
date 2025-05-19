@@ -23,11 +23,11 @@ public class Settings {
      *
      * @param _musicFolder The music folder of the settings.
      */
-    public Settings(Path _musicFolder, String _language) {
+    public Settings(Path _musicFolder, Language _language) {
         musicFolderChanged = false;
         musicFolder = _musicFolder;
         currentUserProfile = null;
-        currentLanguage = Language.fromCode(_language);
+        currentLanguage = _language;
     }
 
     /**
@@ -140,7 +140,7 @@ public class Settings {
      *
      * @return the settings current language.
      */
-    public Language getCurrentLanguage() {
+    public Language getDefaultLanguage() {
         return currentLanguage;
     }
 
@@ -149,7 +149,7 @@ public class Settings {
      *
      * @param newCurrentLanguage the new current language.
      */
-    public void setCurrentLanguage(Language newCurrentLanguage) {
+    public void setDefaultLanguage(Language newCurrentLanguage) {
         currentLanguage = newCurrentLanguage;
     }
 

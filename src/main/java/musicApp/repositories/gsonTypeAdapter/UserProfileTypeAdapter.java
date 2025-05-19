@@ -3,6 +3,7 @@ package musicApp.repositories.gsonTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import musicApp.enums.Language;
 import musicApp.models.Equalizer;
 import musicApp.models.UserProfile;
 
@@ -55,7 +56,12 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
         out.value(playlistPath != null ? playlistPath.toString() : "");
 
         // User preferred language
-        out.name("language").value(userProfile.getLanguage());
+        Language userLanguage = userProfile.getLanguage();
+        switch (userLanguage) {
+            case FRENCH:  out.name("language").value("fr"); break;
+            case DUTCH:  out.name("language").value("nl"); break;
+            default: out.name("language").value("en"); break;
+        }
 
         out.endObject();
     }
@@ -76,7 +82,7 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
         Path userPlaylistPath = null;
         double balance = 0;
         double crossfadeDuration = 0.0;
-        String language = null;
+        Language language = null;
 
         Equalizer equalizer = new Equalizer();
 
@@ -113,7 +119,7 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                             ? Paths.get(rawPath)
                             : null;
                 }
-                case "language" -> language = in.nextString();
+                case "language" -> language = Language.fromCode(in.nextString());
                 default -> in.skipValue();
             }
         }
