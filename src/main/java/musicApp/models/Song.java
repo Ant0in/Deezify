@@ -28,6 +28,7 @@ public class Song {
      */
     public Song(Path _filePath) {
         filePath = _filePath;
+        lyricsEntry = Optional.empty();
         MetadataService metadataReader = new MetadataService();
         try {
             metadata = metadataReader.getMetadata(filePath.toFile());
