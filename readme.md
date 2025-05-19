@@ -17,7 +17,7 @@
 - [🤝 Acknowledgements](#-acknowledgements)
 
 ## 📖 Overview
-Deezify is a music player application developed as part of the INFO-F307 course at ULB. The project aims to provide a simple, intuitive, and feature-rich music player for desktop platforms.
+**Deezify** is a music player application developed as part of the INFO-F307 course at ULB. The project aims to provide a simple, intuitive, and feature-rich music player for desktop platforms.
 It is developed using Java and JavaFX, and it supports playback of local audio files (`.mp3`, `.wav`).
 
 It is available for Windows, macOS, and Linux.
@@ -60,9 +60,9 @@ mvn exec:java
 
 ## 🗺️ Roadmap
 ### 📌 Phase 1
-- [x] 🎵 **Basic Music Playback**: Plays local audio files (`.mp3`, `.wav`)
+- [x] 🎵 **Basic Music Playback**: Play local audio files (`.mp3`, `.wav`)
 - [x] 🎚️ **Playback Controls**: Play, pause, skip, previous track, seek, volume control
-- [x] 📌 **Queue System**: Adds/removes tracks to the playback queue
+- [x] 📌 **Queue System**: Add/remove tracks to the playback queue
 
 
 ### 📌 Phase 2
@@ -74,20 +74,20 @@ mvn exec:java
 - [x] ⭐ **Favorites System**: Easily mark and access favorite songs
 - [x] 📻 **Web Radio Integration**: Stream online radio stations
 - [x] 🎤 **Lyrics Display**: Display lyrics for the currently playing track
-- [x] 🎧 **Equalizer**
+- [x] 🎧 **Equalizer**:  Tune frequency bands (−20 dB to +20 dB)
 
 ### 📌 Phase 3
-- [x] 🔎 **Research**: Lets the userProfile search for music in its library based on title, artist, album, or tags 
+- [x] 🔎 **Research**: Let the user search for music in its library based on title, artist, album, or tags
 - [x] 〰️ **Visualizer**: Audio Visualizer, draws a nice looking graph that updates based on the sounds that are playing
-- [x] 📜 **Metadata autocompletion**: Proposes values for artist, album, and tags when modifying the metadata
-- [x] 🎤 **Karaoke**: Allows for the userProfile to sing along with the music playing thanks to lyrics updating in real time with the song
-- [x] 🎛️ **DJ mode**: Allows for audio effects to be applied in real time
+- [x] 📜 **Metadata autocompletion**: Suggest values for artist, album, and tags when modifying the metadata
+- [x] 🎤 **Karaoke**: Allow user to sing along with the music playing thanks to lyrics updating in real time with the song
+- [x] 🎛️ **DJ mode**: Allow for audio effects to be applied in real time
 
 ### 📌 Phase 4
-- [x] 🤖 **Smart Suggestions**: Suggests similar tracks during playlist creation based on artist, tags, and album metadata.
-- [x] 🔄 **Crossfade Transitions**: Smooth transitions between tracks with adjustable fade duration.
-- [x] 🎬 **Video Cover Support**: Plays a muted `.mp4` video as the song’s cover if set.
-- [x] 👥 **User Accounts (Local)**: Multiple local users with separate libraries and playlists, plus a shared global folder.
+- [x] 🤖 **Smart Suggestions**: Suggest similar tracks during playlist creation based on artist, tags, and album metadata
+- [x] 🔄 **Crossfade Transitions**: Smooth transitions between tracks with adjustable fade duration
+- [x] 🎬 **Video Cover Support**: Play a muted `.mp4` video as the song’s cover if set
+- [x] 👥 **User Accounts (Local)**: Multiple local users with separate libraries and playlists, plus a shared global folder
 
 ## 🤝 Acknowledgements
 This project uses the following libraries:
