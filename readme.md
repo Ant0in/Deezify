@@ -89,6 +89,11 @@ mvn exec:java
 - [x] 🎬 **Video Cover Support**: Play a muted `.mp4` video as the song’s cover if set
 - [x] 👥 **User Accounts (Local)**: Multiple local users with separate libraries and playlists, plus a shared global folder
 
+### Project's Burndown chart interactive overview
+
+https://v0-work-in-progress-page-ebon.vercel.app/
+
+
 ## 🤝 Acknowledgements
 This project uses the following libraries:
 - [JavaFX](https://openjfx.io/)
