@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 import musicApp.exceptions.BadSongException;
 import musicApp.exceptions.EqualizerGainException;
-import musicApp.models.AudioPlayer;
 import musicApp.models.Song;
 import musicApp.services.ViewService;
 import musicApp.views.MediaPlayerView;
@@ -258,9 +257,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     }
 
     public void handlePlayingStatusChange(Consumer<Boolean> callback) {
-        getIsPlayingProperty().addListener((obs, oldVal, newVal) -> {
-            callback.accept(newVal);
-        });
+        getIsPlayingProperty().addListener((_, _, newVal) -> callback.accept(newVal));
     }
 
     public void bindProgressProperty(DoubleProperty property) {
@@ -293,9 +290,8 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     }
 
     public void handleLoadedSongStatusChange(Consumer<Boolean> callback) {
-        getCurrentSongProperty().addListener((_, _, _) -> {
-            callback.accept(getLoadedSong()!=null);
-        });
+        getCurrentSongProperty().addListener((_, _, _) ->
+                callback.accept(getLoadedSong()!=null));
     }
 
 }

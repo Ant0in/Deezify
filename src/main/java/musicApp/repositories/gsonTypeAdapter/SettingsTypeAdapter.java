@@ -3,7 +3,6 @@ package musicApp.repositories.gsonTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import musicApp.models.Equalizer;
 import musicApp.models.Settings;
 
 import java.io.IOException;
@@ -44,8 +43,6 @@ public class SettingsTypeAdapter extends TypeAdapter<Settings> {
     @Override
     public Settings read(JsonReader in) throws IOException {
         Path musicFolder = null;
-        Equalizer equalizer = new Equalizer();
-        double crossfadeDuration = 0.0;
         String language = null;
 
         in.beginObject();

@@ -3,7 +3,6 @@ package musicApp.models;
 import com.google.gson.annotations.Expose;
 import musicApp.enums.Language;
 import musicApp.models.dtos.SettingsDTO;
-import musicApp.services.LanguageService;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -75,19 +74,6 @@ public class Settings {
             return currentUserProfile.getBalance();
         } else {
             throw new IllegalStateException("Cannot get balance when currentUserProfile is null.");
-        }
-    }
-
-    /**
-     * Set the balance of the settings.
-     *
-     * @param newBalance The balance.
-     */
-    public void setBalance(double newBalance) {
-        if (currentUserProfile != null) {
-            currentUserProfile.setBalance(newBalance);
-        } else {
-            throw new IllegalStateException("Cannot set balance when currentUserProfile is null.");
         }
     }
 
@@ -178,19 +164,6 @@ public class Settings {
         return Double.compare(otherSettings.getBalance(), getBalance()) == 0 &&
                 otherSettings.getMusicFolder().equals(getMusicFolder()) &&
                 otherSettings.getEqualizerBands().equals(getEqualizerBands());
-    }
-
-    /**
-     * Gets equalizer.
-     *
-     * @return the equalizer
-     */
-    public Equalizer getEqualizer() {
-        if (currentUserProfile == null) {
-            return new Equalizer();
-        } else {
-            return currentUserProfile.getEqualizer();
-        }
     }
 
     /**

@@ -1,12 +1,10 @@
 package musicApp.services;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-
+import javafx.util.Duration;
+import musicApp.enums.SupportedFileType;
+import musicApp.exceptions.BadFileTypeException;
+import musicApp.exceptions.ID3TagException;
+import musicApp.models.Metadata;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
@@ -14,11 +12,12 @@ import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
-import javafx.util.Duration;
-import musicApp.enums.SupportedFileType;
-import musicApp.exceptions.BadFileTypeException;
-import musicApp.exceptions.ID3TagException;
-import musicApp.models.Metadata;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 
 public class MetadataService {
 

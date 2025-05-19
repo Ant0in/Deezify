@@ -7,9 +7,9 @@ import javafx.scene.control.Alert;
 import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Song;
+import musicApp.services.LanguageService;
 import musicApp.services.PlaylistService;
 import musicApp.views.LibraryView;
-import musicApp.services.LanguageService;
 
 import java.io.File;
 import java.io.IOException;
@@ -392,7 +392,7 @@ public class LibraryController extends SongContainerController<LibraryView>
     public List<Song> toList() {
         List<Song> songs = new ArrayList<>(super.toList());
         if (isModifiable()) {
-            songs.addAll(getSuggestions(""));
+            songs.addAll(getSuggestions());
         }
         return songs;
     }
@@ -402,7 +402,7 @@ public class LibraryController extends SongContainerController<LibraryView>
      *
      * @return A list of suggested songs based on the query.
      */
-    private List<Song> getSuggestions(String query) {
+    private List<Song> getSuggestions() {
         Set<String> artists = new HashSet<>(), albums = new HashSet<>(), tags = new HashSet<>(), genres = new HashSet<>();
         collectPlaylistData(artists, albums, tags, genres);
 

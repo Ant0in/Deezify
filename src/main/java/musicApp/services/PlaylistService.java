@@ -86,7 +86,7 @@ public class PlaylistService {
         }
     }
 
-    public Path addSongToLibrary(File song, Path libraryPath) throws IOException, SettingsFilesException {
+    public Path addSongToLibrary(File song, Path libraryPath) throws IOException {
         PathRepository loader = new PathRepository();
         return loader.copyFileToDirectory(song, libraryPath);
     }

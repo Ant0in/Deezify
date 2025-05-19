@@ -1,7 +1,6 @@
 package musicApp.views;
 
 import javafx.fxml.FXML;
-
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -15,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
+
 import java.nio.file.Path;
 import java.util.List;
 

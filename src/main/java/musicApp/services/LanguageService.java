@@ -89,15 +89,6 @@ public class LanguageService {
     }
 
     /**
-     * Get the current language.
-     *
-     * @return The current language.
-     */
-    public Language getCurrentLanguage() {
-        return Language.fromCode(languageProperty.get());
-    }
-
-    /**
      * Check if the language is supported.
      *
      * @param language The language.

@@ -5,9 +5,7 @@ import musicApp.controllers.MetaController;
 import musicApp.controllers.ViewController;
 import musicApp.enums.Language;
 import musicApp.models.Settings;
-import musicApp.models.UserProfile;
 import musicApp.models.dtos.SettingsDTO;
-import musicApp.services.LanguageService;
 import musicApp.views.settings.SettingsView;
 
 import java.nio.file.Path;
@@ -71,14 +69,6 @@ public class SettingsController extends ViewController<SettingsView> implements 
      * @param language the language
      */
     private void setLanguage(Language language) { settings.setCurrentLanguage(language); }
-
-    /**
-     * Set the current user profile.
-     * @param userProfile
-     */
-    public void setUserProfile(UserProfile userProfile) {
-        settings.setCurrentUserProfile(userProfile);
-    }
 
     /**
      * Handle when the save button is pressed

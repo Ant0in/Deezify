@@ -3,7 +3,6 @@ package musicApp.controllers.playlists;
 import javafx.scene.image.Image;
 import musicApp.controllers.ViewController;
 import musicApp.models.Library;
-import musicApp.services.LanguageService;
 import musicApp.views.playlists.PlaylistCell;
 import musicApp.views.playlists.PlaylistCellView;
 

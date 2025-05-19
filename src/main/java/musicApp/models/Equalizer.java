@@ -112,21 +112,6 @@ public class Equalizer {
         checkBandsGain(newBandsGain);
         bandsGain = newBandsGain;
     }
-    /**
-     * Get the maximum gain in decibels.
-     * @return the maximum gain in decibels
-     */
-    public double getMaxGainDB() {
-        return MAX_GAIN_DB;
-    }
-
-    /**
-     * Get the minimum gain in decibels.
-     * @return the minimum gain in decibels
-     */
-    public double getMinGainDB() {
-        return MIN_GAIN_DB;
-    }
 
     /**
      * Get the list of bands frequency.

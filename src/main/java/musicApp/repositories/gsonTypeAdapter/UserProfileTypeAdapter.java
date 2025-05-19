@@ -113,9 +113,7 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                             ? Paths.get(rawPath)
                             : null;
                 }
-                case "language" -> {
-                    language = in.nextString();
-                }
+                case "language" -> language = in.nextString();
                 default -> in.skipValue();
             }
         }

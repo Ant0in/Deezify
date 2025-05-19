@@ -1,6 +1,8 @@
 package musicApp.controllers;
 
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.media.*;
 import javafx.util.Duration;

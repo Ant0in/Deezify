@@ -67,22 +67,12 @@ public class EqualizerController extends ViewController<EqualizerView> implement
     }
 
     /**
-     * Get the band gain.
-     *
-     * @param frequency The frequency of the band.
-     * @return the equalizer band gain
-     */
-    public List<Double> getEqualizerBandsGain() {
-        return equalizer.getBandsGain();
-    }
-
-    /**
      * Get the maximum gain in dB.
      *
      * @return the max gain db
      */
     public double getMaxGainDB() {
-        return equalizer.getMaxGainDB();
+        return Equalizer.MAX_GAIN_DB;
     }
 
     /**
@@ -91,7 +81,7 @@ public class EqualizerController extends ViewController<EqualizerView> implement
      * @return the min gain db
      */
     public double getMinGainDB() {
-        return equalizer.getMinGainDB();
+        return Equalizer.MIN_GAIN_DB;
     }
 
     /**

@@ -9,11 +9,10 @@ import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;
+import musicApp.repositories.LyricsRepository.LyricsFilePaths;
 import musicApp.repositories.gsonTypeAdapter.LibraryTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.SettingsTypeAdapter;
 import musicApp.repositories.gsonTypeAdapter.UserProfileTypeAdapter;
-import musicApp.repositories.LyricsRepository.LyricsFilePaths;
-
 
 import java.io.FileReader;
 import java.io.IOException;

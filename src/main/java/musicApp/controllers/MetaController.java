@@ -2,15 +2,14 @@ package musicApp.controllers;
 
 import javafx.stage.Stage;
 import musicApp.controllers.settings.SettingsController;
-import musicApp.exceptions.SettingsFilesException;
 import musicApp.enums.Language;
+import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;
 import musicApp.services.AlertService;
 import musicApp.services.SettingsService;
 import musicApp.services.UserProfileService;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -36,9 +35,8 @@ public class MetaController implements EditUserProfileController.EditUserProfile
     /**
      * Instantiates a new Meta controller.
      *
-     * @throws IOException the io exception
      */
-    public MetaController(Stage primaryStage) throws IOException {
+    public MetaController(Stage primaryStage) {
         alertService = new AlertService();
         try {
             settingsService = new SettingsService();

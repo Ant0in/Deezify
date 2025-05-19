@@ -9,19 +9,10 @@ import musicApp.services.MetadataService;
 import musicApp.services.VideoService;
 import musicApp.views.songs.EditMetadataView;
 
-
 import java.io.File;
-
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
-import javafx.embed.swing.SwingFXUtils;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Java2DFrameConverter;
-
-
-
-import java.awt.image.BufferedImage;
 
 /**
  * The type Edit metadata controller.
@@ -99,7 +90,6 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
                 System.err.println("Failed to load file: " + file.getName());
             }
         } catch (Exception e) {
-            e.printStackTrace();
             alertService.showExceptionAlert(e);
         }
     }

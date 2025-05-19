@@ -31,7 +31,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         primaryStage.setResizable(true);
         MetaController meta = new MetaController(primaryStage);
         meta.switchScene(MetaController.Scenes.USERSWINDOW);
