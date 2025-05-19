@@ -1,6 +1,5 @@
-package musicApp.utils;
+package musicApp.repositories;
 
-import musicApp.repositories.PathRepository;
 import org.junit.Test;
 
 import java.io.IOException;

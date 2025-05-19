@@ -1,7 +1,7 @@
 /**
  * Test suite for the VideoService class.
  */
-package musicApp.utils;
+package musicApp.services;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -9,8 +9,6 @@ import java.nio.file.Paths;
 
 import org.jaudiotagger.tag.images.Artwork;
 import org.junit.Test;
-
-import musicApp.services.VideoService;
 
 
 public class TestVideoService {

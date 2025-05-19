@@ -1,11 +1,10 @@
-package musicApp.utils;
+package musicApp.services;
 
 import musicApp.exceptions.LyricsOperationException;
 import musicApp.exceptions.SettingsFilesException;
 import musicApp.models.Song;
 import musicApp.repositories.JsonRepository;
 import musicApp.repositories.LyricsRepository;
-import musicApp.services.LyricsService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

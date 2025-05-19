@@ -3,7 +3,7 @@
  * These tests cover reading and writing metadata (title, artist, genre, user tags, duration, and cover images)
  * for both MP3 and WAV files. They also test error handling, edge cases, and format-specific behavior.
  */
-package musicApp.utils;
+package musicApp.services;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -27,8 +27,6 @@ import javafx.util.Duration;
 import musicApp.exceptions.BadFileTypeException;
 import musicApp.exceptions.ID3TagException;
 import musicApp.models.Metadata;
-import musicApp.services.LanguageService;
-import musicApp.services.MetadataService;
 
 public class TestMetadataService {
 

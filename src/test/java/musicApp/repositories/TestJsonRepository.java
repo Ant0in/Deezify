@@ -1,10 +1,9 @@
-package musicApp.utils;
+package musicApp.repositories;
 
 import musicApp.models.Equalizer;
 import musicApp.models.Library;
 import musicApp.models.Settings;
 import musicApp.models.UserProfile;
-import musicApp.repositories.JsonRepository;
 import musicApp.repositories.LyricsRepository.LyricsFilePaths;
 import musicApp.exceptions.SettingsFilesException;
 import com.google.gson.JsonSyntaxException;
