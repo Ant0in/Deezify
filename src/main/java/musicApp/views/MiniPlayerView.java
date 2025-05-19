@@ -13,7 +13,6 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -98,7 +97,7 @@ public class MiniPlayerView extends View {
      * @param title         the title
      * @param newCoverImage the cover image
      */
-    public void updateSongProperties(String title, @Nullable Image newCoverImage, @Nullable Path videoPath) {
+    public void updateSongProperties(String title, Image newCoverImage, Path videoPath) {
         songTitleLabel.setText(title);
 
         if (videoPath != null) {

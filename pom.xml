@@ -51,9 +51,86 @@
     </dependency>
     <dependency>
       <groupId>org.bytedeco</groupId>
-      <artifactId>javacv-platform</artifactId>
-      <version>1.5.10</version>
+      <artifactId>javacv</artifactId>
+      <version>1.5.11</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>flycapture</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>libdc1394</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>libfreenect2</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>libfreenect</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>librealsense</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>librealsense2</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>videoinput</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>artoolkitplus</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>leptonica</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>tesseract</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>openblas</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.bytedeco</groupId>-->
+<!--      <artifactId>ffmpeg</artifactId>-->
+<!--      <version>7.1-1.5.11</version>-->
+<!--    </dependency>-->
+    <!-- Optional: Include ffmpeg-platform with specific classifiers -->
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>ffmpeg</artifactId>
+      <version>7.1-1.5.11</version>
+      <classifier>linux-x86_64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>ffmpeg</artifactId>
+      <version>7.1-1.5.11</version>
+      <classifier>macosx-x86_64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>ffmpeg</artifactId>
+      <version>7.1-1.5.11</version>
+      <classifier>macosx-arm64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>ffmpeg</artifactId>
+      <version>7.1-1.5.11</version>
+      <classifier>windows-x86_64</classifier>
+    </dependency>
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-swing</artifactId>
@@ -124,48 +201,20 @@
       <artifactId>gson</artifactId>
       <version>2.10.1</version>
     </dependency>
-    <!-- Additional dependencies -->
-    <dependency>
-      <groupId>com.gluonhq</groupId>
-      <artifactId>charm-glisten</artifactId>
-      <version>6.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.gluonhq.attach</groupId>
-      <artifactId>display</artifactId>
-      <version>4.0.11</version>
-    </dependency>
-    <dependency>
-      <groupId>com.gluonhq.attach</groupId>
-      <artifactId>lifecycle</artifactId>
-      <version>4.0.11</version>
-    </dependency>
 
-    <dependency>
-      <groupId>org.testfx</groupId>
-      <artifactId>testfx-core</artifactId>
-      <version>4.0.16-alpha</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.testfx</groupId>
-      <artifactId>testfx-junit</artifactId>
-      <version>4.0.15-alpha</version>
-      <scope>test</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.testfx</groupId>-->
+<!--      <artifactId>testfx-junit</artifactId>-->
+<!--      <version>4.0.15-alpha</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>net.jthink</groupId>
       <artifactId>jaudiotagger</artifactId>
       <version>3.0.1</version>
     </dependency>
-    <dependency>
-      <groupId>org.jetbrains</groupId>
-      <artifactId>annotations</artifactId>
-      <version>RELEASE</version>
-      <scope>compile</scope>
-    </dependency>
+
 
   </dependencies>
   <build>
@@ -174,10 +223,6 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.0</version>
-<!--        <configuration>-->
-<!--          <source>23</source>-->
-<!--          <target>23</target>-->
-<!--        </configuration>-->
       </plugin>
       <!-- Maven Surefire Plugin -->
       <plugin>
