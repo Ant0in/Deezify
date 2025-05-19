@@ -198,7 +198,7 @@
             <configuration>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>musicApp.MainLauncher</mainClass>
+                  <mainClass>musicApp.Main</mainClass>
                 </transformer>
                 <!-- Merge service files if any -->
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
@@ -257,7 +257,7 @@
           <artifactId>exec-maven-plugin</artifactId>
           <version>3.1.1</version>
           <configuration>
-            <mainClass>musicApp.MainLauncher</mainClass>
+            <mainClass>musicApp.Main</mainClass>
             <arguments>
               <argument>--module-path</argument>
               <!-- Replace [module-path-value] with your actual module path -->
@@ -278,7 +278,7 @@
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
-                <mainClass>musicApp.MainLauncher</mainClass>
+                <mainClass>musicApp.Main</mainClass>
               </manifest>
             </archive>
           </configuration>

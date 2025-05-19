@@ -1,39 +1,18 @@
 package musicApp;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-import musicApp.controllers.MetaController;
-
-import java.io.InputStream;
-import java.util.logging.LogManager;
-
 /**
- * Main class that extends the JavaFX Application class.
- * This class is NOT the entry point of the application.
- *
- * @see Application
- * @see MetaController
+ * Main class that works around JavaFX module system requirements.
+ * This class is a standard Java class that can be launched with java -jar.
+ * It sets up the necessary module path and options before launching the actual JavaFX application.
  */
-public class Main extends Application {
+public class Main {
 
     public static void main(String[] args) {
-
-        // Load the logging configuration programmatically
-        try (InputStream is = Main.class.getClassLoader().getResourceAsStream("logging.properties")) {
-            if (is != null) {
-                LogManager.getLogManager().readConfiguration(is);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setResizable(true);
-        MetaController meta = new MetaController(primaryStage);
-        meta.switchScene(MetaController.Scenes.USERSWINDOW);
+        // Set system property to suppress the module warning
+        System.setProperty("javafx.verbose", "false");
+        // For severe module issues, this property can help in some environments
+        System.setProperty("illegal-access", "permit");
+        // Launch the actual JavaFX application
+        Launcher.main(args);
     }
 }
