@@ -11,9 +11,9 @@ import java.nio.file.Path;
  */
 public class EditPlaylistController extends ViewController<EditPlaylistView> implements EditPlaylistView.EditPlaylistViewListener {
 
-    private PlaylistNavigatorController navigatorController;
     private final Library playlistToEdit;
     private final boolean isCreation;
+    private PlaylistNavigatorController navigatorController;
 
     /**
      * Create a controller for creating a new playlist
@@ -47,7 +47,7 @@ public class EditPlaylistController extends ViewController<EditPlaylistView> imp
      *
      * @param _controller The parent navigator controller
      */
-    private void init(PlaylistNavigatorController _controller){
+    private void init(PlaylistNavigatorController _controller) {
         view.setListener(this);
         navigatorController = _controller;
     }
@@ -62,8 +62,8 @@ public class EditPlaylistController extends ViewController<EditPlaylistView> imp
     /**
      * Handle saving the playlist - either create a new one or update an existing one
      *
-     * @param playlistName      The playlist name
-     * @param imagePath The playlist image path
+     * @param playlistName The playlist name
+     * @param imagePath    The playlist image path
      */
     public void handleSave(String playlistName, Path imagePath) {
         if (playlistToEdit == null) {

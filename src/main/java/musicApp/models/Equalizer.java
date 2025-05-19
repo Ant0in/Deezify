@@ -25,6 +25,7 @@ public class Equalizer {
 
     /**
      * Constructor for Equalizer with specified bands gain.
+     *
      * @param bandsGain bandsGains
      */
     public Equalizer(List<Double> bandsGain) {
@@ -34,6 +35,7 @@ public class Equalizer {
 
     /**
      * Get the number of bands in the equalizer.
+     *
      * @return the number of bands
      */
     private int getBandsSize() {
@@ -42,8 +44,9 @@ public class Equalizer {
 
     /**
      * Check if the band index and gain are valid.
+     *
      * @param bandIndex Index of the band to check
-     * @param gain Gain value to check
+     * @param gain      Gain value to check
      */
     private void checkBand(int bandIndex, double gain) throws IllegalArgumentException {
         checkBandIndex(bandIndex);
@@ -56,6 +59,7 @@ public class Equalizer {
 
     /**
      * Check if the band index is valid.
+     *
      * @param bandIndex Index of the band to check
      */
     private void checkBandIndex(int bandIndex) throws IllegalArgumentException {
@@ -66,6 +70,7 @@ public class Equalizer {
 
     /**
      * Check if the bands gain list is valid.
+     *
      * @param bandsGain List of bands gain to check
      */
     private void checkBandsGain(List<Double> bandsGain) throws IllegalArgumentException {
@@ -76,9 +81,10 @@ public class Equalizer {
             checkBand(i, bandsGain.get(i));
         }
     }
-    
+
     /**
      * Get the gain of a specific band.
+     *
      * @param bandIndex Index of the band to get the gain for
      * @return The gain of the band at the specified index
      */
@@ -88,8 +94,9 @@ public class Equalizer {
 
     /**
      * Set the gain of a specific band.
+     *
      * @param bandIndex Index of the band to set the gain for
-     * @param gain The gain value to set for the band at the specified index
+     * @param gain      The gain value to set for the band at the specified index
      */
     public void setBandGain(int bandIndex, double gain) {
         checkBand(bandIndex, gain);
@@ -98,6 +105,7 @@ public class Equalizer {
 
     /**
      * Get the list of bands gain.
+     *
      * @return the list of bands gain
      */
     public List<Double> getBandsGain() {
@@ -106,6 +114,7 @@ public class Equalizer {
 
     /**
      * Set the list of bands gain.
+     *
      * @param newBandsGain the new list of bands gain
      */
     public void setBandsGain(List<Double> newBandsGain) {
@@ -115,6 +124,7 @@ public class Equalizer {
 
     /**
      * Get the list of bands frequency.
+     *
      * @return the list of bands frequency
      */
     @Override

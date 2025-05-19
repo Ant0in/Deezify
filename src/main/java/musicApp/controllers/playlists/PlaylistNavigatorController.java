@@ -20,8 +20,8 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
 
     private final PlayerController playerController;
     private final PlaylistsController playlistsController;
-    private Library selectedLibrary;
     private final PlaylistContextMenuController playlistContextMenuController;
+    private Library selectedLibrary;
 
 
     /**
@@ -90,10 +90,10 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param library the playlist
      */
     public void deletePlaylist(Library library) {
-        try{
+        try {
             playlistsController.deletePlaylist(library);
             refreshUI();
-        } catch (DeletePlaylistException e){
+        } catch (DeletePlaylistException e) {
             alertService.showAlert(LanguageService.getInstance().get("error.delete_playlist"), Alert.AlertType.WARNING);
         }
     }
@@ -145,7 +145,7 @@ public class PlaylistNavigatorController extends ViewController<PlaylistNavigato
      * @param playlist to add the song to
      */
     public void addSongToPlaylist(Song song, Library playlist) {
-        try{
+        try {
             playlistsController.addSongToPlaylist(song, playlist);
             refreshUI();
         } catch (IllegalArgumentException e) {

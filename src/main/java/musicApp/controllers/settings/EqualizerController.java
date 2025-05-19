@@ -13,7 +13,7 @@ import java.util.List;
  * The type Equalizer controller.
  */
 public class EqualizerController extends ViewController<EqualizerView> implements EqualizerView.EqualizerViewListener {
-    
+
     private final EditUserProfileController editUserProfileController;
     private final Equalizer equalizer;
 

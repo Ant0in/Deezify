@@ -12,14 +12,15 @@ import java.util.List;
 
 public class UserProfileSelectionController extends ViewController<UserProfileSelectionView> implements UserProfileSelectionView.UserProfileSelectionViewListener {
 
-    private List<UserProfile> usersList;
     private final MetaController metaController;
+    private List<UserProfile> usersList;
 
     /**
      * * The constructor for the UserProfileSelectionController class.
+     *
      * @param _metaController MetaController instance to handle the main application logic
-     * @param _primaryStage Primary stage of the application
-     * @param _usersList List of user profiles to be displayed
+     * @param _primaryStage   Primary stage of the application
+     * @param _usersList      List of user profiles to be displayed
      */
     public UserProfileSelectionController(MetaController _metaController, Stage _primaryStage, List<UserProfile> _usersList) {
         super(new UserProfileSelectionView(_primaryStage));
@@ -32,7 +33,7 @@ public class UserProfileSelectionController extends ViewController<UserProfileSe
     /**
      * * This method is called when the user clicks the "Add Profile" button.
      */
-    public void onAddProfileClicked(){
+    public void onAddProfileClicked() {
         new EditUserProfileController(metaController);
     }
 
@@ -53,11 +54,11 @@ public class UserProfileSelectionController extends ViewController<UserProfileSe
     /**
      * * This method updates the list of user profiles and refreshes the UI.
      */
-    public void usersUpdate(){
+    public void usersUpdate() {
         try {
             usersList = new UserProfileService().readUserProfiles();
             view.refreshUI();
-        }  catch (SettingsFilesException e) {
+        } catch (SettingsFilesException e) {
             alertService.showFatalErrorAlert("Error loading settings", e);
             throw new RuntimeException(e);
         }
@@ -65,6 +66,7 @@ public class UserProfileSelectionController extends ViewController<UserProfileSe
 
     /**
      * * This method is called when the user selects a user profile.
+     *
      * @param selectedUserProfile The selected user profile
      */
     public void onUserSelected(UserProfile selectedUserProfile) {

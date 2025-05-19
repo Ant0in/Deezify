@@ -7,10 +7,6 @@ import java.util.Objects;
 
 public class ViewService {
 
-    public interface ViewServiceListener {
-        void handleNotFoundImage(String message);
-    }
-
     /**
      * Creates an ImageView from a resource path with predefined dimensions.
      *
@@ -27,16 +23,20 @@ public class ViewService {
     /**
      * Sets the graphic icon for a button.
      *
-     * @param button The button to set the icon for.
+     * @param button    The button to set the icon for.
      * @param imagePath The path to the image resource.
      */
     public void setButtonIcon(ButtonBase button, String imagePath, ViewServiceListener viewServiceListener) {
-        try{
+        try {
             ViewService viewService = new ViewService();
             ImageView icon = viewService.createIcon(imagePath);
             button.setGraphic(icon);
-        }catch (NullPointerException _) {
+        } catch (NullPointerException _) {
             viewServiceListener.handleNotFoundImage("Could not load icon : " + imagePath);
         }
+    }
+
+    public interface ViewServiceListener {
+        void handleNotFoundImage(String message);
     }
 }

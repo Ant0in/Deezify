@@ -45,6 +45,7 @@ public abstract class View {
 
     /**
      * Initialize popup window.
+     *
      * @param fxmlPath
      * @throws IOException
      */

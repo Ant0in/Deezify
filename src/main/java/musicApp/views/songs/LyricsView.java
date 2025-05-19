@@ -27,7 +27,7 @@ import java.util.Optional;
  * actions to the LyricsController.
  */
 public class LyricsView extends View {
-    
+
     private LyricsViewListener lyricsListener;
     private KaraokeListener karaokeListener;
     private Timeline syncTimeline;
@@ -46,37 +46,10 @@ public class LyricsView extends View {
     private Button simpleLyricsButton, karaokeLyricsButton, karaokeAddLyricsButton, karaokeEditButton;
 
     @FXML
-    private ButtonType yesButton, noButton, cancelButton,saveButton;
+    private ButtonType yesButton, noButton, cancelButton, saveButton;
 
     @FXML
     private ScrollPane lyricsScrollPane, karaokeScrollPane;
-
-    /**
-     * Listener interface for handling events in the LyricsView.
-     * Implement this interface to define behaviors for editing lyrics,
-     * retrieving the current song lyrics, and accessing the currently loaded song property.
-     */
-    public interface LyricsViewListener {
-        void handleEditLyrics();
-
-        List<String> getCurrentSongLyrics();
-
-        void handleLoadedSongChange(Runnable callback);
-
-        void handleShowLyrics();
-    }
-
-    public interface KaraokeListener {
-        void handleImportKaraokeLyrics();
-
-        void handleShowKaraoke();
-
-        void handleStopKaraoke();
-
-        void handleSyncLyrics();
-
-        List<KaraokeLine> getKaraokeLines();
-    }
 
     public void stopKaraoke() {
         if (syncTimeline != null) {
@@ -135,7 +108,7 @@ public class LyricsView extends View {
         karaokeScrollPane.setManaged(true);
     }
 
-    private void handleLoadedSongChange(){
+    private void handleLoadedSongChange() {
         karaokeListener.handleStopKaraoke();
         simpleLyricsButton.fire();
     }
@@ -156,7 +129,7 @@ public class LyricsView extends View {
         lyricsTitle.setText(lang.get("lyrics.title"));
     }
 
-    private void initButtonsTypes(LanguageService lang){
+    private void initButtonsTypes(LanguageService lang) {
         yesButton = new ButtonType(lang.get("button.yes"), ButtonBar.ButtonData.YES);
         noButton = new ButtonType(lang.get("button.no"), ButtonBar.ButtonData.NO);
         cancelButton = new ButtonType(lang.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -231,7 +204,6 @@ public class LyricsView extends View {
 
     /**
      * Displays the lyrics along with an edit header.
-
      */
     private void displayLyricsWithHeader(List<String> lyrics) {
         HBox header = new HBox();
@@ -337,8 +309,7 @@ public class LyricsView extends View {
         List<KaraokeLine> karaokeLines = karaokeListener.getKaraokeLines();
         renderKaraokeLines(karaokeLines, null);
     }
-    
-    
+
     /**
      * Updates the karaoke lyrics highlight based on the active line.
      * It retrieves the karaoke lines from the karaoke controller and renders them with highlighting.
@@ -387,5 +358,32 @@ public class LyricsView extends View {
     public void refreshUI() {
         updateLyrics();
         updateKaraokeLyrics();
+    }
+
+    /**
+     * Listener interface for handling events in the LyricsView.
+     * Implement this interface to define behaviors for editing lyrics,
+     * retrieving the current song lyrics, and accessing the currently loaded song property.
+     */
+    public interface LyricsViewListener {
+        void handleEditLyrics();
+
+        List<String> getCurrentSongLyrics();
+
+        void handleLoadedSongChange(Runnable callback);
+
+        void handleShowLyrics();
+    }
+
+    public interface KaraokeListener {
+        void handleImportKaraokeLyrics();
+
+        void handleShowKaraoke();
+
+        void handleStopKaraoke();
+
+        void handleSyncLyrics();
+
+        List<KaraokeLine> getKaraokeLines();
     }
 }

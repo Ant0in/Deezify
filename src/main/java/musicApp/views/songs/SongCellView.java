@@ -18,8 +18,11 @@ import musicApp.views.View;
  */
 public class SongCellView extends View {
 
+    private static final String PLAY_ICON = "/images/play2.png";
+    private static final String PAUSE_ICON = "/images/pause.png";
+    private static final String EDIT_ICON = "/images/edit.png";
+    private static final String ADD_ICON = "/images/add.png";
     private SongCellViewListener listener;
-
     @FXML
     private Button playButton, likeButton, addButton;
     @FXML
@@ -28,49 +31,6 @@ public class SongCellView extends View {
     private ImageView coverImage;
     @FXML
     private ImageView editButton;
-
-    private static final String PLAY_ICON = "/images/play2.png";
-    private static final String PAUSE_ICON = "/images/pause.png";
-    private static final String EDIT_ICON = "/images/edit.png";
-    private static final String ADD_ICON = "/images/add.png";
-
-    /**
-     * Interface defining listener methods for handling user interaction on the SongCellView.
-     */
-    public interface SongCellViewListener {
-        void toggleFavorites();
-
-        void handlePause();
-
-        void handleUnpause();
-
-        void handlePlay();
-
-        void handleAdd();
-
-        void handleLoadedSongChange(Runnable callback);
-
-        void handlePlayingStatusChange(Runnable callback);
-
-        void showContextMenu(double x, double y);
-
-        boolean isLoaded();
-
-        boolean isPlaying();
-
-        boolean isFavorite();
-
-        Image getSongCoverImage();
-
-        String getSongTitle();
-
-        String getSongArtist();
-
-        String getSongGenre();
-
-        Duration getSongDuration();
-    }
-
 
     /**
      * Sets listener.
@@ -212,6 +172,43 @@ public class SongCellView extends View {
      */
     private void setButtonActions() {
         playButton.setOnAction(_ -> listener.handlePlay());
+    }
+
+    /**
+     * Interface defining listener methods for handling user interaction on the SongCellView.
+     */
+    public interface SongCellViewListener {
+        void toggleFavorites();
+
+        void handlePause();
+
+        void handleUnpause();
+
+        void handlePlay();
+
+        void handleAdd();
+
+        void handleLoadedSongChange(Runnable callback);
+
+        void handlePlayingStatusChange(Runnable callback);
+
+        void showContextMenu(double x, double y);
+
+        boolean isLoaded();
+
+        boolean isPlaying();
+
+        boolean isFavorite();
+
+        Image getSongCoverImage();
+
+        String getSongTitle();
+
+        String getSongArtist();
+
+        String getSongGenre();
+
+        Duration getSongDuration();
     }
 
 }

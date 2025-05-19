@@ -26,12 +26,12 @@ import java.util.function.Function;
  */
 public class EditMetadataView extends View {
 
+    private final Set<String> currentTags;
     private EditMetadataViewListener listener;
     private Stage stage;
-    
     @FXML
     private TextField titleField, artistField, albumField, genreField, tagInputField,
-        artistAutoCompletion, albumAutoCompletion, tagAutoCompletion;
+            artistAutoCompletion, albumAutoCompletion, tagAutoCompletion;
     @FXML
     private Label titleLabel, artistLabel, genreLabel;
     @FXML
@@ -41,30 +41,9 @@ public class EditMetadataView extends View {
     @FXML
     private FlowPane tagFlowPane;
 
-    private final Set<String> currentTags;
-
     public EditMetadataView() {
         super();
         currentTags = new HashSet<>();
-    }
-
-    /**
-     * Listener interface for handling events in the EditMetadataView.
-     * Implement this interface to provide auto-completion suggestions and actions for cover selection,
-     * saving metadata, and canceling the edit operation.
-     */
-    public interface EditMetadataViewListener {
-        void handleCancel();
-
-        void handleCoverChanged(File coverImageFile);
-
-        void handleSaveMetadata(String title, String artist, String album, String genre, Set<String> userTags);
-
-        Optional<String> getArtistAutoCompletion(String input);
-
-        Optional<String> getTagAutoCompletion(String input);
-
-        Optional<String> getAlbumAutoCompletion(String input);
     }
 
     /**
@@ -85,21 +64,21 @@ public class EditMetadataView extends View {
         initStage();
     }
 
-    private void initStage(){
+    private void initStage() {
         stage = new Stage();
         stage.setTitle(LanguageService.getInstance().get("button.edit_metadata"));
         stage.setScene(scene);
         stage.show();
     }
 
-    public void close(){
+    public void close() {
         stage.close();
     }
 
     /**
      * Initializes the auto-completion fields for artist and tag input.
      */
-    private void initAutoCompletionFields(){
+    private void initAutoCompletionFields() {
         initArtistAutoCompletion();
         initAlbumAutoCompletion();
         initTagAutoCompletion();
@@ -108,8 +87,8 @@ public class EditMetadataView extends View {
     /**
      * Initializes the auto-completion functionality for a given text field.
      *
-     * @param input              The text field to which auto-completion is applied.
-     * @param autoCompletion     The text field that displays the suggested completion.
+     * @param input                  The text field to which auto-completion is applied.
+     * @param autoCompletion         The text field that displays the suggested completion.
      * @param getSuggestedCompletion A function that provides the suggested completion based on the current input.
      */
     private void initAutoCompletion(TextField input, TextField autoCompletion, Function<String, Optional<String>> getSuggestedCompletion) {
@@ -285,5 +264,24 @@ public class EditMetadataView extends View {
     private void handleChooseCover() {
         File file = promptUserForCoverFile();
         listener.handleCoverChanged(file);
+    }
+
+    /**
+     * Listener interface for handling events in the EditMetadataView.
+     * Implement this interface to provide auto-completion suggestions and actions for cover selection,
+     * saving metadata, and canceling the edit operation.
+     */
+    public interface EditMetadataViewListener {
+        void handleCancel();
+
+        void handleCoverChanged(File coverImageFile);
+
+        void handleSaveMetadata(String title, String artist, String album, String genre, Set<String> userTags);
+
+        Optional<String> getArtistAutoCompletion(String input);
+
+        Optional<String> getTagAutoCompletion(String input);
+
+        Optional<String> getAlbumAutoCompletion(String input);
     }
 }

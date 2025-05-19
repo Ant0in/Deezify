@@ -22,28 +22,11 @@ public class EqualizerView extends View {
 
     private EqualizerViewListener listener;
     private Stage stage;
-    
+
     @FXML
     private Button okButton, cancelButton;
     @FXML
     private HBox slidersContainer;
-
-    /**
-     * Listener interface for handling events and retrieving configuration data for the equalizer.
-     * Implement this interface to provide the necessary actions and configuration for each equalizer band.
-     */
-    public interface EqualizerViewListener {
-        void handleClose();
-
-        void handleCancel();
-
-        double getMaxGainDB();
-
-        double getMinGainDB();
-
-        double getEqualizerBandGain(EqualizerBandFrequency frequency);
-    }
-
 
     /**
      * Sets listener.
@@ -53,7 +36,6 @@ public class EqualizerView extends View {
     public void setListener(EqualizerViewListener newListener) {
         listener = newListener;
     }
-    
 
     @Override
     public void init() {
@@ -77,7 +59,7 @@ public class EqualizerView extends View {
         stage.show();
     }
 
-    public void close(){
+    public void close() {
         stage.close();
     }
 
@@ -226,6 +208,22 @@ public class EqualizerView extends View {
                 }
             }
         }
+    }
+
+    /**
+     * Listener interface for handling events and retrieving configuration data for the equalizer.
+     * Implement this interface to provide the necessary actions and configuration for each equalizer band.
+     */
+    public interface EqualizerViewListener {
+        void handleClose();
+
+        void handleCancel();
+
+        double getMaxGainDB();
+
+        double getMinGainDB();
+
+        double getEqualizerBandGain(EqualizerBandFrequency frequency);
     }
 
 }

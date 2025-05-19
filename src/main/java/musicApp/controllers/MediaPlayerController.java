@@ -29,10 +29,10 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     /**
      * Instantiates a new Media player controller.
      *
-     * @param controller the player controller
-     * @param balance the balance
+     * @param controller        the player controller
+     * @param balance           the balance
      * @param crossfadeDuration the crossfade duration
-     * @param equalizerBands the equalizer bands
+     * @param equalizerBands    the equalizer bands
      */
     public MediaPlayerController(PlayerController controller, double balance, double crossfadeDuration, List<Double> equalizerBands) {
         super(new MediaPlayerView());
@@ -77,7 +77,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The current time of the song.
      */
     public Duration getCurrentTime() {
-        return new Duration(audioPlayerController.getCurrentTime().toMillis()) ;
+        return new Duration(audioPlayerController.getCurrentTime().toMillis());
     }
 
     /**
@@ -86,7 +86,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      * @return The total duration of the song.
      */
     public Duration getTotalDuration() {
-        return new Duration(audioPlayerController.getTotalDuration().toMillis()) ;
+        return new Duration(audioPlayerController.getTotalDuration().toMillis());
     }
 
     /**
@@ -136,7 +136,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
 
 
     public void handleNotFoundImage(String errorMessage) {
-        alertService.showAlert("MediaPlayerController : " +errorMessage, Alert.AlertType.ERROR);
+        alertService.showAlert("MediaPlayerController : " + errorMessage, Alert.AlertType.ERROR);
     }
 
     /**
@@ -226,6 +226,10 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
         miniPlayerController.loadSong(song);
     }
 
+    public List<Double> getEqualizerBands() {
+        return audioPlayerController.getEqualizerBandsGain();
+    }
+
     /**
      * Set the equalizer bands.
      *
@@ -234,10 +238,6 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
      */
     public void setEqualizerBands(List<Double> equalizerBandsGain) throws EqualizerGainException {
         audioPlayerController.updateEqualizerBandsGain(equalizerBandsGain);
-    }
-
-    public List<Double> getEqualizerBands() {
-        return audioPlayerController.getEqualizerBandsGain();
     }
 
     public void toggleLyrics(boolean show) {
@@ -251,7 +251,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
     public void handleLaunchDjMode() {
         try {
             djPlayerController.play(getLoadedSong());
-        }catch(BadSongException e){
+        } catch (BadSongException e) {
             alertService.showAlert(e.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -291,7 +291,7 @@ public class MediaPlayerController extends ViewController<MediaPlayerView>
 
     public void handleLoadedSongStatusChange(Consumer<Boolean> callback) {
         getCurrentSongProperty().addListener((_, _, _) ->
-                callback.accept(getLoadedSong()!=null));
+                callback.accept(getLoadedSong() != null));
     }
 
 }

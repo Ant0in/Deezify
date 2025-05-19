@@ -17,7 +17,7 @@ public abstract class SongContainerController<V extends SongContainerView>
         extends ViewController<V>
         implements SongContainerView.SongContainerViewListener {
 
-    
+
     protected PlayerController playerController;
 
     protected Library library;

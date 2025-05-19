@@ -25,9 +25,10 @@ public class UserProfile {
 
     /**
      * Contstructor of the UserProfile class.
-     * @param _username username of the userProfile.
+     *
+     * @param _username        username of the userProfile.
      * @param _userPicturePath path to the profile picture of the userProfile.
-     * @param _userMusicPath path to the music folder of the userProfile.
+     * @param _userMusicPath   path to the music folder of the userProfile.
      */
     public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, String _language, double _balance, double _crossfadeDuration) {
         username = _username;
@@ -42,13 +43,14 @@ public class UserProfile {
 
     /**
      * Constructor of the UserProfile class.
-     * @param _username username of the userProfile.
-     * @param _userPicturePath path to the profile picture of the userProfile.
-     * @param _userMusicPath path to the music folder of the userProfile.
-     * @param _userPlaylistPath path to the playlist folder of the userProfile.
-     * @param _balance music balance of the userProfile.
+     *
+     * @param _username          username of the userProfile.
+     * @param _userPicturePath   path to the profile picture of the userProfile.
+     * @param _userMusicPath     path to the music folder of the userProfile.
+     * @param _userPlaylistPath  path to the playlist folder of the userProfile.
+     * @param _balance           music balance of the userProfile.
      * @param _crossfadeDuration crossfade duration of the userProfile.
-     * @param _equalizer equalizer of the userProfile.
+     * @param _equalizer         equalizer of the userProfile.
      */
     public UserProfile(String _username, Path _userPicturePath, Path _userMusicPath, String _language, Path _userPlaylistPath, double _balance, double _crossfadeDuration, Equalizer _equalizer) {
         username = _username;
@@ -60,17 +62,10 @@ public class UserProfile {
         equalizer = _equalizer;
         language = _language;
     }
-    
-    /**
-     * Set the username of the userProfile.
-     * @param newUsername new username of the userProfile.
-     */
-    public void setUsername(String newUsername) {
-        username = newUsername;
-    }
 
     /**
      * Get the username of the userProfile.
+     *
      * @return The username of the userProfile.
      */
     public String getUsername() {
@@ -78,15 +73,17 @@ public class UserProfile {
     }
 
     /**
-     * Set the userPicturePath of the userProfile.
-     * @param newUserPicturePath new userPicturePath of the userProfile.
+     * Set the username of the userProfile.
+     *
+     * @param newUsername new username of the userProfile.
      */
-    public void setUserPicturePath(Path newUserPicturePath) {
-        userPicturePath = newUserPicturePath;
+    public void setUsername(String newUsername) {
+        username = newUsername;
     }
 
     /**
      * Get the userPicturePath of the userProfile.
+     *
      * @return The userPicturePath of the userProfile.
      */
     public Path getUserPicturePath() {
@@ -94,7 +91,17 @@ public class UserProfile {
     }
 
     /**
+     * Set the userPicturePath of the userProfile.
+     *
+     * @param newUserPicturePath new userPicturePath of the userProfile.
+     */
+    public void setUserPicturePath(Path newUserPicturePath) {
+        userPicturePath = newUserPicturePath;
+    }
+
+    /**
      * Get the balance of the userProfile.
+     *
      * @return The balance of the userProfile.
      */
     public double getBalance() {
@@ -103,6 +110,7 @@ public class UserProfile {
 
     /**
      * Set the balance of the userProfile.
+     *
      * @param newBalance new balance of the userProfile.
      */
     public void setBalance(double newBalance) {
@@ -111,6 +119,7 @@ public class UserProfile {
 
     /**
      * Get the userMusicPath of the userProfile.
+     *
      * @return String of the userMusicPath of the userProfile.
      */
     public String getUserMusicPathToString() {
@@ -119,6 +128,7 @@ public class UserProfile {
 
     /**
      * Get the userMusicPath of the userProfile.
+     *
      * @return The userMusicPath of the userProfile.
      */
     public Path getUserMusicPath() {
@@ -127,6 +137,7 @@ public class UserProfile {
 
     /**
      * Set the userMusicPath of the userProfile.
+     *
      * @param newUserMusicPath new userMusicPath of the userProfile.
      */
     public void setUserMusicPath(Path newUserMusicPath) {
@@ -135,6 +146,7 @@ public class UserProfile {
 
     /**
      * Get the equalizer of the userProfile.
+     *
      * @return The equalizer of the userProfile.
      */
     public Equalizer getEqualizer() {
@@ -143,6 +155,7 @@ public class UserProfile {
 
     /**
      * Set the equalizer of the userProfile.
+     *
      * @param newEqualizer new equalizer of the userProfile.
      */
     public void setEqualizer(Equalizer newEqualizer) {
@@ -151,6 +164,7 @@ public class UserProfile {
 
     /**
      * Get the crossfade duration of the userProfile.
+     *
      * @return The crossfade duration of the userProfile.
      */
     public double getCrossfadeDuration() {
@@ -159,6 +173,7 @@ public class UserProfile {
 
     /**
      * Set the crossfade duration of the userProfile.
+     *
      * @param newCrossfadeDuration new crossfade duration of the userProfile.
      */
     public void setCrossfadeDuration(double newCrossfadeDuration) {
@@ -167,6 +182,7 @@ public class UserProfile {
 
     /**
      * Get the equalizer bands of the settings.
+     *
      * @return The equalizer bands.
      */
     public List<Double> getEqualizerBands() {
@@ -175,15 +191,20 @@ public class UserProfile {
 
     /**
      * Get the userPlaylistPath of the userProfile.
+     *
      * @return The userPlaylistPath of the userProfile.
      */
     public Path getUserPlaylistPath() {
         return userPlaylistPath;
     }
 
-    public String getLanguage() { return language; }
+    public String getLanguage() {
+        return language;
+    }
 
-    public void setLanguage(String newLanguage) { language = newLanguage; }
+    public void setLanguage(String newLanguage) {
+        language = newLanguage;
+    }
 
     /**
      * To string method for the UserProfile class.
@@ -205,6 +226,7 @@ public class UserProfile {
 
     /**
      * Get the userPlaylistPath as a string.
+     *
      * @return The userPlaylistPath as a string.
      */
     public String getUserPicturePathToString() {
@@ -213,6 +235,7 @@ public class UserProfile {
 
     /**
      * Equals method for the UserProfile class.
+     *
      * @param obj The object to compare to.
      */
     @Override
@@ -231,6 +254,7 @@ public class UserProfile {
     /**
      * Check if two paths are equal.
      * Null and "" are considered equal.
+     *
      * @param p1 path 1
      * @param p2 path 2
      * @return true if the paths are equal, false otherwise

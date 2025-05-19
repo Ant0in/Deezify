@@ -16,7 +16,7 @@ import java.util.List;
  * It allows users to create, edit, and delete playlists, as well as manage their contents.
  */
 public class PlaylistNavigatorView extends View {
-    
+
     private PlaylistNavigatorViewListener listener;
 
     @FXML
@@ -24,20 +24,7 @@ public class PlaylistNavigatorView extends View {
 
     @FXML
     private Button createPlaylist;
-    
-    /**
-     * Listener interface for handling events in the PlaylistNavigatorView.
-     * Implement this interface to define behavior for opening dialogs, setting the selected playlist,
-     * displaying a context menu, and providing the controller.
-     */
-    public interface PlaylistNavigatorViewListener {
-        void handleCreatePlaylist();
 
-        void setSelectedLibrary(Library library);
-
-        void handleShowContextMenu(double x, double y, Library library);
-    }
-    
     /**
      * Sets listener.
      *
@@ -46,7 +33,6 @@ public class PlaylistNavigatorView extends View {
     public void setListener(PlaylistNavigatorViewListener newListener) {
         listener = newListener;
     }
-
 
     /**
      * Initializes the PlaylistNavigatorView.
@@ -112,5 +98,18 @@ public class PlaylistNavigatorView extends View {
 
     private Library getSelectedPlaylist() {
         return listView.getSelectionModel().getSelectedItem();
+    }
+
+    /**
+     * Listener interface for handling events in the PlaylistNavigatorView.
+     * Implement this interface to define behavior for opening dialogs, setting the selected playlist,
+     * displaying a context menu, and providing the controller.
+     */
+    public interface PlaylistNavigatorViewListener {
+        void handleCreatePlaylist();
+
+        void setSelectedLibrary(Library library);
+
+        void handleShowContextMenu(double x, double y, Library library);
     }
 }

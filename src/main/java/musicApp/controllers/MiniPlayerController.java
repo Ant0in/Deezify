@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 /**
  * Controller managing the MiniPlayerView and processing audio spectrum data received on `spectrumDataUpdate`
  */
@@ -59,7 +60,7 @@ public class MiniPlayerController extends ViewController<MiniPlayerView> impleme
         Path videoPath = null;
 
         byte[] videoBytes = song.getMetadata().getVideoCover();
-        if ( videoBytes != null && videoBytes.length > 0 ) {
+        if (videoBytes != null && videoBytes.length > 0) {
             VideoService s = new VideoService();
             try {
                 videoPath = s.tempFileFromBytes(videoBytes).toPath();
@@ -68,7 +69,7 @@ public class MiniPlayerController extends ViewController<MiniPlayerView> impleme
             }
         }
 
-        view.updateSongProperties(song.getTitle(), song.getCoverImage(), videoPath );
+        view.updateSongProperties(song.getTitle(), song.getCoverImage(), videoPath);
     }
 
     /**

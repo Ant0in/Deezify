@@ -15,7 +15,6 @@ public class PlaylistCellController extends ViewController<PlaylistCellView> imp
 
     /**
      * Instantiates a new Playlist cell controller.
-     *
      */
     public PlaylistCellController() {
         super(new PlaylistCellView());
@@ -40,9 +39,9 @@ public class PlaylistCellController extends ViewController<PlaylistCellView> imp
     }
 
     /**
-     * Get the library of the cell.
+     * Get the library size.
      *
-     * @return the library
+     * @return the library size
      */
     public int getLibrarySize() {
         return library.size();

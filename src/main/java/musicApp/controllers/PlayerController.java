@@ -41,8 +41,8 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * Constructor
      *
      * @param _metaController the meta controller
-     * @param primaryStage   the primary stage
-     * @param settingsDTO      the settings
+     * @param primaryStage    the primary stage
+     * @param settingsDTO     the settings
      */
 
     public PlayerController(MetaController _metaController, Stage primaryStage, SettingsDTO settingsDTO) {
@@ -57,7 +57,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
      * Initializes all sub-controllers that are part of the player controller.
      */
     private void initSubControllers(SettingsDTO settingsDTO) {
-        playlistNavigatorController = new PlaylistNavigatorController(this, settingsDTO.getMusicFolder() , settingsDTO.getUserMusicFolder());
+        playlistNavigatorController = new PlaylistNavigatorController(this, settingsDTO.getMusicFolder(), settingsDTO.getUserMusicFolder());
         libraryController = new LibraryController(this, getMainLibrary());
         queueController = new QueueController(this);
         mediaPlayerController = new MediaPlayerController(this, settingsDTO.getBalance(), settingsDTO.getCrossfadeDuration(), settingsDTO.getEqualizerBands());
@@ -67,7 +67,6 @@ public class PlayerController extends ViewController<PlayerView> implements Play
 
     /**
      * Show the player view.
-     *
      */
     public void show() {
         view.show();
@@ -337,6 +336,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
 
     /**
      * Get the main library.
+     *
      * @return the main library
      */
     public Library getMainLibrary() {
@@ -420,7 +420,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
 
     /**
      * Returns whether the given library is the main library.
-
+     *
      * @param library The library to check.
      * @return True if the library is the main library, false otherwise.
      */
@@ -430,6 +430,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
 
     /**
      * Get the next song supplier.
+     *
      * @return The next song supplier.
      */
     public Supplier<Song> getNextSongSupplier() {
@@ -453,6 +454,7 @@ public class PlayerController extends ViewController<PlayerView> implements Play
 
     /**
      * Get the UserPlaylistPath
+     *
      * @return The path to the user playlist
      */
     public Path getUserPlaylistPath() {

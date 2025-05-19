@@ -53,7 +53,7 @@ public class Library {
         if (contains(song)) {
             throw new IllegalArgumentException(
                     LanguageService.getInstance().get("error.media_already_in_library")
-                            + " (" + getDisplayName() +") : "+ song.toString()
+                            + " (" + getDisplayName() + ") : " + song.toString()
             );
         }
         songList.add(song);
@@ -92,7 +92,9 @@ public class Library {
      *
      * @return The size of the library.
      */
-    public int size() { return songList.size(); }
+    public int size() {
+        return songList.size();
+    }
 
     /**
      * Check if the library is empty.
@@ -155,6 +157,15 @@ public class Library {
         return name;
     }
 
+    /**
+     * Set the name of the library.
+     *
+     * @param newName the new name
+     */
+    public void setName(String newName) {
+        name = newName;
+    }
+
     public String getDisplayName() {
         return switch (name) {
             case "??favorites??" -> LanguageService.getInstance().get("favorites");
@@ -163,15 +174,6 @@ public class Library {
             case "??queue??" -> LanguageService.getInstance().get("queue");
             default -> name;
         };
-    }
-
-    /**
-     * Set the name of the library.
-     *
-     * @param newName the new name
-     */
-    public void setName(String newName) {
-        name = newName;
     }
 
     /**
@@ -210,10 +212,10 @@ public class Library {
             return new Image(Objects.requireNonNull(defaultCover));
         }
     }
-    
+
     /**
      * Get the auto-completion for a song artist.
-     * 
+     *
      * @param input The input string to complete.
      * @return The auto-completion for the song artist.
      */
@@ -233,7 +235,7 @@ public class Library {
 
     /**
      * Get the auto-completion for a song tag.
-     * 
+     *
      * @param input The input string to complete.
      * @return The auto-completion for the song tag.
      */
@@ -243,8 +245,8 @@ public class Library {
 
     /**
      * Get the auto-completion for a string in a list given as argument.
-     * 
-     * @param input The input string to complete.
+     *
+     * @param input     The input string to complete.
      * @param extractor The function to extract the list of strings for the autocompletion.
      * @return The auto-completion for the input string.
      */

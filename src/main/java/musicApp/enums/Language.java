@@ -20,7 +20,6 @@ public enum Language {
     private final String displayName;
 
 
-
     Language(String code, String displayName) {
         this.code = code;
         this.displayName = displayName;
@@ -57,6 +56,15 @@ public enum Language {
     }
 
     /**
+     * Returns a set of all the supported Languages.
+     *
+     * @return A set containing all the Languages enum values.
+     */
+    public static Set<Language> getSupportedLanguages() {
+        return EnumSet.allOf(Language.class); // Dynamically gets all enum values
+    }
+
+    /**
      * Gets the code of the language (ISO 639-1).
      *
      * @return the code
@@ -72,14 +80,5 @@ public enum Language {
      */
     public String getDisplayName() {
         return displayName;
-    }
-
-    /**
-     * Returns a set of all the supported Languages.
-     *
-     * @return A set containing all the Languages enum values.
-     */
-    public static Set<Language> getSupportedLanguages() {
-        return EnumSet.allOf(Language.class); // Dynamically gets all enum values
     }
 }

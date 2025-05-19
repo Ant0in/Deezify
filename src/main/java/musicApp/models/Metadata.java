@@ -165,7 +165,7 @@ public class Metadata {
 
     /**
      * Sets the cover image from a byte array.
-     * 
+     *
      * @param bytes The byte array representing the cover image.
      */
     public void setCoverFromBytes(byte[] bytes) {
@@ -183,10 +183,10 @@ public class Metadata {
     public void loadCoverFromPath(File file) throws Exception {
         if (file != null && file.exists()) {
             // If cover is a video
-            if (file.getPath().endsWith(".mp4")){
+            if (file.getPath().endsWith(".mp4")) {
                 byte[] rawFile = Files.readAllBytes(file.toPath());
                 setVideoCover(rawFile);
-                if ( cover != null ) {
+                if (cover != null) {
                     return;
                 }
             }
@@ -216,7 +216,7 @@ public class Metadata {
 
     /**
      * Get the user tags.
-     * 
+     *
      * @return The user tags associated with the song.
      */
     public ArrayList<String> getUserTags() {
@@ -225,6 +225,7 @@ public class Metadata {
 
     /**
      * Sets the user tags.
+     *
      * @param newUserTags The new user tags to set.
      */
     public void setUserTags(ArrayList<String> newUserTags) {

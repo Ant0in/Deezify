@@ -17,17 +17,10 @@ import java.nio.file.Path;
  */
 public class EditUserProfileController extends ViewController<EditUserProfileView> implements EditUserProfileView.EditUserProfileViewListener {
 
-    private UserProfile userProfile;
     private final boolean isCreation;
-    private EditUserProfileControllerListener listener;
     private final EqualizerController equalizerController;
-
-    /**
-     * The interface Edit userProfile controller listener.
-     */
-    public interface EditUserProfileControllerListener {
-        void usersUpdate();
-    }
+    private UserProfile userProfile;
+    private EditUserProfileControllerListener listener;
 
     /**
      * Create a controller for creating a new userProfile
@@ -39,13 +32,13 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         equalizerController = new EqualizerController(this, new Equalizer());
         view.setListener(this);
         initView("/fxml/EditUserProfile.fxml");
-        init(_listener);        
+        init(_listener);
     }
 
     /**
      * Create a controller for editing an existing userProfile
      *
-     * @param _userProfile   The userProfile to edit
+     * @param _userProfile The userProfile to edit
      */
     public EditUserProfileController(EditUserProfileControllerListener _listener, UserProfile _userProfile) {
         super(new EditUserProfileView());
@@ -54,7 +47,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         equalizerController = new EqualizerController(this, _userProfile.getEqualizer());
         view.setListener(this);
         initView("/fxml/EditUserProfile.fxml");
-        init(_listener);     
+        init(_listener);
     }
 
     /**
@@ -63,8 +56,8 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
     private void init(EditUserProfileControllerListener _listener) {
         if (userProfile != null) {
             view.populateFields(userProfile.getUsername(),
-                                userProfile.getUserPicturePathToString(),
-                                userProfile.getUserMusicPathToString());
+                    userProfile.getUserPicturePathToString(),
+                    userProfile.getUserMusicPathToString());
         }
         listener = _listener;
         view.show();
@@ -107,7 +100,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
                 updateUserProfile(userName, imagePath, musicPath, balance, crossfade, language);
                 userProfileService.updateUserProfile(userProfile, originalUserName);
             }
-    //        setLanguage(Language.fromCode(language));
+            //        setLanguage(Language.fromCode(language));
             listener.usersUpdate();
             handleClose();
         } catch (SettingsFilesException e) {
@@ -115,7 +108,6 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
             throw new RuntimeException(e);
         }
     }
-
 
     /**
      * Validate the inputs for creating or updating a userProfile.
@@ -138,7 +130,8 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
 
     /**
      * Update the existing userProfile with the new values.
-     * @param userName userProfile's name
+     *
+     * @param userName  userProfile's name
      * @param imagePath userProfile's image path
      * @param musicPath userProfile's music path
      */
@@ -151,7 +144,6 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
         userProfile.setCrossfadeDuration(crossfade);
         setLanguage(Language.fromCode(language));
     }
-
 
     /**
      * Handle closing the view.
@@ -222,7 +214,7 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
      *
      * @return The user's preferred language
      */
-    public Language getLanguage () {
+    public Language getLanguage() {
         if (userProfile == null) {
             return Language.DEFAULT;
         }
@@ -231,10 +223,18 @@ public class EditUserProfileController extends ViewController<EditUserProfileVie
 
     /**
      * Set the user's preferred language (saves it and applies it to the UI).
+     *
      * @param language the user's preferred language.
      */
     public void setLanguage(Language language) {
         userProfile.setLanguage(language.getDisplayName());
         LanguageService.getInstance().setLanguage(language);
+    }
+
+    /**
+     * The interface Edit userProfile controller listener.
+     */
+    public interface EditUserProfileControllerListener {
+        void usersUpdate();
     }
 }

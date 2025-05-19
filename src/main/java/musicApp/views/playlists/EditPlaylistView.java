@@ -20,7 +20,7 @@ import java.nio.file.Path;
  * This is a popup window that allows the user to create or edit a playlist.
  */
 public class EditPlaylistView extends View {
-    
+
     private EditPlaylistViewListener listener;
     private Stage stage;
 
@@ -34,19 +34,6 @@ public class EditPlaylistView extends View {
     private ImageView coverImage;
     @FXML
     private VBox popupLayout;
-
-    /**
-     * Listener interface for handling events in the EditPlaylistView.
-     * Implement this interface to manage user actions such as saving a playlist,
-     * checking if the view is in creation mode, retrieving the stage, and closing the view.
-     */
-    public interface EditPlaylistViewListener {
-        void handleSave(String playlistName, Path imagePath);
-
-        void handleClose();
-
-        boolean isCreation();
-    }
 
     /**
      * Sets listener.
@@ -138,5 +125,18 @@ public class EditPlaylistView extends View {
                 as.showExceptionAlert(e);
             }
         }
+    }
+
+    /**
+     * Listener interface for handling events in the EditPlaylistView.
+     * Implement this interface to manage user actions such as saving a playlist,
+     * checking if the view is in creation mode, retrieving the stage, and closing the view.
+     */
+    public interface EditPlaylistViewListener {
+        void handleSave(String playlistName, Path imagePath);
+
+        void handleClose();
+
+        boolean isCreation();
     }
 }

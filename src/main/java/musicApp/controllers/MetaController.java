@@ -18,36 +18,24 @@ import java.nio.file.Path;
 public class MetaController implements EditUserProfileController.EditUserProfileControllerListener {
     private final AlertService alertService;
     private final SettingsService settingsService;
+    private final UserProfileSelectionController userProfileSelectionController;
     private PlayerController playerController;
     private SettingsController settingsController;
-    private final UserProfileSelectionController userProfileSelectionController;
-
-    /**
-     * Enum for the different scenes in the application.
-     * NOTE: settings is not a scene but a pop-up window.
-     */
-    public enum Scenes {
-        MAINWINDOW,
-        SETTINGS,
-        USERSWINDOW
-    }
 
     /**
      * Instantiates a new Meta controller.
-     *
      */
     public MetaController(Stage primaryStage) {
         alertService = new AlertService();
         try {
             settingsService = new SettingsService();
             UserProfileService userProfileService = new UserProfileService();
-            userProfileSelectionController = new UserProfileSelectionController(this,primaryStage, userProfileService.readUserProfiles());
+            userProfileSelectionController = new UserProfileSelectionController(this, primaryStage, userProfileService.readUserProfiles());
         } catch (SettingsFilesException e) {
             alertService.showFatalErrorAlert("Error loading settings", e);
             throw new RuntimeException(e);
         }
     }
-
 
     /**
      * Switches the scene to the specified scene.
@@ -86,6 +74,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
 
     /**
      * Load the player with the specified user profile.
+     *
      * @param userProfile The user profile to load.
      */
     public void loadPlayerWithUser(UserProfile userProfile) {
@@ -102,6 +91,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
 
     /**
      * Get the user playlist path.
+     *
      * @return The user playlist path.
      */
     public Path getUserPlaylistPath() {
@@ -110,6 +100,7 @@ public class MetaController implements EditUserProfileController.EditUserProfile
 
     /**
      * Get the user library path.
+     *
      * @return The user library path.
      */
     public Path getUserMusicFolder() {
@@ -119,7 +110,6 @@ public class MetaController implements EditUserProfileController.EditUserProfile
     public Path getMusicFolder() {
         return settingsController.getMusicFolder();
     }
-
 
     /**
      * Update the users list in the user profile selection controller.
@@ -140,5 +130,15 @@ public class MetaController implements EditUserProfileController.EditUserProfile
             alertService.showFatalErrorAlert("Error loading settings", e);
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Enum for the different scenes in the application.
+     * NOTE: settings is not a scene but a pop-up window.
+     */
+    public enum Scenes {
+        MAINWINDOW,
+        SETTINGS,
+        USERSWINDOW
     }
 }

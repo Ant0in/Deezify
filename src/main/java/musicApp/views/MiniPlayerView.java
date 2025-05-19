@@ -21,40 +21,28 @@ import java.util.List;
 /**
  * View component used to render the audio spectrum visualizer in a separate window (popup)
  */
-public class MiniPlayerView extends View{
+public class MiniPlayerView extends View {
 
+    Boolean isBasicMode;
     private MiniPlayerViewListener listener;
     private Stage stage;
-
     @FXML
     private Label songTitleLabel;
-
     @FXML
     private ImageView coverImage;
-
     @FXML
     private MediaView coverVideo;
     @FXML
     private StackPane coverWrapper;
-
     @FXML
     private Canvas canvas;
     // Flag to track whether the image is clipped or not
     private boolean isClipped;
 
-    Boolean isBasicMode;
-
     public MiniPlayerView() {
         super();
         isClipped = true;
         isBasicMode = false;
-    }
-
-    /**
-     * Listener interface for handling user actions from the controller.
-     */
-    public interface MiniPlayerViewListener {
-        int getBandsNumber();
     }
 
     @Override
@@ -107,7 +95,7 @@ public class MiniPlayerView extends View{
     /**
      * Update song properties.
      *
-     * @param title      the title
+     * @param title         the title
      * @param newCoverImage the cover image
      */
     public void updateSongProperties(String title, @Nullable Image newCoverImage, @Nullable Path videoPath) {
@@ -138,8 +126,6 @@ public class MiniPlayerView extends View{
         }
     }
 
-
-
     /**
      * Toggle clip.
      */
@@ -159,7 +145,7 @@ public class MiniPlayerView extends View{
     /**
      * Draw a frame for the audio spectrum visualizer.
      */
-    private void drawFrame( List<Float> values) {
+    private void drawFrame(List<Float> values) {
         int numBars = listener.getBandsNumber();
         double barWidth = canvas.getWidth() / numBars; // Width of each bar
         double canvasHeight = canvas.getHeight();
@@ -217,6 +203,13 @@ public class MiniPlayerView extends View{
             gc.setLineWidth(3); // Optional: Adjust the width of the lines/bars
             gc.strokeLine(xStart, yStart, xEnd, yEnd); // Draw a line from the center to the outer edge (the bar)
         }
+    }
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface MiniPlayerViewListener {
+        int getBandsNumber();
     }
 
 }

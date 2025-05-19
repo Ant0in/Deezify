@@ -24,19 +24,6 @@ public class SongContextMenuView extends View {
     private MenuItem removeFromPlaylistMenu, editMetadataItem; // Can be Menu or MenuItem
 
     /**
-     * Listener interface used to delegate actions from the view to the controller logic.
-     */
-    public interface SongContextMenuViewListener {
-        void handleEditMetadata();
-
-        void handleRemoveFromPlaylist();
-
-        void populatePlaylistMenuItems(Menu addToMenu, Menu removeFromMenu);
-
-        boolean isShowingMainLibrary();
-    }
-
-    /**
      * Sets listener.
      *
      * @param newListener the listener
@@ -44,7 +31,7 @@ public class SongContextMenuView extends View {
     public void setListener(SongContextMenuViewListener newListener) {
         listener = newListener;
     }
-    
+
     @Override
     public void init() {
         initContextMenu();
@@ -73,7 +60,6 @@ public class SongContextMenuView extends View {
         }
         contextMenu.setOnShowing(e -> updateMenuItems());
     }
-
 
     private void clearPlaylistMenuItems() {
         addToPlaylistMenu.getItems().clear();
@@ -111,5 +97,18 @@ public class SongContextMenuView extends View {
      */
     public void show(Node node, double x, double y) {
         contextMenu.show(node, x, y);
+    }
+
+    /**
+     * Listener interface used to delegate actions from the view to the controller logic.
+     */
+    public interface SongContextMenuViewListener {
+        void handleEditMetadata();
+
+        void handleRemoveFromPlaylist();
+
+        void populatePlaylistMenuItems(Menu addToMenu, Menu removeFromMenu);
+
+        boolean isShowingMainLibrary();
     }
 }

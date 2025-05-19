@@ -68,12 +68,14 @@ public class SettingsController extends ViewController<SettingsView> implements 
      *
      * @param language the language
      */
-    private void setLanguage(Language language) { settings.setCurrentLanguage(language); }
+    private void setLanguage(Language language) {
+        settings.setCurrentLanguage(language);
+    }
 
     /**
      * Handle when the save button is pressed
      *
-     * @param language       the language
+     * @param language    the language
      * @param musicFolder the music folder
      */
     public void handleSave(Language language, Path musicFolder) {
@@ -111,6 +113,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
 
     /**
      * Get the settings DTO.
+     *
      * @return
      */
     public SettingsDTO getSettingsDTO() {
@@ -119,6 +122,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
 
     /**
      * Get the current user playlist path.
+     *
      * @return
      */
     public Path getUserPlaylistPath() {
@@ -128,9 +132,9 @@ public class SettingsController extends ViewController<SettingsView> implements 
     /**
      * Open the edit user profile window.
      */
-    public void editUserProfile(){
+    public void editUserProfile() {
         editUserProfileController = new EditUserProfileController(this, settings.getCurrentUserProfile());
-        
+
     }
 
     public void usersUpdate() {
@@ -150,5 +154,7 @@ public class SettingsController extends ViewController<SettingsView> implements 
      *
      * @return The default language.
      */
-    public Language getDefaultLanguage() { return metaController.getDefaultLanguage(); }
+    public Language getDefaultLanguage() {
+        return metaController.getDefaultLanguage();
+    }
 }

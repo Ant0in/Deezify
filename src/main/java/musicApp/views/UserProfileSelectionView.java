@@ -17,9 +17,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class UserProfileSelectionView extends View {
-    private UserProfileSelectionViewListener listener;
     private final Stage primaryStage;
-
+    private UserProfileSelectionViewListener listener;
     @FXML
     private FlowPane userAccounts;
     @FXML
@@ -31,6 +30,7 @@ public class UserProfileSelectionView extends View {
 
     /**
      * * The constructor for the UserProfileSelectionView class.
+     *
      * @param _primaryStage
      */
     public UserProfileSelectionView(Stage _primaryStage) {
@@ -43,17 +43,6 @@ public class UserProfileSelectionView extends View {
      */
     public void close() {
         primaryStage.close();
-    }
-    
-    /**
-     * The listener interface for receiving user profile selection events.
-     * Implement this interface to handle user actions 
-     */
-    public interface UserProfileSelectionViewListener {
-        void onAddProfileClicked();
-        List<UserProfile> getUsersList();
-        void onUserSelected(UserProfile userProfile);
-        void onDeleteUserProfile(UserProfile userProfile);
     }
 
     /**
@@ -141,6 +130,7 @@ public class UserProfileSelectionView extends View {
 
     /**
      * This method sets the listener for the view.
+     *
      * @param newListener The new listener to set
      */
     public void setListener(UserProfileSelectionViewListener newListener) {
@@ -149,7 +139,6 @@ public class UserProfileSelectionView extends View {
 
     /**
      * Show the stage.
-     *
      */
     public void show() {
         primaryStage.show();
@@ -172,5 +161,19 @@ public class UserProfileSelectionView extends View {
         titleLabel.setText(languageService.get("user_profile.select"));
         addProfileButton.setText(languageService.get("user_profile.add"));
         toggleDeleteProfilesButton.setText(languageService.get("user_profile.manage"));
+    }
+
+    /**
+     * The listener interface for receiving user profile selection events.
+     * Implement this interface to handle user actions
+     */
+    public interface UserProfileSelectionViewListener {
+        void onAddProfileClicked();
+
+        List<UserProfile> getUsersList();
+
+        void onUserSelected(UserProfile userProfile);
+
+        void onDeleteUserProfile(UserProfile userProfile);
     }
 }

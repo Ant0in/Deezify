@@ -27,20 +27,6 @@ public class LibraryView extends SongContainerView {
     private Button addSongButton;
 
     /**
-     * Listener interface used to delegate actions from the view to the controller logic.
-     */
-    public interface LibraryViewListener {
-        void handleAddSong();
-
-        void handleSelectionChange();
-
-        List<Song> searchLibrary(String query);
-
-        LibraryController getController();
-
-    }
-
-    /**
      * Sets listener.
      *
      * @param newListener the listener
@@ -48,7 +34,6 @@ public class LibraryView extends SongContainerView {
     public void setListener(LibraryViewListener newListener) {
         listener = newListener;
     }
-
 
     @Override
     public void init() {
@@ -74,8 +59,6 @@ public class LibraryView extends SongContainerView {
         });
     }
 
-
-
     /**
      * Initialize the buttons in the view.
      */
@@ -90,7 +73,6 @@ public class LibraryView extends SongContainerView {
     protected void refreshTranslation() {
         songInput.setPromptText(LanguageService.getInstance().get("search"));
     }
-
 
     /**
      * Initialize the playlist view.
@@ -117,6 +99,20 @@ public class LibraryView extends SongContainerView {
 
     public void refreshUI() {
         updateListView();
+    }
+
+    /**
+     * Listener interface used to delegate actions from the view to the controller logic.
+     */
+    public interface LibraryViewListener {
+        void handleAddSong();
+
+        void handleSelectionChange();
+
+        List<Song> searchLibrary(String query);
+
+        LibraryController getController();
+
     }
 
 }

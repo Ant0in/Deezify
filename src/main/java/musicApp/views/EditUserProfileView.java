@@ -22,7 +22,7 @@ import java.util.Objects;
  * This is a popup window that allows the user to create or edit a playlist.
  */
 public class EditUserProfileView extends View {
-    
+
     private EditUserProfileViewListener listener;
     private Stage stage;
 
@@ -31,7 +31,7 @@ public class EditUserProfileView extends View {
     @FXML
     private TextField nameField;
     @FXML
-    private Button chooseUserImageButton,chooseMusicFolderButton, actionButton, cancelButton, equalizerButton;
+    private Button chooseUserImageButton, chooseMusicFolderButton, actionButton, cancelButton, equalizerButton;
     @FXML
     private ImageView userImage;
     @FXML
@@ -47,27 +47,6 @@ public class EditUserProfileView extends View {
         } else {
             initStage();
         }
-    }
-
-    /**
-     * Listener interface for handling events in the EditPlaylistView.
-     * Implement this interface to manage user actions such as saving a playlist,
-     * checking if the view is in creation mode, retrieving the stage, and closing the view.
-     */
-    public interface EditUserProfileViewListener {
-        void handleSave(String userName,double balance, double crossfade, Path imagePath, Path musicPath, String Language);
-
-        void handleCancel();
-
-        boolean isCreation();
-        
-        double getBalance();
-
-        double getCrossfadeDuration();
-
-        Language getLanguage();
-
-        void handleOpenEqualizer();
     }
 
     /**
@@ -112,7 +91,7 @@ public class EditUserProfileView extends View {
      */
     private void initSlider() {
         balanceSlider.setValue(listener.getBalance());
-        balanceLabel.setText(String.format("%.2f",listener.getBalance()));
+        balanceLabel.setText(String.format("%.2f", listener.getBalance()));
         balanceSlider.valueProperty().addListener((_, _, newVal)
                 -> balanceLabel.setText(String.format("%.2f", newVal.doubleValue())));
 
@@ -130,15 +109,15 @@ public class EditUserProfileView extends View {
     /**
      * Populate the fields with the provided user name, image path, and music path.
      *
-     * @param userName   The user name to set in the text field.
-     * @param imagePath  The path to the user image.
-     * @param musicPath  The path to the music folder.
+     * @param userName  The user name to set in the text field.
+     * @param imagePath The path to the user image.
+     * @param musicPath The path to the music folder.
      */
     public void populateFields(String userName, String imagePath, String musicPath) {
         nameField.setText(userName);
         userImage.setImage(new Image((imagePath == null || imagePath.isBlank()) ?
-                            Objects.requireNonNull(getClass().getResource("/images/default_account.png")).toExternalForm() :
-                            Path.of(imagePath).toUri().toString()));
+                Objects.requireNonNull(getClass().getResource("/images/default_account.png")).toExternalForm() :
+                Path.of(imagePath).toUri().toString()));
         userImageLabel.setText(imagePath);
         chosenMusicFolderLabel.setText(musicPath);
     }
@@ -188,9 +167,9 @@ public class EditUserProfileView extends View {
         chooseUserImageButton.setOnAction(_ -> handleChooseImage());
         chooseMusicFolderButton.setOnAction(_ -> handleBrowseMusicFolder());
 
-        actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(),balanceSlider.getValue(), crossfadeSlider.getValue(),
+        actionButton.setOnAction(_ -> listener.handleSave(nameField.getText(), balanceSlider.getValue(), crossfadeSlider.getValue(),
                 !(userImageLabel.getText() == null) ? Path.of(userImageLabel.getText()) : null
-                , !(chosenMusicFolderLabel.getText() ==null ) ?Path.of(chosenMusicFolderLabel.getText()) : null, languageChoice.getValue()));
+                , !(chosenMusicFolderLabel.getText() == null) ? Path.of(chosenMusicFolderLabel.getText()) : null, languageChoice.getValue()));
 
         cancelButton.setOnAction(_ -> listener.handleCancel());
         equalizerButton.setOnAction(_ -> listener.handleOpenEqualizer());
@@ -242,5 +221,26 @@ public class EditUserProfileView extends View {
         String seconds = LanguageService.getInstance().get("settings.seconds");
         return String.format("%.1f %s", crossfadeDuration, seconds);
 
+    }
+
+    /**
+     * Listener interface for handling events in the EditPlaylistView.
+     * Implement this interface to manage user actions such as saving a playlist,
+     * checking if the view is in creation mode, retrieving the stage, and closing the view.
+     */
+    public interface EditUserProfileViewListener {
+        void handleSave(String userName, double balance, double crossfade, Path imagePath, Path musicPath, String Language);
+
+        void handleCancel();
+
+        boolean isCreation();
+
+        double getBalance();
+
+        double getCrossfadeDuration();
+
+        Language getLanguage();
+
+        void handleOpenEqualizer();
     }
 }

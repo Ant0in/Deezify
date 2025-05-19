@@ -92,7 +92,7 @@ public class KaraokeController extends ViewController<LyricsView> implements Lyr
         boolean overwriteTxt;
 
         if (txtExists) {
-            Optional<Boolean> userChoice =view.showOverwriteTxtConfirmation();
+            Optional<Boolean> userChoice = view.showOverwriteTxtConfirmation();
             if (userChoice.isEmpty()) return Optional.empty();
             overwriteTxt = userChoice.get();
         } else {

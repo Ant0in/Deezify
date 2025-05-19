@@ -14,7 +14,7 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
     /**
      * Writes the UserProfile object to JSON format.
      *
-     * @param out      The JsonWriter to write to.
+     * @param out         The JsonWriter to write to.
      * @param userProfile The UserProfile object to write.
      * @throws IOException If writing fails.
      */
@@ -89,7 +89,7 @@ public class UserProfileTypeAdapter extends TypeAdapter<UserProfile> {
                     String rawPath = in.nextString();
                     userPicturePath = (rawPath != null && !rawPath.isBlank())
                             ? Paths.get(rawPath)
-                            : null; 
+                            : null;
                 }
                 case "balance" -> balance = in.nextDouble();
                 case "equalizerBands" -> {

@@ -47,7 +47,7 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
     public List<String> getCurrentSongLyrics() {
         Song song = playerController.getCurrentlyLoadedSong();
         if (song == null) {
-            return List.of("No song loaded."); 
+            return List.of("No song loaded.");
         }
         return song.getLyrics();
     }
@@ -70,14 +70,14 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
             alertService.showExceptionAlert(e);
         }
         view.updateLyrics();
-}
+    }
 
-    public void handleLoadedSongChange(Runnable callback){
+    public void handleLoadedSongChange(Runnable callback) {
         playerController.getCurrentlyLoadedSongStringProperty().
                 addListener((_, _, _) -> callback.run());
     }
 
-    public void handleShowLyrics(){
+    public void handleShowLyrics() {
         view.updateLyrics();
         view.showLyrics();
     }
@@ -91,10 +91,10 @@ public class LyricsController extends ViewController<LyricsView> implements Lyri
         if (currentLyricsList != null && !currentLyricsList.isEmpty()) {
             initialText = String.join("\n", currentLyricsList);
         }
-        
+
         Optional<String> result = view.getEditedLyrics(initialText);
         result.ifPresent(newLyrics -> {
-            updateCurrentSongLyrics(newLyrics); 
+            updateCurrentSongLyrics(newLyrics);
             view.updateLyrics();
         });
     }

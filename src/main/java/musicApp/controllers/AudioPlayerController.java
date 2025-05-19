@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 public class AudioPlayerController {
 
     private final AudioPlayer audioPlayer;
-    private MediaPlayer mediaPlayer;
     private final AudioSpectrumListener audioSpectrumListener;
+    private MediaPlayer mediaPlayer;
     private MediaPlayer transitionPlayer;
 
     public AudioPlayerController(AudioSpectrumListener _audioSpectrumListener) {
@@ -86,7 +86,7 @@ public class AudioPlayerController {
      */
     private void transitionHandler(Duration progress) {
         Duration totalDuration = mediaPlayer.getTotalDuration();
-        if (totalDuration == null) return ;
+        if (totalDuration == null) return;
         double remainingTime = totalDuration.toSeconds() - progress.toSeconds();
         if (remainingTime <= audioPlayer.getCrossfadeDuration() && !audioPlayer.isTransitioning()) {
             audioPlayer.setTransitioning(true);
@@ -114,7 +114,7 @@ public class AudioPlayerController {
      *
      * @param _nextSongSupplier The next song supplier, which is a function that returns a Song.
      */
-    public void setNextSongSupplier(Supplier<Song> _nextSongSupplier)  {
+    public void setNextSongSupplier(Supplier<Song> _nextSongSupplier) {
         audioPlayer.setNextSongSupplier(_nextSongSupplier);
     }
 
@@ -153,6 +153,7 @@ public class AudioPlayerController {
 
     /**
      * Update the equalizer bands gain.
+     *
      * @param newEqualizerBandsGain The new equalizer bands gain.
      */
     public void updateEqualizerBandsGain(List<Double> newEqualizerBandsGain) throws EqualizerGainException {
@@ -200,7 +201,9 @@ public class AudioPlayerController {
      *
      * @return The current time of the song.
      */
-    public Duration getCurrentTime() { return (mediaPlayer != null) ? mediaPlayer.getCurrentTime() : Duration.ZERO; }
+    public Duration getCurrentTime() {
+        return (mediaPlayer != null) ? mediaPlayer.getCurrentTime() : Duration.ZERO;
+    }
 
     /**
      * Get the total duration of the song.

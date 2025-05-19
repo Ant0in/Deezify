@@ -20,8 +20,8 @@ import java.util.Optional;
 public class SongCellController extends ViewController<SongCellView> implements SongCellView.SongCellViewListener, SongCell.SongCellListener {
 
     private final LibraryController libraryController;
-    private Song song;
     private final SongContextMenuController contextMenuController;
+    private Song song;
 
 
     /**
@@ -47,9 +47,9 @@ public class SongCellController extends ViewController<SongCellView> implements 
         if (!newSong.equals(song)) {
             song = newSong;
         }
-        if (isSuggestion()){
+        if (isSuggestion()) {
             view.updateSuggestion();
-        }else{
+        } else {
             view.update();
         }
     }
@@ -64,7 +64,7 @@ public class SongCellController extends ViewController<SongCellView> implements 
     }
 
     public void showContextMenu(double x, double y) {
-        contextMenuController.showAt(x,y);
+        contextMenuController.showAt(x, y);
     }
 
     /**
@@ -267,11 +267,11 @@ public class SongCellController extends ViewController<SongCellView> implements 
         return libraryController.getTagAutoCompletion(input);
     }
 
-    private boolean isSuggestion(){
+    private boolean isSuggestion() {
         return !libraryController.containsSong(song);
     }
 
-    public void handleAdd(){
+    public void handleAdd() {
         libraryController.addSongToPlaylist(song);
     }
 }

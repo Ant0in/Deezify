@@ -23,16 +23,6 @@ public class PlaylistCell extends ListCell<Library> {
     }
 
     /**
-     * The listener interface for handling playlist cell events.
-     * Implement this interface to provide the cell layout and update functionality.
-     */
-    public interface PlaylistCellListener {
-        Pane getRoot();
-
-        void update(Library library);
-    }
-
-    /**
      * Initializes the cell with the given library.
      *
      * @param library The library to be displayed in the cell.
@@ -48,5 +38,15 @@ public class PlaylistCell extends ListCell<Library> {
             setGraphic(listener.getRoot());
             listener.update(library);
         }
+    }
+
+    /**
+     * The listener interface for handling playlist cell events.
+     * Implement this interface to provide the cell layout and update functionality.
+     */
+    public interface PlaylistCellListener {
+        Pane getRoot();
+
+        void update(Library library);
     }
 }

@@ -10,22 +10,11 @@ import java.util.List;
 /**
  * The  PlayList view.
  */
-public abstract class SongContainerView extends View{
+public abstract class SongContainerView extends View {
 
-    private SongContainerViewListener listener;
-    
     @FXML
     protected ListView<Song> listView;
-
-
-    /**
-     * Listener interface for handling user actions from the controller.
-     */
-    public interface SongContainerViewListener {
-        void handlePlaySong();
-
-        List<Song> toList();
-    }
+    private SongContainerViewListener listener;
 
     /**
      * Sets listener.
@@ -78,6 +67,15 @@ public abstract class SongContainerView extends View{
      */
     public BooleanBinding isSelected() {
         return listView.getSelectionModel().selectedItemProperty().isNotNull();
+    }
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface SongContainerViewListener {
+        void handlePlaySong();
+
+        List<Song> toList();
     }
 
 

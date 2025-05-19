@@ -24,11 +24,11 @@ public class Settings {
      * @param _musicFolder The music folder of the settings.
      */
     public Settings(Path _musicFolder, String _language) {
-            musicFolderChanged = false;
-            musicFolder = _musicFolder;
-            currentUserProfile = null;
-            currentLanguage = Language.fromCode(_language);
-        }
+        musicFolderChanged = false;
+        musicFolder = _musicFolder;
+        currentUserProfile = null;
+        currentLanguage = Language.fromCode(_language);
+    }
 
     /**
      * Instantiates a new Settings.
@@ -59,8 +59,8 @@ public class Settings {
             return new SettingsDTO(musicFolder, musicFolderChanged);
         } else {
             return new SettingsDTO(currentUserProfile.getBalance(), currentUserProfile.getEqualizerBands(), musicFolder,
-                                   currentUserProfile.getUserMusicPath(), currentUserProfile.getUserPlaylistPath(),
-                                   currentUserProfile.getCrossfadeDuration(), musicFolderChanged);
+                    currentUserProfile.getUserMusicPath(), currentUserProfile.getUserPlaylistPath(),
+                    currentUserProfile.getCrossfadeDuration(), musicFolderChanged);
         }
     }
 
@@ -87,26 +87,26 @@ public class Settings {
     }
 
     /**
+     * Set the global music folder for the app.
+     *
+     * @param newMusicFolder The music folder.
+     */
+    public void setMusicFolder(Path newMusicFolder) {
+        if (musicFolder != newMusicFolder) {
+            musicFolder = newMusicFolder;
+            musicFolderChanged = true;
+        } else {
+            musicFolderChanged = false;
+        }
+    }
+
+    /**
      * Get the music folder of the settings as a string.
      *
      * @return The music folder as a string.
      */
     public String getMusicFolderString() {
         return musicFolder.toString();
-    }
-
-    /**
-     * Set the global music folder for the app.
-     *
-     * @param newMusicFolder The music folder.
-     */
-    public void setMusicFolder(Path newMusicFolder) {
-        if (musicFolder != newMusicFolder){
-            musicFolder = newMusicFolder;
-            musicFolderChanged = true;
-        } else {
-            musicFolderChanged = false;
-        }
     }
 
     /**
@@ -137,19 +137,25 @@ public class Settings {
 
     /**
      * Get the settings current language.
+     *
      * @return the settings current language.
      */
-    public Language getCurrentLanguage() { return currentLanguage; }
+    public Language getCurrentLanguage() {
+        return currentLanguage;
+    }
 
     /**
      * Set the settings current language.
      *
      * @param newCurrentLanguage the new current language.
      */
-    public void setCurrentLanguage(Language newCurrentLanguage) { currentLanguage = newCurrentLanguage; }
+    public void setCurrentLanguage(Language newCurrentLanguage) {
+        currentLanguage = newCurrentLanguage;
+    }
 
     /**
      * Checks if the settings object is equal to another settings object.
+     *
      * @param obj The object to compare with.
      * @return True if the objects are equal, false otherwise.
      */
@@ -194,6 +200,7 @@ public class Settings {
 
     /**
      * Returns a string representation of the settings object.
+     *
      * @return A string representation of the settings object.
      */
     @Override

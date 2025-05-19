@@ -26,6 +26,7 @@ public class PlaylistService {
 
     /**
      * Returns all the playlists excluding the main library.
+     *
      * @return A list of playlists.
      */
     public List<Library> readPlaylists() {
@@ -39,7 +40,7 @@ public class PlaylistService {
      * <p>Then, it loads the playlists from the playlists file, if available, and combines both the main library and the playlists into a single list.</p>
      *
      * @return A list containing the main library followed by the playlists.
-     *         The main library is loaded first, followed by any existing playlists.
+     * The main library is loaded first, followed by any existing playlists.
      */
     public List<Library> loadAllLibraries(Path musicFolder, Path userMusicFolder) {
         Library mainLibrary = loadMainLibrary(musicFolder);
@@ -62,7 +63,7 @@ public class PlaylistService {
      * @param musicDirectory The directory from which to load the songs. This is usually the user's default
      *                       music folder.
      * @return A {@link Library} containing all songs from the specified directory, or an empty library
-     *         if loading fails due to an IOException.
+     * if loading fails due to an IOException.
      */
     public Library loadMainLibrary(Path musicDirectory) {
         try {

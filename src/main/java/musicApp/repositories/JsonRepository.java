@@ -39,15 +39,15 @@ import java.util.List;
  */
 public class JsonRepository {
     private final Path settingsFile;
-    private Path playlistsFile;
     private final Path lyricsDir;
     private final Path lyricsFile;
     private final Path usersFile;
+    private Path playlistsFile;
 
     /**
      * Constructor
      */
-    public JsonRepository() throws  SettingsFilesException {
+    public JsonRepository() throws SettingsFilesException {
         Path settingFolder = getSettingsFolder();
         createFolderIfNotExists(settingFolder);
         settingsFile = settingFolder.resolve("settings.json");
@@ -294,7 +294,8 @@ public class JsonRepository {
                 .create();
         if (!Files.exists(lyricsFile)) return new ArrayList<>();
         try (var reader = Files.newBufferedReader(lyricsFile)) {
-            var type = new TypeToken<List<LyricsRepository.LyricsFilePaths>>() {}.getType();
+            var type = new TypeToken<List<LyricsRepository.LyricsFilePaths>>() {
+            }.getType();
             return gson.fromJson(reader, type);
         } catch (IOException e) {
             System.err.println("An error occurred while reading the lyrics file: " + e.getMessage());
@@ -343,13 +344,14 @@ public class JsonRepository {
      * @throws IllegalArgumentException the illegal argument exception
      */
     protected List<UserProfile> getUserProfiles(Path userProfilesPath) throws IllegalArgumentException {
-    Gson gson = new GsonBuilder()
-            .registerTypeAdapter(UserProfile.class, new UserProfileTypeAdapter())
-            .setPrettyPrinting()
-            .create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(UserProfile.class, new UserProfileTypeAdapter())
+                .setPrettyPrinting()
+                .create();
         if (!Files.exists(userProfilesPath)) return new ArrayList<>();
         try (var reader = Files.newBufferedReader(userProfilesPath)) {
-            var type = new TypeToken<List<UserProfile>>() {}.getType();
+            var type = new TypeToken<List<UserProfile>>() {
+            }.getType();
             List<UserProfile> userProfiles = gson.fromJson(reader, type);
             return userProfiles != null ? userProfiles : new ArrayList<>();
         } catch (IOException | JsonSyntaxException | IllegalStateException e) {

@@ -8,30 +8,14 @@ import musicApp.services.LanguageService;
 import musicApp.views.View;
 
 public class PlaylistContextMenuView extends View {
-    
+
     private PlaylistContextMenuViewListener listener;
-    
+
     @FXML
     private ContextMenu contextMenu;
 
     @FXML
     private MenuItem addToQueueItem, replaceQueueItem, editItem, deleteItem;
-
-    /**
-     * Listener interface for handling context menu actions related to playlists.
-     * Implement this interface to define behavior for deleting, editing,
-     * appending to, or replacing the queue.
-     */
-    public interface PlaylistContextMenuViewListener {
-        void handleDeletePlaylist();
-
-        void handleEditPlaylist();
-
-        void handleAppendToQueue();
-
-        void handleReplaceQueue();
-    }
-
 
     /**
      * Sets listener.
@@ -82,5 +66,20 @@ public class PlaylistContextMenuView extends View {
      */
     public void show(Node node, double x, double y) {
         contextMenu.show(node, x, y);
+    }
+
+    /**
+     * Listener interface for handling context menu actions related to playlists.
+     * Implement this interface to define behavior for deleting, editing,
+     * appending to, or replacing the queue.
+     */
+    public interface PlaylistContextMenuViewListener {
+        void handleDeletePlaylist();
+
+        void handleEditPlaylist();
+
+        void handleAppendToQueue();
+
+        void handleReplaceQueue();
     }
 }

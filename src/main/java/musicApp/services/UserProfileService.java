@@ -26,7 +26,7 @@ public class UserProfileService {
         userProfiles.remove(userProfile);
         writeUserProfiles(userProfiles);
     }
-    
+
     public void addUserProfile(UserProfile userProfile) {
         List<UserProfile> userProfiles = readUserProfiles();
         userProfiles.add(userProfile);

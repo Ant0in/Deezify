@@ -22,24 +22,6 @@ public class QueueView extends SongContainerView {
     private Button addSongButton, deleteSongButton, clearQueueButton;
 
     /**
-     * Listener interface for handling user actions from the controller.
-     */
-    public interface QueueViewListener {
-        void handleAddSong();
-
-        void handleDeleteSong();
-
-        void handleClearQueue();
-
-        void reorderQueue(int fromIndex, int toIndex);
-
-        void bindClearSelection(ReadOnlyObjectProperty<Song> songReadOnlyObjectProperty);
-
-        void bindIsPlaylistItemSelected(BooleanProperty booleanProperty);
-
-    }
-
-    /**
      * Sets listener.
      *
      * @param newListener the listener
@@ -47,7 +29,6 @@ public class QueueView extends SongContainerView {
     public void setListener(QueueViewListener newListener) {
         listener = newListener;
     }
-
 
     @Override
     public void init() {
@@ -207,6 +188,24 @@ public class QueueView extends SongContainerView {
         addSongButton.setText(ls.get("button.add"));
         deleteSongButton.setText(ls.get("button.delete"));
         clearQueueButton.setText(ls.get("button.clear"));
+    }
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface QueueViewListener {
+        void handleAddSong();
+
+        void handleDeleteSong();
+
+        void handleClearQueue();
+
+        void reorderQueue(int fromIndex, int toIndex);
+
+        void bindClearSelection(ReadOnlyObjectProperty<Song> songReadOnlyObjectProperty);
+
+        void bindIsPlaylistItemSelected(BooleanProperty booleanProperty);
+
     }
 
 }

@@ -19,30 +19,27 @@ import java.util.List;
 
 public class DjPlayerController extends ViewController<DjPlayerView> implements DjPlayerView.DjPlayerViewListener {
 
+    // Range of values
+    private static final double MAX_DB = EqualizerBand.MAX_GAIN;
+    private static final double MIN_DB = EqualizerBand.MIN_GAIN;
+    private static final double NUM_BANDS = EqualizerBandFrequency.getBandsSize();
+    private static final double MAX_STRENGTH = 18.0;
+    private static final double MIN_BASS_BOOST = 6.0;
     private final MediaPlayerController mediaPlayerController;
     private final Equalizer equalizerBackup;
+    Equalizer equalizerGainMode;
+    Equalizer equalizerBassBoostMode;
+    Equalizer equalizerPressureMode;
     private Timeline timeline;
-
     // parameters for the effects
     private double timelineSpeed;
     private double bassBoostGain;
     private double gainValue;
     private double pressureStrength;
-    Equalizer equalizerGainMode;
-    Equalizer equalizerBassBoostMode;
-    Equalizer equalizerPressureMode;
-
     // Effects ON/OFF
     private boolean gainModeOn = false;
     private boolean bassBoostModeOn = false;
     private boolean pressureModeOn = false;
-
-    // Range of values
-    private static final double MAX_DB =  EqualizerBand.MAX_GAIN;
-    private static final double MIN_DB = EqualizerBand.MIN_GAIN;
-    private static final double NUM_BANDS = EqualizerBandFrequency.getBandsSize();
-    private static final double MAX_STRENGTH = 18.0;
-    private static final double MIN_BASS_BOOST = 6.0;
 
 
     public DjPlayerController(MediaPlayerController _mediaPlayerController) {
@@ -101,6 +98,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Checks if the wave effect is currently running.
+     *
      * @return true if the wave effect is running, false otherwise
      */
     private boolean isWaveRunning() {
@@ -128,6 +126,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Calculates the amplitude for the wave effect.
+     *
      * @return the amplitude of the wave
      */
     private double calculateAmplitude() {
@@ -136,6 +135,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Calculates the offset for the wave effect.
+     *
      * @param amplitude the amplitude of the wave
      * @return the offset for the wave effect
      */
@@ -145,8 +145,9 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Creates a timeline for the wave effect.
+     *
      * @param amplitude the amplitude of the wave
-     * @param offset the offset of the wave
+     * @param offset    the offset of the wave
      * @return the timeline for the wave effect
      */
     private Timeline createWaveTimeline(double amplitude, double offset) {
@@ -155,8 +156,9 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Updates the wave effect on the media player.
+     *
      * @param amplitude the amplitude of the wave
-     * @param offset the offset of the wave
+     * @param offset    the offset of the wave
      */
     private void updateWave(double amplitude, double offset) {
         double currentTime = System.currentTimeMillis() / 1000.0;
@@ -166,9 +168,10 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Calculates the gain for each band based on the current time.
+     *
      * @param currentTime the current time
-     * @param amplitude the amplitude of the wave
-     * @param offset the offset of the wave
+     * @param amplitude   the amplitude of the wave
+     * @param offset      the offset of the wave
      * @return a list of gains for each band
      */
     private List<Double> calculateBandsGain(double currentTime, double amplitude, double offset) {
@@ -201,6 +204,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Builds the mixed equalizer based on the current settings.
+     *
      * @return the mixed equalizer
      */
     private Equalizer buildMixedEqualizer() {
@@ -214,6 +218,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Computes the mixed band gain based on the current settings.
+     *
      * @param band the band index
      * @return the mixed band gain
      */
@@ -222,21 +227,31 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
         int count = 0;
         if (gainModeOn) {
             double value = equalizerGainMode.getBandGain(band);
-            if (value != 0) { sum += value; count++; }
+            if (value != 0) {
+                sum += value;
+                count++;
+            }
         }
         if (bassBoostModeOn) {
             double value = equalizerBassBoostMode.getBandGain(band);
-            if (value != 0) { sum += value; count++; }
+            if (value != 0) {
+                sum += value;
+                count++;
+            }
         }
         if (pressureModeOn) {
             double value = equalizerPressureMode.getBandGain(band);
-            if (value != 0) { sum += value; count++; }
+            if (value != 0) {
+                sum += value;
+                count++;
+            }
         }
         return count != 0 ? sum / count : sum;
     }
 
     /**
      * Updates the media player equalizer with the current equalizer settings.
+     *
      * @param equalizer the equalizer to set
      */
     private void updateMediaPlayerEqualizer(Equalizer equalizer) {
@@ -245,6 +260,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Changes the wave speed.
+     *
      * @param speed the speed of the wave (0 to 100)
      */
     public void handleChangeWaveSpeed(double speed) {
@@ -256,7 +272,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
                 applyMixedEffects();
             }
         } else {
-            timelineSpeed = speed / ((double) 100 /3);
+            timelineSpeed = speed / ((double) 100 / 3);
             if (timeline == null) {
                 toggleWaveGainMode();
             }
@@ -265,6 +281,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Changes the bass boost gain.
+     *
      * @param gain the gain of the bass boost (0 to 100)
      */
     public void handleChangeBassBoostGain(double gain) {
@@ -281,9 +298,10 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Changes the gain mode.
+     *
      * @param gain the gain of the gain mode (0 to 100)
      */
-    public void handleChangeGainMode (double gain) {
+    public void handleChangeGainMode(double gain) {
         // From -24 to 12 db
         if (gain > 0.0) {
             gainModeOn = true;
@@ -297,6 +315,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Changes the pressure strength.
+     *
      * @param strength the strength of the pressure (0 to 100)
      */
     public void handleChangePressureStrength(double strength) {
@@ -314,6 +333,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
 
     /**
      * Plays the song.
+     *
      * @param song the song to play
      */
     public void play(Song song) throws BadSongException {
@@ -326,7 +346,9 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * On quit called method. Destroy all timelines, restore the old config and close the stage.
      */
     public void handleClose() {
-        if (timeline != null) { timeline.stop(); }
+        if (timeline != null) {
+            timeline.stop();
+        }
         setEqualizerBands(equalizerBackup.getBandsGain());
         view.close();
     }
@@ -337,7 +359,7 @@ public class DjPlayerController extends ViewController<DjPlayerView> implements 
      * @param equalizerBands a list of gain values (in decibels) for each frequency band
      */
     public void setEqualizerBands(List<Double> equalizerBands) {
-        try{
+        try {
             mediaPlayerController.setEqualizerBands(equalizerBands);
         } catch (EqualizerGainException e) {
             alertService.showExceptionAlert(e, Alert.AlertType.ERROR);

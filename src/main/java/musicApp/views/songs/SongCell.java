@@ -16,17 +16,6 @@ public class SongCell extends ListCell<Song> {
         listener = newListener;
     }
 
-    /**
-     * Listener interface for handling song cell events.
-     * Implement this interface to define the UI component and update functionality for a song cell.
-     */
-    public interface SongCellListener {
-        void update(Song song);
-
-        Pane getRoot();
-    }
-
-
     @Override
     protected void updateItem(Song song, boolean empty) {
         super.updateItem(song, empty);
@@ -37,6 +26,17 @@ public class SongCell extends ListCell<Song> {
             setGraphic(listener.getRoot());
             listener.update(song);
         }
+    }
+
+
+    /**
+     * Listener interface for handling song cell events.
+     * Implement this interface to define the UI component and update functionality for a song cell.
+     */
+    public interface SongCellListener {
+        void update(Song song);
+
+        Pane getRoot();
     }
 }
 

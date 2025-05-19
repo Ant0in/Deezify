@@ -19,14 +19,12 @@ public class AudioPlayer {
     private final BooleanProperty isPlaying;
     private final BooleanProperty isLoaded;
     private final DoubleProperty volume;
+    private final Double audioSpectrumInterval;
     private List<Double> equalizerBandsGain;
     private Song loadedSong;
     private double balance;
     private double crossfadeDuration;
     private double speed;
-    private final Double audioSpectrumInterval;
-
-
     private Supplier<Song> nextSongSupplier;
 
     private Boolean isTransitioning;
@@ -58,15 +56,6 @@ public class AudioPlayer {
     }
 
     /**
-     * Set the next song supplier.
-     *
-     * @param _nextSongSupplier The next song supplier, which is a function that returns a Song.
-     */
-    public void setNextSongSupplier(Supplier<Song> _nextSongSupplier)  {
-        nextSongSupplier = _nextSongSupplier;
-    }
-
-    /**
      * Returns the list of equalizer band gains.
      *
      * @return list of gains for each equalizer band
@@ -76,10 +65,12 @@ public class AudioPlayer {
     }
 
     /**
-     * Change speed of the loaded song.
+     * Replaces the entire list of equalizer band gains.
+     *
+     * @param newEqualizerBandsGain list of new gain values
      */
-    public void setSpeed(double newSpeed) {
-        speed = newSpeed;
+    public void setEqualizerBandsGain(List<Double> newEqualizerBandsGain) {
+        equalizerBandsGain = newEqualizerBandsGain;
     }
 
     /**
@@ -118,7 +109,6 @@ public class AudioPlayer {
         return loadedSong;
     }
 
-
     /**
      * Get the volume property.
      *
@@ -126,24 +116,6 @@ public class AudioPlayer {
      */
     public DoubleProperty getVolumeProperty() {
         return volume;
-    }
-
-    /**
-     * Set the balance of the AudioPlayer.
-     *
-     * @param newBalance The balance of the AudioPlayer.
-     */
-    public void setBalance(double newBalance) {
-        balance = newBalance;
-    }
-
-    /**
-     * Set the duration of the crossfade.
-     *
-     * @param _crossfadeDuration The duration of the crossfade in seconds.
-     */
-    public void setCrossfadeDuration(double _crossfadeDuration) {
-        crossfadeDuration = _crossfadeDuration;
     }
 
     /**
@@ -156,12 +128,28 @@ public class AudioPlayer {
     }
 
     /**
+     * Set the balance of the AudioPlayer.
+     *
+     * @param newBalance The balance of the AudioPlayer.
+     */
+    public void setBalance(double newBalance) {
+        balance = newBalance;
+    }
+
+    /**
      * Retrieves the current playback speed multiplier.
      *
      * @return speed multiplier
      */
     public double getSpeed() {
         return speed;
+    }
+
+    /**
+     * Change speed of the loaded song.
+     */
+    public void setSpeed(double newSpeed) {
+        speed = newSpeed;
     }
 
     /**
@@ -227,6 +215,15 @@ public class AudioPlayer {
     }
 
     /**
+     * Set the duration of the crossfade.
+     *
+     * @param _crossfadeDuration The duration of the crossfade in seconds.
+     */
+    public void setCrossfadeDuration(double _crossfadeDuration) {
+        crossfadeDuration = _crossfadeDuration;
+    }
+
+    /**
      * Retrieves the next song from the supplier.
      *
      * @return next Song instance
@@ -236,21 +233,21 @@ public class AudioPlayer {
     }
 
     /**
+     * Set the next song supplier.
+     *
+     * @param _nextSongSupplier The next song supplier, which is a function that returns a Song.
+     */
+    public void setNextSongSupplier(Supplier<Song> _nextSongSupplier) {
+        nextSongSupplier = _nextSongSupplier;
+    }
+
+    /**
      * Updates the playback progress value.
      *
      * @param newProgress progress ratio (0.0 to 1.0)
      */
     public void setProgress(double newProgress) {
         progress.set(newProgress);
-    }
-
-    /**
-     * Replaces the entire list of equalizer band gains.
-     *
-     * @param newEqualizerBandsGain list of new gain values
-     */
-    public void setEqualizerBandsGain(List<Double> newEqualizerBandsGain) {
-        equalizerBandsGain = newEqualizerBandsGain;
     }
 
     /**

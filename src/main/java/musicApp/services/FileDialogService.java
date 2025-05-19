@@ -35,7 +35,7 @@ public class FileDialogService {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Audio Files", SupportedFileType.getExtensionsForFileFilter())
+                new FileChooser.ExtensionFilter("Audio Files", SupportedFileType.getExtensionsForFileFilter())
         );
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 

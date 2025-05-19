@@ -18,10 +18,6 @@ public enum EqualizerBandFrequency {
         this.frequencyHz = frequencyHz;
     }
 
-    public int getFrequencyHz() {
-        return frequencyHz;
-    }
-
     public static int getBandsSize() {
         return values().length;
     }
@@ -36,5 +32,9 @@ public enum EqualizerBandFrequency {
             throw new IndexOutOfBoundsException("Invalid band index: " + index);
         }
         return values[index];
+    }
+
+    public int getFrequencyHz() {
+        return frequencyHz;
     }
 }

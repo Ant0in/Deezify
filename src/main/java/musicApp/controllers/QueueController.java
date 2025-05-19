@@ -50,7 +50,6 @@ public class QueueController extends SongContainerController<QueueView> implemen
     }
 
 
-
     /**
      * Reorganize the queue by moving a song from one index to another.
      *

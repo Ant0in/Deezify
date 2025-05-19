@@ -13,12 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistsController {
-    private final PlaylistService playlistService;
-    private List<Library> playlists;
-
-    private final int MAIN_LIBRARY_INDEX = 0;
     private static final int USER_MAIN_LIBRARY_INDEX = 1;
     private static final int FAVORITES_INDEX = 2;
+    private final PlaylistService playlistService;
+    private final int MAIN_LIBRARY_INDEX = 0;
+    private List<Library> playlists;
 
     public PlaylistsController(Path musicFolder, Path userMusicFolder, Path userPlaylistPath) throws SettingsFilesException {
         playlistService = new PlaylistService(userPlaylistPath);
@@ -35,12 +34,12 @@ public class PlaylistsController {
         setUserMainLibrary(userMainLibrary);
     }
 
-    private void setMainLibrary(Library newMainLibrary) {
-        playlists.set(MAIN_LIBRARY_INDEX, newMainLibrary);
-    }
-
     public Library getMainLibrary() {
         return playlists.get(MAIN_LIBRARY_INDEX);
+    }
+
+    private void setMainLibrary(Library newMainLibrary) {
+        playlists.set(MAIN_LIBRARY_INDEX, newMainLibrary);
     }
 
     public void setUserMainLibrary(Library newUserMainLibrary) {
@@ -113,7 +112,7 @@ public class PlaylistsController {
 
     public void updateUserPlaylists(Path userPlaylistPath) {
         playlistService.setPlaylistsPath(userPlaylistPath);
-        playlists = playlists.subList(0, USER_MAIN_LIBRARY_INDEX+1); // Keep only main and user libraries
+        playlists = playlists.subList(0, USER_MAIN_LIBRARY_INDEX + 1); // Keep only main and user libraries
         List<Library> newPlaylists = playlistService.readPlaylists();
         playlists.addAll(newPlaylists);
     }

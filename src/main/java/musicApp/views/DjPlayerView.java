@@ -6,7 +6,7 @@ import javafx.scene.control.Slider;
 import javafx.stage.Stage;
 
 public class DjPlayerView extends View {
-    
+
     private DjPlayerViewListener listener;
     private Stage stage;
 
@@ -16,21 +16,6 @@ public class DjPlayerView extends View {
     private Label gainLabel, bassBoostLabel, pressureLabel, speedLabel;
 
     public DjPlayerView() {
-    }
-
-    /**
-     * Listener interface used to delegate actions from the view to the controller logic.
-     */
-    public interface DjPlayerViewListener {
-        void handleClose();
-
-        void handleChangeGainMode (double gain);
-
-        void handleChangePressureStrength(double strength);
-
-        void handleChangeBassBoostGain(double gain);
-
-        void handleChangeWaveSpeed(double speed);
     }
 
     /**
@@ -63,11 +48,11 @@ public class DjPlayerView extends View {
         stage.setResizable(false);
     }
 
-    public void show(){
+    public void show() {
         stage.show();
     }
 
-    public void close(){
+    public void close() {
         stage.close();
     }
 
@@ -94,6 +79,21 @@ public class DjPlayerView extends View {
         if (value >= 99) {
             speedLabel.setText("x3");
         }
+    }
+
+    /**
+     * Listener interface used to delegate actions from the view to the controller logic.
+     */
+    public interface DjPlayerViewListener {
+        void handleClose();
+
+        void handleChangeGainMode(double gain);
+
+        void handleChangePressureStrength(double strength);
+
+        void handleChangeBassBoostGain(double gain);
+
+        void handleChangeWaveSpeed(double speed);
     }
 
 }

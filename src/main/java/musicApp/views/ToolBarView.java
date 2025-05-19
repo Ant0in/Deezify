@@ -19,17 +19,6 @@ public class ToolBarView extends View {
     private Region spacer;
 
     /**
-     * Listener interface for handling user actions from the controller.
-     */
-    public interface ToolBarViewListener extends ViewService.ViewServiceListener {
-        void handleOpenSettings();
-
-        void handleExitApp();
-
-        void handleReturn();
-    }
-
-    /**
      * Sets listener.
      *
      * @param newListener the listener
@@ -37,7 +26,6 @@ public class ToolBarView extends View {
     public void setListener(ToolBarViewListener newListener) {
         listener = newListener;
     }
-
 
     /**
      * Initialize the view.
@@ -84,9 +72,21 @@ public class ToolBarView extends View {
 
     /**
      * Handle the return button.
+     *
      * @param event
      */
     private void handleReturn(ActionEvent event) {
         listener.handleReturn();
+    }
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface ToolBarViewListener extends ViewService.ViewServiceListener {
+        void handleOpenSettings();
+
+        void handleExitApp();
+
+        void handleReturn();
     }
 }

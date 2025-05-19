@@ -17,9 +17,7 @@ public class PlaylistContextMenuController extends ViewController<PlaylistContex
         initView("/fxml/PlaylistContextMenu.fxml", true);
     }
 
-    /**
-     * Deletes a playlist.
-     */
+
     public void handleDeletePlaylist() {
         playlistNavigatorController.deletePlaylist(selectedLibrary);
     }

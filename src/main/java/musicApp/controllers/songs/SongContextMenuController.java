@@ -15,11 +15,11 @@ import java.util.List;
  */
 public class SongContextMenuController extends ViewController<SongContextMenuView> implements SongContextMenuView.SongContextMenuViewListener {
 
+    private final boolean isMainLibrary;
     /**
      * The Song cell controller.
      */
     public SongCellController songCellController;
-    private final boolean isMainLibrary;
 
     /**
      * Instantiates a new Song context menu controller.

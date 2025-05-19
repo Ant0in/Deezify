@@ -18,15 +18,6 @@ public enum SupportedFileType {
     }
 
     /**
-     * Returns the file extension associated with the file type.
-     *
-     * @return The file extension as a string (e.g., ".mp3", ".wav").
-     */
-    public String getExt() {
-        return ext;
-    }
-
-    /**
      * Returns an array of file extensions formatted to be used directly in a
      * file search filter, with each extension prefixed by a wildcard (e.g., "*.mp3", "*.wav").
      *
@@ -62,5 +53,14 @@ public enum SupportedFileType {
                 .filter(fileType -> fileType.getExt().equalsIgnoreCase(extension))
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * Returns the file extension associated with the file type.
+     *
+     * @return The file extension as a string (e.g., ".mp3", ".wav").
+     */
+    public String getExt() {
+        return ext;
     }
 }

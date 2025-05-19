@@ -17,9 +17,8 @@ import musicApp.services.LanguageService;
  */
 public class PlayerView extends View {
 
-    private PlayerViewListener listener;
     private final Stage primaryStage;
-
+    private PlayerViewListener listener;
     @FXML
     private Pane controls;
     @FXML
@@ -48,25 +47,6 @@ public class PlayerView extends View {
 
     public void closeStage() {
         primaryStage.close();
-    }
-
-    /**
-     * Listener interface for handling user actions from the controller.
-     */
-    public interface PlayerViewListener {
-        void close();
-
-        Pane getControlPanelRoot();
-
-        Pane getToolBarRoot();
-
-        Pane getMainLibraryRoot();
-
-        Pane getPlaylistNavigatorRoot();
-
-        Pane getQueueRoot();
-
-        Pane getLyricsRoot();
     }
 
     /**
@@ -113,7 +93,6 @@ public class PlayerView extends View {
         labelContainer.setTop(toolBarPane);
     }
 
-
     private void initMainLibrary() {
         playerContainer.getChildren().set(0, listener.getMainLibraryRoot());
     }
@@ -127,14 +106,12 @@ public class PlayerView extends View {
         playerContainer.getChildren().set(1, listener.getQueueRoot());
     }
 
-
     /**
      * Initialize the bindings between the view and the controller.
      */
     private void initBindings() {
         bindPlayingSongAnchor();
     }
-
 
     /**
      * Bind the visibility of the playing song anchor (the controls at the bottom).
@@ -143,10 +120,8 @@ public class PlayerView extends View {
         controls.setVisible(true);
     }
 
-
     /**
      * Enable double click to grow (fullscreen)
-     *
      */
     public void enableDoubleClickToGrow() {
         labelContainer.setOnMouseClicked(e -> {
@@ -158,7 +133,6 @@ public class PlayerView extends View {
 
     /**
      * Setup the window close handler.
-     *
      */
     private void setupWindowCloseHandler() {
         primaryStage.setOnCloseRequest(_ -> listener.close());
@@ -190,7 +164,6 @@ public class PlayerView extends View {
 
     /**
      * Show the stage.
-     *
      */
     public void show() {
         primaryStage.show();
@@ -221,6 +194,25 @@ public class PlayerView extends View {
             HBox.setHgrow(libraryPane, Priority.ALWAYS);
             playerContainer.getChildren().set(0, libraryPane);
         }
+    }
+
+    /**
+     * Listener interface for handling user actions from the controller.
+     */
+    public interface PlayerViewListener {
+        void close();
+
+        Pane getControlPanelRoot();
+
+        Pane getToolBarRoot();
+
+        Pane getMainLibraryRoot();
+
+        Pane getPlaylistNavigatorRoot();
+
+        Pane getQueueRoot();
+
+        Pane getLyricsRoot();
     }
 
 }

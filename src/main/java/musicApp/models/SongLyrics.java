@@ -8,10 +8,10 @@ import java.util.List;
  * Contains the actual lyrics content, not just paths.
  */
 public class SongLyrics {
-    
+
     private final List<String> textLyrics;
     private final List<KaraokeLine> karaokeLyrics;
-    
+
     /**
      * Default constructor
      */
@@ -19,7 +19,7 @@ public class SongLyrics {
         textLyrics = Collections.emptyList();
         karaokeLyrics = Collections.emptyList();
     }
-    
+
     /**
      * Constructor with lyrics content
      */
@@ -27,14 +27,14 @@ public class SongLyrics {
         textLyrics = _textLyrics != null ? _textLyrics : Collections.emptyList();
         karaokeLyrics = _karaokeLyrics != null ? _karaokeLyrics : Collections.emptyList();
     }
-    
+
     /**
      * Get the plain text lyrics
      */
     public List<String> getLyrics() {
         return textLyrics;
     }
-    
+
     /**
      * Get the karaoke lyrics
      */

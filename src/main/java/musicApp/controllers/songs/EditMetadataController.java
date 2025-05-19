@@ -18,9 +18,9 @@ import java.util.Set;
  * The type Edit metadata controller.
  */
 public class EditMetadataController extends ViewController<EditMetadataView> implements EditMetadataView.EditMetadataViewListener {
-    private File selectedCoverFile;
     private final Song song;
     private final SongCellController songCellController;
+    private File selectedCoverFile;
 
 
     /**
@@ -78,12 +78,14 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
             if (file.toPath().toString().endsWith(".mp4")) {
                 VideoService videoService = new VideoService();
                 image = videoService.getFirstFrame(file);
-                if (image == null) { return; }
+                if (image == null) {
+                    return;
+                }
             } else {
                 image = new Image(file.toURI().toString());
             }
 
-            if ( !image.isError()) {
+            if (!image.isError()) {
                 view.setCoverImage(image);
                 selectedCoverFile = file;
             } else {
@@ -147,7 +149,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      * @param input the input
      * @return the optional
      */
-    public Optional<String> getArtistAutoCompletion(String input){
+    public Optional<String> getArtistAutoCompletion(String input) {
         return songCellController.getArtistAutoCompletion(input);
     }
 
@@ -157,7 +159,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      * @param input the input
      * @return the optional
      */
-    public Optional<String> getAlbumAutoCompletion(String input){
+    public Optional<String> getAlbumAutoCompletion(String input) {
         return songCellController.getAlbumAutoCompletion(input);
     }
 
@@ -167,7 +169,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
      * @param input the input
      * @return the optional
      */
-    public Optional<String> getTagAutoCompletion(String input){
+    public Optional<String> getTagAutoCompletion(String input) {
         return songCellController.getTagAutoCompletion(input);
     }
 

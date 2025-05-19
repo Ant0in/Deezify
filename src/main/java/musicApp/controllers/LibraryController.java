@@ -25,8 +25,8 @@ public class LibraryController extends SongContainerController<LibraryView>
     private final int MAX_SUGGESTIONS = 5;
     private final LanguageService LANG = LanguageService.getInstance();
     private final String DEFAULT_ARTIST = LANG.get("metadata.artist");
-    private final String DEFAULT_ALBUM  = LANG.get("metadata.album");
-    private final String DEFAULT_GENRE  = LANG.get("metadata.genre");
+    private final String DEFAULT_ALBUM = LANG.get("metadata.album");
+    private final String DEFAULT_GENRE = LANG.get("metadata.genre");
 
     private int currentIndex;
     private Boolean shuffle;
@@ -287,7 +287,7 @@ public class LibraryController extends SongContainerController<LibraryView>
                 Path copiedFilePath = playlistService.addSongToLibrary(audioFile, playerController.getMainLibraryPath());
                 addSong(copiedFilePath);
             } else if (isShowingUserLibrary()) {
-                Path copiedFilePath = playlistService.addSongToLibrary(audioFile, playerController.getUserLibraryPath() );
+                Path copiedFilePath = playlistService.addSongToLibrary(audioFile, playerController.getUserLibraryPath());
                 addSong(copiedFilePath);
             }
         } catch (IOException e) {
@@ -369,7 +369,7 @@ public class LibraryController extends SongContainerController<LibraryView>
      *
      * @return true if the library can be modified, false otherwise.
      */
-    public boolean isModifiable(){
+    public boolean isModifiable() {
         return playerController.isModifiable(library);
     }
 
@@ -409,11 +409,11 @@ public class LibraryController extends SongContainerController<LibraryView>
         List<Song> candidates = new ArrayList<>(playerController.getMainLibrary().toList()); // get all songs in main library
         candidates.removeAll(library.toList()); // remove songs already in playlist
 
-        if (artists.isEmpty() && albums.isEmpty() && genres.isEmpty()  && tags.isEmpty()) {
+        if (artists.isEmpty() && albums.isEmpty() && genres.isEmpty() && tags.isEmpty()) {
             return fallbackCandidates(candidates);
         }
 
-        candidates.sort((a,b) -> score(b, artists, albums, tags, genres) - score(a, artists, albums, tags, genres));
+        candidates.sort((a, b) -> score(b, artists, albums, tags, genres) - score(a, artists, albums, tags, genres));
 
         List<Song> suggestions = new ArrayList<>();
         for (Song s : candidates) {
@@ -429,7 +429,8 @@ public class LibraryController extends SongContainerController<LibraryView>
      */
     private void collectPlaylistData(Set<String> artists, Set<String> albums, Set<String> tags, Set<String> genres) {
         for (Song s : library.toList()) {
-            if (DEFAULT_ARTIST.equals(s.getArtist()) && DEFAULT_ALBUM.equals(s.getAlbum()) && DEFAULT_GENRE.equals(s.getGenre())) continue;
+            if (DEFAULT_ARTIST.equals(s.getArtist()) && DEFAULT_ALBUM.equals(s.getAlbum()) && DEFAULT_GENRE.equals(s.getGenre()))
+                continue;
 
             String art = s.getArtist(), alb = s.getAlbum(), g = s.getGenre();
 
@@ -443,6 +444,7 @@ public class LibraryController extends SongContainerController<LibraryView>
 
         }
     }
+
     /**
      * Provides a fallback list of songs if the playlist has no data.
      */
@@ -456,6 +458,7 @@ public class LibraryController extends SongContainerController<LibraryView>
 
     /**
      * Scores a song based on its attributes and the user's library.
+     *
      * @return The score of the song based on its attributes and the user's library.
      */
     private int score(Song s, Set<String> artists, Set<String> albums, Set<String> tags, Set<String> genres) {
@@ -463,8 +466,8 @@ public class LibraryController extends SongContainerController<LibraryView>
         String art = s.getArtist(), alb = s.getAlbum(), g = s.getGenre();
 
         if (art != null && !art.equals(DEFAULT_ARTIST) && artists.contains(art)) sc++;
-        if (alb != null && !alb.equals(DEFAULT_ALBUM)  && albums.contains(alb)) sc++;
-        if (g   != null && !g.equals(DEFAULT_GENRE)  && genres.contains(g)) sc++;
+        if (alb != null && !alb.equals(DEFAULT_ALBUM) && albums.contains(alb)) sc++;
+        if (g != null && !g.equals(DEFAULT_GENRE) && genres.contains(g)) sc++;
 
         for (String t : s.getUserTags()) if (tags.contains(t)) sc++;
         return sc;

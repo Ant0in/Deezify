@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  * The MediaPlayer view.
  */
 public class MediaPlayerView extends View {
-    
+
     private MediaPlayerViewListener listener;
 
     @FXML
@@ -36,50 +36,6 @@ public class MediaPlayerView extends View {
     @FXML
     private ToggleButton shuffleToggle, lyricsToggle, miniPlayerToggle;
 
-
-    /**
-     * Listener interface for handling user actions from the media player view.
-     */
-    public interface MediaPlayerViewListener extends ViewService.ViewServiceListener{
-        void handlePauseSong();
-
-        void handleNextSong();
-
-        void handlePreviousSong();
-
-        void handleLaunchDjMode();
-
-        void seek(double duration);
-
-        void changeSpeed(double speed);
-
-        void toggleLyrics(boolean show);
-
-        void toggleShuffle(boolean isShuffle);
-
-        void toggleMiniPlayer(boolean show);
-
-        void handlePlayingStatusChange(Consumer<Boolean> callback);
-
-        void bindProgressProperty(DoubleProperty property);
-
-        void handleProgressChange(Runnable callback);
-
-        void bindVolumeProperty(DoubleBinding divide);
-
-        void handleCurrentSongTitleChange(Consumer<String> callback);
-
-        void handleCurrentSongArtistChange(Consumer<String> callback);
-
-        void handleCurrentImageCoverChange(Consumer<Image> callback);
-
-        void handleLoadedSongStatusChange(Consumer<Boolean> callback);
-
-        Duration getCurrentTime();
-
-        Duration getTotalDuration();
-    }
-
     /**
      * Sets listener.
      *
@@ -89,7 +45,6 @@ public class MediaPlayerView extends View {
         listener = newListener;
     }
 
-
     @Override
     public void init() {
         initBindings();
@@ -98,7 +53,6 @@ public class MediaPlayerView extends View {
         setDefaultCoverImage();
     }
 
-
     private void setButtonActions() {
         pauseSongButton.setOnAction(_ -> listener.handlePauseSong());
         nextSongButton.setOnAction(_ -> listener.handleNextSong());
@@ -106,7 +60,7 @@ public class MediaPlayerView extends View {
         previousSongButton.setOnAction(_ -> listener.handlePreviousSong());
         shuffleToggle.setOnAction(_ -> listener.toggleShuffle(shuffleToggle.isSelected()));
         lyricsToggle.setOnAction(_ -> listener.toggleLyrics(lyricsToggle.isSelected()));
-        miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer(miniPlayerToggle.isSelected()) );
+        miniPlayerToggle.setOnAction(_ -> listener.toggleMiniPlayer(miniPlayerToggle.isSelected()));
     }
 
     private void initBindings() {
@@ -138,7 +92,6 @@ public class MediaPlayerView extends View {
             currentSongLabel.setStyle("-fx-text-fill: white;");
         }
     }
-
 
     /**
      * Bind the song progress bar and label.
@@ -256,8 +209,6 @@ public class MediaPlayerView extends View {
         currentArtistLabel.setText(newArtist == null ? "" : newArtist);
     }
 
-
-
     /**
      * Bind the current song cover.
      */
@@ -266,11 +217,14 @@ public class MediaPlayerView extends View {
     }
 
     private void updateCurrentImageCover(Image coverImage) {
-        if (coverImage == null) {setDefaultCoverImage();}
-        else {imageCover.setImage(coverImage);}
+        if (coverImage == null) {
+            setDefaultCoverImage();
+        } else {
+            imageCover.setImage(coverImage);
+        }
     }
 
-    private void setDefaultCoverImage(){
+    private void setDefaultCoverImage() {
         imageCover.setImage(loadDefaultCoverImage());
     }
 
@@ -306,14 +260,14 @@ public class MediaPlayerView extends View {
     }
 
     private void bindAllControlActivation() {
-        List<Control> controls = Arrays.asList( pauseSongButton, nextSongButton, previousSongButton,shuffleToggle, speedBox, volumeSlider, lyricsToggle, djButton, miniPlayerToggle);
+        List<Control> controls = Arrays.asList(pauseSongButton, nextSongButton, previousSongButton, shuffleToggle, speedBox, volumeSlider, lyricsToggle, djButton, miniPlayerToggle);
         updateControlsState(controls, true);
         listener.handleLoadedSongStatusChange(isLoaded ->
                 updateLoadedSongChange(controls, isLoaded)
         );
     }
 
-    private void updateLoadedSongChange(List<Control> controls,boolean isLoadedSong){
+    private void updateLoadedSongChange(List<Control> controls, boolean isLoadedSong) {
         updateControlsState(controls, !isLoadedSong);
     }
 
@@ -325,6 +279,49 @@ public class MediaPlayerView extends View {
                 c.getStyleClass().add("disabled-btn");
             }
         }
+    }
+
+    /**
+     * Listener interface for handling user actions from the media player view.
+     */
+    public interface MediaPlayerViewListener extends ViewService.ViewServiceListener {
+        void handlePauseSong();
+
+        void handleNextSong();
+
+        void handlePreviousSong();
+
+        void handleLaunchDjMode();
+
+        void seek(double duration);
+
+        void changeSpeed(double speed);
+
+        void toggleLyrics(boolean show);
+
+        void toggleShuffle(boolean isShuffle);
+
+        void toggleMiniPlayer(boolean show);
+
+        void handlePlayingStatusChange(Consumer<Boolean> callback);
+
+        void bindProgressProperty(DoubleProperty property);
+
+        void handleProgressChange(Runnable callback);
+
+        void bindVolumeProperty(DoubleBinding divide);
+
+        void handleCurrentSongTitleChange(Consumer<String> callback);
+
+        void handleCurrentSongArtistChange(Consumer<String> callback);
+
+        void handleCurrentImageCoverChange(Consumer<Image> callback);
+
+        void handleLoadedSongStatusChange(Consumer<Boolean> callback);
+
+        Duration getCurrentTime();
+
+        Duration getTotalDuration();
     }
 
 }

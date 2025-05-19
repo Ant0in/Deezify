@@ -19,35 +19,16 @@ import java.nio.file.Paths;
  * The view for the settings window.
  */
 public class SettingsView extends View {
-    
+
     private SettingsViewListener listener;
     private Stage stage;
 
     @FXML
-    private ComboBox<String> languageComboBox;    
+    private ComboBox<String> languageComboBox;
     @FXML
     private Label languageTitle, languageSelect, musicFolderLabel;
     @FXML
     private Button saveButton, cancelButton, browseButton, editUserProfileButton;
-
-
-    
-    /**
-     * The listener interface for receiving settings view events.
-     * Implement this interface to handle user actions in the settings view.
-     */
-    public interface SettingsViewListener {
-
-        void handleCancel();
-
-        void handleSave(Language language, Path musicFolder);
-
-        String getMusicFolderString();
-
-        void editUserProfile();
-
-        Language getDefaultLanguage();
-    }
 
     /**
      * Sets listener.
@@ -84,14 +65,14 @@ public class SettingsView extends View {
     /**
      * Show the settings view.
      */
-    public void show(){
+    public void show() {
         stage.show();
     }
 
     /**
      * Close the settings view.
      */
-    public void close(){
+    public void close() {
         stage.close();
     }
 
@@ -184,5 +165,22 @@ public class SettingsView extends View {
     public void updateView(String musicFolderString) {
         initComboBox();
         musicFolderLabel.setText(musicFolderString);
+    }
+
+    /**
+     * The listener interface for receiving settings view events.
+     * Implement this interface to handle user actions in the settings view.
+     */
+    public interface SettingsViewListener {
+
+        void handleCancel();
+
+        void handleSave(Language language, Path musicFolder);
+
+        String getMusicFolderString();
+
+        void editUserProfile();
+
+        Language getDefaultLanguage();
     }
 }
