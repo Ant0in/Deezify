@@ -72,7 +72,7 @@ public class EditMetadataController extends ViewController<EditMetadataView> imp
 
         try {
 
-            Image image = null;
+            Image image;
 
             // Check if File is a video file
             if (file.toPath().toString().endsWith(".mp4")) {
