@@ -130,11 +130,23 @@
       <version>7.1-1.5.11</version>
       <classifier>windows-x86_64</classifier>
     </dependency>
-
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-swing</artifactId>
-      <version>17.0.2</version> <!-- or your JavaFX version -->
+      <version>17.0.2</version>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>17.0.2</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>17.0.2</version>
+      <classifier>mac</classifier>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
@@ -201,21 +213,11 @@
       <artifactId>gson</artifactId>
       <version>2.10.1</version>
     </dependency>
-
-<!--    <dependency>-->
-<!--      <groupId>org.testfx</groupId>-->
-<!--      <artifactId>testfx-junit</artifactId>-->
-<!--      <version>4.0.15-alpha</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
-
     <dependency>
       <groupId>net.jthink</groupId>
       <artifactId>jaudiotagger</artifactId>
       <version>3.0.1</version>
     </dependency>
-
-
   </dependencies>
   <build>
     <plugins>
