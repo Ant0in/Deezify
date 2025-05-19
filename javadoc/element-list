@@ -7,8 +7,10 @@ musicApp.controllers.songs
 musicApp.enums
 musicApp.exceptions
 musicApp.models
-musicApp.utils
-musicApp.utils.gsonTypeAdapter
+musicApp.models.dtos
+musicApp.repositories
+musicApp.repositories.gsonTypeAdapter
+musicApp.services
 musicApp.views
 musicApp.views.playlists
 musicApp.views.settings
