@@ -62,6 +62,6 @@ public class PlaylistCellController extends ViewController<PlaylistCellView> imp
      * @return the display name of the library
      */
     public String getLibraryDisplayName() {
-        return library.getDisplayName();
+        return library != null ? library.getDisplayName() : "";
     }
 }
