@@ -34,7 +34,7 @@ You'll need to have [Java](https://www.java.com/en/download/) installed on your 
 1. Clone the repository
 
 ```bash
-git clone https://gitlab.ulb.be/ulb-infof307/2025-groupe-2.git
+git clone https://github.com/Ant0in/Deezify.git
 ```
 
 2. Install the Java JDK compatible with your platform:
